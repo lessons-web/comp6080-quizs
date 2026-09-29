@@ -51,7 +51,7 @@ export function ExamPaper({ exam }: ExamPaperProps) {
           {exam.title}
         </h2>
         <div
-          role="radiogroup"
+          role="tablist"
           aria-label="试卷视图切换"
           onKeyDown={handleTabKeyDown}
           className="inline-flex w-56 shrink-0 items-center rounded-full border border-slate-200 bg-slate-50 p-1"
@@ -69,8 +69,8 @@ export function ExamPaper({ exam }: ExamPaperProps) {
                 key={tab.value}
                 id={`${exam.id}-tab-${tab.value}`}
                 type="button"
-                role="radio"
-                aria-checked={active}
+                role="tab"
+                aria-selected={active}
                 aria-controls={controlsId}
                 tabIndex={mode === tab.value ? 0 : -1}
                 onClick={() => setMode(tab.value)}
@@ -91,7 +91,7 @@ export function ExamPaper({ exam }: ExamPaperProps) {
       <div className="mt-6 grid gap-6 xl:grid-cols-2">
         <section
           id={questionsId}
-          role="region"
+          role="tabpanel"
           aria-labelledby={`${exam.id}-tab-${mode}`}
           hidden={mode === 'answers'}
           className="rounded-[1.5rem] border border-slate-200 bg-slate-50 p-5"
@@ -126,7 +126,7 @@ export function ExamPaper({ exam }: ExamPaperProps) {
 
         <section
           id={answersId}
-          role="region"
+          role="tabpanel"
           aria-labelledby={`${exam.id}-tab-${mode}`}
           hidden={mode === 'questions'}
           className="rounded-[1.5rem] border border-blue-100 bg-blue-50 p-5"
