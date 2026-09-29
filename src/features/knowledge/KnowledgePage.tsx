@@ -5,13 +5,7 @@ import {
   getKnowledgeByWeek,
   isSupportedWeek,
 } from '../../lib/content/knowledge'
-
-function parseWeek(weekParam?: string) {
-  const match = weekParam?.match(/^week-(\d)$/)
-  const value = Number(match?.[1])
-
-  return Number.isInteger(value) ? value : Number.NaN
-}
+import { parseWeek } from '../../lib/utils/parseWeek'
 
 export function KnowledgePage() {
   const { week: weekParam } = useParams()

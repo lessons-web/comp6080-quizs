@@ -3,6 +3,7 @@ import { useParams } from 'react-router-dom'
 
 import { WeekTabs } from '../../components/WeekTabs'
 import { useLocalStoragePref } from '../../lib/hooks/useLocalStoragePref'
+import { parseWeek } from '../../lib/utils/parseWeek'
 import {
   getPracticeQuestionsByWeek,
   groupPracticeQuestions,
@@ -12,12 +13,6 @@ import { QuestionCard } from './QuestionCard'
 const COLUMN_KEY = 'comp6080:pref:practice-columns'
 type ColumnPref = '1' | '2' | '3'
 const isValidColumn = (v: string): v is ColumnPref => ['1', '2', '3'].includes(v)
-
-function parseWeek(weekParam?: string) {
-  const match = weekParam?.match(/^week-(\d)$/)
-  const value = Number(match?.[1])
-  return Number.isInteger(value) ? value : Number.NaN
-}
 
 const COL_ICON = {
   1: (

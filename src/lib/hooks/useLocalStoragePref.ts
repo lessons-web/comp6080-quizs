@@ -1,4 +1,4 @@
-import { useCallback, useState } from 'react'
+import { useCallback, useMemo, useState } from 'react'
 
 function handleStorageError(e: unknown): void {
   const expected =
@@ -45,5 +45,5 @@ export function useLocalStoragePref<T extends string>(
     setValue(next)
     write(next)
   }, [write])
-  return [value, setPref]
+  return useMemo<[T, (next: T) => void]>(() => [value, setPref], [value, setPref])
 }

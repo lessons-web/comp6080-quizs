@@ -2,14 +2,8 @@ import { useParams } from 'react-router-dom'
 
 import { WeekTabs } from '../../components/WeekTabs'
 import { getMockExamsByWeek } from '../../lib/content/mockExams'
+import { parseWeek } from '../../lib/utils/parseWeek'
 import { ExamPaper } from './ExamPaper'
-
-function parseWeek(weekParam?: string) {
-  const match = weekParam?.match(/^week-(\d)$/)
-  const value = Number(match?.[1])
-
-  return Number.isInteger(value) ? value : Number.NaN
-}
 
 export function MockExamsPage() {
   const { week: weekParam } = useParams()
