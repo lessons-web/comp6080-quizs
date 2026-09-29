@@ -30,13 +30,15 @@ export function ExamPaper({ exam }: ExamPaperProps) {
         >
           {TABS.map((tab) => {
             const active = mode === tab.value
+            const ariaControlsVal = tab.value === 'split' ? `${questionsId} ${answersId}` : tab.value === 'questions' ? questionsId : answersId
             return (
               <button
                 key={tab.value}
+                id={`${exam.id}-tab-${tab.value}`}
                 type="button"
                 role="tab"
                 aria-selected={active}
-                aria-controls={tab.value === 'answers' ? answersId : questionsId}
+                aria-controls={ariaControlsVal}
                 onClick={() => setMode(tab.value)}
                 className={[
                   'flex-1 rounded-full px-2 py-1.5 text-xs font-medium transition',
@@ -62,7 +64,7 @@ export function ExamPaper({ exam }: ExamPaperProps) {
           <section
             id={questionsId}
             role="tabpanel"
-            aria-labelledby={`${questionsId}-tab`}
+            aria-labelledby={`${exam.id}-tab-questions`}
             className="rounded-[1.5rem] border border-slate-200 bg-slate-50 p-5"
           >
             <h3 className="text-lg font-semibold text-slate-950">题目</h3>
@@ -98,7 +100,7 @@ export function ExamPaper({ exam }: ExamPaperProps) {
           <section
             id={answersId}
             role="tabpanel"
-            aria-labelledby={`${answersId}-tab`}
+            aria-labelledby={`${exam.id}-tab-answers`}
             className="rounded-[1.5rem] border border-blue-100 bg-blue-50 p-5"
           >
             <h3 className="text-lg font-semibold text-slate-950">答案</h3>
