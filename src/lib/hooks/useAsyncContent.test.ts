@@ -25,6 +25,15 @@ describe('useAsyncContent', () => {
     expect(result.current.data).toBeNull()
   })
 
+  it('wraps non-Error thrown values into Error instances', async () => {
+    const fetcher = vi.fn(async () => { throw 'network down' })
+    const { result } = renderHook(() => useAsyncContent(fetcher, []))
+    await waitFor(() => expect(result.current.loading).toBe(false))
+    expect(result.current.error).toBeInstanceOf(Error)
+    expect(result.current.error?.message).toBe('network down')
+    expect(result.current.data).toBeNull()
+  })
+
   it('refetches when dep value changes', async () => {
     const fetcher = vi.fn(async (n: number) => n * 2)
     const { result, rerender } = renderHook(
