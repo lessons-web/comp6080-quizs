@@ -1,0 +1,62 @@
+---
+title: "Week 1 Foundations: HTML and CSS"
+week: "week-1"
+summary: "Covers HTML document structure, semantic markup, paths and images, plus core CSS concepts such as specificity, box model, Flexbox, and stacking context."
+---
+
+# Week 1 Foundations
+
+Week 1 focuses on the two browser-facing foundations of the course: HTML for structure and meaning, and CSS for presentation and layout. The goal is not just to remember tags or properties, but to understand why a browser interprets them in a certain way.
+
+## HTML Structure and Semantics
+
+A basic HTML document separates metadata from visible content. Elements inside `<head>` describe the document, while elements inside `<body>` become the main content users read and interact with.
+
+Semantic HTML matters because it communicates intent. For example, `<h1>` expresses a top-level heading, and `header`, `nav`, and `footer` describe page regions more clearly than generic `div` containers. Semantic markup improves readability, maintainability, and accessibility.
+
+## Paths, Images, and Accessibility
+
+Asset paths are interpreted relative to either the current document location or the site root. A relative path such as `images/logo.png` depends on the current file location, while `/images/logo.png` always resolves from the root of the site.
+
+Image authoring also includes accessibility responsibilities. `alt` text should communicate the image's purpose, not repeat vague words such as `image`. For content like a course logo, a short descriptive alternative is more helpful.
+
+Week 1 also introduces the difference between vector and bitmap graphics. SVG is usually preferred for icons, logos, and simple diagrams because it scales cleanly, while raster formats such as PNG and JPG store pixel data and are better suited to photo-like content.
+
+## Code Presentation Tags
+
+HTML uses `<code>` to mark content as code and `<pre>` to preserve formatting such as whitespace and line breaks. They often appear together so that the browser and readers both understand that the content is code and should keep its original layout.
+
+## CSS Matching and Specificity
+
+CSS rules only apply when the selector actually matches the element. A class selector like `.warning` will not match an element that only has `id="warning"`, and an id selector like `#warning` will not match an element with `class="warning"`.
+
+When multiple rules match the same element, specificity determines which rule wins. A class selector usually overrides an element selector, so `.note { color: red; }` beats `p { color: blue; }` on `<p class="note">`.
+
+## Box Model and Spacing
+
+The box model explains why an element with `width: 200px` may take up more than 200 pixels in the layout. By default, total width also includes horizontal padding and borders.
+
+Spacing decisions depend on whether the problem is inside or outside the element. `padding` changes internal spacing and click target size, while `margin` changes the space around the element.
+
+## Flexbox and Layout Stability
+
+Flexbox is introduced as a more stable way to align a group of elements than manually forcing positions with fixed margins. `display: flex` is typically applied to the parent container so it can control the layout of its children.
+
+Inside a flex container, `justify-content` manages distribution along the main axis, and `align-items` manages alignment on the cross axis. Understanding the axis direction comes before choosing the property.
+
+## Stacking Context and z-index
+
+`z-index` does not guarantee that a large number will always place an element on top of everything else. Stacking still depends on positioning rules and stacking contexts created by ancestors.
+
+When a `z-index` value appears to have no effect, common causes include missing positioning, different stacking contexts, or a parent element restricting how descendants layer relative to siblings.
+
+## Week 1 Review Checklist
+
+- Distinguish document metadata from page content.
+- Prefer semantic tags when they express meaning.
+- Trace whether a path is relative to the current file or the site root.
+- Write meaningful `alt` text for informative images.
+- Separate selector matching from selector specificity.
+- Use `padding` for internal spacing and `margin` for external spacing.
+- Treat Flexbox as a parent-controlled layout system.
+- Remember that `z-index` is scoped by stacking context.

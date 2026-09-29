@@ -1,0 +1,195 @@
+{
+  "week": "week-1",
+  "exams": [
+    {
+      "id": "week-1-mock-1",
+      "title": "Week 1 真题套卷 1",
+      "questions": [
+        {
+          "id": "W1-M1-Q1",
+          "question": "在 HTML 基本文档中，`<head>` 和 `<body>` 的职责分别是什么？",
+          "knowledgePoint": "HTML 文档结构",
+          "answerExplanation": "`<head>` 放文档元信息，`<body>` 放页面主体内容。",
+          "codeBlocks": [],
+          "images": []
+        },
+        {
+          "id": "W1-M1-Q2",
+          "question": "比较 `<div>Title</div>` 与 `<h1>Title</h1>` 作为页面主标题的差异。",
+          "knowledgePoint": "语义标签（标题）",
+          "answerExplanation": "`<h1>` 有一级标题语义，适合作为主标题；`<div>` 是通用容器。",
+          "codeBlocks": [],
+          "images": []
+        },
+        {
+          "id": "W1-M1-Q3",
+          "question": "解释 `src=\"images/logo.png\"` 与 `src=\"/images/logo.png\"` 的区别。",
+          "knowledgePoint": "相对路径与根路径",
+          "answerExplanation": "`images/...` 相对当前页面目录；`/images/...` 从站点根目录解析。",
+          "codeBlocks": [],
+          "images": []
+        },
+        {
+          "id": "W1-M1-Q4",
+          "question": "课程 logo 的 `alt` 写成 `alt=\"image\"` 是否合理？说明原因。",
+          "knowledgePoint": "alt 文本质量",
+          "answerExplanation": "不合理，过于空泛。应写能传达图片信息的描述，如 `COMP6080 course logo`。",
+          "codeBlocks": [],
+          "images": []
+        },
+        {
+          "id": "W1-M1-Q5",
+          "question": "为什么图标类资源通常优先考虑 SVG？",
+          "knowledgePoint": "SVG 与位图差异",
+          "answerExplanation": "SVG 是矢量图，缩放清晰，适合图标/线条图。",
+          "codeBlocks": [],
+          "images": []
+        },
+        {
+          "id": "W1-M1-Q6",
+          "question": "下面哪段结构语义更清晰？为什么？",
+          "knowledgePoint": "结构语义化",
+          "answerExplanation": "第二段更清晰，`header/nav/footer` 直接表达页面区域角色。",
+          "codeBlocks": [
+            {
+              "language": "html",
+              "code": "<div class=\"header\">A</div><div class=\"nav\">B</div><div class=\"footer\">C</div>"
+            },
+            {
+              "language": "html",
+              "code": "<header>A</header><nav>B</nav><footer>C</footer>"
+            }
+          ],
+          "images": []
+        },
+        {
+          "id": "W1-M1-Q7",
+          "question": "解释 `<code>` 与 `<pre>` 的区别和配合场景。",
+          "knowledgePoint": "<code> 与 <pre>",
+          "answerExplanation": "`<code>` 表示代码语义，`<pre>` 保留空格换行，常一起展示代码块。",
+          "codeBlocks": [],
+          "images": []
+        },
+        {
+          "id": "W1-M1-Q8",
+          "question": "判断：`.note { color: red; }` 与 `p { color: blue; }` 同时命中 `<p class=\"note\">` 时最终颜色是什么？",
+          "knowledgePoint": "CSS 优先级",
+          "answerExplanation": "红色。类选择器 `.note` 优先级高于元素选择器 `p`。",
+          "codeBlocks": [],
+          "images": []
+        },
+        {
+          "id": "W1-M1-Q9",
+          "question": "解释 `margin` 与 `padding` 的区别，并说明“按钮太挤”应先调哪一个。",
+          "knowledgePoint": "盒模型（margin/padding）",
+          "answerExplanation": "`padding` 是内部留白，`margin` 是外部间距。按钮太挤先调 `padding`。",
+          "codeBlocks": [],
+          "images": []
+        },
+        {
+          "id": "W1-M1-Q10",
+          "question": "判断：只要写 `z-index: 9999` 就一定在最上层。对还是错？为什么？",
+          "knowledgePoint": "z-index 与层叠上下文",
+          "answerExplanation": "错误。`z-index` 受定位与层叠上下文限制，不是只比数字。",
+          "codeBlocks": [],
+          "images": []
+        }
+      ]
+    },
+    {
+      "id": "week-1-mock-2",
+      "title": "Week 1 真题套卷 2",
+      "questions": [
+        {
+          "id": "W1-M2-Q1",
+          "question": "为什么课程 Week 1 先讲 HTML/CSS，而不是直接讲框架？",
+          "knowledgePoint": "学习路径（基础先行）",
+          "answerExplanation": "框架建立在 HTML/CSS/JS 基础之上，先打牢结构和样式才能理解后续抽象。",
+          "codeBlocks": [],
+          "images": []
+        },
+        {
+          "id": "W1-M2-Q2",
+          "question": "指出下面代码的两个问题并修正。",
+          "knowledgePoint": "图片标签完整性",
+          "answerExplanation": "问题一是 `src` 不完整，问题二是缺少 `alt`。可改为 `<img src=\"logo.png\" alt=\"Course logo\">`。",
+          "codeBlocks": [
+            {
+              "language": "html",
+              "code": "<img src=\"logo\">"
+            },
+            {
+              "language": "html",
+              "code": "<img src=\"logo.png\" alt=\"Course logo\">"
+            }
+          ],
+          "images": []
+        },
+        {
+          "id": "W1-M2-Q3",
+          "question": "判断：SVG 和 JPG 的主要区别只是文件后缀。对还是错？解释原因。",
+          "knowledgePoint": "图片格式本质差异",
+          "answerExplanation": "错误。SVG 是矢量图，JPG 是位图，存储与缩放表现不同。",
+          "codeBlocks": [],
+          "images": []
+        },
+        {
+          "id": "W1-M2-Q4",
+          "question": "解释为什么 `<meta>` 通常写在 `<head>` 中。",
+          "knowledgePoint": "文档元信息位置",
+          "answerExplanation": "`meta` 属于文档头部配置，不是正文内容，浏览器在解析文档头时读取。",
+          "codeBlocks": [],
+          "images": []
+        },
+        {
+          "id": "W1-M2-Q5",
+          "question": "为什么 `#warning { ... }` 不会命中 `<p class=\"warning\">`？",
+          "knowledgePoint": "选择器匹配",
+          "answerExplanation": "`#warning` 是 id 选择器，而 `class=\"warning\"` 需要 `.warning`。",
+          "codeBlocks": [],
+          "images": []
+        },
+        {
+          "id": "W1-M2-Q6",
+          "question": "元素设置 `width: 200px; padding: 20px; border: 5px solid;`，为什么总占宽不止 200px？",
+          "knowledgePoint": "盒模型计算",
+          "answerExplanation": "默认盒模型下 `width` 仅是内容宽度，总宽还包含左右 `padding` 与 `border`。",
+          "codeBlocks": [],
+          "images": []
+        },
+        {
+          "id": "W1-M2-Q7",
+          "question": "`display: flex` 通常加在父元素还是子元素？它主要影响谁？",
+          "knowledgePoint": "Flex 容器与子项关系",
+          "answerExplanation": "通常加在父元素，主要影响子元素如何排列和对齐。",
+          "codeBlocks": [],
+          "images": []
+        },
+        {
+          "id": "W1-M2-Q8",
+          "question": "解释 `justify-content` 和 `align-items` 的区别。",
+          "knowledgePoint": "Flex 主轴与交叉轴",
+          "answerExplanation": "`justify-content` 管主轴分布，`align-items` 管交叉轴对齐。",
+          "codeBlocks": [],
+          "images": []
+        },
+        {
+          "id": "W1-M2-Q9",
+          "question": "为什么卡片横向排列更适合用 Flexbox，而不是给每张卡片手写大量 `margin-left`？",
+          "knowledgePoint": "Flexbox 布局稳定性",
+          "answerExplanation": "Flexbox 对空间变化更自适应，手写固定边距在不同屏幕下更容易错位。",
+          "codeBlocks": [],
+          "images": []
+        },
+        {
+          "id": "W1-M2-Q10",
+          "question": "预处理器（Sass/SCSS）在样式维护上的主要价值是什么？",
+          "knowledgePoint": "CSS Preprocessors 价值",
+          "answerExplanation": "可通过变量、嵌套、复用减少重复，提升样式组织性和统一修改效率。",
+          "codeBlocks": [],
+          "images": []
+        }
+      ]
+    }
+  ]
+}
