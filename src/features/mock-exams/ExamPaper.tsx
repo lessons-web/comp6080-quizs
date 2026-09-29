@@ -1,44 +1,121 @@
+import { useState } from 'react'
+
 import type { MockExam } from '../../types/content'
 
-type ExamPaperProps = {
-  exam: MockExam
-}
+type ViewMode = 'split' | 'questions' | 'answers'
+
+type ExamPaperProps = { exam: MockExam }
+
+const TABS: { value: ViewMode; label: string }[] = [
+  { value: 'split', label: '分屏对照' },
+  { value: 'questions', label: '仅题目' },
+  { value: 'answers', label: '仅答案' },
+]
 
 export function ExamPaper({ exam }: ExamPaperProps) {
+  const [mode, setMode] = useState<ViewMode>('split')
+  const questionsId = `questions-${exam.id}`
+  const answersId = `answers-${exam.id}`
+
   return (
     <article className="rounded-[2rem] border border-slate-200 bg-white p-6 shadow-sm sm:p-8">
-      <h2 className="text-2xl font-semibold tracking-tight text-slate-950">
-        {exam.title}
-      </h2>
+      <div className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
+        <h2 className="text-2xl font-semibold tracking-tight text-slate-950">
+          {exam.title}
+        </h2>
+        <div
+          role="tablist"
+          aria-label="试卷视图切换"
+          className="inline-flex w-56 shrink-0 items-center rounded-full border border-slate-200 bg-slate-50 p-1"
+        >
+          {TABS.map((tab) => {
+            const active = mode === tab.value
+            return (
+              <button
+                key={tab.value}
+                type="button"
+                role="tab"
+                aria-selected={active}
+                aria-controls={tab.value === 'answers' ? answersId : questionsId}
+                onClick={() => setMode(tab.value)}
+                className={[
+                  'flex-1 rounded-full px-2 py-1.5 text-xs font-medium transition',
+                  active
+                    ? 'bg-blue-600 text-white shadow-sm'
+                    : 'text-slate-600 hover:text-blue-700',
+                ].join(' ')}
+              >
+                {tab.label}
+              </button>
+            )
+          })}
+        </div>
+      </div>
 
-      <div className="mt-6 grid gap-6 xl:grid-cols-2">
-        <section className="rounded-[1.5rem] border border-slate-200 bg-slate-50 p-5">
-          <h3 className="text-lg font-semibold text-slate-950">题目</h3>
-          <ol className="mt-4 space-y-4 text-sm leading-7 text-slate-700">
-            {exam.questions.map((question, index) => (
-              <li key={question.id}>
-                <span className="font-semibold text-slate-950">{`${index + 1}. `}</span>
-                {question.question}
-              </li>
-            ))}
-          </ol>
-        </section>
-
-        <section className="rounded-[1.5rem] border border-blue-100 bg-blue-50 p-5">
-          <h3 className="text-lg font-semibold text-slate-950">答案</h3>
-          <ol className="mt-4 space-y-4 text-sm leading-7 text-slate-700">
-            {exam.questions.map((question, index) => (
-              <li key={`${question.id}-answer`}>
-                <p>
+      <div
+        className={[
+          'mt-6 gap-6',
+          mode === 'split' ? 'grid xl:grid-cols-2' : 'grid grid-cols-1',
+        ].join(' ')}
+      >
+        {mode !== 'answers' ? (
+          <section
+            id={questionsId}
+            role="tabpanel"
+            aria-labelledby={`${questionsId}-tab`}
+            className="rounded-[1.5rem] border border-slate-200 bg-slate-50 p-5"
+          >
+            <h3 className="text-lg font-semibold text-slate-950">题目</h3>
+            <ol className="mt-4 space-y-4 text-sm leading-7 text-slate-700">
+              {exam.questions.map((question, index) => (
+                <li key={question.id}>
                   <span className="font-semibold text-slate-950">{`${index + 1}. `}</span>
-                  <span className="font-semibold text-slate-950">知识点：</span>
-                  {question.knowledgePoint}
-                </p>
-                <p className="mt-1">{question.answerExplanation}</p>
-              </li>
-            ))}
-          </ol>
-        </section>
+                  {question.question}
+                  {question.codeBlocks.length > 0 ? (
+                    <div className="mt-3 space-y-3">
+                      {question.codeBlocks.map((block, bi) => (
+                        <div
+                          key={`${question.id}-${bi}`}
+                          className="overflow-hidden rounded-2xl border border-slate-200"
+                        >
+                          <div className="border-b border-slate-200 bg-slate-100 px-4 py-2 text-xs font-semibold uppercase tracking-[0.16em] text-slate-500">
+                            {block.language}
+                          </div>
+                          <pre className="overflow-x-auto bg-slate-950 px-4 py-4 text-sm leading-6 text-slate-100">
+                            <code>{block.code}</code>
+                          </pre>
+                        </div>
+                      ))}
+                    </div>
+                  ) : null}
+                </li>
+              ))}
+            </ol>
+          </section>
+        ) : null}
+
+        {mode !== 'questions' ? (
+          <section
+            id={answersId}
+            role="tabpanel"
+            aria-labelledby={`${answersId}-tab`}
+            className="rounded-[1.5rem] border border-blue-100 bg-blue-50 p-5"
+          >
+            <h3 className="text-lg font-semibold text-slate-950">答案</h3>
+            <ol className="mt-4 space-y-4 text-sm leading-7 text-slate-700">
+              {exam.questions.map((question, index) => (
+                <li key={`${question.id}-answer`}>
+                  <p>
+                    <span className="font-semibold text-slate-950">{`${index + 1}. `}</span>
+                    <span className="font-semibold text-slate-950">知识点：</span>
+                    {question.knowledgePoint}
+                  </p>
+                  <p className="mt-1">{question.answerExplanation}</p>
+                </li>
+              ))}
+            </ol>
+          </section>
+        ) : null}
       </div>
     </article>
   )
