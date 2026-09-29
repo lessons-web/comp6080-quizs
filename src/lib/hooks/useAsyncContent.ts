@@ -27,11 +27,11 @@ export function useAsyncContent<T>(
         setState({ data: value, loading: false, error: null })
       } catch (err) {
         if (!alive) return
-        setState({
-          data: null,
+        setState((prev) => ({
+          data: prev.data,
           loading: false,
           error: err instanceof Error ? err : new Error(String(err)),
-        })
+        }))
       }
     }
 
