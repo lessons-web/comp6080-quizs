@@ -1,38 +1,37 @@
 import type { RouteObject } from 'react-router-dom'
-import { Navigate, createBrowserRouter } from 'react-router-dom'
+import { lazy } from 'react'
+import { createBrowserRouter, Navigate } from 'react-router-dom'
 
 import { AppShell } from './AppShell'
-import { KnowledgePage } from '../features/knowledge/KnowledgePage'
-import { MockExamsPage } from '../features/mock-exams/MockExamsPage'
-import { PracticePage } from '../features/practice/PracticePage'
+
+const KnowledgePage = lazy(() =>
+  import('../features/knowledge/KnowledgePage').then((m) => ({
+    default: m.KnowledgePage,
+  })),
+)
+const PracticePage = lazy(() =>
+  import('../features/practice/PracticePage').then((m) => ({
+    default: m.PracticePage,
+  })),
+)
+const MockExamsPage = lazy(() =>
+  import('../features/mock-exams/MockExamsPage').then((m) => ({
+    default: m.MockExamsPage,
+  })),
+)
 
 export const appRoutes: RouteObject[] = [
   {
     path: '/',
     element: <AppShell />,
     children: [
-      {
-        index: true,
-        element: <Navigate replace to="/knowledge/week-1" />,
-      },
-      {
-        path: 'knowledge/:week',
-        element: <KnowledgePage />,
-      },
-      {
-        path: 'practice/:week',
-        element: <PracticePage />,
-      },
-      {
-        path: 'mock-exams/:week',
-        element: <MockExamsPage />,
-      },
+      { index: true, element: <Navigate to="/knowledge/week-1" replace /> },
+      { path: 'knowledge/week-:week', element: <KnowledgePage /> },
+      { path: 'practice/week-:week', element: <PracticePage /> },
+      { path: 'mock-exams/week-:week', element: <MockExamsPage /> },
+      { path: '*', element: <Navigate to="/knowledge/week-1" replace /> },
     ],
   },
 ]
 
-export function createAppRouter() {
-  return createBrowserRouter(appRoutes)
-}
-
-export const router = createAppRouter()
+export const router = createBrowserRouter(appRoutes)
