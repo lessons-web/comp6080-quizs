@@ -10,6 +10,7 @@ import {
   groupPracticeQuestions,
 } from '../../lib/content/practice'
 import { parseWeek } from '../../lib/utils/parseWeek'
+import { isSupportedWeek } from '../../lib/content/knowledge'
 import { QuestionCard } from './QuestionCard'
 
 const COLUMN_KEY = 'comp6080:pref:practice-columns'
@@ -71,7 +72,7 @@ function LoadErrorCard() {
 export function PracticePage() {
   const { week: weekParam } = useParams()
   const week = parseWeek(weekParam)
-  const supported = Number.isFinite(week) && week >= 1 && week <= 4
+  const supported = isSupportedWeek(week)
 
   const { data: collection, loading, error } = useAsyncContent(
     () => (supported ? getPracticeQuestionsByWeek(week) : Promise.resolve(null)),

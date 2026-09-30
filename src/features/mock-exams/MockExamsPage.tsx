@@ -5,6 +5,7 @@ import { ContentLoading } from '../../components/ContentLoading'
 import { getMockExamsByWeek } from '../../lib/content/mockExams'
 import { useAsyncContent } from '../../lib/hooks/useAsyncContent'
 import { parseWeek } from '../../lib/utils/parseWeek'
+import { isSupportedWeek } from '../../lib/content/knowledge'
 import { ExamPaper } from './ExamPaper'
 
 function UnsupportedWeekCard() {
@@ -30,7 +31,7 @@ function LoadErrorCard() {
 export function MockExamsPage() {
   const { week: weekParam } = useParams()
   const week = parseWeek(weekParam)
-  const supported = Number.isFinite(week) && week >= 1 && week <= 4
+  const supported = isSupportedWeek(week)
 
   const { data: collection, loading, error } = useAsyncContent(
     () => (supported ? getMockExamsByWeek(week) : Promise.resolve(null)),
