@@ -50,9 +50,9 @@ export function KnowledgeListItem({ meta, active, highlight, onClick }: Knowledg
       type="button"
       onClick={onClick}
       className={[
-        'block w-full border-b border-slate-50 px-3 py-2.5 text-left transition last:border-none',
+        'block w-full cursor-pointer border-b border-slate-50 px-3 py-2.5 text-left transition last:border-none',
         active
-          ? 'relative bg-blue-50 ring-1 ring-blue-200 border-l-2 border-blue-500'
+          ? 'bg-blue-50 ring-1 ring-blue-200 border-l-2 border-blue-500'
           : 'hover:bg-slate-50',
       ].join(' ')}
     >
