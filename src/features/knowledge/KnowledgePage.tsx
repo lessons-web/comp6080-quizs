@@ -1,34 +1,69 @@
 import { Link, useParams } from 'react-router-dom'
 
 import { WeekTabs } from '../../components/WeekTabs'
+import { ContentLoading } from '../../components/ContentLoading'
 import {
   getKnowledgeByWeek,
   isSupportedWeek,
 } from '../../lib/content/knowledge'
+import { useAsyncContent } from '../../lib/hooks/useAsyncContent'
+import { parseWeek } from '../../lib/utils/parseWeek'
 
-function parseWeek(weekParam?: string) {
-  const match = weekParam?.match(/^week-(\d)$/)
-  const value = Number(match?.[1])
+function UnsupportedWeekCard() {
+  return (
+    <section className="w-full rounded-3xl border border-amber-200 bg-amber-50 p-6 text-amber-900">
+      <h2 className="text-xl font-semibold">暂不支持这个周次</h2>
+      <p className="mt-2 text-sm leading-6">
+        请选择 `Week 1` 到 `Week 4` 之间的内容。
+      </p>
+    </section>
+  )
+}
 
-  return Number.isInteger(value) ? value : Number.NaN
+function LoadErrorCard() {
+  return (
+    <section className="w-full rounded-3xl border border-rose-200 bg-rose-50 p-6 text-rose-900">
+      <h2 className="text-xl font-semibold">知识点内容加载失败</h2>
+      <p className="mt-2 text-sm leading-6">请稍后刷新；若持续失败，请检查网络与构建产物。</p>
+    </section>
+  )
 }
 
 export function KnowledgePage() {
   const { week: weekParam } = useParams()
   const week = parseWeek(weekParam)
+  const supported = isSupportedWeek(week)
 
-  if (!isSupportedWeek(week)) {
+  const { data: knowledge, loading, error } = useAsyncContent(
+    () => (supported ? getKnowledgeByWeek(week) : Promise.resolve(null)),
+    [supported, week],
+  )
+
+  if (!supported) {
+    return <UnsupportedWeekCard />
+  }
+
+  if (loading) {
     return (
-      <section className="w-full rounded-3xl border border-amber-200 bg-amber-50 p-6 text-amber-900">
-        <h2 className="text-xl font-semibold">暂不支持这个周次</h2>
-        <p className="mt-2 text-sm leading-6">
-          请选择 `Week 1` 到 `Week 4` 之间的内容。
-        </p>
+      <section className="flex w-full flex-col gap-6">
+        <div className="rounded-[2rem] border border-slate-200 bg-white p-6 shadow-sm sm:p-8">
+          <div className="flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">
+            <div className="max-w-3xl flex-1">
+              <div className="h-4 w-24 animate-pulse rounded-full bg-slate-200" />
+              <div className="mt-2 h-8 w-64 animate-pulse rounded-full bg-slate-200" />
+            </div>
+            <div className="h-9 w-60 animate-pulse rounded-full bg-slate-100" />
+          </div>
+        </div>
+        <ContentLoading rows={10} />
       </section>
     )
   }
 
-  const knowledge = getKnowledgeByWeek(week)
+  if (error || !knowledge) {
+    return error ? <LoadErrorCard /> : <UnsupportedWeekCard />
+  }
+
   const KnowledgeContent = knowledge.Component
 
   return (
