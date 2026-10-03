@@ -1,15 +1,8 @@
 export type WeekTag = `week-${number}`
 
-export type TopicId = 'html' | 'css' | 'javascript' | 'react' | 'nodejs'
-
 export type Difficulty = 'easy' | 'medium' | 'hard'
 
-export const TOPIC_META: Record<TopicId, {
-  label: string
-  defaultWeek: WeekTag
-  description: string
-  accent: string
-}> = {
+export const TOPIC_META = {
   html: {
     label: 'HTML',
     defaultWeek: 'week-1',
@@ -40,7 +33,14 @@ export const TOPIC_META: Record<TopicId, {
     description: '服务端运行时与生态',
     accent: 'from-emerald-500 to-green-600',
   },
-}
+} satisfies Record<string, {
+  label: string
+  defaultWeek: WeekTag
+  description: string
+  accent: string
+}>
+
+export type TopicId = keyof typeof TOPIC_META
 
 export interface ContentCodeBlock {
   language: string
@@ -66,7 +66,7 @@ export interface KnowledgePointMeta {
 
 export interface PracticeQuestion {
   id: string
-  topic: string
+  topic: TopicId
   weeks: WeekTag[]
   question: string
   knowledgePoint: string
