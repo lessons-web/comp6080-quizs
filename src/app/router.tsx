@@ -26,9 +26,9 @@ export const appRoutes: RouteObject[] = [
     element: <AppShell />,
     children: [
       { index: true, element: <Navigate to="/knowledge/week-1" replace /> },
-      { path: 'knowledge/week-:week', element: <KnowledgePage /> },
-      { path: 'practice/week-:week', element: <PracticePage /> },
-      { path: 'mock-exams/week-:week', element: <MockExamsPage /> },
+      { path: 'knowledge/*', element: <KnowledgePage /> },
+      { path: 'practice/*', element: <PracticePage /> },
+      { path: 'mock-exams/*', element: <MockExamsPage /> },
       { path: '*', element: <Navigate to="/knowledge/week-1" replace /> },
     ],
   },

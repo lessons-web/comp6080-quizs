@@ -1,4 +1,4 @@
-import { Link, useParams } from 'react-router-dom'
+import { Link, useLocation, useParams } from 'react-router-dom'
 
 import { WeekTabs } from '../../components/WeekTabs'
 import { ContentLoading } from '../../components/ContentLoading'
@@ -31,7 +31,9 @@ function LoadErrorCard() {
 
 export function KnowledgePage() {
   const { week: weekParam } = useParams()
-  const week = parseWeek(weekParam)
+  const location = useLocation()
+  const pathWeek = location.pathname.match(/week-(\d+)/i)?.[1]
+  const week = parseWeek(weekParam ?? pathWeek)
   const supported = isSupportedWeek(week)
 
   const { data: knowledge, loading, error } = useAsyncContent(
