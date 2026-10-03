@@ -10,7 +10,7 @@ vi.mock('react-router-dom', async () => {
   )
   return {
     ...actual,
-    useParams: () => ({ week: 'week-1' }),
+    useParams: () => ({ week: '1' }),
   }
 })
 
