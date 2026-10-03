@@ -1,0 +1,21 @@
+---
+id: "004-stacking-context"
+title: "Stacking Context and z-index"
+topic: "css"
+category: "层级系统"
+difficulty: "hard"
+tags: ["week-1"]
+summary: "z-index 非全局；受祖先 stacking context 作用域；常见失效原因"
+createdAt: "2026-09-28T13:30:00.000Z"
+---
+
+# Stacking Context and z-index
+
+`z-index` does not guarantee that a large number will always place an element on top of everything else. Stacking still depends on positioning rules and stacking contexts created by ancestors.
+
+When a `z-index` value appears to have no effect, common causes include missing positioning, different stacking contexts, or a parent element restricting how descendants layer relative to siblings.
+
+## Review Checklist
+
+- Remember that `z-index` is scoped by stacking context.
+- Prefer external stylesheets for reusable, maintainable CSS.
