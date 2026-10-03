@@ -82,7 +82,7 @@ export function TopicCard({ topic, label, description, accent, pointCount }: Top
       <div className="mt-1 line-clamp-2 text-sm leading-5 text-slate-500">
         {description}
       </div>
-      <div className="mt-auto flex items-center justify-between">
+      <div className="mt-auto flex items-center justify-end">
         <span className="text-xs font-medium text-slate-500">{pointCount} 篇</span>
       </div>
     </Link>
