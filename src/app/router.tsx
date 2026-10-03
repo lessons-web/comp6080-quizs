@@ -25,11 +25,11 @@ export const appRoutes: RouteObject[] = [
     path: '/',
     element: <AppShell />,
     children: [
-      { index: true, element: <Navigate to="/knowledge/week-1" replace /> },
+      { index: true, element: <Navigate to="/knowledge" replace /> },
       { path: 'knowledge/*', element: <KnowledgePage /> },
       { path: 'practice/*', element: <PracticePage /> },
       { path: 'mock-exams/*', element: <MockExamsPage /> },
-      { path: '*', element: <Navigate to="/knowledge/week-1" replace /> },
+      { path: '*', element: <Navigate to="/knowledge" replace /> },
     ],
   },
 ]
