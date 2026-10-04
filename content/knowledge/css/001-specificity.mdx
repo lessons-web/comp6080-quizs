@@ -1,0 +1,20 @@
+---
+id: "001-specificity"
+title: "CSS Matching and Specificity"
+topic: "css"
+category: "选择器系统"
+difficulty: "medium"
+tags: ["week-1"]
+summary: "选择器匹配 vs 特异性；class 胜元素；id 胜 class"
+createdAt: "2026-09-28T13:00:00.000Z"
+---
+
+# CSS Matching and Specificity
+
+CSS rules only apply when the selector actually matches the element. A class selector like `.warning` will not match an element that only has `id="warning"`, and an id selector like `#warning` will not match an element with `class="warning"`.
+
+When multiple rules match the same element, specificity determines which rule wins. A class selector usually overrides an element selector, so `.note { color: red; }` beats `p { color: blue; }` on `<p class="note">`.
+
+## Review Checklist
+
+- Separate selector matching from selector specificity.

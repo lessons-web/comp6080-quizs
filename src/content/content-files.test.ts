@@ -16,13 +16,18 @@ function readJson(relativePath: string) {
 }
 
 describe('content files', () => {
-  it('stores knowledge MDX files with required frontmatter', () => {
-    const week1 = readText('content/knowledge/week-1.mdx')
-    const week4 = readText('content/knowledge/week-4.mdx')
+  it('stores knowledge point MDX files with required point-level frontmatter', () => {
+    const html1 = readText('content/knowledge/html/001-structure-semantics.mdx')
+    const css4 = readText('content/knowledge/css/004-stacking-context.mdx')
 
-    expect(week1).toContain('title:')
-    expect(week1).toContain('week: "week-1"')
-    expect(week4).toContain('summary:')
+    expect(html1).toContain('id: "001-structure-semantics"')
+    expect(html1).toContain('category: "文档基础"')
+    expect(html1).toContain('topic: "html"')
+    expect(html1).toContain('difficulty: "easy"')
+    expect(html1).toContain('tags: ["week-1"]')
+    expect(html1).toContain('createdAt:')
+    expect(css4).toContain('difficulty: "hard"')
+    expect(css4).toContain('summary:')
   })
 
   it('stores week 1 practice questions with the spec fields', () => {

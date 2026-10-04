@@ -1,5 +1,5 @@
 import { useMemo } from 'react'
-import { useLocation, useParams } from 'react-router-dom'
+import { useParams } from 'react-router-dom'
 
 import { WeekTabs } from '../../components/WeekTabs'
 import { ContentLoading } from '../../components/ContentLoading'
@@ -10,7 +10,8 @@ import {
   groupPracticeQuestions,
 } from '../../lib/content/practice'
 import { parseWeek } from '../../lib/utils/parseWeek'
-import { isSupportedWeek } from '../../lib/content/knowledge'
+import { isSupportedTopic } from '../../lib/content/knowledge'
+import { TOPIC_META, type TopicId } from '../../types/content'
 import { QuestionCard } from './QuestionCard'
 
 const COLUMN_KEY = 'comp6080:pref:practice-columns'
@@ -49,12 +50,50 @@ function gridClassFor(pref: ColumnPref) {
   }
 }
 
-function UnsupportedWeekCard() {
+function extractTopic(rest: string | undefined): string | undefined {
+  if (!rest) return undefined
+  const seg = rest.split('/').filter(Boolean)[0]
+  return seg
+}
+
+function findTopicByWeekNum(weekNum: number): TopicId | undefined {
+  const weekTag = `week-${weekNum}` as const
+  const entries = Object.entries(TOPIC_META) as [TopicId, typeof TOPIC_META[TopicId]][]
+  const match = entries.find(([, meta]) => meta.defaultWeek === weekTag)
+  return match ? match[0] : undefined
+}
+
+function weekNumberFromTag(weekTag: string): number {
+  const m = /week-(\d+)/i.exec(weekTag)
+  return m ? Number(m[1]) : Number.NaN
+}
+
+function resolveTopicParam(
+  rest: string | undefined,
+  weekParam: string | undefined,
+): TopicId | undefined {
+  const fromRest = extractTopic(rest)
+  if (fromRest && isSupportedTopic(fromRest)) return fromRest
+  const weekNum = parseWeek(weekParam)
+  if (!Number.isNaN(weekNum)) {
+    const mapped = findTopicByWeekNum(weekNum)
+    if (mapped) return mapped
+  }
+  return undefined
+}
+
+function topicToWeekNum(topic: TopicId): number | undefined {
+  const weekTag = TOPIC_META[topic].defaultWeek
+  const num = weekNumberFromTag(weekTag)
+  return Number.isNaN(num) ? undefined : num
+}
+
+function UnsupportedTopicCard() {
   return (
     <section className="w-full rounded-3xl border border-amber-200 bg-amber-50 p-6 text-amber-900">
-      <h2 className="text-xl font-semibold">暂不支持这个周次</h2>
+      <h2 className="text-xl font-semibold">暂不支持这个领域</h2>
       <p className="mt-2 text-sm leading-6">
-        请选择 `Week 1` 到 `Week 4` 之间的内容。
+        请选择 `HTML` / `CSS` / `JavaScript` / `React` / `Node.js`。
       </p>
     </section>
   )
@@ -70,15 +109,14 @@ function LoadErrorCard() {
 }
 
 export function PracticePage() {
-  const { week: weekParam } = useParams()
-  const location = useLocation()
-  const pathWeek = location.pathname.match(/week-(\d+)/i)?.[1]
-  const week = parseWeek(weekParam ?? pathWeek)
-  const supported = isSupportedWeek(week)
+  const { '*': rest, week: weekParam } = useParams()
+  const topic = resolveTopicParam(rest, weekParam)
+  const supported = isSupportedTopic(topic)
+  const weekNum = supported && topic ? topicToWeekNum(topic) : undefined
 
   const { data: collection, loading, error } = useAsyncContent(
-    () => (supported ? getPracticeQuestionsByWeek(week) : Promise.resolve(null)),
-    [supported, week],
+    () => (supported && weekNum !== undefined ? getPracticeQuestionsByWeek(weekNum) : Promise.resolve(null)),
+    [supported, weekNum],
   )
 
   const [colPref, setColPref] = useLocalStoragePref<ColumnPref>(
@@ -94,7 +132,7 @@ export function PracticePage() {
   }, [collection])
 
   if (!supported) {
-    return <UnsupportedWeekCard />
+    return <UnsupportedTopicCard />
   }
 
   if (loading) {
@@ -118,8 +156,10 @@ export function PracticePage() {
   }
 
   if (error || !collection) {
-    return error ? <LoadErrorCard /> : <UnsupportedWeekCard />
+    return error ? <LoadErrorCard /> : <UnsupportedTopicCard />
   }
+
+  const topicLabel = TOPIC_META[topic].label
 
   return (
     <section className="flex w-full flex-col gap-6">
@@ -131,7 +171,7 @@ export function PracticePage() {
                 Practice
               </p>
               <h2 className="mt-2 text-3xl font-semibold tracking-tight text-slate-950">
-                {`Week ${week} 模拟题库`}
+                {`${topicLabel} 模拟题库`}
               </h2>
               <p className="mt-3 text-sm leading-6 text-slate-600">
                 每次先独立判断，再展开答案，训练“概念 + 解释”一体化输出。
@@ -172,14 +212,14 @@ export function PracticePage() {
 
       {collection.questions.length === 0 ? (
         <div className="rounded-[2rem] border border-dashed border-slate-300 bg-white p-8 text-sm text-slate-600 shadow-sm">
-          当前周题库还未填充，后续会补充这一周的分类练习题。
+          当前领域题库还未填充，后续会补充该领域的分类练习题。
         </div>
       ) : null}
 
-      {Object.entries(grouped).map(([topic, questions]) => (
-        <div key={topic} className="flex flex-col gap-4">
+      {Object.entries(grouped).map(([topicGroup, questions]) => (
+        <div key={topicGroup} className="flex flex-col gap-4">
           <h3 className="text-xl font-semibold tracking-tight text-slate-950">
-            {topic}
+            {topicGroup}
           </h3>
           <div className={gridClass}>
             {questions.map((question) => (

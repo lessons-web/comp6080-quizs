@@ -1,7 +1,7 @@
 import { NavLink } from 'react-router-dom'
 
 const navItems = [
-  { label: '知识点解析', to: '/knowledge/week-1' },
+  { label: '知识点解析', to: '/knowledge' },
   { label: '模拟题库', to: '/practice/week-1' },
   { label: '模拟真题', to: '/mock-exams/week-1' },
 ]

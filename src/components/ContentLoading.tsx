@@ -1,18 +1,24 @@
-type ContentLoadingProps = { rows?: number }
+import type { ReactNode } from 'react'
 
-export function ContentLoading({ rows = 6 }: ContentLoadingProps) {
+interface ContentLoadingProps {
+  rows?: number
+  children?: ReactNode
+  className?: string
+}
+
+export function ContentLoading({ rows = 8, children, className = '' }: ContentLoadingProps) {
   return (
-    <div className="rounded-[2rem] border border-slate-200 bg-white p-6 shadow-sm sm:p-8">
-      <div className="h-6 w-1/3 animate-pulse rounded-full bg-slate-200" />
-      <div className="mt-6 space-y-4">
+    <div className={['w-full space-y-2', className].filter(Boolean).join(' ')}>
+      <div className="h-8 w-1/3 animate-pulse rounded bg-slate-200" />
+      <div className="space-y-2">
         {Array.from({ length: rows }).map((_, i) => (
           <div
             key={i}
-            className="h-4 animate-pulse rounded-full bg-slate-200"
-            style={{ width: `${100 - (i % 3) * 20}%` }}
+            className="h-4 animate-pulse rounded bg-slate-100 last:w-3/4"
           />
         ))}
       </div>
+      {children}
     </div>
   )
 }

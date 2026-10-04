@@ -1,0 +1,24 @@
+---
+id: "002-paths-images"
+title: "Paths, Images, and Graphics"
+topic: "html"
+category: "资源与可访问性"
+difficulty: "medium"
+tags: ["week-1"]
+summary: "相对/绝对路径、alt 文本职责、SVG vs 位图选择"
+createdAt: "2026-09-28T12:10:00.000Z"
+---
+
+# Paths, Images, and Graphics
+
+Asset paths are interpreted relative to either the current document location or the site root. A relative path such as `images/logo.png` depends on the current file location, while `/images/logo.png` always resolves from the root of the site.
+
+Image authoring also includes accessibility responsibilities. `alt` text should communicate the image's purpose, not repeat vague words such as `image`. For content like a course logo, a short descriptive alternative is more helpful.
+
+HTML also introduces the difference between vector and bitmap graphics. SVG is usually preferred for icons, logos, and simple diagrams because it scales cleanly, while raster formats such as PNG and JPG store pixel data and are better suited to photo-like content.
+
+## Review Checklist
+
+- Trace whether a path is relative to the current file or the site root.
+- Write meaningful `alt` text for informative images.
+- Choose SVG for diagrams/logos and raster formats for photographs.
