@@ -1,193 +1,291 @@
 {
-  "week": "week-1",
+  "topic": "html",
   "exams": [
     {
-      "id": "week-1-mock-1",
-      "title": "Week 1 真题套卷 1",
+      "id": "2026T3-QUIZ1",
+      "title": "2026 Term 3 Quiz 1",
+      "description": "Comprehensive mock exam covering HTML, CSS, and JS.",
+      "totalMarks": 59,
       "questions": [
         {
-          "id": "W1-M1-Q1",
-          "question": "在 HTML 基本文档中，`<head>` 和 `<body>` 的职责分别是什么？",
-          "knowledgePoint": "HTML 文档结构",
-          "answerExplanation": "`<head>` 放文档元信息，`<body>` 放页面主体内容。",
-          "codeBlocks": [],
-          "images": []
-        },
-        {
-          "id": "W1-M1-Q2",
-          "question": "比较 `<div>Title</div>` 与 `<h1>Title</h1>` 作为页面主标题的差异。",
-          "knowledgePoint": "语义标签（标题）",
-          "answerExplanation": "`<h1>` 有一级标题语义，适合作为主标题；`<div>` 是通用容器。",
-          "codeBlocks": [],
-          "images": []
-        },
-        {
-          "id": "W1-M1-Q3",
-          "question": "解释 `src=\"images/logo.png\"` 与 `src=\"/images/logo.png\"` 的区别。",
-          "knowledgePoint": "相对路径与根路径",
-          "answerExplanation": "`images/...` 相对当前页面目录；`/images/...` 从站点根目录解析。",
-          "codeBlocks": [],
-          "images": []
-        },
-        {
-          "id": "W1-M1-Q4",
-          "question": "课程 logo 的 `alt` 写成 `alt=\"image\"` 是否合理？说明原因。",
-          "knowledgePoint": "alt 文本质量",
-          "answerExplanation": "不合理，过于空泛。应写能传达图片信息的描述，如 `COMP6080 course logo`。",
-          "codeBlocks": [],
-          "images": []
-        },
-        {
-          "id": "W1-M1-Q5",
-          "question": "为什么图标类资源通常优先考虑 SVG？",
-          "knowledgePoint": "SVG 与位图差异",
-          "answerExplanation": "SVG 是矢量图，缩放清晰，适合图标/线条图。",
-          "codeBlocks": [],
-          "images": []
-        },
-        {
-          "id": "W1-M1-Q6",
-          "question": "下面哪段结构语义更清晰？为什么？",
-          "knowledgePoint": "结构语义化",
-          "answerExplanation": "第二段更清晰，`header/nav/footer` 直接表达页面区域角色。",
-          "codeBlocks": [
+          "id": "Q1",
+          "title": "The four rules below all set the colour of the same button.",
+          "marks": 8,
+          "contentMdx": "```\n<button class=\"important\" id=\"confirm\">Delete Account</button>\n\nCSS:\n\nbutton {\n    color: blue;\n}\n\n.important {\n    color: red;\n}\n\n#confirm {\n    color: green;\n}\n\nbutton.important {\n    color: orange;\n}\n```",
+          "subQuestions": [
             {
-              "language": "html",
-              "code": "<div class=\"header\">A</div><div class=\"nav\">B</div><div class=\"footer\">C</div>"
+              "id": "Q1-a",
+              "label": "(a)",
+              "marks": 3,
+              "questionMdx": "What colour is the button text, and how does the browser choose between the four rules? Explain what it compares and why source order does not decide the result here.",
+              "answerMdx": "The button text is GREEN.\nID always takes precedent over classes and type selectors.\nThe order does not matter unless it's two tied things (e.g. .important and button.important)",
+              "markingMdx": "1 mark for identifying the text as green.\n1 mark for explaining about precedent\n1 mark for highlighting order only matters with a tie"
             },
             {
-              "language": "html",
-              "code": "<header>A</header><nav>B</nav><footer>C</footer>"
-            }
-          ],
-          "images": []
-        },
-        {
-          "id": "W1-M1-Q7",
-          "question": "解释 `<code>` 与 `<pre>` 的区别和配合场景。",
-          "knowledgePoint": "<code> 与 <pre>",
-          "answerExplanation": "`<code>` 表示代码语义，`<pre>` 保留空格换行，常一起展示代码块。",
-          "codeBlocks": [],
-          "images": []
-        },
-        {
-          "id": "W1-M1-Q8",
-          "question": "判断：`.note { color: red; }` 与 `p { color: blue; }` 同时命中 `<p class=\"note\">` 时最终颜色是什么？",
-          "knowledgePoint": "CSS 优先级",
-          "answerExplanation": "红色。类选择器 `.note` 优先级高于元素选择器 `p`。",
-          "codeBlocks": [],
-          "images": []
-        },
-        {
-          "id": "W1-M1-Q9",
-          "question": "解释 `margin` 与 `padding` 的区别，并说明“按钮太挤”应先调哪一个。",
-          "knowledgePoint": "盒模型（margin/padding）",
-          "answerExplanation": "`padding` 是内部留白，`margin` 是外部间距。按钮太挤先调 `padding`。",
-          "codeBlocks": [],
-          "images": []
-        },
-        {
-          "id": "W1-M1-Q10",
-          "question": "判断：只要写 `z-index: 9999` 就一定在最上层。对还是错？为什么？",
-          "knowledgePoint": "z-index 与层叠上下文",
-          "answerExplanation": "错误。`z-index` 受定位与层叠上下文限制，不是只比数字。",
-          "codeBlocks": [],
-          "images": []
-        }
-      ]
-    },
-    {
-      "id": "week-1-mock-2",
-      "title": "Week 1 真题套卷 2",
-      "questions": [
-        {
-          "id": "W1-M2-Q1",
-          "question": "为什么课程 Week 1 先讲 HTML/CSS，而不是直接讲框架？",
-          "knowledgePoint": "学习路径（基础先行）",
-          "answerExplanation": "框架建立在 HTML/CSS/JS 基础之上，先打牢结构和样式才能理解后续抽象。",
-          "codeBlocks": [],
-          "images": []
-        },
-        {
-          "id": "W1-M2-Q2",
-          "question": "指出下面代码的两个问题并修正。",
-          "knowledgePoint": "图片标签完整性",
-          "answerExplanation": "问题一是 `src` 不完整，问题二是缺少 `alt`。可改为 `<img src=\"logo.png\" alt=\"Course logo\">`。",
-          "codeBlocks": [
-            {
-              "language": "html",
-              "code": "<img src=\"logo\">"
+              "id": "Q1-b",
+              "label": "(b)",
+              "marks": 1,
+              "questionMdx": "The student cannot change the id rule, so they add !important to the first rule. What colour is the text now?",
+              "answerMdx": "The button text becomes BLUE.",
+              "markingMdx": "1 mark for identifying the text as blue."
             },
             {
-              "language": "html",
-              "code": "<img src=\"logo.png\" alt=\"Course logo\">"
+              "id": "Q1-c",
+              "label": "(c)",
+              "marks": 2,
+              "questionMdx": "Why does routinely using !important cause problems? Describe what a developer should usually do when a rule is not taking effect.",
+              "answerMdx": "It ends the conversation. Once a declaration is important, the only ways to override\nit are another !important or an inline style, so the next person with a legitimate\nreason to change that colour has to escalate too. Stylesheets that use it accumulate\n!important on top of !important until specificity no longer means anything and the\ncascade cannot be reasoned about at all.\n\nIf a rule is not taking effect, the developer should inspect the element in the\nbrowser dev tools, check which rule is winning in the cascade, and then fix the\nnormal CSS by changing the selector, specificity, or source order instead of\nadding !important as a shortcut.",
+              "markingMdx": "1 mark for explaining one real problem caused by routinely using `!important`.\n1 mark for describing what to do instead, including diagnosing with dev tools or\nfixing the selector rather than just \"try harder\"."
             }
-          ],
-          "images": []
+          ]
         },
         {
-          "id": "W1-M2-Q3",
-          "question": "判断：SVG 和 JPG 的主要区别只是文件后缀。对还是错？解释原因。",
-          "knowledgePoint": "图片格式本质差异",
-          "answerExplanation": "错误。SVG 是矢量图，JPG 是位图，存储与缩放表现不同。",
-          "codeBlocks": [],
-          "images": []
+          "id": "Q2",
+          "title": "A badge is positioned over a photo.",
+          "marks": 6,
+          "contentMdx": "```\n<div class=\"phone\">\n  <div class=\"hero\">\n    <img class=\"photo\" src=\"assets/beach.jpg\" alt=\"Bondi Beach at sunrise\">\n    <div class=\"badge\">NEW</div>\n  </div>\n</div>\n\nCSS:\n\n.phone {\n  width: 400px;\n  margin: 0 auto;\n}\n\n.hero {\n  position: relative;\n  height: 300px;\n}\n\n.photo {\n  width: 100%;\n  height: 100%;\n  object-fit: cover;\n}\n\n.badge {\n  position: absolute;\n  top: 20px;\n  right: 20px;\n  width: 80px;\n  height: 40px;\n}\n```",
+          "subQuestions": [
+            {
+              "id": "Q2-a",
+              "label": "(a)",
+              "marks": 2,
+              "questionMdx": "The badge is positioned 20px from the hero's right edge. How many pixels from the hero's left edge is the badge's left edge? Show where the hero's width comes from and why it is needed for the calculation.",
+              "answerMdx": "300px.\n\nright: 20px pins the badge's RIGHT edge 20px in from the hero's right edge, and\nthe badge is 80px wide, so its left edge sits at:\n\n  400 - 20 - 80 = 300px",
+              "markingMdx": "1 mark for calculating the badge's left edge as 300px.\n1 mark for explaining it."
+            },
+            {
+              "id": "Q2-b",
+              "label": "(b)",
+              "marks": 2,
+              "questionMdx": "The developer removes position relative from the hero. Where does the badge move, and what are top and right now measured against?",
+              "answerMdx": "The badge ends up in the top right corner of the page — 20px from the top and\n20px from the right of the window — rather than in the corner of the hero. Absolute will\nattach to the nearest previous relative.",
+              "markingMdx": "1 mark for stating where the badge moves: the top right of the page or viewport.\n1 mark for explaining that the offsets are measured from the nearest positioned\nancestor, or from the initial containing block when there is none."
+            }
+          ]
         },
         {
-          "id": "W1-M2-Q4",
-          "question": "解释为什么 `<meta>` 通常写在 `<head>` 中。",
-          "knowledgePoint": "文档元信息位置",
-          "answerExplanation": "`meta` 属于文档头部配置，不是正文内容，浏览器在解析文档头时读取。",
-          "codeBlocks": [],
-          "images": []
+          "id": "Q3",
+          "title": "Determine the size and spacing of the two blocks below. Each element has its natural height unless a height is specified, and the page is wider than 600px.",
+          "marks": 6,
+          "contentMdx": "```\n<body>\n  <div class=\"card\">\n    <h2>Sydney</h2>\n    <p>Population 5.3 million.</p>\n  </div>\n  <div class=\"note\">Data collected in 2021.</div>\n</body>\n\nCSS:\n\nbody {\n  margin: 0;\n}\n\n.card {\n  width: 400px;\n  padding: 0 20px;\n  border: 2px solid #333333;\n  margin-bottom: 40px;\n}\n\n.card h2 {\n  margin: 24px 0;\n}\n\n.note {\n  margin-top: 25px;\n}\n```",
+          "subQuestions": [
+            {
+              "id": "Q3-a",
+              "label": "(a)",
+              "marks": 2,
+              "questionMdx": "Calculate the card's total width in pixels, showing your working. Then state its total width if box-sizing were set to border-box.",
+              "answerMdx": "444px.\n\nwidth: 400px sets the CONTENT box, because box-sizing defaults to content-box.\nThe padding and the border are then added outside it:\n\n  400 (content) + 20 + 20 (padding) + 2 + 2 (border) = 444px",
+              "markingMdx": "1 mark for calculating 444px\n1 mark for working shown."
+            }
+          ]
         },
         {
-          "id": "W1-M2-Q5",
-          "question": "为什么 `#warning { ... }` 不会命中 `<p class=\"warning\">`？",
-          "knowledgePoint": "选择器匹配",
-          "answerExplanation": "`#warning` 是 id 选择器，而 `class=\"warning\"` 需要 `.warning`。",
-          "codeBlocks": [],
-          "images": []
+          "id": "Q4",
+          "title": "A website remembers whether the user chose dark mode.",
+          "marks": 6,
+          "contentMdx": "```\n<button id=\"dark\">Dark mode</button>\n\nJS:\n\nconst savedTheme = localStorage.getItem('theme');\nif (savedTheme === 'dark') {\n  document.body.classList.add('dark');\n}\n\ndocument.getElementById('dark').addEventListener('click', () => {\n  document.body.classList.add('dark');\n  localStorage.setItem('theme', 'dark');\n});\n```",
+          "subQuestions": [
+            {
+              "id": "Q4-a",
+              "label": "(a)",
+              "marks": 2,
+              "questionMdx": "A user visits the site for the first time. What does `localStorage.getItem('theme')` return, and is the page shown in dark mode?",
+              "answerMdx": "It returns null, because nothing has been saved under 'theme' yet.\nThe if condition is false, so the page is NOT in dark mode.",
+              "markingMdx": "1 mark for stating getItem returns null.\n1 mark for stating the page is not in dark mode."
+            },
+            {
+              "id": "Q4-b",
+              "label": "(b)",
+              "marks": 2,
+              "questionMdx": "The user clicks the button, closes the browser, and comes back the next day. Is the page in dark mode? Explain why.",
+              "answerMdx": "Yes, the page is in dark mode.\nsetItem saved 'dark' in localStorage, which stays in the browser even after it\nis closed. When the page loads, getItem returns 'dark' and the class is added.",
+              "markingMdx": "1 mark for stating the page is in dark mode.\n1 mark for explaining that localStorage keeps data after the browser is closed."
+            },
+            {
+              "id": "Q4-c",
+              "label": "(c)",
+              "marks": 2,
+              "questionMdx": "The developer deletes the `localStorage.setItem` line. What happens now when the user clicks the button and then reloads the page?",
+              "answerMdx": "Clicking still turns the page dark, but after reloading it goes back to light.\nWithout setItem the choice is never saved, so getItem returns null on reload.",
+              "markingMdx": "1 mark for stating the page goes back to light mode after reloading.\n1 mark for explaining that the choice is no longer saved to localStorage."
+            }
+          ]
         },
         {
-          "id": "W1-M2-Q6",
-          "question": "元素设置 `width: 200px; padding: 20px; border: 5px solid;`，为什么总占宽不止 200px？",
-          "knowledgePoint": "盒模型计算",
-          "answerExplanation": "默认盒模型下 `width` 仅是内容宽度，总宽还包含左右 `padding` 与 `border`。",
-          "codeBlocks": [],
-          "images": []
+          "id": "Q5",
+          "title": "A button shows a message when it is clicked.",
+          "marks": 6,
+          "contentMdx": "```\n<button id=\"greet\">Say hello</button>\n<p id=\"message\"></p>\n\nJS:\n\nconst button = document.getElementById('greet');\nconst message = document.getElementById('message');\n\nfunction showMessage() {\n  message.textContent = 'Hello!';\n}\n\nbutton.addEventListener('click', showMessage);\n```",
+          "subQuestions": [
+            {
+              "id": "Q5-a",
+              "label": "(a)",
+              "marks": 2,
+              "questionMdx": "What does the user see when the page first loads, and what happens when they click the button?",
+              "answerMdx": "When the page loads the paragraph is empty, so no message is shown.\nWhen the button is clicked, showMessage runs and \"Hello!\" appears in the paragraph.",
+              "markingMdx": "1 mark for stating no message is shown on load.\n1 mark for stating \"Hello!\" appears when the button is clicked."
+            },
+            {
+              "id": "Q5-b",
+              "label": "(b)",
+              "marks": 2,
+              "questionMdx": "The developer changes the last line to `button.addEventListener('click', showMessage());`. What happens now, and why?",
+              "answerMdx": "\"Hello!\" appears straight away when the page loads, without any click.\nThe brackets call showMessage immediately instead of passing the function to\naddEventListener, so it is not run when the button is clicked.",
+              "markingMdx": "1 mark for stating the message appears immediately on page load.\n1 mark for explaining that the brackets call the function straight away."
+            },
+            {
+              "id": "Q5-c",
+              "label": "(c)",
+              "marks": 2,
+              "questionMdx": "The developer changes `'click'` to `'mouseover'`. When does the message appear now?",
+              "answerMdx": "The message appears when the user moves their mouse over the button, without\nneeding to click it. The event name decides which user action runs the function.",
+              "markingMdx": "1 mark for stating the message appears when the mouse moves over the button.\n1 mark for explaining that the event name controls when the function runs."
+            }
+          ]
         },
         {
-          "id": "W1-M2-Q7",
-          "question": "`display: flex` 通常加在父元素还是子元素？它主要影响谁？",
-          "knowledgePoint": "Flex 容器与子项关系",
-          "answerExplanation": "通常加在父元素，主要影响子元素如何排列和对齐。",
-          "codeBlocks": [],
-          "images": []
+          "id": "Q6",
+          "title": "A sign-up form shows a welcome message.",
+          "marks": 6,
+          "contentMdx": "```\n<form id=\"signup\">\n  <input id=\"name\" type=\"text\">\n  <button type=\"submit\">Sign up</button>\n</form>\n<p id=\"output\"></p>\n\nJS:\n\nconst form = document.getElementById('signup');\n\nform.addEventListener('submit', (event) => {\n  event.preventDefault();\n  const name = document.getElementById('name').value;\n  document.getElementById('output').textContent = 'Welcome, ' + name;\n});\n```",
+          "subQuestions": [
+            {
+              "id": "Q6-a",
+              "label": "(a)",
+              "marks": 2,
+              "questionMdx": "The user types `Sam` into the box and clicks Sign up. What is shown on the page? Explain where the name comes from.",
+              "answerMdx": "\"Welcome, Sam\" is shown in the paragraph.\n.value reads the text the user typed into the input box.",
+              "markingMdx": "1 mark for stating \"Welcome, Sam\".\n1 mark for explaining that .value gives the text typed into the input."
+            },
+            {
+              "id": "Q6-b",
+              "label": "(b)",
+              "marks": 2,
+              "questionMdx": "The developer deletes the `event.preventDefault();` line. What happens now when the form is submitted?",
+              "answerMdx": "The browser submits the form the normal way and reloads the page, so the\nwelcome message disappears straight away (or is never seen).\npreventDefault is what stops the browser's default submit behaviour.",
+              "markingMdx": "1 mark for stating the page reloads and the message disappears.\n1 mark for explaining that preventDefault stops the default form submission."
+            },
+            {
+              "id": "Q6-c",
+              "label": "(c)",
+              "marks": 2,
+              "questionMdx": "The developer wants to stop the form from being submitted when the name box is empty, without writing any JavaScript. What should they add to the HTML, and what happens if the user then clicks Sign up with the box empty?",
+              "answerMdx": "Add the required attribute to the input:\n\n  <input id=\"name\" type=\"text\" required>\n\nThe browser then stops the form from submitting and shows a message asking the\nuser to fill in the field, so no welcome message is shown.",
+              "markingMdx": "1 mark for adding the required attribute to the input.\n1 mark for stating the browser blocks the submission and shows a warning."
+            }
+          ]
         },
         {
-          "id": "W1-M2-Q8",
-          "question": "解释 `justify-content` 和 `align-items` 的区别。",
-          "knowledgePoint": "Flex 主轴与交叉轴",
-          "answerExplanation": "`justify-content` 管主轴分布，`align-items` 管交叉轴对齐。",
-          "codeBlocks": [],
-          "images": []
+          "id": "Q7",
+          "title": "A page changes its layout on small screens.",
+          "marks": 6,
+          "contentMdx": "```\n<head>\n  <meta name=\"viewport\" content=\"width=device-width, initial-scale=1\">\n</head>\n<body>\n  <h1 class=\"title\">My Blog</h1>\n  <nav class=\"menu\">Home | Posts | About</nav>\n</body>\n\nCSS:\n\n.title {\n  font-size: 32px;\n}\n\n.menu {\n  display: block;\n}\n\n@media (max-width: 600px) {\n  .title {\n    font-size: 20px;\n  }\n\n  .menu {\n    display: none;\n  }\n}\n```",
+          "subQuestions": [
+            {
+              "id": "Q7-a",
+              "label": "(a)",
+              "marks": 2,
+              "questionMdx": "The page is viewed on a laptop with a screen 1000px wide. What size is the title, and is the menu shown? Explain why.",
+              "answerMdx": "The title is 32px and the menu is shown.\nThe screen is wider than 600px, so the rules inside the media query do not apply.",
+              "markingMdx": "1 mark for stating 32px and the menu is shown.\n1 mark for explaining the media query does not apply above 600px."
+            },
+            {
+              "id": "Q7-b",
+              "label": "(b)",
+              "marks": 2,
+              "questionMdx": "The page is viewed on a phone with a screen 400px wide. What size is the title, and is the menu shown? Explain why.",
+              "answerMdx": "The title is 20px and the menu is hidden.\nThe screen is 600px or narrower, so the rules inside the media query apply and\noverride the earlier rules.",
+              "markingMdx": "1 mark for stating 20px and the menu is hidden.\n1 mark for explaining the media query applies at 600px or below."
+            },
+            {
+              "id": "Q7-c",
+              "label": "(c)",
+              "marks": 2,
+              "questionMdx": "What is the purpose of the `<meta name=\"viewport\">` tag in the head?",
+              "answerMdx": "It tells the phone to use its real screen width for the page instead of\npretending to be a wide desktop screen and zooming out. Without it, the phone\nmay not match max-width: 600px, so the mobile styles would not apply.",
+              "markingMdx": "1 mark for explaining it makes the page use the device's real width.\n1 mark for explaining that without it the mobile styles may not apply."
+            }
+          ]
         },
         {
-          "id": "W1-M2-Q9",
-          "question": "为什么卡片横向排列更适合用 Flexbox，而不是给每张卡片手写大量 `margin-left`？",
-          "knowledgePoint": "Flexbox 布局稳定性",
-          "answerExplanation": "Flexbox 对空间变化更自适应，手写固定边距在不同屏幕下更容易错位。",
-          "codeBlocks": [],
-          "images": []
+          "id": "Q8",
+          "title": "A simple web page about a trip.",
+          "marks": 4,
+          "contentMdx": "```\n<!DOCTYPE html>\n<html lang=\"en\">\n  <head>\n    <title>My Trip</title>\n  </head>\n  <body>\n    <h1>Trip to Sydney</h1>\n    <img src=\"opera.jpg\">\n    <ul>\n      <li>Opera House</li>\n      <li>Harbour Bridge</li>\n    </ul>\n  </body>\n</html>\n```",
+          "subQuestions": [
+            {
+              "id": "Q8-a",
+              "label": "(a)",
+              "marks": 2,
+              "questionMdx": "Where does the text \"My Trip\" appear, and where does \"Trip to Sydney\" appear?",
+              "answerMdx": "\"My Trip\" appears in the browser tab, because it is inside <title> in the head.\n\"Trip to Sydney\" appears on the page itself as the main heading, because it is\ninside <h1> in the body.",
+              "markingMdx": "1 mark for stating \"My Trip\" appears in the browser tab.\n1 mark for stating \"Trip to Sydney\" appears on the page as a heading."
+            },
+            {
+              "id": "Q8-b",
+              "label": "(b)",
+              "marks": 2,
+              "questionMdx": "The developer wants the list to be numbered 1, 2 instead of using bullet points. What should they change?",
+              "answerMdx": "Change <ul> to <ol> (and </ul> to </ol>).\nul is an unordered list shown with bullets; ol is an ordered list shown with numbers.",
+              "markingMdx": "1 mark for changing ul to ol.\n1 mark for explaining the difference between unordered and ordered lists."
+            }
+          ]
         },
         {
-          "id": "W1-M2-Q10",
-          "question": "预处理器（Sass/SCSS）在样式维护上的主要价值是什么？",
-          "knowledgePoint": "CSS Preprocessors 价值",
-          "answerExplanation": "可通过变量、嵌套、复用减少重复，提升样式组织性和统一修改效率。",
-          "codeBlocks": [],
-          "images": []
+          "id": "Q9",
+          "title": "A student uses browser dev tools to work out why their page is broken.",
+          "marks": 4,
+          "contentMdx": "",
+          "subQuestions": [
+            {
+              "id": "Q9-a",
+              "label": "(a)",
+              "marks": 2,
+              "questionMdx": "The student selects a heading in the Elements panel. In the Styles pane, their rule `color: red` is shown with a line through it. What does the line mean, and how can they find out which rule is actually setting the colour?",
+              "answerMdx": "The line means the declaration matched the element but was overridden by\nanother rule, for example one with higher specificity or one that comes later.\nThey can look for the rule higher up in the Styles pane that is not crossed out,\nor open the Computed tab to see the final colour and which rule it came from.",
+              "markingMdx": "1 mark for explaining that the rule was overridden by another rule.\n1 mark for describing how to find the winning rule (Styles pane or Computed tab)."
+            },
+            {
+              "id": "Q9-c",
+              "label": "(c)",
+              "marks": 2,
+              "questionMdx": "The student fixes the colour by editing it directly in the Styles pane, and the page looks right. When they reload the page, the fix is gone. Why, and what should they do?",
+              "answerMdx": "Changes made in dev tools only affect the copy of the page currently open in\nthe browser. They are not saved to the student's CSS file, so reloading loads\nthe original file again. They need to make the same change in their CSS file\nand save it.",
+              "markingMdx": "1 mark for explaining dev tools edits are not saved to the source files.\n1 mark for stating the change must be copied into the actual CSS file."
+            }
+          ]
+        },
+        {
+          "id": "Q10",
+          "title": "A developer chooses image formats for a website.",
+          "marks": 7,
+          "contentMdx": "The site needs three images:\n\n- a large photo of a beach at sunset\n- the company logo, with a transparent background, which must stay sharp at any size\n- a small animated loading icon",
+          "subQuestions": [
+            {
+              "id": "Q10-a",
+              "label": "(a)",
+              "marks": 3,
+              "questionMdx": "Choose the most suitable format for each image from JPG, PNG, GIF and SVG. Give a reason for each choice.",
+              "answerMdx": "Beach photo: JPG. It uses lossy compression, which keeps photos with lots of\ncolours and detail at a small file size.\n\nLogo: SVG. It is a vector format, so it stays sharp at any size, and it supports\ntransparency.\n\nLoading icon: GIF. It supports simple animation.",
+              "markingMdx": "1 mark for each correct format with a valid reason.\nAccept PNG for the logo only if transparency is mentioned (but it will not\nscale sharply). Accept SVG or WebP for the loading icon if animation is mentioned."
+            },
+            {
+              "id": "Q10-b",
+              "label": "(b)",
+              "marks": 2,
+              "questionMdx": "The developer saves the beach photo as a PNG instead, and the file is about five times bigger. It also looks no better. Explain why.",
+              "answerMdx": "PNG is lossless, so it keeps every pixel exactly. A photo has lots of fine\ndetail and colour changes, which lossless compression cannot shrink well.\nJPG throws away detail the eye barely notices, so it is much smaller while\nlooking almost the same.",
+              "markingMdx": "1 mark for explaining PNG is lossless and keeps all the detail.\n1 mark for explaining JPG discards detail people do not notice, making it smaller."
+            },
+            {
+              "id": "Q10-c",
+              "label": "(c)",
+              "marks": 2,
+              "questionMdx": "Someone saves the logo as a JPG instead. On the site's dark blue header it now has a white box around it, and it looks blurry when shown larger. Explain both problems.",
+              "answerMdx": "White box: JPG does not support transparency, so the transparent background\nis filled in with a solid colour (white).\n\nBlurry: JPG is a raster format made of a fixed number of pixels. Showing it\nlarger stretches those pixels, so it looks blurry or blocky. An SVG is\ndrawn from shapes, so it can be redrawn sharply at any size.",
+              "markingMdx": "1 mark for explaining JPG has no transparency.\n1 mark for explaining raster images blur when scaled up, unlike vector images."
+            }
+          ]
         }
       ]
     }
