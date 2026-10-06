@@ -1,54 +1,55 @@
-// @ts-nocheck
 import { render, screen } from '@testing-library/react'
-import { userEvent } from '@testing-library/user-event'
-import { describe, expect, it } from 'vitest'
+import { describe, expect, it, vi } from 'vitest'
 
 import { ExamPaper } from './ExamPaper'
-import type { MockExam } from '../../types/content'
+import type { ExamPaper as ExamPaperType } from '../../types/content'
 
-const fixture: MockExam = {
+// Mock ExamQuestionCard
+vi.mock('./ExamQuestionCard', () => ({
+  ExamQuestionCard: ({ question }: { question: any }) => (
+    <div data-testid={`question-card-${question.id}`}>{question.title}</div>
+  )
+}))
+
+const fixture: ExamPaperType = {
   id: 'W1-TEST',
   title: 'Test Paper',
+  description: 'Test paper description',
+  totalMarks: 30,
   questions: [
     {
       id: 'Q1',
-      question: 'What is HTML?',
-      knowledgePoint: 'HTML basics',
-      answerExplanation: 'Hypertext Markup Language.',
-      codeBlocks: [],
-      images: [],
+      title: 'Question 1',
+      marks: 15,
+      contentMdx: 'Content 1',
+      subQuestions: []
     },
     {
       id: 'Q2',
-      question: 'What is CSS?',
-      knowledgePoint: 'CSS basics',
-      answerExplanation: 'Cascading Style Sheets.',
-      codeBlocks: [],
-      images: [],
+      title: 'Question 2',
+      marks: 15,
+      contentMdx: 'Content 2',
+      subQuestions: []
     },
   ],
 }
 
-describe('ExamPaper view mode tabs', () => {
-  it('defaults to split view (both panels rendered)', () => {
+describe('ExamPaper', () => {
+  it('renders exam title, description and total marks', () => {
     render(<ExamPaper exam={fixture} />)
-    expect(screen.getByRole('heading', { name: '题目' })).toBeInTheDocument()
-    expect(screen.getByRole('heading', { name: '答案' })).toBeInTheDocument()
-    const split = screen.getByRole('tab', { name: '分屏对照' }) as HTMLButtonElement
-    expect(split).toHaveAttribute('aria-selected', 'true')
+    
+    expect(screen.getByText('Test Paper')).toBeInTheDocument()
+    expect(screen.getByText('Test paper description')).toBeInTheDocument()
+    expect(screen.getByText('30 marks')).toBeInTheDocument()
   })
-  it('hides answers when "仅题目" tab is selected', async () => {
-    const user = userEvent.setup()
+
+  it('renders question cards for all questions', () => {
     render(<ExamPaper exam={fixture} />)
-    await user.click(screen.getByRole('tab', { name: '仅题目' }))
-    expect(screen.queryByRole('heading', { name: '答案' })).not.toBeInTheDocument()
-    expect(screen.getByRole('heading', { name: '题目' })).toBeInTheDocument()
-  })
-  it('hides questions when "仅答案" tab is selected', async () => {
-    const user = userEvent.setup()
-    render(<ExamPaper exam={fixture} />)
-    await user.click(screen.getByRole('tab', { name: '仅答案' }))
-    expect(screen.queryByRole('heading', { name: '题目' })).not.toBeInTheDocument()
-    expect(screen.getByRole('heading', { name: '答案' })).toBeInTheDocument()
+    
+    expect(screen.getByTestId('question-card-Q1')).toBeInTheDocument()
+    expect(screen.getByText('Question 1')).toBeInTheDocument()
+    
+    expect(screen.getByTestId('question-card-Q2')).toBeInTheDocument()
+    expect(screen.getByText('Question 2')).toBeInTheDocument()
   })
 })

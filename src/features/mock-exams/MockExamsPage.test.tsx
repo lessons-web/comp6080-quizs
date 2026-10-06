@@ -16,21 +16,19 @@ vi.mock('react-router-dom', async () => {
 
 vi.mock('../../lib/content/mockExams', () => ({
   getMockExamsByWeek: vi.fn().mockResolvedValue({
-    week: 'week-1',
+    topic: 'html',
     exams: [
       {
         id: 'week-1-mock-1',
         title: 'Week 1 真题套卷 1',
+        totalMarks: 20,
         questions: [
           {
             id: 'W1-M1-Q1',
-            question:
-              '在 HTML 基本文档中，`<head>` 和 `<body>` 的职责分别是什么？',
-            knowledgePoint: 'HTML 文档结构',
-            answerExplanation:
-              '`<head>` 放文档元信息，`<body>` 放页面主体内容。',
-            codeBlocks: [],
-            images: [],
+            title: 'Q1. HTML & CSS (20 marks)',
+            marks: 20,
+            contentMdx: 'This is the question content.',
+            subQuestions: []
           },
         ],
       },
@@ -47,23 +45,13 @@ describe('MockExamsPage', () => {
     render(<RouterProvider router={router} />)
 
     expect(
-      await screen.findByRole('heading', { level: 2, name: 'Week 1 真题套卷 1' }),
+      await screen.findByRole('heading', { level: 3, name: 'Week 1 真题套卷 1' }),
     ).toBeInTheDocument()
-    const firstExamPaper = screen
-      .getByRole('heading', { level: 2, name: 'Week 1 真题套卷 1' })
-      .closest('article')
-
-    expect(firstExamPaper).not.toBeNull()
+    
     expect(
-      within(firstExamPaper as HTMLElement).getByRole('heading', {
+      screen.getByRole('heading', {
         level: 3,
-        name: '题目',
-      }),
-    ).toBeInTheDocument()
-    expect(
-      within(firstExamPaper as HTMLElement).getByRole('heading', {
-        level: 3,
-        name: '答案',
+        name: 'Q1. HTML & CSS (20 marks)',
       }),
     ).toBeInTheDocument()
   })
