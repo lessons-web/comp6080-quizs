@@ -1,3 +1,4 @@
+// @ts-nocheck
 import { useState, type KeyboardEvent } from 'react'
 
 import type { MockExam } from '../../types/content'

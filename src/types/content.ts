@@ -68,11 +68,14 @@ export interface PracticeQuestion {
   id: string
   topic: TopicId
   weeks: WeekTag[]
+  difficulty: Difficulty
+  tags: string[]
   question: string
   knowledgePoint: string
   answerExplanation: string
   codeBlocks: ContentCodeBlock[]
   images: ContentImage[]
+  createdAt: string
 }
 
 export interface PracticeQuestionCollection {
@@ -80,22 +83,32 @@ export interface PracticeQuestionCollection {
   questions: PracticeQuestion[]
 }
 
-export interface MockExamQuestion {
+export interface ExamSubQuestion {
   id: string
-  question: string
-  knowledgePoint: string
-  answerExplanation: string
-  codeBlocks: ContentCodeBlock[]
-  images: ContentImage[]
+  label: string
+  marks: number
+  questionMdx: string
+  answerMdx: string
+  markingMdx?: string
 }
 
-export interface MockExam {
+export interface ExamQuestion {
   id: string
   title: string
-  questions: MockExamQuestion[]
+  marks: number
+  contentMdx: string
+  subQuestions: ExamSubQuestion[]
+}
+
+export interface ExamPaper {
+  id: string
+  title: string
+  description?: string
+  totalMarks: number
+  questions: ExamQuestion[]
 }
 
 export interface MockExamCollection {
   topic: TopicId
-  exams: MockExam[]
+  exams: ExamPaper[]
 }
