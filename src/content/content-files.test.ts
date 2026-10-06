@@ -48,17 +48,16 @@ describe('content files', () => {
     const exams = readJson('content/exams/week-1.mock-exams.json')
     const week2Practice = readJson('content/questions/week-2.practice.json')
 
-    expect(exams.week).toBe('week-1')
+    expect(exams.topic).toBe('html')
     expect(exams.exams).toBeInstanceOf(Array)
-    expect((exams.exams as Array<{ questions: unknown[] }>)).toHaveLength(2)
+    expect((exams.exams as Array<{ questions: unknown[] }>)).toHaveLength(1)
     expect(
       (exams.exams as Array<{ questions: unknown[] }>)[0].questions[0],
     ).toMatchObject({
-      question: expect.any(String),
-      knowledgePoint: expect.any(String),
-      answerExplanation: expect.any(String),
-      codeBlocks: expect.any(Array),
-      images: expect.any(Array),
+      id: expect.any(String),
+      title: expect.any(String),
+      marks: expect.any(Number),
+      subQuestions: expect.any(Array),
     })
     expect(week2Practice.questions).toEqual([])
   })
