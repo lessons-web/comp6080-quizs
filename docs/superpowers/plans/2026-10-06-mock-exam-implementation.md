@@ -203,7 +203,7 @@ git commit -m "feat: parse 2026T3-QUIZ1 to JSON data"
 **文件：**
 - 创建：`src/features/mock-exams/ExamSubQuestionList.tsx`
 
-- [ ] **步骤 1：实现组件**
+- [x] **步骤 1：实现组件**
 
 ```tsx
 import { useState } from 'react'
@@ -269,7 +269,7 @@ export function ExamSubQuestionList({ subQuestions }: { subQuestions: ExamSubQue
 }
 ```
 
-- [ ] **步骤 2：Commit**
+- [x] **步骤 2：Commit**
 
 ```bash
 git add src/features/mock-exams/ExamSubQuestionList.tsx
@@ -284,7 +284,7 @@ git commit -m "feat: add ExamSubQuestionList with inline accordion"
 - 创建：`src/features/mock-exams/ExamQuestionCard.tsx`
 - 修改：`src/features/mock-exams/ExamPaper.tsx`
 
-- [ ] **步骤 1：实现 ExamQuestionCard**
+- [x] **步骤 1：实现 ExamQuestionCard**
 
 ```tsx
 import ReactMarkdown from 'react-markdown'
@@ -320,7 +320,7 @@ export function ExamQuestionCard({ question }: { question: ExamQuestion }) {
 }
 ```
 
-- [ ] **步骤 2：更新 ExamPaper.tsx**
+- [x] **步骤 2：更新 ExamPaper.tsx**
 
 替换旧的 `ExamPaper.tsx` 实现，以适配新的类型。
 
@@ -358,11 +358,11 @@ export function ExamPaper({ exam }: ExamPaperProps) {
 }
 ```
 
-- [ ] **步骤 3：验证类型无误**
+- [x] **步骤 3：验证类型无误**
 
 运行 `npx tsc --noEmit` 检查 `MockExamsPage.tsx` 是否存在因为 `ExamPaper` 类型变更而引起的报错（理论上直接遍历 `collection.exams` 并传递给 `ExamPaper` 不会报错）。
 
-- [ ] **步骤 4：Commit**
+- [x] **步骤 4：Commit**
 
 ```bash
 git add src/features/mock-exams/ExamQuestionCard.tsx src/features/mock-exams/ExamPaper.tsx
