@@ -86,9 +86,20 @@ export function MockExamsPage() {
                 className="group relative flex flex-col justify-between overflow-hidden rounded-3xl border border-slate-200 bg-white p-6 shadow-sm transition-all hover:border-blue-500 hover:shadow-md hover:-translate-y-1"
               >
                 <div>
-                  <h3 className="text-xl font-semibold text-slate-900 group-hover:text-blue-600">
-                    {exam.title}
-                  </h3>
+                  <div className="flex items-start justify-between gap-4">
+                    <h3 className="text-xl font-semibold text-slate-900 group-hover:text-blue-600">
+                      {exam.title}
+                    </h3>
+                    {exam.tags && exam.tags.length > 0 && (
+                      <div className="flex flex-wrap gap-2 shrink-0">
+                        {exam.tags.map(tag => (
+                          <span key={tag} className="inline-flex items-center rounded-full bg-blue-50 px-2.5 py-0.5 text-xs font-medium text-blue-700 ring-1 ring-inset ring-blue-700/10">
+                            {tag}
+                          </span>
+                        ))}
+                      </div>
+                    )}
+                  </div>
                   {exam.description && (
                     <p className="mt-3 text-sm text-slate-600 line-clamp-2">
                       {exam.description}

@@ -1,4 +1,4 @@
-import { render, screen, within } from '@testing-library/react'
+import { render, screen } from '@testing-library/react'
 import { RouterProvider, createMemoryRouter } from 'react-router-dom'
 import { describe, expect, it, vi } from 'vitest'
 
@@ -10,6 +10,7 @@ vi.mock('../../lib/content/mockExams', () => ({
       id: 'week-1-mock-1',
       title: 'Week 1 真题套卷 1',
       description: 'A test exam',
+      tags: ['真题'],
       totalMarks: 20,
       questions: [],
     },
@@ -37,5 +38,6 @@ describe('MockExamsPage', () => {
 
     expect(screen.getByText('A test exam')).toBeInTheDocument()
     expect(screen.getByText('总分: 20')).toBeInTheDocument()
+    expect(screen.getByText('真题')).toBeInTheDocument()
   })
 })

@@ -76,6 +76,7 @@ const paper = {
   id: "2026T3-QUIZ1",
   title: "2026 Term 3 Quiz 1",
   description: "Comprehensive mock exam covering HTML, CSS, and JS.",
+  tags: ["真题"],
   totalMarks: questions.reduce((acc, q) => acc + q.marks, 0),
   questions
 }

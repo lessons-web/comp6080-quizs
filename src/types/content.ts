@@ -104,6 +104,7 @@ export interface ExamPaper {
   id: string
   title: string
   description?: string
+  tags?: string[]
   totalMarks: number
   questions: ExamQuestion[]
 }
