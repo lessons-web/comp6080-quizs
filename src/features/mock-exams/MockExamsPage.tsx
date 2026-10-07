@@ -93,7 +93,11 @@ export function MockExamsPage() {
                     {exam.tags && exam.tags.length > 0 && (
                       <div className="flex flex-wrap gap-2 shrink-0">
                         {exam.tags.map(tag => (
-                          <span key={tag} className="inline-flex items-center rounded-full bg-blue-50 px-2.5 py-0.5 text-xs font-medium text-blue-700 ring-1 ring-inset ring-blue-700/10">
+                          <span key={tag} className={`inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium ring-1 ring-inset ${
+                            tag === '真题' 
+                              ? 'bg-red-50 text-red-700 ring-red-600/10'
+                              : 'bg-blue-50 text-blue-700 ring-blue-700/10'
+                          }`}>
                             {tag}
                           </span>
                         ))}

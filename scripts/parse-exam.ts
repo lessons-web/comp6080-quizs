@@ -16,8 +16,17 @@ const EXAMS_CONFIG = [
     input: 'quizs/mock-exam-1.md',
     output: 'content/exams/mock-exam-1.json',
     id: "MOCK-EXAM-1",
-    title: "Weeks 1-4 Mock Exam",
-    description: "A comprehensive mock exam covering the first four weeks of the course (HTML, CSS, JS, DOM, Fetch).",
+    title: "模拟试卷 1",
+    description: "基于前四周知识点（HTML, CSS, 响应式, JS 基础）的模拟试卷。",
+    tags: ["模拟题"],
+    topic: "javascript"
+  },
+  {
+    input: 'quizs/mock-exam-2.md',
+    output: 'content/exams/mock-exam-2.json',
+    id: "MOCK-EXAM-2",
+    title: "模拟试卷 2",
+    description: "基于前四周知识点（DOM, NPM, 事件冒泡, Fetch/Promise）的模拟试卷。",
     tags: ["模拟题"],
     topic: "javascript"
   }

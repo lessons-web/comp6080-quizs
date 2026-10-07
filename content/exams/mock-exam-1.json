@@ -3,8 +3,8 @@
   "exams": [
     {
       "id": "MOCK-EXAM-1",
-      "title": "Weeks 1-4 Mock Exam",
-      "description": "A comprehensive mock exam covering the first four weeks of the course (HTML, CSS, JS, DOM, Fetch).",
+      "title": "模拟试卷 1",
+      "description": "基于前四周知识点（HTML, CSS, 响应式, JS 基础）的模拟试卷。",
       "tags": [
         "模拟题"
       ],
@@ -12,7 +12,7 @@
       "questions": [
         {
           "id": "Q1",
-          "title": "A responsive navigation bar and hero section.",
+          "title": "响应式导航栏与首屏区域。",
           "marks": 8,
           "contentMdx": "```html\n<header class=\"navbar\">\n  <div class=\"logo\">MySite</div>\n  <nav class=\"links\">\n    <a href=\"#\">Home</a>\n    <a href=\"#\">About</a>\n  </nav>\n</header>\n<section class=\"hero\">\n  <div class=\"dropdown\">Menu</div>\n</section>\n\nCSS:\n\n.navbar {\n  display: flex;\n  justify-content: space-between;\n  padding: 10px 20px;\n  position: relative;\n  z-index: 10;\n}\n\n.hero {\n  position: relative;\n  z-index: 5;\n}\n\n@media (max-width: 600px) {\n  .navbar {\n    flex-direction: column;\n  }\n}\n```",
           "subQuestions": [
@@ -20,31 +20,31 @@
               "id": "Q1-a",
               "label": "(a)",
               "marks": 2,
-              "questionMdx": "In the `.navbar` class, what does `justify-content: space-between` do?",
-              "answerMdx": "It distributes the flex items (the logo and the nav links) along the main axis so that the first item is flush with the start edge and the last item is flush with the end edge, maximizing the space between them.",
-              "markingMdx": "1 mark for mentioning it distributes items along the main axis.\n1 mark for stating it puts maximum space between the items (logo on the left, links on the right)."
+              "questionMdx": "在 `.navbar` 类中，`justify-content: space-between` 的作用是什么？",
+              "answerMdx": "它的作用是沿主轴（水平方向）分布 flex 子元素（logo 和 nav 链接），使得第一个元素紧贴起始边缘，最后一个元素紧贴结束边缘，从而在它们之间留出最大的空白空间。",
+              "markingMdx": "1 mark for 提到沿主轴分布/对齐子元素。\n1 mark for 提到使得子元素分别靠两边对齐，中间留出最大空间。"
             },
             {
               "id": "Q1-b",
               "label": "(b)",
               "marks": 3,
-              "questionMdx": "When the page is viewed on a mobile device with a 400px screen width, how does the layout of the `.navbar` change and why?",
-              "answerMdx": "The layout changes from a horizontal row to a vertical column.\nThis happens because the screen width (400px) is less than 600px, so the media query applies, changing `flex-direction` to `column`.",
-              "markingMdx": "1 mark for stating the layout becomes vertical/column.\n2 marks for explaining that the media query `max-width: 600px` applies and overrides the default flex-direction."
+              "questionMdx": "当在一个屏幕宽度为 400px 的移动设备上查看该页面时，`.navbar` 的布局会发生什么变化？为什么？",
+              "answerMdx": "布局会从水平排列的行（row）变为垂直排列的列（column）。\n发生这种情况是因为屏幕宽度（400px）小于 600px，因此触发了媒体查询 `@media (max-width: 600px)`，将 `flex-direction` 更改为 `column`。",
+              "markingMdx": "1 mark for 说明布局变为垂直/列（column）。\n2 marks for 解释因为屏幕小于 600px 触发了媒体查询，覆盖了默认的 flex-direction。"
             },
             {
               "id": "Q1-c",
               "label": "(c)",
               "marks": 3,
-              "questionMdx": "Why is `z-index` used on both `.navbar` and `.hero`? Which one will appear on top if they overlap?",
-              "answerMdx": "`z-index` is used to control the stacking order of positioned elements along the z-axis.\nBecause both have `position: relative`, they form stacking contexts. The `.navbar` has a higher z-index (10) than the `.hero` (5), so the navbar will appear on top if they overlap.",
-              "markingMdx": "1 mark for explaining z-index controls stacking order.\n1 mark for noting they are both positioned elements.\n1 mark for correctly stating `.navbar` appears on top because 10 > 5."
+              "questionMdx": "为什么 `.navbar` 和 `.hero` 都使用了 `z-index`？如果它们发生重叠，哪一个会显示在最上面？",
+              "answerMdx": "`z-index` 用于控制定位元素在 Z 轴上的层叠顺序。\n因为两个元素都使用了 `position: relative`，它们都创建了层叠上下文。由于 `.navbar` 的 z-index (10) 高于 `.hero` 的 z-index (5)，因此如果发生重叠，`.navbar` 会显示在最上面。",
+              "markingMdx": "1 mark for 解释 z-index 用于控制层叠顺序。\n1 mark for 注意到它们都是定位元素（position: relative）。\n1 mark for 正确回答 .navbar 会显示在上面（因为 10 > 5）。"
             }
           ]
         },
         {
           "id": "Q2",
-          "title": "A simple JavaScript counter.",
+          "title": "简单的 JavaScript 计数器。",
           "marks": 6,
           "contentMdx": "```javascript\nfunction createCounter() {\n  let count = 0;\n  return function() {\n    count++;\n    return count;\n  };\n}\n\nconst myCounter = createCounter();\nconsole.log(myCounter());\nconsole.log(myCounter());\n```",
           "subQuestions": [
@@ -52,23 +52,23 @@
               "id": "Q2-a",
               "label": "(a)",
               "marks": 3,
-              "questionMdx": "What will be printed to the console when this code runs? Explain why `count` is not reset to 0 on the second call.",
-              "answerMdx": "1\n2\nThe variable `count` is not reset because the inner function forms a closure. It retains access to the scope of `createCounter` even after `createCounter` has finished executing, allowing the same `count` variable to be preserved and updated across multiple calls.",
-              "markingMdx": "1 mark for the correct output (1 then 2).\n2 marks for explaining the concept of a closure and how it preserves the scope/state of `count`."
+              "questionMdx": "当这段代码运行时，控制台会打印出什么？请解释为什么在第二次调用时 `count` 没有被重置为 0。",
+              "answerMdx": "1\n2\n变量 `count` 没有被重置是因为内部函数形成了一个闭包（Closure）。即使 `createCounter` 函数已经执行完毕，返回的内部函数依然保留了对 `createCounter` 作用域的访问权，从而使得同一个 `count` 变量在多次调用间被保存和更新。",
+              "markingMdx": "1 mark for 给出正确的输出 (先 1 后 2)。\n2 marks for 解释闭包（Closure）的概念以及它如何保存 `count` 的状态/作用域。"
             },
             {
               "id": "Q2-b",
               "label": "(b)",
               "marks": 3,
-              "questionMdx": "How does NodeJS execution of this JavaScript differ from running it directly inside a browser's `<script>` tag? Name two objects available in the browser but NOT in NodeJS.",
-              "answerMdx": "NodeJS runs JavaScript on the server/system level using the V8 engine, while the browser runs it within a web page context.\nTwo objects available in the browser but not in NodeJS are `window` and `document`.",
-              "markingMdx": "1 mark for stating NodeJS is a server/system environment while the browser is a web page context.\n2 marks for naming two browser-specific objects (e.g., window, document, localStorage)."
+              "questionMdx": "NodeJS 执行这段 JavaScript 与在浏览器的 `<script>` 标签中直接运行有什么不同？请列举出两个存在于浏览器环境中但不属于 NodeJS 环境的对象。",
+              "answerMdx": "NodeJS 使用 V8 引擎在服务器/系统层面上运行 JavaScript，而浏览器是在网页的上下文中运行 JavaScript。\n两个存在于浏览器但不属于 NodeJS 的对象是 `window` 和 `document`。",
+              "markingMdx": "1 mark for 说明 NodeJS 是服务器/系统环境，而浏览器是网页上下文。\n2 marks for 列出两个浏览器特有的对象（例如 window, document, localStorage 等）。"
             }
           ]
         },
         {
           "id": "Q3",
-          "title": "Handling user input and local storage.",
+          "title": "处理用户输入与本地存储。",
           "marks": 6,
           "contentMdx": "```html\n<form id=\"user-form\">\n  <input type=\"text\" id=\"username\" required>\n  <button type=\"submit\">Save</button>\n</form>\n<p id=\"greeting\"></p>\n\nJS:\n\nconst form = document.getElementById('user-form');\nconst input = document.getElementById('username');\nconst greeting = document.getElementById('greeting');\n\nform.addEventListener('submit', (e) => {\n  e.preventDefault();\n  const name = input.value;\n  localStorage.setItem('savedName', name);\n  greeting.textContent = `Hello, ${name}`;\n});\n```",
           "subQuestions": [
@@ -76,23 +76,23 @@
               "id": "Q3-a",
               "label": "(a)",
               "marks": 3,
-              "questionMdx": "What is the purpose of `e.preventDefault()` in this code? What would happen if it were removed?",
-              "answerMdx": "`e.preventDefault()` stops the browser's default behavior for form submission, which is to send a request and reload the page.\nIf removed, the page would immediately reload when the button is clicked, preventing the JavaScript from saving the name or updating the greeting (or they would briefly flash before disappearing).",
-              "markingMdx": "1 mark for stating it stops the default form submission.\n2 marks for explaining that removing it causes a page reload and breaks the intended JS behavior."
+              "questionMdx": "这段代码中 `e.preventDefault()` 的作用是什么？如果把它删掉会发生什么？",
+              "answerMdx": "`e.preventDefault()` 用于阻止浏览器默认的表单提交行为（即发送请求并重新加载页面）。\n如果将其删除，点击按钮时页面会立即重新加载，这会导致 JavaScript 无法成功保存名称或更新问候语（或者它们只会短暂闪烁然后消失）。",
+              "markingMdx": "1 mark for 说明它阻止了表单的默认提交行为。\n2 marks for 解释如果删除它会导致页面刷新，从而破坏预期的 JS 逻辑。"
             },
             {
               "id": "Q3-b",
               "label": "(b)",
               "marks": 3,
-              "questionMdx": "Write the JavaScript code that should run when the page first loads to check if a name is already saved in `localStorage` and display the greeting if it exists.",
+              "questionMdx": "请编写一段 JavaScript 代码：在页面首次加载时运行，检查 `localStorage` 中是否已经保存了名字，如果存在，则将其显示在问候语段落中。",
               "answerMdx": "javascript\nconst savedName = localStorage.getItem('savedName');\nif (savedName) {\n  greeting.textContent = `Hello, ${savedName}`;\n}",
-              "markingMdx": "1 mark for using `localStorage.getItem('savedName')`.\n1 mark for checking if the value exists.\n1 mark for updating the `textContent` of the greeting element."
+              "markingMdx": "1 mark for 正确使用 `localStorage.getItem('savedName')`。\n1 mark for 使用 if 检查该值是否存在。\n1 mark for 正确更新 greeting 元素的 `textContent`。"
             }
           ]
         },
         {
           "id": "Q4",
-          "title": "Fetching data from an API.",
+          "title": "从 API 获取数据。",
           "marks": 8,
           "contentMdx": "```javascript\nfunction getUserData() {\n  fetch('https://api.example.com/user')\n    .then(response => {\n      if (!response.ok) {\n        throw new Error('Network response was not ok');\n      }\n      return response.json();\n    })\n    .then(data => {\n      console.log(data.name);\n    })\n    .catch(error => {\n      console.error('Fetch error:', error);\n    });\n}\n```",
           "subQuestions": [
@@ -100,25 +100,25 @@
               "id": "Q4-a",
               "label": "(a)",
               "marks": 4,
-              "questionMdx": "Rewrite the `getUserData` function using `async/await` syntax instead of `.then()` and `.catch()`.",
+              "questionMdx": "请使用 `async/await` 语法重写 `getUserData` 函数，替换掉原来的 `.then()` 和 `.catch()`。",
               "answerMdx": "javascript\nasync function getUserData() {\n  try {\n    const response = await fetch('https://api.example.com/user');\n    if (!response.ok) {\n      throw new Error('Network response was not ok');\n    }\n    const data = await response.json();\n    console.log(data.name);\n  } catch (error) {\n    console.error('Fetch error:', error);\n  }\n}",
-              "markingMdx": "1 mark for adding `async` to the function definition.\n1 mark for using `await fetch(...)`.\n1 mark for using `await response.json()`.\n1 mark for wrapping the code in a `try...catch` block."
+              "markingMdx": "1 mark for 在函数定义中添加 `async`。\n1 mark for 使用 `await fetch(...)`。\n1 mark for 使用 `await response.json()`。\n1 mark for 将代码正确地包裹在 `try...catch` 块中。"
             },
             {
               "id": "Q4-b",
               "label": "(b)",
               "marks": 2,
-              "questionMdx": "Why is `response.json()` necessary in the code?",
-              "answerMdx": "`response.json()` is necessary to parse the raw JSON text string returned by the server into a usable JavaScript object so we can access properties like `data.name`.",
-              "markingMdx": "1 mark for stating it parses JSON.\n1 mark for stating it converts it into a JavaScript object."
+              "questionMdx": "为什么在这段代码中必须要调用 `response.json()`？",
+              "answerMdx": "调用 `response.json()` 是必须的，因为它用于将服务器返回的原始 JSON 文本字符串解析为可用的 JavaScript 对象，这样我们才能访问像 `data.name` 这样的属性。",
+              "markingMdx": "1 mark for 说明它用于解析 JSON。\n1 mark for 说明它将其转换为 JavaScript 对象。"
             },
             {
               "id": "Q4-c",
               "label": "(c)",
               "marks": 2,
-              "questionMdx": "`fetch` is an asynchronous operation. Why is it important for network requests to be asynchronous in the browser?",
-              "answerMdx": "Network requests take time to complete. If they were synchronous, the browser's main thread would be blocked, freezing the UI and making the page unresponsive until the server replies. Asynchronous requests allow the user to continue interacting with the page while waiting for the data.",
-              "markingMdx": "1 mark for mentioning that synchronous requests would block the main thread/freeze the UI.\n1 mark for mentioning it allows continued user interaction while waiting."
+              "questionMdx": "`fetch` 是一个异步操作。为什么在浏览器中进行网络请求时，必须是异步的？",
+              "answerMdx": "网络请求需要时间来完成。如果它们是同步的，浏览器的 JavaScript 主线程将被阻塞，导致用户界面（UI）冻结，直到服务器响应为止。异步请求允许用户在等待数据的同时，继续与页面进行交互。",
+              "markingMdx": "1 mark for 提到同步请求会阻塞主线程/冻结 UI。\n1 mark for 提到异步允许在等待时继续进行用户交互。"
             }
           ]
         }
