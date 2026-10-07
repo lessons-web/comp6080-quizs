@@ -7,7 +7,7 @@ export function TopicCardGrid() {
 
   if (loading) {
     return (
-      <div className="mx-auto w-full max-w-7xl px-6 py-8">
+      <div className="w-full px-8 py-8">
         <div className="grid grid-cols-4 gap-5">
           {Array.from({ length: 5 }).map((_, i) => (
             <div
@@ -22,7 +22,7 @@ export function TopicCardGrid() {
 
   if (error) {
     return (
-      <div className="mx-auto w-full max-w-7xl px-6 py-8">
+      <div className="w-full px-8 py-8">
         <div className="rounded-2xl border border-rose-200 bg-rose-50 p-6 text-rose-900">
           <h2 className="text-xl font-semibold">加载失败</h2>
           <p className="mt-2 text-sm leading-6 text-rose-700">请稍后再试。</p>
@@ -34,7 +34,7 @@ export function TopicCardGrid() {
   const summaries = data ?? []
 
   return (
-    <div className="mx-auto w-full max-w-7xl px-6 py-8">
+    <div className="w-full px-8 py-8">
       <div className="mb-6">
         <h1 className="text-2xl font-semibold tracking-tight text-slate-900">
           知识点解析

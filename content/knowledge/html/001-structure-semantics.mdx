@@ -1,6 +1,6 @@
 ---
 id: "001-structure-semantics"
-title: "HTML Structure and Semantics"
+title: "HTML 文档结构与语义化"
 topic: "html"
 category: "文档基础"
 difficulty: "easy"
@@ -9,13 +9,108 @@ summary: "HTML 文档结构、head/body 分工与语义化标签"
 createdAt: "2026-09-28T12:00:00.000Z"
 ---
 
-# HTML Structure and Semantics
+一份最基础的 HTML 文档，会把「给浏览器/搜索引擎读的元信息」和「给用户看的正文内容」**严格分层**。外层用 `<html>` 包裹，内部拆成 `<head>` 和 `<body>` 两段：
 
-A basic HTML document separates metadata from visible content. Elements inside `<head>` describe the document, while elements inside `<body>` become the main content users read and interact with.
+```html
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>页面标题</title>
+  </head>
+  <body>
+    <header>...</header>
+    <main>...</main>
+    <footer>...</footer>
+  </body>
+</html>
+```
 
-Semantic HTML matters because it communicates intent. For example, `<h1>` expresses a top-level heading, and `header`, `nav`, and `footer` describe page regions more clearly than generic `div` containers. Semantic markup improves readability, maintainability, and accessibility.
+## 1. `<head>` 里放什么
 
-## Review Checklist
+`<head>` 的内容**不会出现在页面正文里**，它是给浏览器、搜索引擎、分享卡、CSS/JS 加载器看的。常见成员：
 
-- Distinguish document metadata from page content.
-- Prefer semantic tags when they express meaning.
+| 标签/属性 | 职责 |
+|---|---|
+| `<meta charset>` | 声明文档字符编码，务必写在最前面避免乱码。 |
+| `<title>` | 标签页标题，也是搜索结果默认标题。 |
+| `<meta name="viewport">` | 告诉移动端「按设备宽度 1:1 渲染」，禁止默认缩放。 |
+| `<meta name="description">` | 搜索结果里的摘要文案。 |
+| `<link rel="stylesheet">` | 引入外部 CSS。 |
+| `<script>` + `<script type="module">` | 引入 JS；`<script defer>` 会等 DOM 解析完再跑。 |
+| `<meta property="og:*">` | 分享到社交平台时的缩略图/标题/描述。 |
+
+> ⚠️ 常见误区：在 `<body>` 里写 `<title>`、或者忘记声明 `charset` —— 这两种都会导致**显示异常或中文乱码**。
+
+## 2. `<body>` 里怎么组织
+
+`<body>` 是用户真正会看到的一切。早期大家都用 `<div>` 堆页面，但 `<div>` 本身**没有任何语义**：对搜索引擎、屏幕阅读器、代码维护者来说都像“黑盒”。更推荐用语义化标签：
+
+```html
+<body>
+  <header class="site-header">
+    <a href="/">Logo</a>
+    <nav>
+      <a href="/">首页</a>
+      <a href="/doc">文档</a>
+    </nav>
+  </header>
+
+  <main>
+    <h1>页面主标题（每个页面唯一）</h1>
+    <section aria-labelledby="s1">
+      <h2 id="s1">第一节</h2>
+      <article>文章 1…</article>
+      <article>文章 2…</article>
+    </section>
+    <aside>推荐阅读 / 侧边栏</aside>
+  </main>
+
+  <footer>© 版权信息</footer>
+</body>
+```
+
+每个语义标签都有自己的“职责说明书”：
+
+- `<header>`：**站点或章节的页眉**，不只是最顶部，`<article>`/`<section>` 内部也能有。
+- `<nav>`：**主要导航链接区**，一个页面可多个，但建议只在最重要那组加 `aria-label`。
+- `<main>`：**页面主体唯一入口**，每个页面最多一个，屏幕阅读器可用快捷键直接跳到这里。
+- `<section>`：**有主题的一块内容**，通常内部配一个 `<h2>`。
+- `<article>`：**独立可被分享/引用的一块**（博客、卡片、评论），即使从页面抽出来单独读也通顺。
+- `<aside>`：**和正文弱相关**（侧边栏、广告、相关阅读）。
+- `<footer>`：**页脚**，放版权、备案、友情链接。
+
+## 3. 为什么语义化这么重要
+
+1. **可访问性（A11y）**：屏幕阅读器（VoiceOver/NVDA）会把 `<nav>`、`<main>`、`<h1>~<h6>` 当成“导航锚点”，盲人用户能快速跳到正文，而不是从头听一堆 div。
+2. **SEO**：爬虫会给 `<h1>`、`<article>` 里的文字更高权重；`<strong>` 比 `<b>`、`<em>` 比 `<i>` 在语义上更“重”。
+3. **可维护性**：`<div class="header">` 和 `<header>` 天差地别 —— 后者一眼就知道这块是页眉。
+4. **跨端兼容**：浏览器打印、阅读器模式、PWA 离线阅读都依赖语义结构抽正文。
+
+## 4. 常见反模式（❌ 别这么写）
+
+```html
+<!-- 反模式 1：用 div 替代一切 -->
+<div class="h1">我是标题</div>
+<div class="p">我是段落</div>
+
+<!-- 反模式 2：一个页面好几个 h1 -->
+<h1>站点名</h1>
+<section><h1>第一节</h1></section>
+<section><h1>第二节</h1></section>
+
+<!-- 反模式 3：为了样式用语义标签 -->
+<blockquote>只是想缩进一下文字</blockquote>
+<em>只是想写斜体装饰</em>
+```
+
+## 5. 小练习：自我核对清单
+
+- ✅ 页面有没有且只有一个 `<main>`？
+- ✅ 页面只有一个 `<h1>` 吗？章节标题用 `<h2>`、小节用 `<h3>` 了吗？
+- ✅ 导航链接放在 `<nav>` 里了吗？
+- ✅ 真正“独立成篇”的卡片用 `<article>` 了吗？
+- ✅ `<head>` 里写了 `charset`、`viewport`、`title` 三件套了吗？
+
+做到以上 5 条，你的 HTML 结构对人、对机器、对搜索引擎都会非常友好。

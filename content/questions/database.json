@@ -1,0 +1,387 @@
+{
+  "topic": "mixed",
+  "questions": [
+    {
+      "id": "db-q21-exam",
+      "topic": "html",
+      "difficulty": "hard",
+      "tags": ["真题", "HTML链接", "路径", "安全", "A11Y"],
+      "question": "以下给出了 5 个具有不同目标类型的 <a> 链接：\n1. `<a href=\"/about\">About us</a>`\n2. `<a href=\"about.html\">About us</a>`\n3. `<a href=\"#\">Read more</a>`\n4. `<a href=\"mailto:help@example.com\" target=\"_blank\">Email us</a>`\n5. `<a href=\"handbook.pdf\" target=\"_blank\">Handbook</a>`\n\n请回答以下三个问题：\n\n**(a)** 解释链接 1 和链接 2 的区别。如果整个网站迁移到不同的域名，它们会受到什么影响？如果包含这两个链接的 HTML 页面被移动到了一个子文件夹中，哪一个链接会失效（假设目标文件没动）？\n\n**(b)** 链接 3 和链接 4 都存在问题。请指出它们的错误之处，并提供修正后的代码。\n\n**(c)** 链接 5 会在新标签页中打开一个 PDF 文件。指出应该与 `target=\"_blank\"` 一起使用的属性及其防御的安全威胁，并说明作者应该对“链接文本（Link text）”做出一项什么改进？",
+      "knowledgePoint": "<a> 标签的深入应用（绝对/相对路径、锚点、mailto、target安全、可访问性）",
+      "answerExplanation": "**(a) 路径区别与迁移影响**\n- **区别**：链接 1 使用的是**根相对路径（Root-relative path）**，它总是从网站的根目录（`/`）开始寻找 `about`；链接 2 使用的是**相对路径（Relative path）**，它会从当前页面所在的同一目录下寻找 `about.html`。\n- **域名迁移影响**：都不会受影响。只要内部目录结构不变，不管是根相对还是当前相对路径，更换域名后都能正常工作。\n- **移动到子文件夹**：**链接 2 会失效**。因为页面进入子文件夹后，链接 2 会在子文件夹里找 `about.html`（找不到）；而链接 1 依然会从网站根目录去找，所以链接 1 仍然有效。\n\n**(b) 链接 3 与 4 的问题及修复**\n- **链接 3 问题**：`href=\"#\"` 会导致页面跳转到顶部。如果 \"Read more\" 是一个触发某种 JS 展开行为的按钮，它在语义上不应该是一个 `<a>` 标签，而应该是一个 `<button>`。如果必须用 `<a>`，它应当包含真实的跳转地址。\n  - *修正*：`<button type=\"button\">Read more</button>` 或 `<a href=\"/full-article\">Read more</a>`。\n- **链接 4 问题**：`mailto:` 协议会自动调用操作系统的默认邮件客户端，不需要也不应该使用 `target=\"_blank\"`，否则会导致浏览器在打开邮件客户端前，闪现一个无用的空白标签页。\n  - *修正*：`<a href=\"mailto:help@example.com\">Email us</a>`\n\n**(c) 安全属性与文本优化**\n- **伴随属性与安全威胁**：应配合使用 `rel=\"noopener noreferrer\"`。它用来防御 **Tabnabbing（反向标签页劫持）** 攻击，防止新打开的恶意页面通过 `window.opener` 对象操控篡改原页面的 URL（比如重定向到钓鱼网站）。\n- **链接文本改进**：根据可访问性（A11Y）最佳实践，打开非网页文件（如 PDF、Word）时，链接文本应该明确告知用户文件类型及大致大小。这有助于用户（尤其是使用屏幕阅读器或流量有限的用户）预知点击后果。\n  - *改进示例*：`<a href=\"handbook.pdf\" target=\"_blank\" rel=\"noopener noreferrer\">Handbook (PDF, 2MB)</a>`",
+      "codeBlocks": [],
+      "createdAt": "2026-10-05T11:00:00Z"
+    },
+    {
+      "id": "db-q22",
+      "topic": "html",
+      "difficulty": "medium",
+      "tags": ["HTML基础", "语义化", "图片"],
+      "question": "考虑以下显示图片的 HTML 代码片段：\n`<img src=\"chart.png\" class=\"data-chart\" onClick=\"zoomIn()\">`\n\n请回答以下问题：\n\n**(a)** 这段代码缺少了哪个极其重要的 HTML 属性？如果缺少该属性，会对哪些用户群体或场景造成严重影响？\n\n**(b)** 如果这张图片是一张展示季度利润的复杂数据图表（无法用简短的一句话描述），除了修复 (a) 中的问题外，最佳的 HTML 语义化处理方式是什么？\n\n**(c)** 代码中直接在 `<img>` 上绑定了 `onClick` 事件来实现点击放大。从可访问性（键盘操作）的角度来看，这种做法有什么致命缺陷？应如何修复？",
+      "knowledgePoint": "图片的可访问性（alt）、<figure> 语义化与交互元素的键盘支持",
+      "answerExplanation": "**(a) 缺失的属性与影响**\n- **缺失属性**：`alt` 属性（替代文本）。\n- **影响场景**：\n  1. **视障用户**：屏幕阅读器无法朗读图片内容，用户完全不知道图片表达了什么。\n  2. **网络异常/图片失效**：图片加载失败时，页面上只会显示一个破碎的图标，没有文字提示。\n  3. **SEO**：搜索引擎爬虫无法理解图片内容，丢失了被检索的机会。\n\n**(b) 复杂图表的语义化最佳实践**\n对于需要长篇解释的复杂图表，仅仅使用 `alt` 属性是不够的（`alt` 应当简短）。最佳实践是使用 `<figure>` 和 `<figcaption>` 标签组合，并配合 `aria-describedby` 或提供详细的正文描述。\n\n**(c) 交互元素的键盘操作缺陷与修复**\n- **致命缺陷**：`<img>` 不是交互元素，默认无法获得键盘焦点（Focus）。依赖键盘导航的用户（如使用 Tab 键）根本无法选中并触发这个 `zoomIn` 事件。\n- **修复方案**：应当将图片包裹在一个原生的交互元素（如 `<button>`）中，或者为图片添加 `tabindex=\"0\"` 并监听键盘 `Enter/Space` 事件。",
+      "codeBlocks": [
+        {
+          "language": "html",
+          "code": "<!-- (b) 修复方案：使用 figure 和 figcaption -->\n<figure>\n  <img src=\"chart.png\" alt=\"2026年第一季度利润柱状图\" />\n  <figcaption>图 1：2026年Q1利润相比去年同期增长了 25%，主要得益于新产品的发布。</figcaption>\n</figure>\n\n<!-- (c) 修复方案：使用 button 包裹实现可访问的交互 -->\n<button onClick=\"zoomIn()\">\n  <img src=\"chart.png\" alt=\"利润图表，点击放大\" />\n</button>"
+        }
+      ],
+      "createdAt": "2026-10-05T10:55:00Z"
+    },
+    {
+      "id": "db-q23",
+      "topic": "html",
+      "difficulty": "medium",
+      "tags": ["HTML表单", "可访问性", "交互"],
+      "question": "下面是一个简单的表单代码片段：\n```html\n<div>\n  <p>Username:</p>\n  <input type=\"text\" placeholder=\"Enter username\">\n</div>\n<div>\n  <p>Password:</p>\n  <input type=\"text\" placeholder=\"Enter password\">\n</div>\n<div class=\"btn\" onClick=\"submitForm()\">Submit</div>\n```\n这段代码在“语义化”、“安全”和“可用性（A11Y）”上存在 4 处明显的问题，请逐一指出并给出最终重构后的代码。",
+      "knowledgePoint": "表单元素的语义化（<form>、<label>、type、<button>）",
+      "answerExplanation": "**存在的问题：**\n1. **缺少 `<label>` 绑定（可用性/A11Y）**：使用 `<p>` 标签作为输入框的提示是极其错误的。必须使用 `<label>` 并通过 `for/id` 属性（或嵌套）与 `<input>` 绑定。这样不仅对屏幕阅读器友好，而且**点击文字就能自动聚焦到输入框**，大大增加了移动端的点击热区。\n2. **密码输入框类型错误（安全）**：密码框的 `type` 设置为了 `text`，导致输入的密码会明文显示在屏幕上。应改为 `type=\"password\"`。\n3. **提交按钮语义错误（可用性/A11Y）**：使用 `<div>` 模拟按钮不仅无法获得键盘焦点，还失去了表单的原生回车提交能力。必须使用 `<button type=\"submit\">`。\n4. **缺少 `<form>` 容器（语义化/功能）**：表单项没有被 `<form>` 标签包裹。缺少 `<form>` 会导致无法触发表单的原生提交行为（如手机键盘的“前往/Go”按键），也无法利用原生的 HTML5 表单校验机制（如 `required`）。",
+      "codeBlocks": [
+        {
+          "language": "html",
+          "code": "<!-- 重构后的正确代码 -->\n<form onSubmit=\"submitForm(event)\">\n  <div>\n    <label for=\"username\">Username:</label>\n    <input type=\"text\" id=\"username\" placeholder=\"Enter username\" required>\n  </div>\n  <div>\n    <label for=\"password\">Password:</label>\n    <input type=\"password\" id=\"password\" placeholder=\"Enter password\" required>\n  </div>\n  <button type=\"submit\">Submit</button>\n</form>"
+        }
+      ],
+      "createdAt": "2026-10-05T10:50:00Z"
+    },
+    {
+      "id": "db-q24",
+      "topic": "html",
+      "difficulty": "medium",
+      "tags": ["HTML文档", "移动端", "SEO"],
+      "question": "在一个全新的 HTML5 文档的 `<head>` 区域中，有三个非常关键的标签经常被提及：\n1. `<meta charset=\"UTF-8\">`\n2. `<meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">`\n3. `<title>...</title>`\n\n请分别解释如果不写这三行代码，页面在实际渲染、用户体验和 SEO 上会发生什么灾难性的后果？",
+      "knowledgePoint": "HTML 元数据（Meta Tags）与 Viewport 机制",
+      "answerExplanation": "**如果不写这三行代码的后果：**\n\n1. **缺少 `<meta charset=\"UTF-8\">`**\n   - **后果**：浏览器可能会使用操作系统默认的编码（如 GBK/Windows-1252）来解析 HTML 文件，导致页面上的中文字符、特殊符号甚至是 Emoji **变成乱码（乱码框或问号）**。它必须放在 `<head>` 的最前面（最好在 title 之前），确保浏览器尽早以正确的 UTF-8 编码读取后续内容。\n\n2. **缺少 `viewport` meta 标签**\n   - **后果**：这是**移动端灾难**的根源。如果没有这行代码，移动端浏览器会默认假定这是一个“为桌面端设计的网页”，从而将视口宽度模拟为 980px（左右），然后把整个页面强行缩小以塞进手机屏幕。用户看到的将是一个**字体极其微小、需要双指放大才能勉强看清、甚至出现横向滚动条**的页面。这行代码是所有响应式设计（Responsive Design）的基石。\n\n3. **缺少 `<title>` 标签**\n   - **后果**：\n     - **体验上**：浏览器的标签页标题将显示当前页面的 URL 或文件名（如 `index.html`），非常不专业。\n     - **SEO上（最致命）**：`<title>` 是搜索引擎（Google/百度）抓取并显示在搜索结果列表中的最重要标题。如果没有它，或者内容毫无意义，页面在搜索引擎中的排名会断崖式下跌，用户也完全没有点击的欲望。\n     - **A11Y上**：屏幕阅读器在打开新页面时，首先朗读的就是页面标题。缺失会导致视障用户迷失上下文。",
+      "codeBlocks": [],
+      "createdAt": "2026-10-05T10:45:00Z"
+    },
+    {
+      "id": "db-q11",
+      "topic": "css",
+      "difficulty": "easy",
+      "tags": ["盒模型", "行内元素", "CSS基础"],
+      "question": "运行下面的 CSS 代码，为什么 `width` 和 `margin-top` 在页面上没有任何视觉效果？应该如何修复？",
+      "knowledgePoint": "行内元素（Inline Elements）的盒模型限制",
+      "answerExplanation": "**原因：**\n`<span>` 默认是一个**行内元素（Inline Element）**。在 CSS 的标准规范中，纯行内元素**不支持设置宽度（width）和高度（height）**，并且它的**垂直方向外边距（margin-top / margin-bottom）也不会影响页面布局**（虽然值存在，但不会推开其他元素）。\n\n**如何修复：**\n需要改变它的显示类型。常见的修复方法有两种：\n1. 把它变成**块级元素**：添加 `display: block;`，它将独占一行，宽高和垂直 margin 全部生效。\n2. 把它变成**行内块级元素**：添加 `display: inline-block;`，它既能像文字一样排在一行，又能完美支持宽高和垂直 margin。",
+      "codeBlocks": [
+        {
+          "language": "css",
+          "code": "span {\n  width: 100px;       /* ❌ 行内元素无效 */\n  margin-top: 50px;   /* ❌ 无法推开其他元素 */\n  background: red;    /* ✅ 背景色有效 */\n}\n\n/* 修复方案 */\nspan {\n  display: inline-block; /* 核心修复 */\n  width: 100px;       \n  margin-top: 50px;   \n}"
+        }
+      ],
+      "createdAt": "2026-10-05T10:10:00Z"
+    },
+    {
+      "id": "db-q12",
+      "topic": "css",
+      "difficulty": "easy",
+      "tags": ["选择器", "优先级", "CSS权重"],
+      "question": "这段代码最终渲染出的文字是什么颜色？为什么？",
+      "knowledgePoint": "CSS 选择器优先级与 !important",
+      "answerExplanation": "**最终渲染颜色：红色（red）**\n\n**原因分析：**\n正常情况下，CSS 选择器的优先级权重是：\n`内联样式 style (1000) > ID选择器 (100) > Class选择器 (10) > 标签选择器 (1)`\n\n按照正常权重：\n1. `style=\"color: blue\"` 权重最高。\n2. `#box { color: green }` 权重其次。\n3. `.text { color: red }` 权重最低。\n\n**但是！**\n代码中使用了 `!important`。`!important` 是一张“王牌”，它的优先级**凌驾于所有正常的权重规则之上**（甚至盖过了内联样式 `style`）。因为 `.text` 的样式加上了 `!important`，所以它无视了权重垫底的劣势，强行生效，最终呈现红色。",
+      "codeBlocks": [
+        {
+          "language": "html",
+          "code": "<div class=\"text\" id=\"box\" style=\"color: blue\">\n  Hello World\n</div>"
+        },
+        {
+          "language": "css",
+          "code": ".text {\n  color: red !important;\n}\n\n#box {\n  color: green;\n}"
+        }
+      ],
+      "createdAt": "2026-10-05T10:09:00Z"
+    },
+    {
+      "id": "db-q13",
+      "topic": "javascript",
+      "difficulty": "easy",
+      "tags": ["基础语法", "变量声明", "引用类型"],
+      "question": "运行这段代码，哪一行会报错？为什么用 `const` 声明的数组还能成功调用 `push` 添加数据？",
+      "knowledgePoint": "const 声明的本质与引用类型的变异（Mutation）",
+      "answerExplanation": "**第 3 行 (`list = [1, 2, 3];`) 会报错**（`TypeError: Assignment to constant variable`）。\n\n**原理解析：**\n`const` 保证的不是“数据永远不能变”，而是**“变量指向的内存地址（指针）永远不能变”**。\n\n- 当我们调用 `list.push(3)` 时，我们并没有改变 `list` 这个变量指向的地址，我们只是**顺着地址找到了堆内存中的那个数组，往里面塞了一个数据**。这种操作叫“变异（Mutation）”，对于 `const` 来说是完全合法的。\n- 但是当我们写 `list = [1, 2, 3]` 时，我们在试图把一个**全新数组的地址**重新赋给 `list` 变量，这直接打破了 `const` “指针不可变”的死规矩，所以引擎立刻报错。",
+      "codeBlocks": [
+        {
+          "language": "javascript",
+          "code": "const list = [1, 2];\n\n// ✅ 成功执行：只是修改了数组内部的内容，没有改变变量的指向\nlist.push(3);\n\n// ❌ 报错：试图将 list 指向一个全新的数组，违背了 const 规则\nlist = [1, 2, 3]; "
+        }
+      ],
+      "createdAt": "2026-10-05T10:08:00Z"
+    },
+    {
+      "id": "db-q14",
+      "topic": "javascript",
+      "difficulty": "medium",
+      "tags": ["ES6", "箭头函数", "找Bug"],
+      "question": "这段代码的作者希望将数组里的每个数字乘以 2，但他发现 `console.log(result)` 输出的并不是 `[2, 4, 6]`。请问输出了什么？错在哪里？",
+      "knowledgePoint": "箭头函数的隐式返回与块级作用域",
+      "answerExplanation": "**输出结果：**\n`[undefined, undefined, undefined]`\n\n**错误原因：**\n这是新手使用箭头函数时最容易犯的语法错误。\n箭头函数有两种写法：\n1. **不带花括号 `{}`**：自带“隐式返回（implicit return）”功能。例如 `n => n * 2`，它会自动把 `n * 2` 的结果 `return` 出去。\n2. **带花括号 `{}`**：花括号代表一个代码块，此时**隐式返回功能失效**，你必须手动写 `return` 关键字。\n\n在题目的代码中，作者加上了 `{}`，却没有写 `return`。因此，函数什么都没返回，默认返回了 `undefined`。",
+      "codeBlocks": [
+        {
+          "language": "javascript",
+          "code": "const nums = [1, 2, 3];\n\n// ❌ 错误写法：加了花括号，却没有写 return\nconst result = nums.map(n => { n * 2 });\nconsole.log(result); // [undefined, undefined, undefined]\n\n// ✅ 修复方案 1：去掉花括号，利用隐式返回\nconst result1 = nums.map(n => n * 2);\n\n// ✅ 修复方案 2：保留花括号，但手动加上 return\nconst result2 = nums.map(n => { return n * 2 });"
+        }
+      ],
+      "createdAt": "2026-10-05T10:07:00Z"
+    },
+    {
+      "id": "db-q15",
+      "topic": "javascript",
+      "difficulty": "easy",
+      "tags": ["数据类型", "对象", "内存分配"],
+      "question": "运行这段代码，控制台会输出什么？为什么只修改了 `userB`，却影响了 `userA`？",
+      "knowledgePoint": "对象（引用类型）的地址赋值",
+      "answerExplanation": "**输出结果：**\n`\"李四\"`\n\n**原因分析：**\n在 JavaScript 中，对象属于**引用类型**。它们的数据保存在堆内存中，而变量里保存的只是一个**指向堆内存的地址指针**。\n\n当我们执行 `let userB = userA;` 时，JavaScript **并没有把对象复制一份**，而是仅仅把 `userA` 里的“地址指针”复制给了 `userB`。此时，`userA` 和 `userB` 指向的是**内存里的同一个对象**。\n\n所以，不管你是通过 `userB.name` 修改，还是通过 `userA.name` 修改，改的都是同一块数据。牵一发而动全身。",
+      "codeBlocks": [
+        {
+          "language": "javascript",
+          "code": "let userA = { name: \"张三\" };\n\n// 仅仅是复制了地址，并没有复制对象本身\nlet userB = userA;\n\n// 修改 userB，实际上修改的是共享的那个对象\nuserB.name = \"李四\";\n\nconsole.log(userA.name); // 输出: 李四"
+        }
+      ],
+      "createdAt": "2026-10-05T10:06:00Z"
+    },
+    {
+      "id": "db-q16",
+      "topic": "javascript",
+      "difficulty": "easy",
+      "tags": ["基础语法", "条件判断", "隐式转换"],
+      "question": "代码会输出 \"A\" 还是 \"B\"？在 JavaScript 中，究竟有哪些值放在 `if()` 里会被判定为 `false`？",
+      "knowledgePoint": "Falsy（虚值）与 Truthy（真值）",
+      "answerExplanation": "**输出结果：**\n`\"B\"`\n\n**原因分析：**\n在 JavaScript 的 `if(条件)` 判断中，如果条件不是一个严格的布尔值（`true`/`false`），引擎会自动进行**隐式类型转换**。数字 `0` 在这种转换中会被判定为 `false`，所以代码走入了 `else` 分支。\n\n**JavaScript 中的 Falsy（虚值）有且仅有以下 6 个：**\n1. `false`\n2. `0`（包括 `-0` 和 `0n`）\n3. `\"\"`（空字符串）\n4. `null`\n5. `undefined`\n6. `NaN`（Not a Number）\n\n除了这 6 个值，**其他所有的值（包括空数组 `[]`、空对象 `{}`、字符串 `\"0\"`、字符串 `\"false\"`）全部都是 Truthy（真值）**，在 `if` 里都会被当作 `true` 对待！",
+      "codeBlocks": [
+        {
+          "language": "javascript",
+          "code": "const val = 0;\n\n// 0 是 Falsy 值，转换后相当于 if(false)\nif (val) {\n  console.log(\"A\");\n} else {\n  console.log(\"B\"); // 代码执行到这里\n}"
+        }
+      ],
+      "createdAt": "2026-10-05T10:05:00Z"
+    },
+    {
+      "id": "db-q17",
+      "topic": "react",
+      "difficulty": "medium",
+      "tags": ["React基础", "状态管理", "找Bug"],
+      "question": "点击按钮执行 `add` 函数后，页面上的列表为什么完全没有更新？正确的写法是什么？",
+      "knowledgePoint": "React 状态的不可变性（Immutability）",
+      "answerExplanation": "**原因分析：**\n这是新手写 React 最容易犯的错误：**直接修改（Mutate）了 State 对象**。\n\n`list.push(3)` 直接修改了原数组，但是数组的**内存地址（引用）并没有发生变化**。紧接着调用 `setList(list)` 时，React 内部会使用 `Object.is()` 对比新旧状态。React 发现传入的 `list` 地址和以前的地址一模一样，认为“状态没变”，于是**直接跳过了本次组件渲染**，页面自然就不会更新。\n\n**正确做法（保持不可变性）：**\n永远不要直接修改原数组/对象，而是**创建一个全新的数组/对象**传给 setState。通常使用展开语法（Spread Operator `...`）来实现。",
+      "codeBlocks": [
+        {
+          "language": "javascript",
+          "code": "const [list, setList] = useState([1, 2]);\n\n// ❌ 错误写法：直接修改原数组，地址未变，React 拒绝渲染\nconst addError = () => {\n  list.push(3);\n  setList(list);\n};\n\n// ✅ 正确写法：创建一个新数组，地址改变，触发渲染\nconst addCorrect = () => {\n  setList([...list, 3]);\n};"
+        }
+      ],
+      "createdAt": "2026-10-05T10:04:00Z"
+    },
+    {
+      "id": "db-q18",
+      "topic": "react",
+      "difficulty": "medium",
+      "tags": ["React基础", "JSX", "找Bug"],
+      "question": "这段代码运行后，页面上一片空白。请找出代码里的一处致命错误。",
+      "knowledgePoint": "JSX 列表渲染与箭头函数返回",
+      "answerExplanation": "**致命错误：`map` 的回调函数没有 `return` 出 JSX。**\n\n这和纯 JS 中的箭头函数陷阱如出一辙：作者在箭头函数后面加了**花括号 `{}`**。一旦加了花括号，它就变成了一个代码块，失去了“自动返回（隐式返回）”的功能。\n所以 `map` 遍历执行完，返回的其实是一个充满 `undefined` 的数组（`[undefined, undefined]`），React 渲染这个数组时自然什么都不会显示。\n\n**如何修复：**\n1. 把花括号 `{}` 换成圆括号 `()`，利用箭头函数的隐式返回直接返回 JSX。\n2. 或者保留花括号，但在 `<li>` 前面手动写上 `return` 关键字。",
+      "codeBlocks": [
+        {
+          "language": "javascript",
+          "code": "// ❌ 错误：有花括号却没有 return\n<ul>\n  {data.map(item => {\n    <li key={item.id}>{item.name}</li>\n  })}\n</ul>\n\n// ✅ 修复方案 1：改用圆括号 ()，隐式返回\n<ul>\n  {data.map(item => (\n    <li key={item.id}>{item.name}</li>\n  ))}\n</ul>\n\n// ✅ 修复方案 2：保留花括号 {}，手动 return\n<ul>\n  {data.map(item => {\n    return <li key={item.id}>{item.name}</li>;\n  })}\n</ul>"
+        }
+      ],
+      "createdAt": "2026-10-05T10:03:00Z"
+    },
+    {
+      "id": "db-q19",
+      "topic": "react",
+      "difficulty": "medium",
+      "tags": ["React基础", "条件渲染", "找Bug"],
+      "question": "开发者原本希望当 `count` 为 0 时什么都不显示，但页面上却莫名其妙显示了一个数字 `0`。为什么会这样？如何修复？",
+      "knowledgePoint": "逻辑与 `&&` 短路运算与 React 渲染规则",
+      "answerExplanation": "**原因分析：**\n在 JavaScript 中，`A && B` 的执行逻辑是：如果 `A` 是假值（Falsy），立刻返回 `A` 的值；如果 `A` 是真值，返回 `B` 的值。\n\n当 `count = 0` 时，`0` 是个假值，所以 `count && <span>...</span>` 整个表达式的计算结果就是**数字 `0`**。\nReact 在渲染时，如果遇到 `false`、`true`、`null`、`undefined`，它会默默忽略，什么都不画；但**如果遇到数字（哪怕是 `0`），React 会老老实实把它当成文本渲染到页面上**。\n\n**如何修复：**\n确保 `&&` 左边的值永远是纯正的布尔值（Boolean）。",
+      "codeBlocks": [
+        {
+          "language": "javascript",
+          "code": "const count = 0;\n\n// ❌ 错误：会渲染出数字 0\nreturn <div>{count && <span>收到新消息</span>}</div>;\n\n// ✅ 修复方案 1：使用比较运算符，强行转为布尔值\nreturn <div>{count > 0 && <span>收到新消息</span>}</div>;\n\n// ✅ 修复方案 2：使用双非运算符 !! 强转布尔值\nreturn <div>{!!count && <span>收到新消息</span>}</div>;\n\n// ✅ 修复方案 3：改用三元表达式（最稳妥）\nreturn <div>{count ? <span>收到新消息</span> : null}</div>;"
+        }
+      ],
+      "createdAt": "2026-10-05T10:02:00Z"
+    },
+    {
+      "id": "db-q20",
+      "topic": "react",
+      "difficulty": "easy",
+      "tags": ["React基础", "事件绑定", "找Bug"],
+      "question": "代码 `<button onClick={handleClick()}>点击</button>` 有一个非常严重的新手逻辑错误，会导致什么意想不到的后果？",
+      "knowledgePoint": "React 事件绑定：传递函数引用 vs 执行函数",
+      "answerExplanation": "**严重后果：**\n`handleClick` 函数会在**组件刚渲染时（还未被点击时）就立刻自动执行**。而当用户真正去点击按钮时，反而什么都不会发生。\n\n**原因分析：**\n在 JSX 中，`onClick={}` 里期望接收的是一个**函数的引用（内存地址）**，以便在未来用户点击时再去调用它。\n但是，我们在代码里写了 `handleClick()`，加上了代表执行的圆括号 `()`。这会导致 React 在解析这行代码时，**当场就把函数执行了**，然后把函数的**返回值**（通常是 `undefined`）绑定给了 `onClick` 事件。\n\n**正确做法：**\n去掉圆括号，只传函数名；或者套一层箭头函数。",
+      "codeBlocks": [
+        {
+          "language": "javascript",
+          "code": "// ❌ 错误：组件一渲染，当场执行，点击无效\n<button onClick={handleClick()}>点击</button>\n\n// ✅ 正确：只传引用，不加括号\n<button onClick={handleClick}>点击</button>\n\n// ✅ 正确：如果要传参数，必须套一层箭头函数\n<button onClick={() => handleClick(id)}>点击</button>"
+        }
+      ],
+      "createdAt": "2026-10-05T10:01:00Z"
+    },
+    {
+      "id": "db-q01",
+      "topic": "html",
+      "difficulty": "easy",
+      "tags": ["无障碍", "HTML基础", "SEO"],
+      "question": "`<img>` 标签的 `alt` 属性和 `title` 属性有什么本质区别？在什么场景下应该留空 `alt=\"\"`？",
+      "knowledgePoint": "图片标签属性及无障碍访问（A11Y）",
+      "answerExplanation": "**本质区别：**\n- **`alt` (Alternative Text)**：是图片的**替代文本**。当图片因网络问题、路径错误无法加载时，会显示 `alt` 的文本。同时，屏幕阅读器（Screen Reader）会朗读这段文字，帮助视障用户理解图片内容。它对 SEO（搜索引擎优化）也非常重要。\n- **`title`**：是元素的**提示文本**。当鼠标悬停（Hover）在图片上时，会弹出一个系统默认的工具提示框（Tooltip）。`title` 可以用在几乎所有 HTML 元素上，不仅限于图片。\n\n**什么时候留空 `alt=\"\"`？**\n如果图片纯粹是**装饰性**的（例如一根美化的分割线、背景点缀），对理解网页内容没有任何实际意义，此时**必须**写成 `alt=\"\"`（空字符串）。\n这样做的目的是明确告诉屏幕阅读器“请跳过这张图片”，而不是让阅读器去尴尬地朗读图片的文件名（如 `line-bg-01.png`）。",
+      "codeBlocks": [
+        {
+          "language": "html",
+          "code": "<!-- 装饰性图片，留空 alt，让屏幕阅读器跳过 -->\n<img src=\"decorative-line.png\" alt=\"\" />\n\n<!-- 带有 title 的图片，鼠标悬停会显示提示 -->\n<img src=\"logo.png\" alt=\"公司 Logo\" title=\"点击返回首页\" />"
+        }
+      ],
+      "createdAt": "2026-10-05T10:00:00Z"
+    },
+    {
+      "id": "db-q02",
+      "topic": "css",
+      "difficulty": "medium",
+      "tags": ["盒模型", "BFC", "布局基础"],
+      "question": "为什么两个相邻的 div，上面的 margin-bottom 是 20px，下面的 margin-top 是 30px，它们之间的实际间距却是 30px 而不是 50px？",
+      "knowledgePoint": "外边距合并（Margin Collapse）与 BFC",
+      "answerExplanation": "这在 CSS 中被称为**外边距合并（Margin Collapse）**现象。\n\n**发生机制：**\n在标准文档流中，垂直方向上相邻的两个块级元素（Block-level elements），它们的上下外边距会发生重叠。合并后的最终间距，会取两者之间**较大的那个值**（即 30px），而不是两者的和。\n\n**为什么 CSS 要这样设计？**\n这是为了排版文本的便利。比如几个 `<p>` 标签连续排列，如果间距相加，段落之间的缝隙会变得异常宽大，而折叠机制保证了段落间的间距始终保持均匀。\n\n**如何打破合并（解决间距问题）？**\n1. 触发其中一个元素的 **BFC（块级格式化上下文）**，例如给父容器设置 `overflow: hidden` 或 `display: flex`。\n2. 改用 `padding` 替代 `margin` 撑开间距。\n3. 在两个元素中间插入一个有高度的空元素、边框（border）或内边距（padding）。",
+      "codeBlocks": [
+        {
+          "language": "html",
+          "code": "<div class=\"box1\">Box 1</div>\n<div class=\"box2\">Box 2</div>"
+        },
+        {
+          "language": "css",
+          "code": ".box1 {\n  margin-bottom: 20px;\n  background: lightblue;\n}\n.box2 {\n  margin-top: 30px;\n  background: lightcoral;\n}\n/* 两个盒子之间的实际垂直间距是 30px，而不是 50px */"
+        }
+      ],
+      "createdAt": "2026-10-05T09:59:00Z"
+    },
+    {
+      "id": "db-q03",
+      "topic": "css",
+      "difficulty": "medium",
+      "tags": ["Flexbox", "布局"],
+      "question": "Flexbox 布局中，设置 `flex: 1` 到底是哪三个属性的简写？它在空间分配上有什么作用？",
+      "knowledgePoint": "Flex 伸缩机制与剩余空间分配",
+      "answerExplanation": "`flex` 属性是 `flex-grow`、`flex-shrink` 和 `flex-basis` 这三个属性的简写。\n\n当我们写 `flex: 1` 时，它等同于：\n- **`flex-grow: 1`**：如果有剩余空间，该元素将按比例放大瓜分空间。\n- **`flex-shrink: 1`**：如果空间不足，该元素允许缩小以防止溢出。\n- **`flex-basis: 0%`**：在分配多余空间之前，该元素的主轴基础尺寸被视为 0（即不考虑其内部内容的原始宽度，完全按照比例重新分配空间）。\n\n**核心作用：**\n`flex: 1` 常用于让多个子元素**均分父容器的剩余空间**，或者让某个特定元素（如 Main 区域）自动撑满除去 Header 和 Footer 之外的中间所有可用空间。",
+      "codeBlocks": [
+        {
+          "language": "css",
+          "code": ".container {\n  display: flex;\n}\n\n.item {\n  /* 等同于 flex-grow: 1; flex-shrink: 1; flex-basis: 0%; */\n  flex: 1;\n}\n/* 如果有三个子元素都设置了 flex: 1，它们将精确地各占 1/3 的宽度 */"
+        }
+      ],
+      "createdAt": "2026-10-05T09:58:00Z"
+    },
+    {
+      "id": "db-q04",
+      "topic": "javascript",
+      "difficulty": "medium",
+      "tags": ["作用域", "变量提升"],
+      "question": "`let` 和 `const` 声明的变量真的没有“变量提升”（Hoisting）吗？什么是“暂时性死区”（TDZ）？",
+      "knowledgePoint": "变量提升与暂时性死区（Temporal Dead Zone）",
+      "answerExplanation": "**并不是没有提升，而是处于“暂时性死区”。**\n\n在 JavaScript 引擎解析代码时，无论是 `var` 还是 `let`、`const`，都会被**提升**到当前作用域的顶部。\n- `var` 提升后会被初始化为 `undefined`，所以可以提前访问不报错。\n- 但 `let` 和 `const` 提升后，**不会被初始化**。如果在实际声明代码执行之前去访问它们，JavaScript 会抛出 `ReferenceError` 引用错误。\n\n**什么是暂时性死区（TDZ）？**\n从代码块作用域开始，直到 `let` 或 `const` 声明语句被执行到的这片区域，被称为“暂时性死区”。在这个区域内访问该变量都是非法的。这是一种语言层面的安全机制，强迫开发者养成“先声明，后使用”的好习惯。",
+      "codeBlocks": [
+        {
+          "language": "javascript",
+          "code": "console.log(a); // 输出 undefined，var 被提升并初始化\nvar a = 1;\n\n// --- 暂时性死区开始 ---\nconsole.log(b); // 报错：ReferenceError: Cannot access 'b' before initialization\n// --- 暂时性死区结束 ---\nlet b = 2;"
+        }
+      ],
+      "createdAt": "2026-10-05T09:57:00Z"
+    },
+    {
+      "id": "db-q05",
+      "topic": "javascript",
+      "difficulty": "medium",
+      "tags": ["异步编程", "事件循环"],
+      "question": "`Promise.then` 和 `setTimeout` 的回调谁先执行？它们在浏览器的调度中有什么区别？",
+      "knowledgePoint": "宏任务（Macrotask）与微任务（Microtask）",
+      "answerExplanation": "**`Promise.then` 的回调会先于 `setTimeout` 执行。**\n\nJavaScript 运行在单线程上，通过**事件循环（Event Loop）**来处理异步任务。异步任务被分为两类队列：\n1. **微任务（Microtask）**：包括 `Promise.then/catch`、`MutationObserver`。优先级极高。\n2. **宏任务（Macrotask）**：包括 `setTimeout`、`setInterval`、用户交互事件等。优先级较低。\n\n**执行机制：**\n当主线程的同步代码执行完毕后，引擎会**优先清空当前所有的微任务队列**。只有当微任务队列完全空了，引擎才会去宏任务队列里取**一个**宏任务出来执行。执行完这个宏任务后，又会再次检查微任务队列。\n\n因此，哪怕 `setTimeout` 的延迟时间设为 0，它也必须排在微任务（Promise）的后面执行。",
+      "codeBlocks": [
+        {
+          "language": "javascript",
+          "code": "console.log(\"1. 主线程同步代码\");\n\nsetTimeout(() => {\n  console.log(\"4. 宏任务 Timeout\");\n}, 0);\n\nPromise.resolve().then(() => {\n  console.log(\"3. 微任务 Promise\");\n});\n\nconsole.log(\"2. 主线程同步代码结束\");\n\n// 最终输出顺序: 1 -> 2 -> 3 -> 4"
+        }
+      ],
+      "createdAt": "2026-10-05T09:56:00Z"
+    },
+    {
+      "id": "db-q06",
+      "topic": "javascript",
+      "difficulty": "easy",
+      "tags": ["数据类型", "内存机制"],
+      "question": "使用 `const` 声明的对象，为什么它的属性可以被修改，但不能被重新赋值为另一个对象？",
+      "knowledgePoint": "原始类型与引用类型的内存存储（栈与堆）",
+      "answerExplanation": "这涉及到 JavaScript 中数据在内存里的存储机制。\n\n`const` 关键字保证的是**变量指向的内存地址不可改变**。\n\n- **原始类型**（如 String, Number, Boolean）：数据直接存储在**栈内存（Stack）**中。`const` 锁定了这个值，所以不能修改。\n- **引用类型**（如 Object, Array）：数据本体非常庞大，存储在**堆内存（Heap）**中，而在**栈内存**中只保存了一个指向堆内存的**地址指针**。\n\n当我们用 `const` 声明一个对象时，`const` **仅仅锁死了栈内存里的那个“地址指针”**。你不能把指针指向一个全新的对象（重新赋值报错），但是你完全可以顺着指针找到堆里的对象，去修改对象内部的属性（比如增删改字段）。",
+      "codeBlocks": [
+        {
+          "language": "javascript",
+          "code": "const user = { name: \"Tom\" };\n\n// ✅ 允许：没有改变指针，只是顺着指针修改了堆内存里的数据\nuser.name = \"Jerry\"; \nconsole.log(user.name); // \"Jerry\"\n\n// ❌ 报错：试图改变栈内存中的指针，指向一个全新的对象\nuser = { name: \"Spike\" }; // TypeError: Assignment to constant variable."
+        }
+      ],
+      "createdAt": "2026-10-05T09:55:00Z"
+    },
+    {
+      "id": "db-q07",
+      "topic": "javascript",
+      "difficulty": "easy",
+      "tags": ["基础语法", "隐式转换"],
+      "question": "在 JavaScript 中，`==`（双等号）和 `===`（三等号）有什么本质区别？为什么开发中强烈建议永远使用 `===`？",
+      "knowledgePoint": "严格相等与隐式类型转换（Type Coercion）",
+      "answerExplanation": "**本质区别：**\n- **`===`（严格相等）**：比较时**不会**进行类型转换。只有当两边数据的**类型相同**且**值也相同**时，才会返回 `true`。\n- **`==`（宽松相等）**：比较时如果两边数据类型不同，JS 引擎会偷偷在后台触发**隐式类型转换（Type Coercion）**，试图把它们转换成相同的类型后再比较。\n\n**为什么要避免使用 `==`？**\nJS 的隐式转换规则极其复杂且反直觉（例如 `0 == false` 为 true，`\"\" == 0` 为 true，但 `null == 0` 为 false）。使用 `==` 很容易在边界条件下引发难以排查的 Bug。\n因此，现代前端开发规范（如 ESLint 规则）强制要求使用 `===`，这能保证代码逻辑清晰、严谨且结果可预测。",
+      "codeBlocks": [
+        {
+          "language": "javascript",
+          "code": "// --- === 严格相等（推荐） ---\nconsole.log(0 === false); // false（Number 与 Boolean 类型不同）\nconsole.log(\"1\" === 1);   // false（String 与 Number 类型不同）\n\n// --- == 宽松相等（危险的隐式转换） ---\nconsole.log(0 == false);  // true（false 被转换成了数字 0）\nconsole.log(\"\" == 0);     // true（空字符串被转换成了 0）\nconsole.log(null == undefined); // true（特例规则）"
+        }
+      ],
+      "createdAt": "2026-10-05T09:54:00Z"
+    },
+    {
+      "id": "db-q08",
+      "topic": "react",
+      "difficulty": "medium",
+      "tags": ["状态管理", "React机制"],
+      "question": "在 React 中连续三次调用 `setCount(count + 1)`，最终视图会更新几次？`count` 的值会增加几？如果换成 `setCount(c => c + 1)` 呢？",
+      "knowledgePoint": "状态批处理（Batching）与函数式更新",
+      "answerExplanation": "**场景 1：`setCount(count + 1)` 连续三次**\n- 视图只会更新 **1 次**。\n- `count` 的值只会增加 **1**。\n- **原因**：React 为了性能优化，具有**状态批处理（Batching）**机制。连续的 setState 不会立即修改变量，而是放入队列。且由于闭包，这三次调用的 `count` 拿到的都是本次渲染的**同一个旧值**（比如 0）。所以相当于执行了三次 `setCount(0 + 1)`，最后被覆盖为 1。\n\n**场景 2：`setCount(c => c + 1)` 连续三次**\n- 视图依然只会更新 **1 次**（批处理机制仍在生效）。\n- 但 `count` 的值会增加 **3**。\n- **原因**：这里传递的是一个**更新函数（Updater Function）**。React 会将这些函数串联在队列中执行，每一个函数接收到的参数 `c` 都是**上一个函数计算完毕后的最新状态**，因此能保证基于最新状态累加，最终结果变为 3。",
+      "codeBlocks": [
+        {
+          "language": "javascript",
+          "code": "// 假设初始 count 为 0\nconst handleNormalClick = () => {\n  setCount(count + 1); // 相当于 setCount(0 + 1)\n  setCount(count + 1); // 相当于 setCount(0 + 1)\n  setCount(count + 1); // 相当于 setCount(0 + 1)\n  // 结果：count 变为 1\n};\n\nconst handleFunctionalClick = () => {\n  setCount(c => c + 1); // 接收 0，返回 1\n  setCount(c => c + 1); // 接收 1，返回 2\n  setCount(c => c + 1); // 接收 2，返回 3\n  // 结果：count 变为 3\n};"
+        }
+      ],
+      "createdAt": "2026-10-05T09:53:00Z"
+    },
+    {
+      "id": "db-q09",
+      "topic": "react",
+      "difficulty": "medium",
+      "tags": ["列表渲染", "Virtual DOM"],
+      "question": "为什么在 React 列表渲染时，极其不推荐使用数组的 `index` 作为组件的 `key`？",
+      "knowledgePoint": "Virtual DOM 的 Diff 算法与 Key 的作用",
+      "answerExplanation": "`key` 是 React 在进行 Virtual DOM **Diff 算法**比对时，用来识别列表中元素的“身份证”。\n\n**为什么用 index 很危险？**\n`index` 是元素的**物理位置序号**，而不是元素的唯一身份标识。如果我们在列表的开头或中间**插入、删除或重新排序**了元素：\n1. 原本数据项的 index 会发生错位（例如原本的第 0 项变成了第 1 项）。\n2. React 在对比前后两次渲染时，发现 `key=\"0\"` 的元素依然存在，就会误认为这个组件没有被销毁，只是内容变了，从而**错误地复用了旧组件实例**。\n3. 这会导致极其严重的 Bug：比如输入框里的输入内容错位、动画错乱、甚至渲染出完全错误的数据。\n\n**最佳实践**：\n永远使用数据本身具有的**唯一且稳定**的标识符（如数据库生成的 `id`）作为 key。只有在列表是纯静态展示、绝对不会发生排序和增删的情况下，才可以勉强使用 `index` 兜底。",
+      "codeBlocks": [
+        {
+          "language": "javascript",
+          "code": "// ❌ 危险的做法：一旦删除或排序 items，组件状态将发生错位\n{items.map((item, index) => (\n  <TodoItem key={index} data={item} />\n))}\n\n// ✅ 推荐的做法：使用数据的唯一稳定 ID\n{items.map(item => (\n  <TodoItem key={item.id} data={item} />\n))}"
+        }
+      ],
+      "createdAt": "2026-10-05T09:52:00Z"
+    },
+    {
+      "id": "db-q10",
+      "topic": "css",
+      "difficulty": "medium",
+      "tags": ["性能优化", "浏览器渲染"],
+      "question": "当我们要实现一个元素的位移动画时，修改 `transform: translateX(100px)` 和修改 `left: 100px` 在浏览器底层性能上有什么巨大差异？",
+      "knowledgePoint": "浏览器渲染流水线（回流、重绘、合成）",
+      "answerExplanation": "这两者在性能上有天壤之别。修改 `left` 性能极差，而修改 `transform` 性能极高。\n\n**浏览器渲染流水线（Pixel Pipeline）：**\n生成一帧画面通常需要经过：`Layout（布局/回流） -> Paint（绘制/重绘） -> Composite（合成）`。\n\n- **修改 `left`**：\n  改变元素的 `left` 会改变它在页面上的物理几何位置，这会触发**回流（Reflow）**。浏览器必须重新计算整个页面的布局，接着重新绘制受影响的区域。在动画执行的每一帧（60次/秒）都做这么重的计算，极易导致页面卡顿、掉帧。\n- **修改 `transform`**：\n  `transform` 是一个神奇的属性。它**不会触发回流和重绘**。浏览器会将带有 `transform` 的元素单独提升到一个**独立的图层（Layer）**中，直接把它交给 **GPU（图形处理器）** 去做硬件加速。GPU 只需要在最后的**合成（Composite）**阶段，把这个图层挪动一下位置即可，计算开销极低，动画如丝般顺滑。",
+      "codeBlocks": [
+        {
+          "language": "css",
+          "code": "/* ❌ 性能差，每一帧都会重新计算布局（回流） */\n.box-bad {\n  position: relative;\n  left: 0;\n  transition: left 0.3s;\n}\n.box-bad:hover {\n  left: 100px;\n}\n\n/* ✅ 性能极佳，触发 GPU 硬件加速图层合成 */\n.box-good {\n  transform: translateX(0);\n  transition: transform 0.3s;\n}\n.box-good:hover {\n  transform: translateX(100px);\n}"
+        }
+      ],
+      "createdAt": "2026-10-05T09:51:00Z"
+    }
+  ]
+}

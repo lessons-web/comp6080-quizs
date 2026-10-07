@@ -1,6 +1,6 @@
 ---
 id: "004-stacking-context"
-title: "Stacking Context and z-index"
+title: "层叠上下文与 z-index"
 topic: "css"
 category: "层级系统"
 difficulty: "hard"
@@ -9,13 +9,130 @@ summary: "z-index 非全局；受祖先 stacking context 作用域；常见失�
 createdAt: "2026-09-28T13:30:00.000Z"
 ---
 
-# Stacking Context and z-index
+> 题面："我给弹层写了 `z-index: 9999`，为什么还被一个 `z-index: 10` 的卡片盖住了？"  
+> 回答：**因为 z-index 不是全局的，它只在"当前层叠上下文"里有效。**
 
-`z-index` does not guarantee that a large number will always place an element on top of everything else. Stacking still depends on positioning rules and stacking contexts created by ancestors.
+层叠上下文（Stacking Context）是 CSS 里的"小宇宙"：每个上下文内部会做自己的层级选举，再把结果**整体**拿出去跟兄弟比。`z-index` 只是同一宇宙内的投票，跨宇宙是跨不过去的。理解这个概念，能让你彻底告别 `z-index: 9999999` 的军备竞赛。
 
-When a `z-index` value appears to have no effect, common causes include missing positioning, different stacking contexts, or a parent element restricting how descendants layer relative to siblings.
+## 1. 一个经典失败例子
 
-## Review Checklist
+```html
+<div class="a">   <!-- z-index: 10 -->
+  <div class="modal" style="z-index: 9999">弹层</div>
+</div>
+<div class="b">   <!-- z-index: 20 -->
+  卡片 B
+</div>
+```
 
-- Remember that `z-index` is scoped by stacking context.
-- Prefer external stylesheets for reusable, maintainable CSS.
+```css
+.a { position: relative; z-index: 10; }
+.b { position: relative; z-index: 20; }
+```
+
+你以为 `.modal(9999)` 肯定盖过 `.b(20)`，**实际上 `.modal` 永远盖不到 `.b`** —— 因为 `.a(10)` 和 `.b(20)` 在同一个父层叠上下文中比较，`.a < .b`，所以 `.a` 里面所有子项（包括 `z-index: 9999`）都被当成"一个整体"放在 `.b` 底下。
+
+这是最反直觉也最核心的规则：**层叠上下文是嵌套的、内部不外溢的。**
+
+## 2. 怎么创建一个层叠上下文
+
+满足下列任一条件，这个元素就"自成一国"了，里面的 z-index 不再跟外面混：
+
+| 最常见触发方式 | 说明 |
+|---|---|
+| **根元素 `<html>`** | 最顶层的宇宙，所有 z-index 最终都要回到这里排队 |
+| `position: absolute/relative/fixed/sticky` + 写了非 `auto` 的 `z-index` | ⭐ 日常 90% 的触发来源 |
+| `display: flex/grid` 容器里的子项 + 该子项写了非 `auto` 的 `z-index` | 注意是 **flex item** 而不是容器本身！ |
+| `opacity < 1` | 🔥 大坑：哪怕只写 `opacity: 0.99` 也会新建层叠上下文！ |
+| `transform / filter / perspective / clip-path` 非 `none` | 动 GPU 的属性基本都会创建 |
+| `will-change: transform/opacity` | 提前声明"将要动画"，也会提前创建 |
+| `isolation: isolate` | ⭐ 刻意"隔离"的官方方式，不改变视觉只改变层级语义 |
+
+> 💡 推荐工程习惯：想把某个组件内部的 z-index 锁死在组件里，最干净的写法就是 `isolation: isolate`。
+
+## 3. 同一个层叠上下文内部怎么排序？（从底到顶）
+
+同一上下文里，所有后代元素按下面这个**固定顺序**从下往上画（后面的盖住前面的）：
+
+```
+1. 本上下文的 background / border
+2. z-index < 0 的子项（负数，专门用来当"背景装饰"）
+3. 常规 flow（block/inline/inline-block）里，没写非 static position 的元素
+4. position 非 static + z-index:auto（默认，其实就是没写）的元素，按 DOM 出现顺序
+5. z-index = 0 且创建了上下文的元素（作为一个整体）
+6. z-index > 0 的子项（越大越在上），数值相同时按 DOM 顺序
+```
+
+直觉结论：
+- **写了 position 但没写 z-index**，默认已经比普通 flow 元素"浮在上层"了；
+- 想把一张图压到文字底下做背景：`position: absolute; z-index: -1`，同时确保父元素**确实是一个层叠上下文**（不然会穿到更外层背后，很常见的 Bug）。
+
+## 4. z-index 失效的 5 个常见原因（调试 checklist）
+
+下次发现 `z-index` 不管用，按顺序查：
+
+1. **是不是没写 position？**
+   `z-index` 只对 `position: relative/absolute/fixed/sticky` 或 flex/grid item 生效；纯 static 元素上写的 `z-index` **直接被忽略**（没报错就是了）。
+
+2. **父元素是不是层叠上下文，且父的 z-index 比兄弟低？**
+   回到文首 `.a(10)` vs `.b(20)` 的例子。父的 z-index 低，子写多少都没用。
+   ✅ 解法：把父的 z-index 提上去，或者干脆把弹层移到 body 最底下（"Portal 方案"）。
+
+3. **祖先有 `transform` / `opacity<1`？**
+   哪怕一层 `<div style="transform: translate(0)">` 套了一下，你写的 `z-index: 9999` 都只在这一个 transform div 里有效。
+   ✅ 解法：给外层 `transform` 加 `z-index`，或用 Portal，或把动画层写到元素本身上。
+
+4. **是不是 `overflow: hidden`？（间接）**
+   本身 `overflow:hidden` 不创建上下文；但它配合 `position: relative + z-index` 组合出现的时候常常把"想浮出去的 toast"裁掉 —— 视觉上看起来跟 z-index 没用一样，其实是被裁了。
+
+5. **flex 子项：你以为是在跟别的比，其实 flex item 本身才是层级单位**
+   父 display:flex + 子写 z-index → 每个 flex item 自动建上下文。想让子项里面的 tooltip 盖到下一列，必须把**这个 flex item** 的 z-index 提高。
+
+## 5. 工程规范：终结 z-index 军备竞赛
+
+大型项目里经常出现 `z-index: 9001`、`999999`、`2147483647`（整数最大）这种恐怖数字。怎么治理？
+
+### 方案 A：主题变量集中管理（推荐）
+```css
+:root {
+  --z-dropdown: 100;
+  --z-sticky:   200;
+  --z-drawer:   300;
+  --z-modal:    400;
+  --z-toast:    500;
+  --z-tooltip:  600;
+}
+```
+谁都不许再写裸的 z-index，一律用变量。想加新层？先到这个表登记，大家都看得见。
+
+### 方案 B：Portal 组件 + 隔离
+Modal / Drawer / Toast 一律通过 React Portal 挂到 `document.body`，根只套一次 `.app-root`，再给 `.app-root { isolation: isolate }`。这样这些"浮层"不会被任何中间的层叠上下文压下去。
+
+### 方案 C：`isolation: isolate` + DOM 顺序兜底
+对于"页面内部的浮层"（tooltip / popover），把它的目标容器写 `isolation: isolate`，保证负 z-index 的装饰不会跑出页面；然后正 z-index 相对较小就能控制清楚。
+
+## 6. 一个小练习
+
+阅读下面的 DOM 结构。假设所有写了 `z-index: N` 的祖先都满足 position 条件：
+```html
+<html>
+  <div class="wrap" style="z-index: 0">      <!-- 层叠上下文 A -->
+    <div class="card" style="z-index: 2">    <!-- 层叠上下文 B -->
+      <div class="tooltip" style="z-index: 100">悬浮提示</div>
+    </div>
+    <div class="nav"  style="z-index: 3">    <!-- 层叠上下文 C -->
+      顶部导航
+    </div>
+  </div>
+</html>
+```
+**问：tooltip 能盖过 nav 吗？**  
+**答：不能。** 因为 A 内部：card(2) < nav(3)；card 里面 100 再大都没用。
+
+## 7. 自我核对清单
+
+- ✅ z-index 写的那个元素，position 真的非 static 吗？
+- ✅ 怀疑被压了，先逐层往上查"哪一层先创建了上下文"，比到和兄弟那一层为止；
+- ✅ 项目里 z-index 是集中定义的变量，而不是拍脑袋写的数字？
+- ✅ 弹层、Toast 都用 Portal 或贴 body，不走中间 10 层 DOM 嵌套？
+- ✅ 真的需要 z-index 负值做背景图时，确保父是一个层叠上下文（`isolation: isolate`）？

@@ -38,7 +38,7 @@ export function KnowledgeListPanel({
   }, [items, debounced])
 
   return (
-    <div className="flex h-full w-96 shrink-0 flex-col overflow-hidden rounded-xl bg-white shadow-sm ring-1 ring-slate-200">
+    <div className="flex h-full w-80 shrink-0 flex-col overflow-hidden rounded-xl bg-white shadow-sm ring-1 ring-slate-200">
       <div className="border-b border-slate-100 p-3">
         <div className="mb-2 flex items-center justify-between">
           <span className="text-xs font-semibold uppercase tracking-wider text-slate-500">

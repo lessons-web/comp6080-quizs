@@ -2,16 +2,16 @@ import { useEffect } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
 
 import { TopicCardGrid } from './components/TopicCardGrid'
-import { KnowledgeSplitLayout } from './components/KnowledgeSplitLayout'
-import { KnowledgeListPanel } from './components/KnowledgeListPanel'
 import { KnowledgeDetailPanel } from './components/KnowledgeDetailPanel'
+import { KnowledgeSidebar } from './components/KnowledgeSidebar'
 import {
+  getAllTopicSummaries,
   getKnowledgePoint,
   getKnowledgePointList,
   isSupportedTopic,
 } from '../../lib/content/knowledge'
 import { useAsyncContent } from '../../lib/hooks/useAsyncContent'
-import { TOPIC_META, type TopicId } from '../../types/content'
+import type { TopicId } from '../../types/content'
 
 function extractKnowledgeSegments(rest: string | undefined): string[] {
   if (!rest) return []
@@ -24,6 +24,8 @@ export function KnowledgePage() {
   const [topicStr, knowledgeId] = extractKnowledgeSegments(rest)
   const topic: TopicId | null =
     topicStr && isSupportedTopic(topicStr) ? topicStr : null
+
+  useAsyncContent(() => getAllTopicSummaries(), [])
 
   const { data: list, loading: listLoading } = useAsyncContent(
     () => (topic ? getKnowledgePointList(topic) : Promise.resolve(null)),
@@ -50,36 +52,27 @@ export function KnowledgePage() {
   )
 
   if (!topic) {
-    return <TopicCardGrid />
+    return (
+      <div className="flex min-h-0 w-full flex-1 overflow-y-auto bg-slate-50">
+        <TopicCardGrid />
+      </div>
+    )
   }
 
-  const topicLabel = TOPIC_META[topic].label
-  const listData = list ?? []
-  const activeId = knowledgeId ?? null
-
   return (
-    <KnowledgeSplitLayout
-      left={
-        listLoading ? (
-          <div className="h-full w-96 shrink-0 animate-pulse rounded-xl bg-slate-100" />
-        ) : (
-          <KnowledgeListPanel
-            items={listData}
-            topicLabel={topicLabel}
-            activeId={activeId}
-            onSelect={(id) => navigate(`/knowledge/${topic}/${id}`)}
+    <div className="flex h-full w-full">
+      <KnowledgeSidebar topic={topic} />
+      <section className="flex min-h-0 flex-1 flex-col overflow-hidden bg-slate-50">
+        <div className="min-h-0 flex-1 overflow-y-auto">
+          <KnowledgeDetailPanel
+            topic={topic}
+            meta={detail?.meta ?? null}
+            Component={detail?.Component ?? null}
+            loading={Boolean(knowledgeId) && detailLoading && !listLoading}
+            error={detailError}
           />
-        )
-      }
-      right={
-        <KnowledgeDetailPanel
-          topic={topic}
-          meta={detail?.meta ?? null}
-          Component={detail?.Component ?? null}
-          loading={Boolean(knowledgeId) && detailLoading}
-          error={detailError}
-        />
-      }
-    />
+        </div>
+      </section>
+    </div>
   )
 }

@@ -2,8 +2,8 @@ import { NavLink } from 'react-router-dom'
 
 const navItems = [
   { label: '知识点解析', to: '/knowledge' },
-  { label: '模拟题库', to: '/practice/week-1' },
-  { label: '模拟真题', to: '/mock-exams/week-1' },
+  { label: '模拟题库', to: '/practice' },
+  { label: '模拟真题', to: '/mock-exams' },
 ]
 
 function navClassName(isActive: boolean) {
@@ -18,7 +18,7 @@ function navClassName(isActive: boolean) {
 export function Header() {
   return (
     <header className="border-b border-slate-200 bg-white/90 backdrop-blur">
-      <div className="mx-auto flex h-[72px] w-full max-w-6xl items-center justify-between gap-6 px-4 sm:px-6 lg:px-8">
+      <div className="mx-auto flex h-[72px] w-full max-w-7xl items-center justify-between gap-6 px-4 sm:px-6 lg:px-8">
         <div className="flex items-center gap-3">
           <span
             aria-hidden
@@ -40,6 +40,7 @@ export function Header() {
           {navItems.map((item) => (
             <NavLink
               key={item.to}
+              end={item.to === '/knowledge' || item.to === '/practice'}
               className={({ isActive }) => navClassName(isActive)}
               to={item.to}
             >

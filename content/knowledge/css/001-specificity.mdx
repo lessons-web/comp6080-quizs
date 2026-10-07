@@ -1,6 +1,6 @@
 ---
 id: "001-specificity"
-title: "CSS Matching and Specificity"
+title: "CSS 选择器与特异性"
 topic: "css"
 category: "选择器系统"
 difficulty: "medium"
@@ -9,12 +9,113 @@ summary: "选择器匹配 vs 特异性；class 胜元素；id 胜 class"
 createdAt: "2026-09-28T13:00:00.000Z"
 ---
 
-# CSS Matching and Specificity
+写 CSS 90% 的 Bug 最终都能归到两件事：**选择器根本没命中到元素**，或者 **多条规则同时命中，但胜出的那条不是你以为的那条**。前者叫「匹配（matching）」，后者叫「特异性 / 优先级（specificity）」。理解这两者是写好 CSS 的第一道坎。
 
-CSS rules only apply when the selector actually matches the element. A class selector like `.warning` will not match an element that only has `id="warning"`, and an id selector like `#warning` will not match an element with `class="warning"`.
+## 1. 先判断：选择器是否真的匹配
 
-When multiple rules match the same element, specificity determines which rule wins. A class selector usually overrides an element selector, so `.note { color: red; }` beats `p { color: blue; }` on `<p class="note">`.
+先看例子：
 
-## Review Checklist
+```css
+/* 规则 A：class 选择器 */
+.warning { color: red; }
 
-- Separate selector matching from selector specificity.
+/* 规则 B：id 选择器 */
+#warning { color: blue; }
+
+/* 规则 C：元素选择器 */
+div { color: green; }
+```
+
+```html
+<div id="warning">我是 div id=warning</div>
+<div class="warning">我是 div class=warning</div>
+<div>我是纯 div</div>
+```
+
+很多初学者会把「匹配」和「优先级」混在一起：
+- 规则 A 只会命中**第 2 个**元素；
+- 规则 B 只会命中**第 1 个**元素；
+- 规则 C 三个都命中。
+
+所以不会出现「A vs B 谁赢」的问题，它们根本不打架。**只有当多个选择器都命中同一个元素时才需要谈特异性。**
+
+> 🔥 高频错题：题目给 `.a { ... }` 和 `#b { ... }`，元素写的是 `<div class="b">`，问最后颜色是啥？答案是「都没匹配，用继承/默认值」—— 根本轮不到特异性。
+
+## 2. 特异性怎么算：三（四）位计数器
+
+W3C 把特异性用 `(a, b, c, d)` 四维来记，通常只看前三位就够：
+
+```
+  (inline-style,  id,   class/attr/pseudo,   element/pseudo-element)
+       🔥          ⭐⭐      🟢🟢🟢            🔵🔵🔵🔵
+```
+
+从左到右一位一位比，**高位有值就直接赢**，低位再大没用。记一个例子：
+
+| 选择器 | 计算 (id, class, elem) | 结果 |
+|---|---|---|
+| `div` | (0, 0, 1) = 001 | 🔵 |
+| `.note` | (0, 1, 0) = 010 | 🟢 |
+| `div.note` | (0, 1, 1) = 011 | 🟢 🔵 |
+| `.alert.danger` | (0, 2, 0) = 020 | 🟢🟢 |
+| `#hero` | (1, 0, 0) = 100 | ⭐ |
+| `<div style="...">` | 行内样式 ≈ (1,0,0,0) | 🔥 上面全赢 |
+| `!important` | 不在特异性表中，它是**核武器**，谁写谁赢 | 💣 |
+
+- 🟢 **类选择器永远赢过元素选择器**：所以 `.note { color: red; }` 和 `p { color: blue; }` 同时作用在 `<p class="note">` 上，文字就是红的。
+- ⭐ **id 选择器永远赢过 class**：`.a.b.c.d.e` 写 100 个 class，也赢不过一个 `#x`。
+- 🔥 **行内 style** 只有 `!important` 能反杀（不推荐写）。
+
+## 3. 同一元素命中多条规则，谁赢？
+
+判胜负顺序（从高到低，前面赢了就不用看后面）：
+
+1. **`!important`** 打标记的 > 没打的；
+2. **来源**：用户写的 `!important` > 作者写的 `!important` > 作者写的正常规则 > 用户写的正常规则；
+3. **特异性**：按上面的 (a, b, c, d) 算；
+4. **书写顺序**：完全打平就看**最后写的那条**赢。（所以 link 标签顺序会影响结果！）
+
+经典坑：
+
+```html
+<link rel="stylesheet" href="a.css" />
+<link rel="stylesheet" href="b.css" />
+```
+
+a.css 和 b.css 里都有 `.btn { color: ... }`，最终**后面的 b.css 赢**。
+
+## 4. 伪类和伪元素别搞混
+
+- **伪类 `:`**：匹配「状态/位置」，算在 🟢 class 那一栏里。
+  - `:hover :active :focus :nth-child(2) :not(.x)`
+  - ✨ 注意 `:not()` 本身**不算特异性**，但括号里的东西要算！
+- **伪元素 `::`**：匹配「元素上生成的虚拟小块」，算在 🔵 element 那一栏。
+  - `::before ::after ::first-letter ::placeholder`
+
+## 5. 反模式 & 健康习惯
+
+### ❌ 反模式
+```css
+/* 1. 多层嵌套堆砌特异性，根本赢不了 */
+.app .page .wrap .list ul li a.item span { color: red; }
+
+/* 2. 一有冲突就 !important，过几天你会再写 !important 去覆盖 */
+.btn { color: #fff !important; }
+
+/* 3. 用 id 写样式 */
+#topbar { background: #222; }
+```
+
+### ✅ 健康习惯
+1. **尽量只用一个 className**（BEM、Tailwind 原子化都是这个思路），特异性永远是 `(0,1,0)`，很好预测；
+2. **少 id 写样式**，id 留给 JS/锚点；
+3. 组件里的「覆盖样式」只增加**一个描述状态的 className**，不要写嵌套叠加；
+4. CSS 文件顺序要稳定：基础 → 组件 → 业务覆盖。
+
+## 6. 自我核对清单
+
+- ✅ 每次调不出样式先确认：选择器真的匹配到这个元素了吗？
+- ✅ 用 DevTools Elements → Computed 面板看最终胜出的值是哪条规则打勾的？
+- ✅ 能不写 `!important` 就不写，写了要写注释解释原因；
+- ✅ 特异性尽量控制在 (0,1,0) 附近，不要超过 (0,3,0)；
+- ✅ `:hover` 等状态类写在同特异性的基础样式「后面」吗？

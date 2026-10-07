@@ -3,7 +3,15 @@
   "questions": [
     {
       "id": "HTML-Q1",
-      "topic": "HTML",
+      "topic": "html",
+      "weeks": [
+        "week-1"
+      ],
+      "difficulty": "easy",
+      "tags": [
+        "文档结构",
+        "语义化"
+      ],
       "question": "在下面代码中，哪一部分属于页面主体内容？为什么？",
       "knowledgePoint": "HTML 文档结构（head 与 body）",
       "answerExplanation": "页面主体内容是 `<body>` 内的内容。`<head>` 主要放文档元信息（标题、meta、样式链接等），不是给用户直接阅读的主内容区域。",
@@ -13,65 +21,130 @@
           "code": "<!doctype html>\n<html>\n  <head>\n    <title>Week 1</title>\n  </head>\n  <body>\n    <h1>Hello</h1>\n    <p>COMP6080</p>\n  </body>\n</html>"
         }
       ],
-      "images": []
+      "images": [],
+      "createdAt": "2026-03-15"
     },
     {
       "id": "HTML-Q2",
-      "topic": "HTML",
+      "topic": "html",
+      "weeks": [
+        "week-1"
+      ],
+      "difficulty": "easy",
+      "tags": [
+        "语义化",
+        "标题层级"
+      ],
       "question": "`<div>Course Notes</div>` 和 `<h1>Course Notes</h1>` 哪个更适合作为页面主标题？为什么？",
       "knowledgePoint": "HTML 语义标签（标题层级）",
-      "answerExplanation": "`<h1>` 更合适，因为它明确表达“一级标题”的语义；`<div>` 是通用容器，不表达标题意义。",
+      "answerExplanation": "`<h1>` 更合适，因为它明确表达「一级标题」的语义；`<div>` 是通用容器，不表达标题意义。",
       "codeBlocks": [],
-      "images": []
+      "images": [],
+      "createdAt": "2026-03-15"
     },
     {
       "id": "HTML-Q3",
-      "topic": "HTML",
+      "topic": "html",
+      "weeks": [
+        "week-1"
+      ],
+      "difficulty": "medium",
+      "tags": [
+        "图片",
+        "路径解析"
+      ],
       "question": "`<img src=\"logo.png\">` 在什么情况下会加载失败？请从路径角度解释。",
       "knowledgePoint": "图片相对路径解析",
       "answerExplanation": "这是相对路径写法，浏览器会从当前 HTML 文件所在目录查找 `logo.png`。当目录层级变化或文件不在预期位置时会失败。",
       "codeBlocks": [],
-      "images": []
+      "images": [],
+      "createdAt": "2026-03-15"
     },
     {
       "id": "HTML-Q4",
-      "topic": "HTML",
+      "topic": "html",
+      "weeks": [
+        "week-1"
+      ],
+      "difficulty": "easy",
+      "tags": [
+        "可访问性",
+        "a11y",
+        "图片"
+      ],
       "question": "课程 logo 图片使用 `alt=\"image\"` 是否合适？如果不合适，怎么改？",
       "knowledgePoint": "图片可访问性（alt 文本）",
       "answerExplanation": "不合适。`image` 信息过于空泛，建议使用有意义的描述，例如 `alt=\"COMP6080 course logo\"`。`alt` 应帮助用户理解图片信息。",
       "codeBlocks": [],
-      "images": []
+      "images": [],
+      "createdAt": "2026-03-16"
     },
     {
       "id": "HTML-Q5",
-      "topic": "HTML",
+      "topic": "html",
+      "weeks": [
+        "week-1"
+      ],
+      "difficulty": "medium",
+      "tags": [
+        "路径",
+        "根路径"
+      ],
       "question": "比较 `src=\"images/photo.jpg\"` 与 `src=\"/images/photo.jpg\"` 的区别。",
       "knowledgePoint": "相对路径与根路径",
       "answerExplanation": "前者是相对路径，基于当前页面目录；后者是根路径，基于站点根目录。页面迁移到子目录时，相对路径更容易受影响。",
       "codeBlocks": [],
-      "images": []
+      "images": [],
+      "createdAt": "2026-03-16"
     },
     {
       "id": "HTML-Q6",
-      "topic": "HTML",
+      "topic": "html",
+      "weeks": [
+        "week-1"
+      ],
+      "difficulty": "medium",
+      "tags": [
+        "SVG",
+        "图片格式"
+      ],
       "question": "为什么课程图标或线条图常推荐 SVG，而不是 PNG？",
       "knowledgePoint": "SVG 与位图差异",
       "answerExplanation": "SVG 是矢量图，缩放后通常更清晰，适合图标、logo、线条图；PNG 是位图，放大后更容易失真。",
       "codeBlocks": [],
-      "images": []
+      "images": [],
+      "createdAt": "2026-03-17"
     },
     {
       "id": "HTML-Q7",
-      "topic": "HTML",
-      "question": "这句话对不对？“SVG 和 JPG 的主要区别只是后缀不同。”",
+      "topic": "html",
+      "weeks": [
+        "week-1"
+      ],
+      "difficulty": "easy",
+      "tags": [
+        "SVG",
+        "JPG",
+        "概念辨析"
+      ],
+      "question": "这句话对不对？「SVG 和 JPG 的主要区别只是后缀不同。」",
       "knowledgePoint": "图片格式本质差异",
       "answerExplanation": "不对。二者在图像表示方式上不同：SVG 是矢量描述，JPG 是位图像素数据，适用场景和缩放表现不同。",
       "codeBlocks": [],
-      "images": []
+      "images": [],
+      "createdAt": "2026-03-17"
     },
     {
       "id": "HTML-Q8",
-      "topic": "HTML",
+      "topic": "html",
+      "weeks": [
+        "week-1"
+      ],
+      "difficulty": "medium",
+      "tags": [
+        "语义化",
+        "结构标签"
+      ],
       "question": "下面两种结构，哪种更有语义？为什么？",
       "knowledgePoint": "语义化结构标签",
       "answerExplanation": "第二种更有语义。`header/nav/footer` 明确表达页面区域角色，结构可读性和后续维护性更好。",
@@ -85,29 +158,57 @@
           "code": "<header>Site</header>\n<nav>Menu</nav>\n<footer>Footer</footer>"
         }
       ],
-      "images": []
+      "images": [],
+      "createdAt": "2026-03-18"
     },
     {
       "id": "HTML-Q9",
-      "topic": "HTML",
+      "topic": "html",
+      "weeks": [
+        "week-1"
+      ],
+      "difficulty": "easy",
+      "tags": [
+        "代码标签",
+        "格式"
+      ],
       "question": "`<code>` 和 `<pre>` 有什么区别？为什么常一起使用？",
       "knowledgePoint": "<code> 与 <pre> 标签职责",
-      "answerExplanation": "`<code>` 用于表达“这是一段代码”，`<pre>` 用于保留空格与换行格式。一起用能同时表达语义和格式。",
+      "answerExplanation": "`<code>` 用于表达「这是一段代码」，`<pre>` 用于保留空格与换行格式。一起用能同时表达语义和格式。",
       "codeBlocks": [],
-      "images": []
+      "images": [],
+      "createdAt": "2026-03-18"
     },
     {
       "id": "HTML-Q10",
-      "topic": "HTML",
+      "topic": "html",
+      "weeks": [
+        "week-1"
+      ],
+      "difficulty": "easy",
+      "tags": [
+        "meta",
+        "文档元信息"
+      ],
       "question": "为什么 `<meta>` 一般放在 `<head>` 而不是 `<body>`？",
       "knowledgePoint": "文档元信息位置",
       "answerExplanation": "`<meta>` 是文档元信息（编码、描述、视口等），属于文档头部配置，不是页面主体内容。",
       "codeBlocks": [],
-      "images": []
+      "images": [],
+      "createdAt": "2026-03-19"
     },
     {
       "id": "HTML-Q11",
-      "topic": "HTML",
+      "topic": "html",
+      "weeks": [
+        "week-1"
+      ],
+      "difficulty": "hard",
+      "tags": [
+        "链接",
+        "路径",
+        "根路径"
+      ],
       "question": "比较下面两种链接，当页面移动到子目录时，哪个更容易出问题？",
       "knowledgePoint": "链接路径行为",
       "answerExplanation": "`about.html`（相对路径）更容易受目录变化影响；`/about`（根路径）始终从站点根目录解析。",
@@ -117,11 +218,21 @@
           "code": "<a href=\"/about\">About</a>\n<a href=\"about.html\">About</a>"
         }
       ],
-      "images": []
+      "images": [],
+      "createdAt": "2026-03-19"
     },
     {
       "id": "HTML-Q12",
-      "topic": "HTML",
+      "topic": "html",
+      "weeks": [
+        "week-1"
+      ],
+      "difficulty": "hard",
+      "tags": [
+        "图片",
+        "排错",
+        "可访问性"
+      ],
       "question": "指出下面代码的两个问题，并给出修正写法。",
       "knowledgePoint": "图片标签完整性",
       "answerExplanation": "问题 1：路径或文件名不完整，可能无法正确加载；问题 2：缺少 `alt`。可改为 `<img src=\"logo.png\" alt=\"Course logo\">`。",
@@ -135,11 +246,20 @@
           "code": "<img src=\"logo.png\" alt=\"Course logo\">"
         }
       ],
-      "images": []
+      "images": [],
+      "createdAt": "2026-03-20"
     },
     {
       "id": "CSS-Q1",
-      "topic": "CSS",
+      "topic": "css",
+      "weeks": [
+        "week-1"
+      ],
+      "difficulty": "medium",
+      "tags": [
+        "选择器",
+        "优先级"
+      ],
       "question": "下面文本最终显示什么颜色？为什么？",
       "knowledgePoint": "选择器优先级（元素 vs 类）",
       "answerExplanation": "显示红色。类选择器 `.note` 的优先级高于元素选择器 `p`。",
@@ -153,20 +273,39 @@
           "code": "p { color: blue; }\n.note { color: red; }"
         }
       ],
-      "images": []
+      "images": [],
+      "createdAt": "2026-03-20"
     },
     {
       "id": "CSS-Q2",
-      "topic": "CSS",
+      "topic": "css",
+      "weeks": [
+        "week-1"
+      ],
+      "difficulty": "easy",
+      "tags": [
+        "CSS 引入",
+        "工程实践"
+      ],
       "question": "外部样式、内部样式、行内样式三种方式中，项目开发里最常用哪种？为什么？",
       "knowledgePoint": "CSS 引入方式",
       "answerExplanation": "最常用外部样式文件，因为便于复用、组织和维护。内部/行内样式更适合临时场景。",
       "codeBlocks": [],
-      "images": []
+      "images": [],
+      "createdAt": "2026-03-21"
     },
     {
       "id": "CSS-Q3",
-      "topic": "CSS",
+      "topic": "css",
+      "weeks": [
+        "week-1"
+      ],
+      "difficulty": "easy",
+      "tags": [
+        "选择器",
+        "id",
+        "class"
+      ],
       "question": "为什么以下样式不会命中目标元素？",
       "knowledgePoint": "id 选择器与 class 选择器匹配",
       "answerExplanation": "`#warning` 是 id 选择器，但 HTML 给的是 class。应改成 `.warning` 或把 HTML 改为 `id=\"warning\"`。",
@@ -180,106 +319,208 @@
           "code": "#warning { color: orange; }"
         }
       ],
-      "images": []
+      "images": [],
+      "createdAt": "2026-03-21"
     },
     {
       "id": "CSS-Q4",
-      "topic": "CSS",
-      "question": "按钮太“挤”时，优先调 `margin` 还是 `padding`？为什么？",
+      "topic": "css",
+      "weeks": [
+        "week-1"
+      ],
+      "difficulty": "easy",
+      "tags": [
+        "盒模型",
+        "margin",
+        "padding"
+      ],
+      "question": "按钮太「挤」时，优先调 `margin` 还是 `padding`？为什么？",
       "knowledgePoint": "margin 与 padding 区别",
       "answerExplanation": "优先调 `padding`，因为它增加按钮内部留白和可点击区域；`margin` 主要改变元素与外部元素的间距。",
       "codeBlocks": [],
-      "images": []
+      "images": [],
+      "createdAt": "2026-03-22"
     },
     {
       "id": "CSS-Q5",
-      "topic": "CSS",
-      "question": "如果要让段落“更大、更清晰、更醒目”，应优先考虑哪些 CSS 属性？",
+      "topic": "css",
+      "weeks": [
+        "week-1"
+      ],
+      "difficulty": "easy",
+      "tags": [
+        "字体",
+        "文本属性"
+      ],
+      "question": "如果要让段落「更大、更清晰、更醒目」，应优先考虑哪些 CSS 属性？",
       "knowledgePoint": "文本格式化属性",
       "answerExplanation": "通常优先 `font-size`、`font-weight`、`font-family`，必要时再配合 `line-height` 和颜色。",
       "codeBlocks": [],
-      "images": []
+      "images": [],
+      "createdAt": "2026-03-22"
     },
     {
       "id": "CSS-Q6",
-      "topic": "CSS",
-      "question": "解释为什么“元素设置了 `width: 200px`，最终占宽不一定是 200px”。",
+      "topic": "css",
+      "weeks": [
+        "week-1"
+      ],
+      "difficulty": "medium",
+      "tags": [
+        "盒模型",
+        "width"
+      ],
+      "question": "解释为什么「元素设置了 `width: 200px`，最终占宽不一定是 200px」。",
       "knowledgePoint": "默认盒模型计算",
       "answerExplanation": "默认盒模型下，`width` 只表示内容宽度，总占宽通常还包括左右 `padding` 和左右 `border`。",
       "codeBlocks": [],
-      "images": []
+      "images": [],
+      "createdAt": "2026-03-23"
     },
     {
       "id": "CSS-Q7",
-      "topic": "CSS",
-      "question": "为什么“当前看起来对齐了”不等于布局没问题？",
+      "topic": "css",
+      "weeks": [
+        "week-1"
+      ],
+      "difficulty": "medium",
+      "tags": [
+        "响应式",
+        "布局稳定性"
+      ],
+      "question": "为什么「当前看起来对齐了」不等于布局没问题？",
       "knowledgePoint": "布局稳定性与响应变化",
       "answerExplanation": "布局需要适应不同屏幕宽度和内容长度。仅在当前尺寸下看起来正常，不能证明布局在其他场景也稳定。",
       "codeBlocks": [],
-      "images": []
+      "images": [],
+      "createdAt": "2026-03-23"
     },
     {
       "id": "CSS-Q8",
-      "topic": "CSS",
+      "topic": "css",
+      "weeks": [
+        "week-1"
+      ],
+      "difficulty": "easy",
+      "tags": [
+        "Flexbox",
+        "容器"
+      ],
       "question": "`display: flex` 通常写在父元素还是子元素？分别会影响什么？",
       "knowledgePoint": "Flex 容器与 Flex 子项",
       "answerExplanation": "通常写在父元素，用于控制子元素排列。写在子元素时，影响的是该子元素内部内容布局，不是兄弟元素之间布局。",
       "codeBlocks": [],
-      "images": []
+      "images": [],
+      "createdAt": "2026-03-24"
     },
     {
       "id": "CSS-Q9",
-      "topic": "CSS",
+      "topic": "css",
+      "weeks": [
+        "week-1"
+      ],
+      "difficulty": "medium",
+      "tags": [
+        "Flexbox",
+        "主轴",
+        "交叉轴"
+      ],
       "question": "`justify-content` 与 `align-items` 的区别是什么？",
       "knowledgePoint": "Flex 主轴与交叉轴",
       "answerExplanation": "`justify-content` 控制主轴分布，`align-items` 控制交叉轴对齐。先确认主轴方向，再判断用哪个属性。",
       "codeBlocks": [],
-      "images": []
+      "images": [],
+      "createdAt": "2026-03-24"
     },
     {
       "id": "CSS-Q10",
-      "topic": "CSS",
-      "question": "一组横向卡片布局，为什么通常用 Flexbox 比“每张卡片写死 margin-left”更稳？",
+      "topic": "css",
+      "weeks": [
+        "week-1"
+      ],
+      "difficulty": "medium",
+      "tags": [
+        "Flexbox",
+        "布局优势"
+      ],
+      "question": "一组横向卡片布局，为什么通常用 Flexbox 比「每张卡片写死 margin-left」更稳？",
       "knowledgePoint": "Flexbox 布局优势",
       "answerExplanation": "Flexbox 能根据可用空间自动分配和对齐，适应性更好；写死边距在屏幕变化时更容易错位。",
       "codeBlocks": [],
-      "images": []
+      "images": [],
+      "createdAt": "2026-03-25"
     },
     {
       "id": "CSS-Q11",
-      "topic": "CSS",
-      "question": "这句话对不对？“只要写 `z-index: 9999`，元素一定在最上层。”",
+      "topic": "css",
+      "weeks": [
+        "week-1"
+      ],
+      "difficulty": "hard",
+      "tags": [
+        "z-index",
+        "层叠上下文"
+      ],
+      "question": "这句话对不对？「只要写 `z-index: 9999`，元素一定在最上层。」",
       "knowledgePoint": "z-index 与层叠上下文",
       "answerExplanation": "不对。`z-index` 受定位条件和层叠上下文影响，不是单纯比数字大小。",
       "codeBlocks": [],
-      "images": []
+      "images": [],
+      "createdAt": "2026-03-25"
     },
     {
       "id": "CSS-Q12",
-      "topic": "CSS",
+      "topic": "css",
+      "weeks": [
+        "week-1"
+      ],
+      "difficulty": "hard",
+      "tags": [
+        "z-index",
+        "排错"
+      ],
       "question": "元素写了 `z-index: 10` 却没变化，常见原因有哪些？",
       "knowledgePoint": "z-index 失效排查",
       "answerExplanation": "常见原因包括未处于合适定位环境、与目标元素不在同一层叠上下文、被父层叠关系限制。",
       "codeBlocks": [],
-      "images": []
+      "images": [],
+      "createdAt": "2026-03-26"
     },
     {
       "id": "CSS-Q13",
-      "topic": "CSS",
+      "topic": "css",
+      "weeks": [
+        "week-1"
+      ],
+      "difficulty": "medium",
+      "tags": [
+        "预处理器",
+        "工程化"
+      ],
       "question": "预处理器在样式维护上的核心价值是什么？",
       "knowledgePoint": "CSS Preprocessors 价值",
       "answerExplanation": "通过变量、嵌套、复用减少重复代码，提升统一修改效率，尤其适合样式规模较大的项目。",
       "codeBlocks": [],
-      "images": []
+      "images": [],
+      "createdAt": "2026-03-26"
     },
     {
       "id": "CSS-Q14",
-      "topic": "CSS",
-      "question": "这句话对不对？“有变量和嵌套就说明预处理器本质上等于 JavaScript。”",
+      "topic": "css",
+      "weeks": [
+        "week-1"
+      ],
+      "difficulty": "easy",
+      "tags": [
+        "预处理器",
+        "概念辨析"
+      ],
+      "question": "这句话对不对？「有变量和嵌套就说明预处理器本质上等于 JavaScript。」",
       "knowledgePoint": "Preprocessor 定位",
       "answerExplanation": "不对。预处理器是 CSS 的增强与编译前处理工具，不是通用脚本语言。",
       "codeBlocks": [],
-      "images": []
+      "images": [],
+      "createdAt": "2026-03-27"
     }
   ]
 }

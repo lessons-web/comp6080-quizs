@@ -1,6 +1,6 @@
 ---
 id: "002-box-model"
-title: "Box Model and Spacing"
+title: "盒模型与间距"
 topic: "css"
 category: "盒模型"
 difficulty: "easy"
@@ -9,12 +9,116 @@ summary: "width 不等于渲染宽；padding vs margin 内外分工"
 createdAt: "2026-09-28T13:10:00.000Z"
 ---
 
-# Box Model and Spacing
+任何 HTML 元素在浏览器里都会被画成一个「矩形盒子」——这就是 CSS 盒模型（Box Model）。理解它你才能明白为什么明明写了 `width: 200px`，元素实际却占了 240px；为什么按钮点不到；为什么两张图之间总有缝隙。
 
-The box model explains why an element with `width: 200px` may take up more than 200 pixels in the layout. By default, total width also includes horizontal padding and borders.
+## 1. 盒子的四层结构
 
-Spacing decisions depend on whether the problem is inside or outside the element. `padding` changes internal spacing and click target size, while `margin` changes the space around the element.
+从内到外分别是：
 
-## Review Checklist
+```
+┌────────────────  margin（外边距，透明，叠层）  ────────────────┐
+│  ┌────────────  border（边框）  ──────────────────────────┐   │
+│  │  ┌────────  padding（内边距，继承背景色）  ─────────┐   │   │
+│  │  │                                                    │   │   │
+│  │  │              content（内容区，width/height）        │   │   │
+│  │  │                                                    │   │   │
+│  │  └────────────────────────────────────────────────────┘   │   │
+│  └────────────────────────────────────────────────────────────┘   │
+└──────────────────────────────────────────────────────────────────┘
+```
 
-- Use `padding` for internal spacing and `margin` for external spacing.
+## 2. content-box vs border-box：决定 width 算到哪一层
+
+这是**最核心的选择**。通过 `box-sizing` 切换：
+
+```css
+/* 默认值，IE 以外大家都默认用了 20 年 */
+box-sizing: content-box;
+/* 工程界推荐默认值，几乎所有项目都会全局重置成这个 */
+box-sizing: border-box;
+```
+
+给 `.box { width: 200px; padding: 0 20px; border: 5px solid #333; }`：
+
+| box-sizing | 内容区实际宽度 | 盒子**最终视觉占用宽度** | 计算 |
+|---|---|---|---|
+| `content-box` | 200px | **250px**（=200+40+10） | padding/border 往外加 |
+| `border-box` | 150px（=200-40-10） | **200px** | padding/border 往内压缩 |
+
+> 🔥 **工程推荐**：项目最开头直接写
+> ```css
+> *, *::before, *::after { box-sizing: border-box; }
+> ```
+> 以后写 `width: 200px` 就真的是 200px，写卡片、做 Grid 完全不用再心算。
+
+## 3. padding 与 margin 的分工
+
+两者都是"空格子"，但方向和语义完全不同：
+
+| 属性 | 工作位置 | 效果 | 常见用途 |
+|---|---|---|---|
+| `padding` | border 内侧，扩大盒子本身 | 背景色会跟着铺；会扩大点击热区 | 卡片内部留白、按钮上下左右 padding |
+| `margin` | border 外侧，推开兄弟/父元素 | 透明；不会影响点击热区 | 两个按钮之间的距离、列表项之间的缝 |
+
+典型按钮：
+
+```css
+.btn {
+  padding: 10px 18px;        /* 让能点击的区域足够大（≥ 40×40 a11y 推荐） */
+  border: 1px solid #2563eb;
+  border-radius: 8px;
+  background: #2563eb;
+  color: #fff;
+}
+.btn + .btn {
+  margin-left: 12px;         /* 按钮之间的缝用 margin，不要在 .btn 里写 padding-left 两边 */
+}
+```
+
+## 4. margin 的怪现象：折叠（collapse）
+
+垂直方向上（top/bottom）**外边距会发生折叠**——两个相邻 margin 不会相加，而是取较大那个。这是你必踩的坑：
+
+```html
+<p>第一段</p>
+<p>第二段</p>
+```
+
+```css
+p { margin-top: 12px; margin-bottom: 20px; }
+```
+
+实际两段之间只有 **20px**（不是 12+20=32），取 max(20, 12) = 20。
+
+折叠三法则（只在垂直方向上，block 级别元素之间）：
+
+1. **兄弟相邻** → 取最大；
+2. **父子首尾** → 如果父元素第一个子元素有 `margin-top`、父元素又没 padding-top/border-top/overflow 非 visible，这个 margin 会「穿过」父元素贴到父外边；
+3. **空元素自折叠** → 空 `<div>` 的上下 margin 会自己合并成一个。
+
+**破折叠方法（任选一个）**：
+- 外层加 `display: flex` / `grid`（flex 项目永远不折叠）
+- 父元素加 `padding-top: 0.1px` 或 `border-top: 1px solid transparent`
+- 父元素 `overflow: auto/hidden`
+- 直接用 Flex / Grid 的 `gap` 代替 margin（**现在工程里最推荐**，彻底告别折叠）
+
+## 5. 水平方向：margin 居中神技
+
+对一个有固定 `width` 的 block 元素：
+
+```css
+.card {
+  width: 600px;
+  margin: 0 auto;   /* 左右自动 → 水平居中 */
+}
+```
+
+`margin-left: auto` / `margin-right: auto` 会把所有剩余空间吃掉，完美水平居中。在 Flex 里用 `margin-left: auto` 也能把单个子元素"推到右边"（老工程师的小绝技）。
+
+## 6. 自我核对清单
+
+- ✅ 项目全局是否写了 `box-sizing: border-box`？
+- ✅ 按钮的可点击区域（包含 padding）至少 40×40 吗？
+- ✅ 两个元素之间的距离用的是 Flex `gap` / Grid `gap`，而不是 margin 叠 margin？
+- ✅ 检查"一段文字粘到了父容器顶上"的情况 —— 是不是首子 margin 穿透了？
+- ✅ 水平居中优先用 `margin: 0 auto` 或 flex/grid 对齐，不要手写 `margin-left` 固定像素。

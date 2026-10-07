@@ -8,14 +8,16 @@ import { Header } from '../components/Header'
 
 export function AppShell() {
   return (
-    <div className="min-h-screen bg-slate-50 text-slate-900">
+    <div className="flex h-screen flex-col overflow-hidden bg-slate-50 text-slate-900">
       <Header />
-      <main className="mx-auto flex min-h-[calc(100vh-9rem)] w-full max-w-6xl flex-1 px-4 py-8 sm:px-6 lg:px-8">
-        <RouteErrorBoundary>
-          <Suspense fallback={<PageLoading />}>
-            <Outlet />
-          </Suspense>
-        </RouteErrorBoundary>
+      <main className="flex min-h-0 flex-1 overflow-hidden">
+        <div className="flex min-h-0 w-full flex-1 overflow-hidden">
+          <RouteErrorBoundary>
+            <Suspense fallback={<PageLoading />}>
+              <Outlet />
+            </Suspense>
+          </RouteErrorBoundary>
+        </div>
       </main>
       <Footer />
     </div>

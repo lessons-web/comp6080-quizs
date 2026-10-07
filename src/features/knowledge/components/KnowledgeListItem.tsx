@@ -52,7 +52,7 @@ export function KnowledgeListItem({ meta, active, highlight, onClick }: Knowledg
       className={[
         'block w-full cursor-pointer border-b border-slate-50 px-3 py-2.5 text-left transition last:border-none',
         active
-          ? 'bg-blue-50 ring-1 ring-blue-200 border-l-2 border-blue-500'
+          ? 'bg-blue-50 ring-1 ring-blue-200 border-r-4 border-blue-600'
           : 'hover:bg-slate-50',
       ].join(' ')}
     >

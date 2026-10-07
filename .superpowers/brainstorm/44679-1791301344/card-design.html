@@ -1,0 +1,69 @@
+<h2>真题卡片 (Quiz Card) 内部结构设计</h2>
+<p class="subtitle">我们采用了“单页沉浸流” (A)，每道题是一张卡片，默认隐藏答案。下面请确认卡片内部的排版和答案展开交互方式。</p>
+
+<div class="options">
+  <div class="option" data-choice="inline-expand" onclick="toggleSelect(this)">
+    <div class="letter">1</div>
+    <div class="content">
+      <h3>内联手风琴 (Inline Accordion)</h3>
+      <p>点击“查看答案”后，答案内容直接在题目下方平滑展开。符合最常见的阅读习惯。</p>
+      <div class="mockup" style="margin-top: 10px; padding: 12px; border: 1px solid #ddd; border-radius: 8px; font-size: 12px;">
+        <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
+          <span style="font-weight: 600; color: #333;">Q1: CSS 权重问题 (8 marks)</span>
+          <span style="background: #eef2ff; color: #2563eb; padding: 2px 6px; border-radius: 4px; font-size: 10px;">CSS</span>
+        </div>
+        <p style="color: #4b5563; margin-bottom: 12px;">What colour is the button text, and how does the browser choose between the four rules?</p>
+        
+        <div style="border-top: 1px dashed #eee; padding-top: 8px; display: flex; align-items: center; justify-content: space-between; cursor: pointer;">
+          <span style="color: #6b7280; font-weight: 500;">查看答案与解析</span>
+          <span style="color: #9ca3af;">▼</span>
+        </div>
+        <div style="margin-top: 8px; padding: 12px; background: #f8fafc; border-left: 3px solid #3b82f6; border-radius: 0 4px 4px 0; color: #1e293b;">
+          <b>Model answer:</b><br/>
+          The button text is GREEN.<br/>
+          ID always takes precedent over classes and type selectors.
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="option" data-choice="flip-card" onclick="toggleSelect(this)">
+    <div class="letter">2</div>
+    <div class="content">
+      <h3>翻转卡片 (Flip Card / Flashcard)</h3>
+      <p>点击卡片任意位置或翻转按钮，整个卡片翻转显示背面的答案。适合强记忆型的刷题体验，但对长答案支持不够友好。</p>
+      <div class="mockup" style="margin-top: 10px; padding: 12px; border: 1px solid #ddd; border-radius: 8px; font-size: 12px; background: #f1f5f9; position: relative; height: 140px; display: flex; align-items: center; justify-content: center; text-align: center;">
+        <div style="position: absolute; top: 8px; right: 8px;">
+           <span style="background: #e2e8f0; padding: 2px 6px; border-radius: 4px; font-size: 10px;">↻ 翻转</span>
+        </div>
+        <div style="color: #334155;">
+          <b>Model answer:</b><br/>
+          The button text is GREEN.<br/>
+          ID always takes precedent over classes and type selectors.
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="option" data-choice="side-by-side" onclick="toggleSelect(this)">
+    <div class="letter">3</div>
+    <div class="content">
+      <h3>卡片内分栏 (Card Split View)</h3>
+      <p>在较宽屏幕上，卡片左侧是题目，右侧是答案区域（默认覆盖毛玻璃遮罩，点击解锁）。在移动端退化为上下布局。</p>
+      <div class="mockup" style="margin-top: 10px; border: 1px solid #ddd; border-radius: 8px; font-size: 12px; display: flex; overflow: hidden; height: 140px;">
+        <div style="flex: 1; padding: 12px; border-right: 1px solid #eee;">
+          <div style="font-weight: 600; margin-bottom: 8px;">Q1 (8 marks)</div>
+          <p style="color: #4b5563;">What colour is the button text...</p>
+        </div>
+        <div style="flex: 1; padding: 12px; background: #f8fafc; position: relative; display: flex; align-items: center; justify-content: center;">
+           <div style="position: absolute; inset: 0; background: rgba(255,255,255,0.8); backdrop-filter: blur(4px); display: flex; align-items: center; justify-content: center; cursor: pointer;">
+             <button class="mock-button">点击显示答案</button>
+           </div>
+           <div style="color: #1e293b; opacity: 0.2;">
+             The button text is GREEN.
+           </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

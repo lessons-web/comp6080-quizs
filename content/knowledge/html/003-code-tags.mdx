@@ -1,6 +1,6 @@
 ---
 id: "003-code-tags"
-title: "Code Presentation Tags"
+title: "代码片段与保留格式"
 topic: "html"
 category: "内容标记"
 difficulty: "easy"
@@ -9,10 +9,96 @@ summary: "<code> 与 <pre> 的分工与组合使用"
 createdAt: "2026-09-28T12:20:00.000Z"
 ---
 
-# Code Presentation Tags
+在技术文档里写代码，最怕两种坑：**空格和换行被浏览器吞掉**、或**关键字、行号、注释看起来像普通正文**。HTML 给我们准备了两对语义化工具：`<code>` 用来标记「这是代码」，`<pre>` 用来标记「这段文字要保留原始排版」。实际写的时候它们几乎总是搭档出现。
 
-HTML uses `<code>` to mark content as code and `<pre>` to preserve formatting such as whitespace and line breaks. They often appear together so that the browser and readers both understand that the content is code and should keep its original layout.
+## 1. `<code>` —— 语义标记
 
-## Review Checklist
+`<code>` 的含义是：**里面的内容是一段代码或标识符**。它默认是等宽字体，不会做空格换行压缩以外的事。
 
-- Combine `<code>` with `<pre>` when preserving layout matters.
+```html
+<p>在 React 里用 <code>useState(0)</code> 声明状态变量。</p>
+```
+
+常用场景：
+- 行内的函数名、变量名、命令名、HTML 标签名
+- 文件名、路径
+- 命令行里的单条命令
+
+## 2. `<pre>` —— 保留原始格式
+
+浏览器默认会把**连续空白、换行、Tab**都折叠成一个空格，这对代码是致命的。`<pre>`（pre-formatted 的缩写）告诉浏览器：**里面的空格、缩进、换行，一个都别动，原样输出**。
+
+```html
+<pre>
+function add(a, b) {
+  return a + b;
+}
+</pre>
+```
+
+> ⚠️ 注意：`<pre>` 里第一行的缩进会被完整保留，所以写源码时要把 `<pre>` 开头贴着正文写，否则整段代码会额外多一截空格。
+
+## 3. 最佳搭档：`<pre><code>...</code></pre>`
+
+单独用 `<code>` 不会保留格式，单独用 `<pre>` 不表达“这是代码”的语义，所以**代码块永远把它们套在一起**：
+
+```html
+<pre><code class="language-javascript">
+// 一段 JavaScript
+function greet(name) {
+  return `Hello, ${name}!`;
+}
+</code></pre>
+```
+
+再配一个语法高亮库（rehype-pretty-code / Prism / Shiki），它会读 `class="language-*"` 自动上色。本 Quiz Hub 用的就是 Vite + MDX + rehype-pretty-code 的标准流水线。
+
+## 4. HTML 实体转义：少踩三个雷
+
+浏览器会把 `<` 解析成标签开头，所以代码里出现的特殊字符要写成实体：
+
+| 原字符 | 实体 | 说明 |
+|---|---|---|
+| `<` | `&lt;` | 小于号 / 左尖括号（**最常忘**） |
+| `>` | `&gt;` | 大于号（尖括号闭合，一般建议也写） |
+| `&` | `&amp;` | and 符号 |
+| `"` | `&quot;` | 双引号（属性里才必须） |
+| `'` | `&#39;` 或 `&apos;` | 单引号 |
+
+**反模式 ❌**：
+```html
+<pre><code>
+  const x = 1 < 2;   // 浏览器会把 "< 2" 当成未闭合标签开始，直接整段挂掉
+</code></pre>
+```
+
+**正确 ✅**：
+```html
+<pre><code>const x = 1 &lt; 2;</code></pre>
+```
+
+## 5. 其他代码语义标签
+
+- `<kbd>`：表示**键盘按键**，比如 <kbd>Ctrl</kbd> + <kbd>C</kbd>，浏览器默认等宽 + 边框，视觉就是"键帽"。
+- `<samp>`：表示**程序/终端输出**，比如报错信息，语义上区别于“你亲手敲的代码”。
+- `<var>`：表示**数学变量或占位符**，斜体显示，比如在公式里写解 <var>x</var>。
+
+## 6. 长代码的 UX 小细节
+
+```html
+<pre class="overflow-x-auto rounded-lg bg-slate-900 text-slate-100 p-4 max-h-[480px] overflow-y-auto">
+  <code class="language-ts">...</code>
+</pre>
+```
+
+- `overflow-x-auto`：长代码横向可滚动，不要把容器撑破；
+- `max-h-[480px]`：超长的函数不要一上来铺几屏，限制最大高度让用户主动滚动；
+- `rounded + bg-dark + p-4`：深色底比浅色底更适合代码，视觉噪音更少。
+
+## 7. 自我核对清单
+
+- ✅ 行内代码用 `<code>` 了吗？
+- ✅ 多行代码是否同时套了 `<pre><code>` 并加了 `language-*`？
+- ✅ 代码里的 `<`、`>`、`&` 都做了实体转义吗？
+- ✅ 大段代码是否设置了横/纵滚动条而非撑破布局？
+- ✅ 键盘按键和终端输出是否用了 `<kbd>` / `<samp>`？

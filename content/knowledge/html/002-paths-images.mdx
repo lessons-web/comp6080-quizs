@@ -1,6 +1,6 @@
 ---
 id: "002-paths-images"
-title: "Paths, Images, and Graphics"
+title: "路径、图片与可访问性"
 topic: "html"
 category: "资源与可访问性"
 difficulty: "medium"
@@ -9,16 +9,114 @@ summary: "相对/绝对路径、alt 文本职责、SVG vs 位图选择"
 createdAt: "2026-09-28T12:10:00.000Z"
 ---
 
-# Paths, Images, and Graphics
+前端页面除了 HTML 骨架，还会引入大量**外部资源**：图片、CSS、JS、字体、图标。这三件事出错率极高：路径写错 → 资源 404；`alt` 不写 → 可访问性挂零；图片格式乱选 → 首屏加载慢到不可用。本篇把三类问题一次讲清。
 
-Asset paths are interpreted relative to either the current document location or the site root. A relative path such as `images/logo.png` depends on the current file location, while `/images/logo.png` always resolves from the root of the site.
+## 1. 路径：相对路径 vs 绝对路径 vs 根路径
 
-Image authoring also includes accessibility responsibilities. `alt` text should communicate the image's purpose, not repeat vague words such as `image`. For content like a course logo, a short descriptive alternative is more helpful.
+先约定一个项目目录样例：
 
-HTML also introduces the difference between vector and bitmap graphics. SVG is usually preferred for icons, logos, and simple diagrams because it scales cleanly, while raster formats such as PNG and JPG store pixel data and are better suited to photo-like content.
+```
+site/
+├── index.html
+├── about/
+│   └── index.html
+└── assets/
+    ├── images/
+    │   └── logo.png
+    └── css/
+        └── main.css
+```
 
-## Review Checklist
+在 `about/index.html` 里引入 `assets/images/logo.png`，三种写法：
 
-- Trace whether a path is relative to the current file or the site root.
-- Write meaningful `alt` text for informative images.
-- Choose SVG for diagrams/logos and raster formats for photographs.
+| 路径写法 | 含义 | 实际解析到 | 是否推荐 |
+|---|---|---|---|
+| `../assets/images/logo.png` | **相对当前文件**：往上跳一层 → 再进 assets | ✅ 正确 | ⭐ 小项目用 |
+| `/assets/images/logo.png` | **相对站点根**：从 site/ 开始找 | ✅ 正确 | ⭐⭐⭐ 工程首选 |
+| `assets/images/logo.png` | 相对 about/ 目录去找 | ❌ about/assets/... 不存在 | ❌ 易错 |
+
+> 🧭 判别口诀：**开头是 `/` → 根路径；开头是 `../` 或文件名 → 相对路径；开头是 `https://` → 绝对 URL**。
+
+额外一个坑：如果你用 `<base href="/app/">` 标签，所有相对路径都会以 `/app/` 为基准解析。除非你非常清楚为什么要用，否则**别加 `<base>`**。
+
+## 2. 图片的可访问性 —— `alt` 到底写啥
+
+`<img>` 的 `alt`（替代文本）不是“可选优化项”，是**规范要求**。原则：
+
+1. **能传达信息的图片**：写一句话描述图片内容及目的。
+   ```html
+   <!-- ✅ 好 -->
+   <img src="/images/arch.svg" alt="微服务架构图：网关 → 5 个服务 → 共享数据库" />
+   ```
+2. **纯装饰性图片**（背景、分隔线、视觉点缀）：写 `alt=""`（空字符串），屏幕阅读器会直接跳过。
+   ```html
+   <!-- ✅ 好 -->
+   <img src="/divider.png" alt="" />
+   ```
+3. **文字图**：`alt` 必须把图片里的所有文字抄一遍，否则视力障碍用户等于没看到。
+4. **按钮内图片 / Logo 链接**：`alt` 描述**点击后会发生什么**或**链接目的地**，而不是“logo”。
+   ```html
+   <!-- ❌ 坏 alt="公司 logo" -->
+   <!-- ✅ 好 -->
+   <a href="/">
+     <img src="/logo.png" alt="返回红黑树论坛首页" />
+   </a>
+   ```
+
+## 3. SVG vs 位图：什么时候用哪个
+
+HTML 引入的图形主要两类：**矢量图 SVG** 和 **位图像素图（PNG/JPG/WebP/AVIF）**。选错会直接影响文件体积和清晰度。
+
+### 3.1 SVG（可缩放矢量图形）
+
+适用：**图标、Logo、线条画、示意图、流程图、数据图**。
+
+```html
+<img src="/icons/home.svg" alt="" width="24" height="24" />
+
+<!-- 或者直接内联，方便改颜色 -->
+<svg class="w-6 h-6 text-blue-600" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+  <path stroke-width="2" d="M3 12l9-9 9 9M5 10v10h14V10"/>
+</svg>
+```
+
+优点：
+- 无限放大不糊（高分屏/Retina 爽）；
+- 尺寸小（几十字节到几 KB）；
+- 可通过 `currentColor` 跟文字颜色联动。
+
+缺点：复杂照片级别细节表现力不如位图。
+
+### 3.2 位图（PNG / JPG / WebP / AVIF）
+
+适用：**照片、截图、渐变海报、需要半透明/alpha 通道的复杂画面**。
+
+```html
+<picture>
+  <source type="image/avif" srcset="/hero.avif" />
+  <source type="image/webp" srcset="/hero.webp" />
+  <img src="/hero.jpg" alt="红黑树课堂线下活动合影" width="1200" height="600" loading="lazy" decoding="async" />
+</picture>
+```
+
+选格式速查表：
+
+| 内容 | 首选 | 备选 | 备注 |
+|---|---|---|---|
+| 实拍照片 | AVIF / WebP | JPG | 压缩率 AVIF > WebP >> JPG |
+| 有透明通道的 UI 图 | WebP | PNG | PNG 无损但通常大 3~5 倍 |
+| 渐变海报 / 插画 | AVIF | WebP | 注意文字抗锯齿 |
+
+## 4. 三个额外小习惯
+
+1. **给 `<img>` 写宽高**：`<img width="800" height="500" />` 能避免图片加载时“页面往下一窜”（CLS，Cumulative Layout Shift），是 Web Vitals 关键指标。
+2. **非首屏图加 `loading="lazy"`**：让浏览器滚动到附近才下载，首屏更快。
+3. **背景图用 CSS，内容图用 HTML `<img>`**：有信息的图片（商品、头像、配图）都该进 `<img>`，这样搜索引擎和屏幕阅读器才能看到；纯装饰才放 CSS `background-image`。
+
+## 5. 自我核对清单
+
+- ✅ 所有资源路径都验证过能打开吗？（别把相对路径当根路径用）
+- ✅ 每张 `<img>` 都有 `alt` 吗？装饰图是否为空字符串？
+- ✅ 图标用 SVG、照片用 AVIF/WebP 了吗？
+- ✅ `<img>` 是否声明了 `width/height` 防 CLS？
+- ✅ 首屏外的图都加了 `loading="lazy"` 吗？

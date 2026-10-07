@@ -1,0 +1,64 @@
+<h2>模拟真题 (Mock Exam) 的核心交互模式</h2>
+<p class="subtitle">我们拿到了 2026T3-QUIZ1，包含多道题目。针对“模拟真题”的详情页，你期望采用哪种整体展现形式？（根据记忆，项目偏好“分屏/仅题/仅答”模式，这里我们来确认具体的布局）</p>
+
+<div class="options">
+  <div class="option" data-choice="a" onclick="toggleSelect(this)">
+    <div class="letter">A</div>
+    <div class="content">
+      <h3>单页沉浸流 (经典卷子模式)</h3>
+      <p>所有题目从上到下平铺，提供“仅题目”和“显示答案”的全局切换。最接近真实纸质试卷的体验，适合快速浏览。</p>
+      <div class="mockup" style="margin-top: 10px; height: 120px; overflow: hidden; font-size: 12px;">
+        <div style="padding: 8px; border-bottom: 1px solid #eee;">
+          <div style="display: flex; gap: 8px; margin-bottom: 8px;">
+            <button class="mock-button" style="padding: 2px 8px;">仅题目</button>
+            <button class="mock-button" style="padding: 2px 8px; background: #eee;">显示答案</button>
+          </div>
+          <div><b>Q1:</b> 题目内容...</div>
+          <div><b>Q2:</b> 题目内容...</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="option" data-choice="b" onclick="toggleSelect(this)">
+    <div class="letter">B</div>
+    <div class="content">
+      <h3>双栏分屏 (题目区 + 答题/解析区)</h3>
+      <p>左侧显示题目列表或当前题目，右侧固定为解析/答题区。顶部支持「分屏/仅题/仅答」切换。适合深度学习和对照看解析。</p>
+      <div class="mockup" style="margin-top: 10px; height: 120px; display: flex; flex-direction: column; font-size: 12px;">
+        <div style="padding: 4px 8px; border-bottom: 1px solid #eee; display: flex; gap: 8px;">
+           <span style="background: #ccc; padding: 2px 6px; border-radius: 4px;">分屏</span>
+           <span>仅题</span>
+           <span>仅答</span>
+        </div>
+        <div style="display: flex; flex: 1;">
+          <div style="flex: 1; border-right: 1px solid #eee; padding: 8px;">
+            <b>Q1:</b> 题目内容...
+          </div>
+          <div style="flex: 1; padding: 8px; background: #f9f9f9;">
+            <b>解析:</b> 这里是答案...
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="option" data-choice="c" onclick="toggleSelect(this)">
+    <div class="letter">C</div>
+    <div class="content">
+      <h3>向导模式 (一题一页)</h3>
+      <p>每次只显示一道题目，底部有“上一题/下一题”和“查看解析”抽屉（符合现有题库偏好）。适合沉浸式模拟考试。</p>
+      <div class="mockup" style="margin-top: 10px; height: 120px; display: flex; flex-direction: column; font-size: 12px; position: relative;">
+        <div style="flex: 1; padding: 8px;">
+          <div style="text-align: right; color: #666;">1 / 8</div>
+          <b>Q1:</b> 题目内容...
+        </div>
+        <div style="padding: 8px; background: #f1f1f1; display: flex; justify-content: space-between; border-top: 1px solid #ddd; position: absolute; bottom: 0; width: 100%; box-sizing: border-box;">
+           <span>&lt; 上一题</span>
+           <span style="color: blue;">查看解析 (Drawer)</span>
+           <span>下一题 &gt;</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

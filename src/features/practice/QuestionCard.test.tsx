@@ -9,6 +9,8 @@ const fixture: PracticeQuestion = {
   id: 'HTML-Q1',
   topic: 'html',
   weeks: ['week-1'],
+  difficulty: 'easy',
+  tags: ['文档结构', '语义化'],
   question: '在下面代码中，哪一部分属于页面主体内容？为什么？',
   knowledgePoint: 'HTML 文档结构（head 与 body）',
   answerExplanation:
@@ -20,6 +22,7 @@ const fixture: PracticeQuestion = {
     },
   ],
   images: [],
+  createdAt: '2026-03-15',
 }
 
 describe('QuestionCard', () => {
