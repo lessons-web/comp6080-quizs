@@ -32,6 +32,14 @@ const TOPIC_FILTERS: Array<{ value: 'all' | TopicId; label: string }> = [
   { value: 'nodejs', label: TOPIC_META.nodejs.label },
 ]
 
+const WEEK_FILTERS: Array<{ value: 'all' | string; label: string }> = [
+  { value: 'all', label: '全部周次' },
+  ...Array.from({ length: 12 }, (_, i) => ({
+    value: `week-${i + 1}`,
+    label: `Week ${i + 1}`,
+  })),
+]
+
 const LAYOUT_ICON: Record<LayoutPref, React.JSX.Element> = {
   '1': (
     <svg viewBox="0 0 16 16" aria-hidden="true" className="h-4 w-4">
@@ -103,10 +111,12 @@ function matchQuestion(
   kw: string,
   topic: 'all' | TopicId,
   diff: 'all' | Difficulty,
+  week: 'all' | string,
   tags: string[],
 ) {
   if (topic !== 'all' && q.topic !== topic) return false
   if (diff !== 'all' && q.difficulty !== diff) return false
+  if (week !== 'all' && (!q.weeks || !q.weeks.includes(week as any))) return false
   if (tags.length > 0 && !tags.every((t) => q.tags.includes(t))) return false
   if (!kw) return true
   const s = kw.toLowerCase()
@@ -149,6 +159,7 @@ export function PracticePage() {
   const debouncedSearch = useDebounced(searchRaw, 200)
   const [topicFilter, setTopicFilter] = useState<'all' | TopicId>(initialTopic)
   const [diffFilter, setDiffFilter] = useState<'all' | Difficulty>('all')
+  const [weekFilter, setWeekFilter] = useState<'all' | string>('all')
   const [selectedTags, setSelectedTags] = useState<string[]>([])
 
   const allTags = useMemo(
@@ -178,6 +189,19 @@ export function PracticePage() {
     }, base)
   }, [allQuestions])
 
+  const weekCounts = useMemo(() => {
+    const base: Record<string, number> = {}
+    if (!allQuestions) return base
+    return allQuestions.reduce((acc, q) => {
+      if (q.weeks) {
+        q.weeks.forEach(w => {
+          acc[w] = (acc[w] ?? 0) + 1
+        })
+      }
+      return acc
+    }, base)
+  }, [allQuestions])
+
   const topicOptions: SelectOption[] = useMemo(
     () =>
       TOPIC_FILTERS.map((f) => ({
@@ -191,13 +215,22 @@ export function PracticePage() {
     () => DIFF_FILTERS.map((f) => ({ value: f.value, label: f.label })),
     [],
   )
+  const weekOptions: SelectOption[] = useMemo(
+    () =>
+      WEEK_FILTERS.map((f) => ({
+        value: f.value,
+        label: f.label,
+        suffix: f.value === 'all' ? undefined : `· ${weekCounts[f.value] ?? 0}`,
+      })),
+    [weekCounts],
+  )
 
   const filtered = useMemo(() => {
     if (!allQuestions) return []
     return allQuestions.filter((q) =>
-      matchQuestion(q, debouncedSearch, topicFilter, diffFilter, selectedTags),
+      matchQuestion(q, debouncedSearch, topicFilter, diffFilter, weekFilter, selectedTags),
     )
-  }, [allQuestions, debouncedSearch, topicFilter, diffFilter, selectedTags])
+  }, [allQuestions, debouncedSearch, topicFilter, diffFilter, weekFilter, selectedTags])
 
   if (loading) {
     return (
@@ -340,6 +373,14 @@ export function PracticePage() {
                 options={diffOptions}
                 placeholder="全部难度"
                 className="w-28 shrink-0"
+              />
+
+              <Select
+                value={weekFilter}
+                onChange={(v) => setWeekFilter(v as string)}
+                options={weekOptions}
+                placeholder="全部周次"
+                className="w-32 shrink-0"
               />
 
               <MultiSelect
