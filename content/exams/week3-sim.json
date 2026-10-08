@@ -1,0 +1,121 @@
+{
+  "topic": "javascript",
+  "exams": [
+    {
+      "id": "WEEK3-SIM",
+      "title": "Week 3 模拟试卷",
+      "description": "Week 3 知识点模拟试卷：DOM 操作与事件委托、表单验证与默认行为、闭包（Closure）。",
+      "tags": [
+        "模拟题",
+        "Week3"
+      ],
+      "totalMarks": 20,
+      "questions": [
+        {
+          "id": "Q1",
+          "title": "DOM 操作与交互",
+          "marks": 8,
+          "contentMdx": "```html\n<ul id=\"task-list\">\n  <li class=\"task\">Read notes</li>\n</ul>\n<button id=\"add-btn\">Add Task</button>\n\n<script>\n  const btn = document.getElementById('add-btn');\n  const list = document.getElementById('task-list');\n\n  btn.addEventListener('click', () => {\n    const newItem = document.createElement('li');\n    newItem.textContent = 'New Task';\n    newItem.className = 'task';\n    list.appendChild(newItem);\n  });\n</script>\n```",
+          "subQuestions": [
+            {
+              "id": "Q1-a",
+              "label": "(a)",
+              "marks": 2,
+              "questionMdx": "什么是 DOM？在上述代码中，DOM 扮演了什么角色？",
+              "answerMdx": "DOM（文档对象模型，Document Object Model）是浏览器将 HTML 页面解析成树状结构的 API 接口。\n在这段代码中，DOM 作为桥梁，让 JavaScript 能够查找现有的 HTML 元素（getElementById），创建新元素（createElement），并将其插入到页面的结构树中（appendChild）。",
+              "markingMdx": "1 mark for defining DOM as the tree representation/API of the HTML document.\n1 mark for explaining its role in allowing JS to interact with and modify the page."
+            },
+            {
+              "id": "Q1-b",
+              "label": "(b)",
+              "marks": 2,
+              "questionMdx": "用户连续点击了 3 次 \"Add Task\" 按钮，页面上的 `<ul>` 列表中总共会有几个 `<li>` 元素？",
+              "answerMdx": "总共会有 4 个 <li> 元素。（1个初始存在的，加上 3 次点击新创建的 3个）。",
+              "markingMdx": "2 marks for correctly stating 4 elements."
+            },
+            {
+              "id": "Q1-c",
+              "label": "(c)",
+              "marks": 2,
+              "questionMdx": "开发者想在点击列表项时给其添加一个完成的样式，于是他写了：\n```javascript\nconst tasks = document.querySelectorAll('.task');\ntasks.forEach(task => {\n  task.addEventListener('click', () => task.classList.add('done'));\n});\n```\n他发现点击 \"Read notes\" 时正常，但点击新添加的 \"New Task\" 时却没有任何反应。为什么？",
+              "answerMdx": "因为 `querySelectorAll` 只在脚本初始执行时获取了当时页面上已存在的 `.task` 元素（即第一个 <li>），并为它绑定了事件。后续动态创建的新 <li> 元素并没有绑定点击事件。",
+              "markingMdx": "1 mark for explaining that querySelectorAll only grabs existing elements.\n1 mark for explaining that dynamically added elements miss out on the event listener."
+            },
+            {
+              "id": "Q1-d",
+              "label": "(d)",
+              "marks": 2,
+              "questionMdx": "承接上一题，为了让所有现有和未来新添加的列表项都能响应点击，通常推荐使用什么技术方案？（只需说出概念或思路）",
+              "answerMdx": "事件委托（Event Delegation）。\n思路是将点击事件监听器绑定在父元素 `<ul>` 上，利用事件冒泡机制，当点击发生时检查 `event.target` 是否是 `.task` 元素，从而统一处理所有子元素的点击。",
+              "markingMdx": "1 mark for mentioning Event Delegation.\n1 mark for explaining the concept (binding to parent and checking event.target)."
+            }
+          ]
+        },
+        {
+          "id": "Q2",
+          "title": "表单验证与默认行为",
+          "marks": 6,
+          "contentMdx": "```html\n<form id=\"loginForm\">\n  <input type=\"text\" id=\"user\" name=\"user\">\n  <input type=\"password\" id=\"pass\" name=\"pass\">\n  <button type=\"submit\">Login</button>\n</form>\n<div id=\"error-msg\"></div>\n\n<script>\n  const form = document.getElementById('loginForm');\n  const errorMsg = document.getElementById('error-msg');\n\n  form.addEventListener('submit', function(event) {\n    const user = document.getElementById('user').value;\n    if (user === '') {\n      errorMsg.textContent = 'Username cannot be empty';\n      // 代码缺少了一行关键逻辑\n    }\n  });\n</script>\n```",
+          "subQuestions": [
+            {
+              "id": "Q2-a",
+              "label": "(a)",
+              "marks": 2,
+              "questionMdx": "当用户留空用户名并点击 Login 时，页面闪过一条错误信息然后立刻刷新了，错误信息也消失了。为什么会这样？",
+              "answerMdx": "因为点击 `type=\"submit\"` 的按钮触发了表单的默认提交行为。默认行为会将表单数据发送给服务器并刷新当前页面。虽然 JavaScript 修改了错误信息，但紧接着页面刷新导致修改被重置。",
+              "markingMdx": "1 mark for explaining the default form submission behavior.\n1 mark for explaining that page reload wipes out the JS DOM changes."
+            },
+            {
+              "id": "Q2-b",
+              "label": "(b)",
+              "marks": 2,
+              "questionMdx": "为了修复上述问题，阻止页面刷新并保留错误信息，应该在 `if` 块中（或最前面）添加哪一行关键代码？",
+              "answerMdx": "javascript\nevent.preventDefault();",
+              "markingMdx": "2 marks for correctly writing `event.preventDefault();`."
+            },
+            {
+              "id": "Q2-c",
+              "label": "(c)",
+              "marks": 2,
+              "questionMdx": "假设不写任何 JavaScript，如何仅通过修改 HTML 代码来实现“用户名不能为空”的验证，并阻止表单提交？",
+              "answerMdx": "在 username 的 `<input>` 标签中添加 `required` 属性。\n例如：`<input type=\"text\" id=\"user\" name=\"user\" required>`\n浏览器原生表单验证会拦截提交并提示用户。",
+              "markingMdx": "1 mark for identifying the `required` attribute.\n1 mark for explaining that browser's native validation handles it."
+            }
+          ]
+        },
+        {
+          "id": "Q3",
+          "title": "JavaScript 闭包 (Closure)",
+          "marks": 6,
+          "contentMdx": "```javascript\nfunction makeMultiplier(multiplier) {\n  return function(x) {\n    return x * multiplier;\n  };\n}\n\nconst double = makeMultiplier(2);\nconst triple = makeMultiplier(3);\n\nconsole.log(double(5));\nconsole.log(triple(5));\n```",
+          "subQuestions": [
+            {
+              "id": "Q3-a",
+              "label": "(a)",
+              "marks": 2,
+              "questionMdx": "代码运行后，控制台会输出什么？",
+              "answerMdx": "10\n15",
+              "markingMdx": "1 mark for 10.\n1 mark for 15."
+            },
+            {
+              "id": "Q3-b",
+              "label": "(b)",
+              "marks": 2,
+              "questionMdx": "什么是闭包？在上述代码中，闭包体现在哪里？",
+              "answerMdx": "闭包是指一个函数能够记住并访问它被创建时所在的词法作用域，即使该外部函数已经执行完毕。\n体现在：返回的匿名函数 `function(x)` 记住了外部函数 `makeMultiplier` 的参数 `multiplier` 的值，因此 `double` 函数永远记住了 2，`triple` 永远记住了 3。",
+              "markingMdx": "1 mark for defining closure (function remembering its lexical scope).\n1 mark for applying it to the code (inner function remembers `multiplier`)."
+            },
+            {
+              "id": "Q3-c",
+              "label": "(c)",
+              "marks": 2,
+              "questionMdx": "在前端开发中，闭包经常被用来解决什么实际问题？请举一个例子。",
+              "answerMdx": "常用来解决：\n1. 状态私有化/数据封装（隐藏不希望被外部直接修改的变量）。\n2. 事件处理函数或回调函数中保存外部变量。\n3. 柯里化或工厂函数（如本题的生成器）。",
+              "markingMdx": "2 marks for a valid use case in frontend development."
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

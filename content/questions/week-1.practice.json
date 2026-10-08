@@ -521,6 +521,102 @@
       "codeBlocks": [],
       "images": [],
       "createdAt": "2026-03-27"
+    },
+    {
+      "id": "2026T3-Q1",
+      "topic": "css",
+      "weeks": [
+        "week-1"
+      ],
+      "difficulty": "medium",
+      "tags": [
+        "真题",
+        "选择器",
+        "优先级",
+        "!important"
+      ],
+      "question": "The four rules below all set the colour of the same button.\n```html\n<button class=\"important\" id=\"confirm\">Delete Account</button>\n```\n```css\nbutton { color: blue; }\n.important { color: red; }\n#confirm { color: green; }\nbutton.important { color: orange; }\n```\n(a) What colour is the button text, and how does the browser choose between the four rules?\n(b) The student adds !important to the first rule. What colour is the text now?\n(c) Why does routinely using !important cause problems? Describe what a developer should usually do when a rule is not taking effect.",
+      "knowledgePoint": "CSS Specificity and !important",
+      "answerExplanation": "(a) GREEN. ID always takes precedent over classes and type selectors. Order does not matter unless it's two tied things.\n(b) BLUE.\n(c) It ends the conversation. Once a declaration is important, the only ways to override it are another !important or an inline style. If a rule is not taking effect, the developer should inspect the element in the browser dev tools, check which rule is winning in the cascade, and then fix the normal CSS by changing the selector, specificity, or source order.",
+      "codeBlocks": [],
+      "images": [],
+      "createdAt": "2026-10-08"
+    },
+    {
+      "id": "2026T3-Q2",
+      "topic": "css",
+      "weeks": [
+        "week-1"
+      ],
+      "difficulty": "medium",
+      "tags": [
+        "真题",
+        "定位",
+        "position"
+      ],
+      "question": "A badge is positioned over a photo.\n```html\n<div class=\"phone\">\n  <div class=\"hero\">\n    <img class=\"photo\" src=\"assets/beach.jpg\" alt=\"Bondi Beach at sunrise\">\n    <div class=\"badge\">NEW</div>\n  </div>\n</div>\n```\n```css\n.phone { width: 400px; margin: 0 auto; }\n.hero { position: relative; height: 300px; }\n.photo { width: 100%; height: 100%; object-fit: cover; }\n.badge { position: absolute; top: 20px; right: 20px; width: 80px; height: 40px; }\n```\n(a) The badge is positioned 20px from the hero's right edge. How many pixels from the hero's left edge is the badge's left edge? Show where the hero's width comes from and why it is needed for the calculation.\n(b) The developer removes position relative from the hero. Where does the badge move, and what are top and right now measured against?",
+      "knowledgePoint": "CSS Absolute Positioning",
+      "answerExplanation": "(a) 300px. right: 20px pins the badge's RIGHT edge 20px in from the hero's right edge, and the badge is 80px wide, so its left edge sits at: 400 - 20 - 80 = 300px.\n(b) The badge ends up in the top right corner of the page — 20px from the top and 20px from the right of the window — rather than in the corner of the hero. Absolute will attach to the nearest previous relative.",
+      "codeBlocks": [],
+      "images": [],
+      "createdAt": "2026-10-08"
+    },
+    {
+      "id": "2026T3-Q3",
+      "topic": "css",
+      "weeks": [
+        "week-1"
+      ],
+      "difficulty": "easy",
+      "tags": [
+        "真题",
+        "盒模型",
+        "box-sizing"
+      ],
+      "question": "Determine the size and spacing of the two blocks below. Each element has its natural height unless a height is specified, and the page is wider than 600px.\n```css\n.card { width: 400px; padding: 0 20px; border: 2px solid #333333; margin-bottom: 40px; }\n```\n(a) Calculate the card's total width in pixels, showing your working. Then state its total width if box-sizing were set to border-box.",
+      "knowledgePoint": "CSS Box Model",
+      "answerExplanation": "444px. width: 400px sets the CONTENT box, because box-sizing defaults to content-box. The padding and the border are then added outside it: 400 (content) + 20 + 20 (padding) + 2 + 2 (border) = 444px. If box-sizing were border-box, the total width would be exactly 400px.",
+      "codeBlocks": [],
+      "images": [],
+      "createdAt": "2026-10-08"
+    },
+    {
+      "id": "2026T3-Q8",
+      "topic": "html",
+      "weeks": [
+        "week-1"
+      ],
+      "difficulty": "easy",
+      "tags": [
+        "真题",
+        "文档结构",
+        "列表"
+      ],
+      "question": "A simple web page about a trip.\n```html\n<!DOCTYPE html>\n<html lang=\"en\">\n  <head>\n    <title>My Trip</title>\n  </head>\n  <body>\n    <h1>Trip to Sydney</h1>\n    <img src=\"opera.jpg\">\n    <ul>\n      <li>Opera House</li>\n      <li>Harbour Bridge</li>\n    </ul>\n  </body>\n</html>\n```\n(a) Where does the text \"My Trip\" appear, and where does \"Trip to Sydney\" appear?\n(b) The developer wants the list to be numbered 1, 2 instead of using bullet points. What should they change?",
+      "knowledgePoint": "HTML Basics (title, headings, lists)",
+      "answerExplanation": "(a) \"My Trip\" appears in the browser tab, because it is inside <title> in the head. \"Trip to Sydney\" appears on the page itself as the main heading, because it is inside <h1> in the body.\n(b) Change <ul> to <ol> (and </ul> to </ol>). ul is an unordered list shown with bullets; ol is an ordered list shown with numbers.",
+      "codeBlocks": [],
+      "images": [],
+      "createdAt": "2026-10-08"
+    },
+    {
+      "id": "2026T3-Q10",
+      "topic": "html",
+      "weeks": [
+        "week-1"
+      ],
+      "difficulty": "medium",
+      "tags": [
+        "真题",
+        "图片格式",
+        "SVG"
+      ],
+      "question": "A developer chooses image formats for a website. The site needs three images:\n- a large photo of a beach at sunset\n- the company logo, with a transparent background, which must stay sharp at any size\n- a small animated loading icon\n\n(a) Choose the most suitable format for each image from JPG, PNG, GIF and SVG. Give a reason for each choice.\n(b) The developer saves the beach photo as a PNG instead, and the file is about five times bigger. It also looks no better. Explain why.\n(c) Someone saves the logo as a JPG instead. On the site's dark blue header it now has a white box around it, and it looks blurry when shown larger. Explain both problems.",
+      "knowledgePoint": "Image Formats",
+      "answerExplanation": "(a) Beach photo: JPG. It uses lossy compression, which keeps photos with lots of colours and detail at a small file size. Logo: SVG. It is a vector format, so it stays sharp at any size, and it supports transparency. Loading icon: GIF. It supports simple animation.\n(b) PNG is lossless, so it keeps every pixel exactly. A photo has lots of fine detail and colour changes, which lossless compression cannot shrink well. JPG throws away detail the eye barely notices, so it is much smaller while looking almost the same.\n(c) White box: JPG does not support transparency, so the transparent background is filled in with a solid colour (white). Blurry: JPG is a raster format made of a fixed number of pixels. Showing it larger stretches those pixels, so it looks blurry or blocky. An SVG is drawn from shapes, so it can be redrawn sharply at any size.",
+      "codeBlocks": [],
+      "images": [],
+      "createdAt": "2026-10-08"
     }
   ]
 }

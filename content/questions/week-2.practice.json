@@ -1,4 +1,44 @@
 {
   "week": "week-2",
-  "questions": []
+  "questions": [
+    {
+      "id": "2026T3-Q7",
+      "topic": "css",
+      "weeks": [
+        "week-2"
+      ],
+      "difficulty": "medium",
+      "tags": [
+        "真题",
+        "移动端",
+        "响应式",
+        "viewport"
+      ],
+      "question": "A page changes its layout on small screens.\n```html\n<head>\n  <meta name=\"viewport\" content=\"width=device-width, initial-scale=1\">\n</head>\n<body>\n  <h1 class=\"title\">My Blog</h1>\n  <nav class=\"menu\">Home | Posts | About</nav>\n</body>\n```\n```css\n.title { font-size: 32px; }\n.menu { display: block; }\n@media (max-width: 600px) {\n  .title { font-size: 20px; }\n  .menu { display: none; }\n}\n```\n(a) The page is viewed on a laptop with a screen 1000px wide. What size is the title, and is the menu shown? Explain why.\n(b) The page is viewed on a phone with a screen 400px wide. What size is the title, and is the menu shown? Explain why.\n(c) What is the purpose of the `<meta name=\"viewport\">` tag in the head?",
+      "knowledgePoint": "Mobile CSS and Viewport",
+      "answerExplanation": "(a) The title is 32px and the menu is shown. The screen is wider than 600px, so the rules inside the media query do not apply.\n(b) The title is 20px and the menu is hidden. The screen is 600px or narrower, so the rules inside the media query apply and override the earlier rules.\n(c) It tells the phone to use its real screen width for the page instead of pretending to be a wide desktop screen and zooming out. Without it, the phone may not match max-width: 600px, so the mobile styles would not apply.",
+      "codeBlocks": [],
+      "images": [],
+      "createdAt": "2026-10-08"
+    },
+    {
+      "id": "2026T3-Q9",
+      "topic": "css",
+      "weeks": [
+        "week-2"
+      ],
+      "difficulty": "easy",
+      "tags": [
+        "真题",
+        "DevTools",
+        "调试"
+      ],
+      "question": "A student uses browser dev tools to work out why their page is broken.\n(a) The student selects a heading in the Elements panel. In the Styles pane, their rule `color: red` is shown with a line through it. What does the line mean, and how can they find out which rule is actually setting the colour?\n(b) The student fixes the colour by editing it directly in the Styles pane, and the page looks right. When they reload the page, the fix is gone. Why, and what should they do?",
+      "knowledgePoint": "Browser Dev Tools",
+      "answerExplanation": "(a) The line means the declaration matched the element but was overridden by another rule, for example one with higher specificity or one that comes later. They can look for the rule higher up in the Styles pane that is not crossed out, or open the Computed tab to see the final colour and which rule it came from.\n(b) Changes made in dev tools only affect the copy of the page currently open in the browser. They are not saved to the student's CSS file, so reloading loads the original file again. They need to make the same change in their CSS file and save it.",
+      "codeBlocks": [],
+      "images": [],
+      "createdAt": "2026-10-08"
+    }
+  ]
 }

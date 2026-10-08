@@ -1,0 +1,113 @@
+{
+  "topic": "javascript",
+  "exams": [
+    {
+      "id": "WEEK4-SIM",
+      "title": "Week 4 模拟试卷",
+      "description": "Week 4 知识点模拟试卷：异步编程宏观理解、async/await 重构、回调地狱及前后端通信。",
+      "tags": [
+        "模拟题",
+        "Week4"
+      ],
+      "totalMarks": 20,
+      "questions": [
+        {
+          "id": "Q1",
+          "title": "异步编程与 Fetch API",
+          "marks": 8,
+          "contentMdx": "```javascript\nfunction loadWeather() {\n  let weather = \"Loading...\";\n  \n  fetch('https://api.weather.com/today')\n    .then(response => response.json())\n    .then(data => {\n      weather = data.condition;\n      console.log(\"A: \", weather);\n    });\n    \n  console.log(\"B: \", weather);\n}\n\nloadWeather();\n```",
+          "subQuestions": [
+            {
+              "id": "Q1-a",
+              "label": "(a)",
+              "marks": 2,
+              "questionMdx": "代码运行时，控制台打印的顺序是先打印 A 还是先打印 B？各自打印出的 `weather` 变量的值是什么？",
+              "answerMdx": "先打印 B，后打印 A。\nB 打印出的值是 \"Loading...\"。\nA 打印出的值是服务器返回的真实天气状况（例如 \"Sunny\"）。",
+              "markingMdx": "1 mark for correct order (B then A).\n1 mark for correct values (\"Loading...\" then the actual data)."
+            },
+            {
+              "id": "Q1-b",
+              "label": "(b)",
+              "marks": 2,
+              "questionMdx": "解释为什么会出现 (a) 中的打印顺序，即使服务器响应非常快（只需 1 毫秒）。",
+              "answerMdx": "因为 `fetch` 是异步非阻塞操作。JavaScript 主线程发起网络请求后不会停下来等待，而是立刻继续执行后面的同步代码（打印 B）。只有当网络请求完成且主线程空闲时，传递给 `.then()` 的回调函数才会被放入微任务队列执行（打印 A）。",
+              "markingMdx": "1 mark for explaining `fetch` is asynchronous and non-blocking.\n1 mark for explaining that callbacks execute only after the main thread finishes synchronous code."
+            },
+            {
+              "id": "Q1-c",
+              "label": "(c)",
+              "marks": 4,
+              "questionMdx": "使用 `async/await` 重写上述 `loadWeather` 函数，使得我们可以按照同步代码的阅读习惯，先等待天气数据获取完毕，再按顺序打印出最终的天气结果。",
+              "answerMdx": "javascript\nasync function loadWeather() {\n  try {\n    let weather = \"Loading...\";\n    const response = await fetch('https://api.weather.com/today');\n    const data = await response.json();\n    weather = data.condition;\n    console.log(\"Result: \", weather);\n  } catch (error) {\n    console.error(error);\n  }\n}",
+              "markingMdx": "1 mark for adding `async` to the function.\n1 mark for using `await fetch(...)`.\n1 mark for using `await response.json()`.\n1 mark for correct logic that logs the final result after waiting."
+            }
+          ]
+        },
+        {
+          "id": "Q2",
+          "title": "前后端通信与 HTTP 基础",
+          "marks": 6,
+          "contentMdx": "一个前端页面想要显示用户的购物车列表。前端开发人员写了如下代码：\n```javascript\nfetch('https://shop.example.com/api/cart')\n  .then(res => res.json())\n  .then(cart => renderCart(cart));\n```",
+          "subQuestions": [
+            {
+              "id": "Q2-a",
+              "label": "(a)",
+              "marks": 2,
+              "questionMdx": "在这个场景中，前端与后端的数据交换格式通常是什么？为什么现代 Web 开发普遍选择这种格式而不是 XML？",
+              "answerMdx": "通常是 JSON (JavaScript Object Notation) 格式。\n因为 JSON 的语法更轻量、易读，且原生兼容 JavaScript，可以通过 `response.json()` 极其方便地转换为 JS 对象，不需要像 XML 那样进行复杂的 DOM 解析。",
+              "markingMdx": "1 mark for identifying JSON.\n1 mark for explaining its benefits (lightweight, native JS compatibility)."
+            },
+            {
+              "id": "Q2-b",
+              "label": "(b)",
+              "marks": 2,
+              "questionMdx": "如果服务器发生故障崩溃了，它可能会返回哪种范围的 HTTP 状态码？（选择：2xx, 3xx, 4xx, 5xx）。前端的 `.then(res => res.json())` 会报错吗？",
+              "answerMdx": "服务器崩溃会返回 5xx 状态码（如 500 Internal Server Error）。\n`fetch` 并不会因为 5xx 状态码而自动抛出网络错误抛到 `catch` 中。它仍然会正常执行 `.then()`，前端需要手动检查 `res.ok` 或 `res.status`。如果服务器返回的是一个 HTML 错误页面而不是 JSON，`res.json()` 解析时就会报错抛出异常。",
+              "markingMdx": "1 mark for identifying 5xx.\n1 mark for explaining that fetch doesn't reject HTTP error status codes, or that res.json() will fail if parsing HTML."
+            },
+            {
+              "id": "Q2-c",
+              "label": "(c)",
+              "marks": 2,
+              "questionMdx": "AJAX 这种技术的出现解决了早期 Web 时代最大的什么痛点？",
+              "answerMdx": "解决了“每次请求新数据都必须整页刷新”的痛点。AJAX 允许在后台异步向服务器请求数据，并在不刷新整个页面的情况下，局部更新页面的内容，极大提升了用户体验。",
+              "markingMdx": "1 mark for mentioning preventing full page reloads.\n1 mark for mentioning updating page content partially/asynchronously."
+            }
+          ]
+        },
+        {
+          "id": "Q3",
+          "title": "回调地狱与异步演进",
+          "marks": 6,
+          "contentMdx": "```javascript\n// 早期基于回调的异步风格\ngetUser(1, function(user) {\n  getPosts(user.id, function(posts) {\n    getComments(posts[0].id, function(comments) {\n      console.log(comments);\n    });\n  });\n});\n```",
+          "subQuestions": [
+            {
+              "id": "Q3-a",
+              "label": "(a)",
+              "marks": 2,
+              "questionMdx": "上述代码结构通常被开发者戏称为“回调地狱 (Callback Hell)”。这种写法有什么坏处？",
+              "answerMdx": "1. 代码横向嵌套过深，形成“金字塔”形状，严重降低可读性。\n2. 难以进行错误处理，每个回调层级都需要单独写错误处理逻辑。\n3. 难以管理复杂的并行或串行异步控制流。",
+              "markingMdx": "1 mark for readability / deep nesting / pyramid of doom.\n1 mark for difficulty in error handling or control flow."
+            },
+            {
+              "id": "Q3-b",
+              "label": "(b)",
+              "marks": 2,
+              "questionMdx": "为了解决这个问题，ES6 引入了 `Promise`。请将上述代码用假想的返回 Promise 的 `getUserAsync`, `getPostsAsync`, `getCommentsAsync` 函数改写成 `.then()` 链式调用的形式。",
+              "answerMdx": "javascript\ngetUserAsync(1)\n  .then(user => getPostsAsync(user.id))\n  .then(posts => getCommentsAsync(posts[0].id))\n  .then(comments => console.log(comments))\n  .catch(err => console.error(err));",
+              "markingMdx": "1 mark for chaining `.then()` without deep nesting.\n1 mark for returning the next promise in the chain."
+            },
+            {
+              "id": "Q3-c",
+              "label": "(c)",
+              "marks": 2,
+              "questionMdx": "从 `XMLHttpRequest` 到 `Fetch API` 的演进，除了语法更现代外，最重要的底层设计改进是什么？",
+              "answerMdx": "最重要的底层改进是 Fetch API 原生基于 Promise 设计。\n这使得它可以摆脱 XHR 时代复杂的事件监听和回调函数，直接享受 Promise 链式调用以及后来的 `async/await` 语法带来的红利。",
+              "markingMdx": "1 mark for identifying that Fetch is natively built on Promises.\n1 mark for explaining how this improves handling (chaining, async/await)."
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

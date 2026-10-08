@@ -13,6 +13,42 @@ const EXAMS_CONFIG = [
     topic: "html"
   },
   {
+    input: 'quizs/Week1-模拟试卷.md',
+    output: 'content/exams/week1-sim.json',
+    id: "WEEK1-SIM",
+    title: "Week 1 模拟试卷",
+    description: "Week 1 知识点模拟试卷：HTML 语义化、CSS 盒模型尺寸精准计算、Flexbox 主轴交叉轴对齐。",
+    tags: ["模拟题", "Week1"],
+    topic: "html"
+  },
+  {
+    input: 'quizs/Week2-模拟试卷.md',
+    output: 'content/exams/week2-sim.json',
+    id: "WEEK2-SIM",
+    title: "Week 2 模拟试卷",
+    description: "Week 2 知识点模拟试卷：移动端优先响应式、JS 基础、NPM 依赖与脚本管理。",
+    tags: ["模拟题", "Week2"],
+    topic: "javascript"
+  },
+  {
+    input: 'quizs/Week3-模拟试卷.md',
+    output: 'content/exams/week3-sim.json',
+    id: "WEEK3-SIM",
+    title: "Week 3 模拟试卷",
+    description: "Week 3 知识点模拟试卷：DOM 操作与事件委托、表单验证与默认行为、闭包（Closure）。",
+    tags: ["模拟题", "Week3"],
+    topic: "javascript"
+  },
+  {
+    input: 'quizs/Week4-模拟试卷.md',
+    output: 'content/exams/week4-sim.json',
+    id: "WEEK4-SIM",
+    title: "Week 4 模拟试卷",
+    description: "Week 4 知识点模拟试卷：异步编程宏观理解、async/await 重构、回调地狱及前后端通信。",
+    tags: ["模拟题", "Week4"],
+    topic: "javascript"
+  },
+  {
     input: 'quizs/mock-exam-1.md',
     output: 'content/exams/mock-exam-1.json',
     id: "MOCK-EXAM-1",

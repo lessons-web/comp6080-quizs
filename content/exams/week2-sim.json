@@ -1,0 +1,121 @@
+{
+  "topic": "javascript",
+  "exams": [
+    {
+      "id": "WEEK2-SIM",
+      "title": "Week 2 模拟试卷",
+      "description": "Week 2 知识点模拟试卷：移动端优先响应式、JS 基础、NPM 依赖与脚本管理。",
+      "tags": [
+        "模拟题",
+        "Week2"
+      ],
+      "totalMarks": 20,
+      "questions": [
+        {
+          "id": "Q1",
+          "title": "移动端优先与响应式设计",
+          "marks": 6,
+          "contentMdx": "```html\n<head>\n  <style>\n    .gallery {\n      display: grid;\n      grid-template-columns: 1fr 1fr 1fr 1fr;\n      gap: 10px;\n    }\n\n    @media (max-width: 768px) {\n      .gallery {\n        grid-template-columns: 1fr 1fr;\n      }\n    }\n\n    @media (max-width: 480px) {\n      .gallery {\n        grid-template-columns: 1fr;\n      }\n    }\n  </style>\n</head>\n<body>\n  <div class=\"gallery\">\n    <img src=\"pic1.jpg\" alt=\"Pic 1\">\n    <img src=\"pic2.jpg\" alt=\"Pic 2\">\n    <img src=\"pic3.jpg\" alt=\"Pic 3\">\n    <img src=\"pic4.jpg\" alt=\"Pic 4\">\n  </div>\n</body>\n```",
+          "subQuestions": [
+            {
+              "id": "Q1-a",
+              "label": "(a)",
+              "marks": 2,
+              "questionMdx": "在屏幕宽度为 900px 的桌面显示器上，图片会显示为几列？在屏幕宽度为 390px 的手机上，图片会显示为几列？",
+              "answerMdx": "900px 时显示为 4 列。\n390px 时显示为 1 列。",
+              "markingMdx": "1 mark for 4 columns at 900px.\n1 mark for 1 column at 390px."
+            },
+            {
+              "id": "Q1-b",
+              "label": "(b)",
+              "marks": 2,
+              "questionMdx": "如果在 `<head>` 中忘记添加 `<meta name=\"viewport\" content=\"width=device-width, initial-scale=1\">` 标签，在真实手机上查看时，图片大概率会显示为几列？为什么？",
+              "answerMdx": "大概率会显示为 4 列。\n因为如果没有 viewport 标签，手机浏览器会默认使用一个较宽的视口（通常是 980px 左右）来渲染页面，然后将其缩小以适应屏幕。由于渲染视口宽于 768px，媒体查询不会生效。",
+              "markingMdx": "1 mark for stating it would likely show 4 columns.\n1 mark for explaining that without viewport, mobile browsers simulate a desktop width (e.g., 980px)."
+            },
+            {
+              "id": "Q1-c",
+              "label": "(c)",
+              "marks": 2,
+              "questionMdx": "上述代码采用了“桌面端优先 (Desktop-First)”还是“移动端优先 (Mobile-First)”的开发思路？如何判断？",
+              "answerMdx": "采用了“桌面端优先 (Desktop-First)”思路。\n因为默认的基础样式（4列）是为桌面端编写的，然后通过 `max-width` 的媒体查询，逐渐在较小屏幕上覆盖样式（降级为 2 列、1 列）。如果是移动端优先，基础样式应为 1 列，并使用 `min-width` 来增加列数。",
+              "markingMdx": "1 mark for identifying Desktop-First.\n1 mark for explaining that default styles are for large screens and `max-width` is used to override for smaller screens."
+            }
+          ]
+        },
+        {
+          "id": "Q2",
+          "title": "JavaScript 基础语法与函数",
+          "marks": 8,
+          "contentMdx": "```javascript\nconst numbers = [10, 20, 30];\n\nfunction processNumbers(arr) {\n  let total = 0;\n  for (let i = 0; i < arr.length; i++) {\n    total += arr[i];\n  }\n  return total;\n}\n\nconst result = processNumbers(numbers);\nconsole.log(result);\n```",
+          "subQuestions": [
+            {
+              "id": "Q2-a",
+              "label": "(a)",
+              "marks": 2,
+              "questionMdx": "代码运行后，控制台会输出什么？`total` 变量的作用域是什么？",
+              "answerMdx": "控制台会输出 60。\n`total` 的作用域是函数级作用域（或块级作用域），它只能在 `processNumbers` 函数内部被访问，外部无法直接读取。",
+              "markingMdx": "1 mark for outputting 60.\n1 mark for explaining function/block scope for `total`."
+            },
+            {
+              "id": "Q2-b",
+              "label": "(b)",
+              "marks": 2,
+              "questionMdx": "请使用 JavaScript 数组的高阶函数 `reduce` 重写 `processNumbers` 函数的核心逻辑，使其更简洁。",
+              "answerMdx": "javascript\nfunction processNumbers(arr) {\n  return arr.reduce((total, num) => total + num, 0);\n}",
+              "markingMdx": "1 mark for correctly using `.reduce()`.\n1 mark for correct accumulator logic and initial value."
+            },
+            {
+              "id": "Q2-c",
+              "label": "(c)",
+              "marks": 2,
+              "questionMdx": "在 `const numbers = [10, 20, 30];` 中使用了 `const` 声明，那么执行 `numbers.push(40);` 会报错吗？执行 `numbers = [1, 2, 3];` 会报错吗？为什么？",
+              "answerMdx": "`numbers.push(40);` 不会报错。\n`numbers = [1, 2, 3];` 会报错。\n因为 `const` 保证的是变量指向的内存地址不可变。对于数组这种引用类型，修改其内部元素（push）没有改变内存地址，而重新赋值（=）试图改变指针地址，这违反了 const 的规则。",
+              "markingMdx": "1 mark for stating push works but reassignment fails.\n1 mark for explaining that `const` protects the reference/pointer, not the contents of an object/array."
+            },
+            {
+              "id": "Q2-d",
+              "label": "(d)",
+              "marks": 2,
+              "questionMdx": "什么是高阶函数 (Higher-Order Function)？请给出一个常见的前端开发场景。",
+              "answerMdx": "高阶函数是指接收函数作为参数，或者返回一个函数作为结果的函数。\n常见场景：数组操作如 map、filter，或者事件监听如 addEventListener 接收一个回调函数作为参数。",
+              "markingMdx": "1 mark for definition (takes a function as argument or returns one).\n1 mark for a valid frontend example (map/filter/addEventListener/setTimeout)."
+            }
+          ]
+        },
+        {
+          "id": "Q3",
+          "title": "NPM 与生态系统",
+          "marks": 6,
+          "contentMdx": "```json\n{\n  \"name\": \"my-project\",\n  \"version\": \"1.0.0\",\n  \"scripts\": {\n    \"start\": \"node server.js\",\n    \"dev\": \"nodemon server.js\"\n  },\n  \"dependencies\": {\n    \"express\": \"^4.18.2\"\n  },\n  \"devDependencies\": {\n    \"nodemon\": \"^3.0.1\"\n  }\n}\n```",
+          "subQuestions": [
+            {
+              "id": "Q3-a",
+              "label": "(a)",
+              "marks": 2,
+              "questionMdx": "上述代码属于哪个文件？这个文件在前端工程化项目中的核心作用是什么？",
+              "answerMdx": "属于 `package.json` 文件。\n它的核心作用是管理项目的元信息、依赖包（dependencies）版本，以及定义项目中常用的脚本命令（scripts）。",
+              "markingMdx": "1 mark for identifying `package.json`.\n1 mark for describing its role in managing dependencies and scripts."
+            },
+            {
+              "id": "Q3-b",
+              "label": "(b)",
+              "marks": 2,
+              "questionMdx": "解释 `dependencies` 和 `devDependencies` 之间的区别。",
+              "answerMdx": "`dependencies` 是项目在生产环境（运行阶段）必需的包（如 React、Express）。\n`devDependencies` 是仅在开发和构建阶段需要的工具包（如打包工具、测试框架、nodemon），它们不会被包含在最终的生产环境运行代码中。",
+              "markingMdx": "1 mark for explaining `dependencies` (production/runtime).\n1 mark for explaining `devDependencies` (development/build tools)."
+            },
+            {
+              "id": "Q3-c",
+              "label": "(c)",
+              "marks": 2,
+              "questionMdx": "开发者想要运行 `dev` 脚本启动本地开发服务器，应该在终端输入什么命令？如果另一个开发者克隆了这个项目代码，他在运行脚本之前必须先执行什么命令？",
+              "answerMdx": "运行 dev 脚本命令：`npm run dev`\n克隆代码后必须先执行：`npm install`（或 `npm i`），以便根据 package.json 下载并安装 `node_modules` 文件夹中的所有依赖。",
+              "markingMdx": "1 mark for `npm run dev`.\n1 mark for `npm install`."
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

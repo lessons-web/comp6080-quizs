@@ -1,0 +1,113 @@
+{
+  "topic": "html",
+  "exams": [
+    {
+      "id": "WEEK1-SIM",
+      "title": "Week 1 模拟试卷",
+      "description": "Week 1 知识点模拟试卷：HTML 语义化、CSS 盒模型尺寸精准计算、Flexbox 主轴交叉轴对齐。",
+      "tags": [
+        "模拟题",
+        "Week1"
+      ],
+      "totalMarks": 20,
+      "questions": [
+        {
+          "id": "Q1",
+          "title": "HTML 语义化与页面结构",
+          "marks": 8,
+          "contentMdx": "```html\n<div class=\"top-nav\">\n  <div class=\"site-logo\">Course App</div>\n  <div class=\"menu\">\n    <a href=\"/home\">Home</a>\n    <a href=\"/about\">About</a>\n  </div>\n</div>\n<div class=\"main-content\">\n  <div class=\"post\">\n    <div class=\"post-title\">Learning HTML</div>\n    <div class=\"post-body\">HTML is the foundation of the web.</div>\n  </div>\n</div>\n```",
+          "subQuestions": [
+            {
+              "id": "Q1-a",
+              "label": "(a)",
+              "marks": 3,
+              "questionMdx": "上述代码大量使用了 `<div>` 标签，这种做法被称为“div 汤 (div soup)”。请使用 HTML5 语义化标签对上述代码进行重构，使结构更具专业性和可读性。",
+              "answerMdx": "html\n<header class=\"top-nav\">\n  <div class=\"site-logo\">Course App</div>\n  <nav class=\"menu\">\n    <a href=\"/home\">Home</a>\n    <a href=\"/about\">About</a>\n  </nav>\n</header>\n<main class=\"main-content\">\n  <article class=\"post\">\n    <h1 class=\"post-title\">Learning HTML</h1>\n    <p class=\"post-body\">HTML is the foundation of the web.</p>\n  </article>\n</main>",
+              "markingMdx": "1 mark for using <header> or <nav> appropriately.\n1 mark for using <main> for the main content area.\n1 mark for using <article>, <h1>, or <p> instead of generic divs."
+            },
+            {
+              "id": "Q1-b",
+              "label": "(b)",
+              "marks": 3,
+              "questionMdx": "解释为什么使用语义化标签（如 `<header>`, `<nav>`, `<article>`）比单纯使用 `<div>` 更好。请给出至少两个原因。",
+              "answerMdx": "1. 提升可访问性 (Accessibility/A11Y)：屏幕阅读器可以更准确地识别页面结构，帮助视障用户导航（例如跳过导航栏直接阅读主内容）。\n2. 有利于 SEO（搜索引擎优化）：搜索引擎爬虫能更好地理解页面的重点内容和层级关系，提升搜索排名。\n3. 提高代码可读性和可维护性：开发者能一眼看懂各个区域的功能，不需要完全依赖 class 命名来猜测结构。",
+              "markingMdx": "1 mark for mentioning Accessibility (A11Y) / Screen readers.\n1 mark for mentioning SEO.\n1 mark for mentioning developer readability / maintainability."
+            },
+            {
+              "id": "Q1-c",
+              "label": "(c)",
+              "marks": 2,
+              "questionMdx": "在包含页面正文和元信息时，应该将上述代码放在 HTML 文档的 `<head>` 还是 `<body>` 标签中？为什么？",
+              "answerMdx": "必须放在 `<body>` 标签中。\n因为 `<body>` 包含的是用户在浏览器窗口中直接可见的所有页面主体内容。而 `<head>` 主要用于放置页面的元信息，如 `<title>`、`<meta>` 和引用的 CSS 样式表，这些不会直接显示为页面正文。",
+              "markingMdx": "1 mark for stating it should go in `<body>`.\n1 mark for explaining the difference between `<head>` (metadata) and `<body>` (visible content)."
+            }
+          ]
+        },
+        {
+          "id": "Q2",
+          "title": "CSS 盒模型与尺寸计算",
+          "marks": 6,
+          "contentMdx": "```html\n<div class=\"box\">Content</div>\n\nCSS:\n.box {\n  width: 200px;\n  height: 100px;\n  padding: 20px;\n  border: 5px solid black;\n  margin: 10px;\n}\n```",
+          "subQuestions": [
+            {
+              "id": "Q2-a",
+              "label": "(a)",
+              "marks": 2,
+              "questionMdx": "在默认的 CSS 盒模型下，这个 `.box` 元素在页面上实际占据的总宽度（包括边框）是多少像素？请写出计算过程。",
+              "answerMdx": "实际占据的总宽度为 250px。\n计算过程：\nwidth (200px) + padding-left (20px) + padding-right (20px) + border-left (5px) + border-right (5px) = 250px。\n(注意：margin 不计入元素本身的可见宽度)",
+              "markingMdx": "1 mark for correctly stating 250px.\n1 mark for showing the correct calculation (200 + 20*2 + 5*2)."
+            },
+            {
+              "id": "Q2-b",
+              "label": "(b)",
+              "marks": 2,
+              "questionMdx": "如果在 `.box` 的 CSS 中添加一行 `box-sizing: border-box;`，这个元素实际占据的总宽度会变成多少像素？此时内容区域（Content box）的宽度变成了多少？",
+              "answerMdx": "总宽度会变成 200px。\n此时内容区域的宽度会变成 150px。\n计算过程：200px (总宽) - 40px (左右 padding) - 10px (左右 border) = 150px。",
+              "markingMdx": "1 mark for stating total width becomes 200px.\n1 mark for stating content width becomes 150px."
+            },
+            {
+              "id": "Q2-c",
+              "label": "(c)",
+              "marks": 2,
+              "questionMdx": "开发者想要让这个 `.box` 在其父容器中水平居中，可以在 CSS 中添加什么属性？",
+              "answerMdx": "添加 `margin: 0 auto;`（或 `margin-left: auto; margin-right: auto;`）。",
+              "markingMdx": "2 marks for correctly identifying `margin: 0 auto;` or `margin: auto;` for horizontal centering of a block element."
+            }
+          ]
+        },
+        {
+          "id": "Q3",
+          "title": "Flexbox 布局基础",
+          "marks": 6,
+          "contentMdx": "```html\n<div class=\"container\">\n  <div class=\"item\">1</div>\n  <div class=\"item\">2</div>\n  <div class=\"item\">3</div>\n</div>\n\nCSS:\n.container {\n  display: flex;\n  height: 200px;\n  border: 1px solid gray;\n}\n.item {\n  width: 50px;\n  background: lightblue;\n}\n```",
+          "subQuestions": [
+            {
+              "id": "Q3-a",
+              "label": "(a)",
+              "marks": 2,
+              "questionMdx": "默认情况下，这三个 `.item` 是水平排列还是垂直排列？为什么？",
+              "answerMdx": "水平排列。\n因为 `display: flex` 默认的 `flex-direction` 属性值是 `row`（行），所以子元素会沿着水平主轴从左到右排列。",
+              "markingMdx": "1 mark for stating horizontal (row) layout.\n1 mark for explaining that the default flex-direction is `row`."
+            },
+            {
+              "id": "Q3-b",
+              "label": "(b)",
+              "marks": 2,
+              "questionMdx": "开发者想要让这三个项目在容器内水平居中对齐（项目之间紧挨着），并且垂直方向也居中对齐。应该在 `.container` 的 CSS 中添加哪两行代码？",
+              "answerMdx": "css\njustify-content: center;\nalign-items: center;",
+              "markingMdx": "1 mark for `justify-content: center;` (horizontal/main axis).\n1 mark for `align-items: center;` (vertical/cross axis)."
+            },
+            {
+              "id": "Q3-c",
+              "label": "(c)",
+              "marks": 2,
+              "questionMdx": "如果开发者在 `.container` 中设置了 `flex-direction: column;`，那么控制垂直方向分布的属性是 `justify-content` 还是 `align-items`？",
+              "answerMdx": "是 `justify-content`。\n因为当设置 `flex-direction: column` 时，主轴变成了垂直方向，而 `justify-content` 永远用于控制主轴方向的对齐和分布。",
+              "markingMdx": "1 mark for identifying `justify-content`.\n1 mark for explaining that the main axis is now vertical."
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

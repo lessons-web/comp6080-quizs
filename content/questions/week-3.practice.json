@@ -1,4 +1,61 @@
 {
   "week": "week-3",
-  "questions": []
+  "questions": [
+    {
+      "id": "2026T3-Q4",
+      "topic": "javascript",
+      "weeks": [
+        "week-3"
+      ],
+      "difficulty": "medium",
+      "tags": [
+        "真题",
+        "LocalStorage"
+      ],
+      "question": "A website remembers whether the user chose dark mode.\n```javascript\nconst savedTheme = localStorage.getItem('theme');\nif (savedTheme === 'dark') {\n  document.body.classList.add('dark');\n}\ndocument.getElementById('dark').addEventListener('click', () => {\n  document.body.classList.add('dark');\n  localStorage.setItem('theme', 'dark');\n});\n```\n(a) A user visits the site for the first time. What does localStorage.getItem('theme') return, and is the page shown in dark mode?\n(b) The user clicks the button, closes the browser, and comes back the next day. Is the page in dark mode? Explain why.\n(c) The developer deletes the localStorage.setItem line. What happens now when the user clicks the button and then reloads the page?",
+      "knowledgePoint": "Browser LocalStorage",
+      "answerExplanation": "(a) It returns null, because nothing has been saved under 'theme' yet. The if condition is false, so the page is NOT in dark mode.\n(b) Yes, the page is in dark mode. setItem saved 'dark' in localStorage, which stays in the browser even after it is closed. When the page loads, getItem returns 'dark' and the class is added.\n(c) Clicking still turns the page dark, but after reloading it goes back to light. Without setItem the choice is never saved, so getItem returns null on reload.",
+      "codeBlocks": [],
+      "images": [],
+      "createdAt": "2026-10-08"
+    },
+    {
+      "id": "2026T3-Q5",
+      "topic": "javascript",
+      "weeks": [
+        "week-3"
+      ],
+      "difficulty": "medium",
+      "tags": [
+        "真题",
+        "DOM事件",
+        "addEventListener"
+      ],
+      "question": "A button shows a message when it is clicked.\n```html\n<button id=\"greet\">Say hello</button>\n<p id=\"message\"></p>\n```\n```javascript\nconst button = document.getElementById('greet');\nconst message = document.getElementById('message');\nfunction showMessage() {\n  message.textContent = 'Hello!';\n}\nbutton.addEventListener('click', showMessage);\n```\n(a) What does the user see when the page first loads, and what happens when they click the button?\n(b) The developer changes the last line to `button.addEventListener('click', showMessage());`. What happens now, and why?\n(c) The developer changes `'click'` to `'mouseover'`. When does the message appear now?",
+      "knowledgePoint": "Browser Events",
+      "answerExplanation": "(a) When the page loads the paragraph is empty, so no message is shown. When the button is clicked, showMessage runs and \"Hello!\" appears in the paragraph.\n(b) \"Hello!\" appears straight away when the page loads, without any click. The brackets call showMessage immediately instead of passing the function to addEventListener, so it is not run when the button is clicked.\n(c) The message appears when the user moves their mouse over the button, without needing to click it. The event name decides which user action runs the function.",
+      "codeBlocks": [],
+      "images": [],
+      "createdAt": "2026-10-08"
+    },
+    {
+      "id": "2026T3-Q6",
+      "topic": "javascript",
+      "weeks": [
+        "week-3"
+      ],
+      "difficulty": "medium",
+      "tags": [
+        "真题",
+        "表单",
+        "preventDefault"
+      ],
+      "question": "A sign-up form shows a welcome message.\n```html\n<form id=\"signup\">\n  <input id=\"name\" type=\"text\">\n  <button type=\"submit\">Sign up</button>\n</form>\n<p id=\"output\"></p>\n```\n```javascript\nconst form = document.getElementById('signup');\nform.addEventListener('submit', (event) => {\n  event.preventDefault();\n  const name = document.getElementById('name').value;\n  document.getElementById('output').textContent = 'Welcome, ' + name;\n});\n```\n(a) The user types Sam into the box and clicks Sign up. What is shown on the page? Explain where the name comes from.\n(b) The developer deletes the `event.preventDefault();` line. What happens now when the form is submitted?\n(c) The developer wants to stop the form from being submitted when the name box is empty, without writing any JavaScript. What should they add to the HTML, and what happens if the user then clicks Sign up with the box empty?",
+      "knowledgePoint": "Browser Forms and Events",
+      "answerExplanation": "(a) \"Welcome, Sam\" is shown in the paragraph. .value reads the text the user typed into the input box.\n(b) The browser submits the form the normal way and reloads the page, so the welcome message disappears straight away (or is never seen). preventDefault is what stops the browser's default submit behaviour.\n(c) Add the required attribute to the input: `<input id=\"name\" type=\"text\" required>`. The browser then stops the form from submitting and shows a message asking the user to fill in the field, so no welcome message is shown.",
+      "codeBlocks": [],
+      "images": [],
+      "createdAt": "2026-10-08"
+    }
+  ]
 }
