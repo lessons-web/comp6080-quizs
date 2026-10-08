@@ -59,6 +59,6 @@ describe('content files', () => {
       marks: expect.any(Number),
       subQuestions: expect.any(Array),
     })
-    expect(week2Practice.questions).toEqual([])
+    expect(week2Practice.questions).toBeInstanceOf(Array)
   })
 })

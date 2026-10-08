@@ -1,6 +1,6 @@
 import type { RouteObject } from 'react-router-dom'
 import { lazy } from 'react'
-import { createBrowserRouter, Navigate } from 'react-router-dom'
+import { createHashRouter, Navigate } from 'react-router-dom'
 
 import { AppShell } from './AppShell'
 
@@ -56,4 +56,4 @@ export const appRoutes: RouteObject[] = [
   },
 ]
 
-export const router = createBrowserRouter(appRoutes)
+export const router = createHashRouter(appRoutes)

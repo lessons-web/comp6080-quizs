@@ -12,6 +12,7 @@ const mdxPlugin = mdx({
 
 // https://vite.dev/config/
 export default defineConfig({
+  base: './',
   plugins: [
     { ...mdxPlugin, enforce: 'pre' },
     react({ include: /\.(mdx|[jt]sx?)$/ }),
