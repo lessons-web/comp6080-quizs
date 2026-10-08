@@ -82,7 +82,7 @@ export function MockExamsPage() {
             {exams.map((exam) => (
               <Link
                 key={exam.id}
-                to={`/mock-exams/${exam.id}`}
+                to={`/exams/${exam.id}`}
                 className="group relative flex flex-col justify-between overflow-hidden rounded-3xl border border-slate-200 bg-white p-6 shadow-sm transition-all hover:border-blue-500 hover:shadow-md hover:-translate-y-1"
               >
                 <div>

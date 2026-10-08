@@ -3,7 +3,7 @@ import { NavLink } from 'react-router-dom'
 const navItems = [
   { label: '知识点解析', to: '/knowledge' },
   { label: '模拟题库', to: '/practice' },
-  { label: '模拟真题', to: '/mock-exams' },
+  { label: '模拟真题', to: '/exams' },
 ]
 
 function navClassName(isActive: boolean) {
@@ -18,20 +18,10 @@ function navClassName(isActive: boolean) {
 export function Header() {
   return (
     <header className="border-b border-slate-200 bg-white/90 backdrop-blur">
-      <div className="mx-auto flex h-[72px] w-full max-w-7xl items-center justify-between gap-6 px-4 sm:px-6 lg:px-8">
+      <div className="mx-auto flex h-[72px] w-full  items-center justify-between gap-6 px-8">
         <div className="flex items-center gap-3">
-          <span
-            aria-hidden
-            className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-gradient-to-br from-blue-500 to-indigo-600 text-white shadow-sm"
-          >
-            <svg viewBox="0 0 24 24" className="h-5 w-5" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-              <path d="M4 5.5A2.5 2.5 0 0 1 6.5 3h9a2.5 2.5 0 0 1 0 5h-9A2.5 2.5 0 0 1 4 5.5z" />
-              <path d="M4 9.5A2.5 2.5 0 0 1 6.5 7h9a2.5 2.5 0 0 1 0 5h-9A2.5 2.5 0 0 1 4 9.5z" />
-              <path d="M4 13.5A2.5 2.5 0 0 1 6.5 11h5a2.5 2.5 0 0 1 0 5h-5A2.5 2.5 0 0 1 4 13.5z" />
-              <path d="M16 10h3.5A2.5 2.5 0 0 1 22 12.5V21a1 1 0 0 1-1.6.8L18 19.2l-2.4 2.6A1 1 0 0 1 14 21v-8.5A2.5 2.5 0 0 1 16.5 10H16z" />
-            </svg>
-          </span>
-          <span className="text-sm font-semibold uppercase tracking-[0.2em] text-blue-600">
+          <img src="/favicon.svg" alt="COMP6080 Quiz Hub" className="h-12 w-12" />
+          <span className="text-xl font-semibold uppercase tracking-[0.2em] text-blue-600">
             COMP6080 Quiz Hub
           </span>
         </div>

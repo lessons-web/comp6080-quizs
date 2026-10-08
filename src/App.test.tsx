@@ -33,7 +33,7 @@ describe('App', () => {
         children: [
           { index: true, element: <KnowledgePage /> },
           { path: 'practice', element: <PracticePage /> },
-          { path: 'mock-exams', element: <MockExamsPage /> },
+          { path: 'exams', element: <MockExamsPage /> },
         ],
       },
     ])

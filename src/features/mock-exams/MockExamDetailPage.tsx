@@ -89,7 +89,7 @@ export function MockExamDetailPage() {
     <PageShell>
       <section className="flex w-full flex-col gap-6">
         <button
-          onClick={() => navigate('/mock-exams')}
+          onClick={() => navigate('/exams')}
           className="flex w-fit items-center gap-2 rounded-full px-4 py-2 text-sm font-medium text-slate-600 transition-colors hover:bg-slate-100 hover:text-slate-900"
         >
           <ArrowLeftIcon className="h-4 w-4" />
