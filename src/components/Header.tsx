@@ -20,7 +20,7 @@ export function Header() {
     <header className="border-b border-slate-200 bg-white/90 backdrop-blur">
       <div className="mx-auto flex h-[72px] w-full  items-center justify-between gap-6 px-8">
         <div className="flex items-center gap-3">
-          <img src="/favicon.svg" alt="COMP6080 Quiz Hub" className="h-12 w-12" />
+          <img src="./favicon.svg" alt="COMP6080 Quiz Hub" className="h-12 w-12" />
           <span className="text-xl font-semibold uppercase tracking-[0.2em] text-blue-600">
             COMP6080 Quiz Hub
           </span>
