@@ -8,7 +8,7 @@
       "tags": [
         "模拟题"
       ],
-      "totalMarks": 28,
+      "totalMarks": 54,
       "questions": [
         {
           "id": "Q1",
@@ -121,8 +121,105 @@
               "markingMdx": "1 mark for 提到同步请求会阻塞主线程/冻结 UI。\n1 mark for 提到异步允许在等待时继续进行用户交互。"
             }
           ]
+        },
+        {
+          "id": "Q5",
+          "title": "HTML 语义化与列表结构。",
+          "marks": 6,
+          "contentMdx": "```html\n<header>\n  <nav>\n    <ul>\n      <li><a href=\"#\">Home</a></li>\n      <li><a href=\"#\">About</a></li>\n    </ul>\n  </nav>\n</header>\n```",
+          "subQuestions": [
+            {
+              "id": "Q5-a",
+              "label": "(a)",
+              "marks": 3,
+              "questionMdx": "解释 `<ol>` 和 `<ul>` 的区别。",
+              "answerMdx": "`<ol>` 代表有序列表（Ordered List），列表项通常带有数字或字母编号，用于有先后顺序的步骤。\n`<ul>` 代表无序列表（Unordered List），列表项通常带有圆点项目符号，用于顺序无关的集合。",
+              "markingMdx": "1.5 marks for 解释 `<ol>` 是有序列表及其特征。\n1.5 marks for 解释 `<ul>` 是无序列表及其特征。"
+            },
+            {
+              "id": "Q5-b",
+              "label": "(b)",
+              "marks": 3,
+              "questionMdx": "什么是 HTML 语义化？在上述代码中，使用了哪些语义化标签？",
+              "answerMdx": "HTML 语义化是指使用恰当的 HTML 标签来表达内容的结构和含义，而不是仅仅为了样式（如使用 div 或 span）。这有助于无障碍访问和 SEO。\n代码中使用的语义化标签有 `<header>` 和 `<nav>`。",
+              "markingMdx": "1 mark for 解释语义化的概念（表达内容含义）。\n1 mark for 提到有助于无障碍访问或 SEO。\n1 mark for 正确指出 `<header>` 或 `<nav>`。"
+            }
+          ]
+        },
+        {
+          "id": "Q6",
+          "title": "HTML 表单元素与交互。",
+          "marks": 6,
+          "contentMdx": "```html\n<form action=\"/submit\">\n  <label for=\"email\">Email:</label>\n  <input type=\"email\" id=\"email\" name=\"email\" required placeholder=\"Enter your email\">\n  <button type=\"submit\">Subscribe</button>\n</form>\n```",
+          "subQuestions": [
+            {
+              "id": "Q6-a",
+              "label": "(a)",
+              "marks": 3,
+              "questionMdx": "`label` 标签的 `for` 属性有什么作用？为什么它在表单中很重要？",
+              "answerMdx": "`for` 属性用于将 `label` 与特定的表单控件（如 `input`）绑定。它的值必须与目标控件的 `id` 属性相匹配。\n重要性：点击标签文本时会自动聚焦到对应的输入框，提升了用户体验；同时屏幕阅读器可以正确地朗读出输入框的用途，增强了无障碍访问。",
+              "markingMdx": "1.5 marks for 解释 `for` 属性通过 `id` 绑定表单控件。\n1.5 marks for 提到提升可用性（点击聚焦）或无障碍访问（屏幕阅读器）。"
+            },
+            {
+              "id": "Q6-b",
+              "label": "(b)",
+              "marks": 3,
+              "questionMdx": "在输入框中，`required` 和 `placeholder` 属性分别起到什么作用？",
+              "answerMdx": "`required` 是一个布尔属性，用于在表单提交前强制要求用户必须填写该字段（浏览器端校验）。\n`placeholder` 提供了一个简短的提示信息，当输入框为空时显示在输入框内，指导用户应该输入什么内容。",
+              "markingMdx": "1.5 marks for 解释 `required` 阻止空表单提交。\n1.5 marks for 解释 `placeholder` 提供输入提示语。"
+            }
+          ]
+        },
+        {
+          "id": "Q7",
+          "title": "CSS 盒模型基础。",
+          "marks": 8,
+          "contentMdx": "```css\n.box {\n  width: 200px;\n  padding: 20px;\n  border: 5px solid black;\n  margin: 10px;\n}\n```",
+          "subQuestions": [
+            {
+              "id": "Q7-a",
+              "label": "(a)",
+              "marks": 4,
+              "questionMdx": "在默认的 CSS 盒模型（`box-sizing: content-box`）下，该元素在页面上占据的实际总宽度（包括可见部分和外边距）是多少像素？请写出计算过程。",
+              "answerMdx": "实际总宽度 = 270px。\n计算过程：内容宽度 (200px) + 左内边距 (20px) + 右内边距 (20px) + 左边框 (5px) + 右边框 (5px) + 左外边距 (10px) + 右外边距 (10px) = 200 + 40 + 10 + 20 = 270px。",
+              "markingMdx": "2 marks for 给出正确的总宽度 270px。\n2 marks for 展示了包含内容、padding、border 和 margin 的完整计算过程。"
+            },
+            {
+              "id": "Q7-b",
+              "label": "(b)",
+              "marks": 4,
+              "questionMdx": "如果为该元素添加 `box-sizing: border-box;` 属性，其可见区域的总宽度（不含 margin）会变成多少？为什么？",
+              "answerMdx": "可见区域的总宽度会变成 200px。\n因为 `border-box` 改变了盒模型的计算方式：设定的 `width` (200px) 将包含内容区、padding 和 border。因此内容的实际宽度会自动缩小（200 - 40 - 10 = 150px），而整个可见盒子的宽度保持为 200px。",
+              "markingMdx": "2 marks for 给出正确的可见区域宽度 200px。\n2 marks for 解释 `border-box` 会让 width 包含 padding 和 border。"
+            }
+          ]
+        },
+        {
+          "id": "Q8",
+          "title": "CSS 特异性与层叠规则。",
+          "marks": 6,
+          "contentMdx": "```html\n<div id=\"main\" class=\"container\">\n  <p class=\"text highlight\" style=\"color: red;\">Hello World</p>\n</div>\n\nCSS:\np {\n  color: blue;\n}\n.container .text {\n  color: green;\n}\n#main p.highlight {\n  color: orange;\n}\n```",
+          "subQuestions": [
+            {
+              "id": "Q8-a",
+              "label": "(a)",
+              "marks": 3,
+              "questionMdx": "最终页面上 `Hello World` 会显示什么颜色？为什么？",
+              "answerMdx": "最终会显示红色（red）。\n因为在 HTML 标签中直接使用的内联样式（`style=\"color: red;\"`）具有最高的优先级，它会覆盖所有外部或内部样式表中的 CSS 规则（除非使用了 `!important`）。",
+              "markingMdx": "1 mark for 正确回答红色（red）。\n2 marks for 解释内联样式的优先级最高。"
+            },
+            {
+              "id": "Q8-b",
+              "label": "(b)",
+              "marks": 3,
+              "questionMdx": "如果不考虑内联样式，上述三个 CSS 规则中哪一个的特异性（Specificity）最高？请写出它的特异性权重值。",
+              "answerMdx": "特异性最高的是 `#main p.highlight`。\n它的权重值是 [1, 1, 1]（或 111）：包含 1 个 ID 选择器 (`#main`)，1 个类选择器 (`.highlight`)，以及 1 个标签选择器 (`p`)。",
+              "markingMdx": "1 mark for 选出 `#main p.highlight`。\n2 marks for 正确分析权重（1个ID，1个类，1个标签）。"
+            }
+          ]
         }
-      ]
+      ],
+      "time": "2026-10-01 10:00"
     }
   ]
 }

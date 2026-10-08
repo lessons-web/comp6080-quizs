@@ -8,7 +8,7 @@
       "tags": [
         "模拟题"
       ],
-      "totalMarks": 28,
+      "totalMarks": 54,
       "questions": [
         {
           "id": "Q1",
@@ -105,8 +105,105 @@
               "markingMdx": "1.5 marks for 提到基于 Promise 或 async/await 支持更好。\n1.5 marks for 提到语法更简洁或避免了回调地狱。"
             }
           ]
+        },
+        {
+          "id": "Q5",
+          "title": "HTML 媒体元素。",
+          "marks": 6,
+          "contentMdx": "```html\n<video width=\"640\" controls autoplay muted>\n  <source src=\"movie.mp4\" type=\"video/mp4\">\n  <source src=\"movie.webm\" type=\"video/webm\">\n  Your browser does not support the video tag.\n</video>\n```",
+          "subQuestions": [
+            {
+              "id": "Q5-a",
+              "label": "(a)",
+              "marks": 3,
+              "questionMdx": "在 `<video>` 标签中，`controls`、`autoplay` 和 `muted` 属性分别有什么作用？为什么现代浏览器通常要求自动播放的视频必须静音？",
+              "answerMdx": "`controls` 显示播放器控制条（如播放/暂停、音量等）；`autoplay` 让视频在加载后立即自动播放；`muted` 使视频默认静音。\n要求自动播放必须静音是为了提升用户体验，防止页面突然发出声音惊吓用户，同时节省移动端带宽。",
+              "markingMdx": "1.5 marks for 解释三个属性的作用。\n1.5 marks for 解释自动播放必须静音的原因（用户体验/防干扰）。"
+            },
+            {
+              "id": "Q5-b",
+              "label": "(b)",
+              "marks": 3,
+              "questionMdx": "为什么要提供多个 `<source>` 标签？",
+              "answerMdx": "因为不同的浏览器支持的视频格式不同（例如旧版 Safari 可能不支持 WebM，而只支持 MP4）。提供多个格式可以让浏览器按顺序检查并加载它能支持的第一个格式，作为兼容性降级方案。",
+              "markingMdx": "1.5 marks for 提到浏览器格式支持度不同。\n1.5 marks for 解释浏览器会选择第一个能播放的格式（兼容性策略）。"
+            }
+          ]
+        },
+        {
+          "id": "Q6",
+          "title": "HTML 表格结构。",
+          "marks": 6,
+          "contentMdx": "```html\n<table>\n  <thead>\n    <tr>\n      <th>Name</th>\n      <th colspan=\"2\">Contact</th>\n    </tr>\n  </thead>\n  <tbody>\n    <tr>\n      <td>John</td>\n      <td>Email</td>\n      <td>Phone</td>\n    </tr>\n  </tbody>\n</table>\n```",
+          "subQuestions": [
+            {
+              "id": "Q6-a",
+              "label": "(a)",
+              "marks": 3,
+              "questionMdx": "在构建数据表格时，`<thead>` 和 `<tbody>` 的作用是什么？它们如何帮助可访问性？",
+              "answerMdx": "`<thead>` 用于对表格的表头部分进行分组，`<tbody>` 用于对表格的主体数据内容进行分组。\n作用：它们让表格的结构具有语义化，屏幕阅读器可以区分表头和数据；同时在打印长表格时，浏览器可以在每一页重复打印 `<thead>`。",
+              "markingMdx": "1.5 marks for 解释分组表头和数据的语义化作用。\n1.5 marks for 提到对屏幕阅读器的帮助或长表格打印优化。"
+            },
+            {
+              "id": "Q6-b",
+              "label": "(b)",
+              "marks": 3,
+              "questionMdx": "解释 `colspan=\"2\"` 在上述代码中的作用。",
+              "answerMdx": "`colspan=\"2\"` 让 \"Contact\" 这个表头单元格在水平方向上跨越两个单元格的宽度。这意味着它占据了其下方两列（Email 和 Phone）的宽度空间。",
+              "markingMdx": "1.5 marks for 解释跨越两列。\n1.5 marks for 结合代码说明覆盖了下方的 Email 和 Phone 列。"
+            }
+          ]
+        },
+        {
+          "id": "Q7",
+          "title": "CSS Grid 与 Flexbox 布局对比。",
+          "marks": 8,
+          "contentMdx": "```css\n.grid-container {\n  display: grid;\n  grid-template-columns: repeat(3, 1fr);\n  gap: 20px;\n}\n```",
+          "subQuestions": [
+            {
+              "id": "Q7-a",
+              "label": "(a)",
+              "marks": 4,
+              "questionMdx": "解释 `grid-template-columns: repeat(3, 1fr)` 的确切含义。其中的 `1fr` 代表什么？",
+              "answerMdx": "它的含义是创建 3 列等宽的网格。\n`repeat(3, ...)` 是一个简写，表示重复 3 次。\n`1fr` 代表 1 个“分数单位（Fractional Unit）”，它会将网格容器中剩余的可用空间等分为若干份。3个 `1fr` 意味着可用空间被平分为 3 份，每列占据 1 份。",
+              "markingMdx": "2 marks for 解释创建 3 列等宽网格。\n2 marks for 解释 `1fr` 代表分配剩余空间的比例单位。"
+            },
+            {
+              "id": "Q7-b",
+              "label": "(b)",
+              "marks": 4,
+              "questionMdx": "CSS Grid 布局与 Flexbox 布局在设计理念上的主要区别是什么？",
+              "answerMdx": "Flexbox 是一维布局系统，主要用于沿着单根轴线（行或列）对齐和分配空间。\nCSS Grid 是二维布局系统，可以同时处理行和列的布局。\n通常，Flexbox 适合组件内部的线性布局，而 Grid 适合页面的整体宏观网格结构。",
+              "markingMdx": "2 marks for 明确指出 Flexbox 是一维布局。\n2 marks for 明确指出 Grid 是二维布局。"
+            }
+          ]
+        },
+        {
+          "id": "Q8",
+          "title": "CSS 伪类与伪元素。",
+          "marks": 6,
+          "contentMdx": "```css\na:hover {\n  text-decoration: underline;\n}\n\n.card::before {\n  content: \"New!\";\n  display: block;\n  color: red;\n}\n```",
+          "subQuestions": [
+            {
+              "id": "Q8-a",
+              "label": "(a)",
+              "marks": 3,
+              "questionMdx": "什么是伪类（Pseudo-class）？在上述代码中，`:hover` 伪类的作用是什么？",
+              "answerMdx": "伪类用于定义元素的特殊状态，它不是基于文档树中的 DOM 结构，而是基于用户的交互或元素的状态。\n`:hover` 伪类用于当用户的鼠标指针悬停在链接 `<a>` 上时，为其添加下划线样式。",
+              "markingMdx": "1.5 marks for 解释伪类用于表示元素的特殊状态/交互。\n1.5 marks for 解释 `:hover` 表示鼠标悬停状态。"
+            },
+            {
+              "id": "Q8-b",
+              "label": "(b)",
+              "marks": 3,
+              "questionMdx": "什么是伪元素（Pseudo-element）？在上述代码中，`::before` 的作用是什么，为什么必须包含 `content` 属性？",
+              "answerMdx": "伪元素用于样式化元素的某个特定部分，或者在元素的内容前后插入生成的内容。\n`::before` 在 `.card` 元素的内容最前面插入了一个包含 \"New!\" 的虚拟节点。\n必须包含 `content` 属性是因为如果没有它，伪元素将不会在页面中生成和渲染任何内容。",
+              "markingMdx": "1 mark for 解释伪元素用于样式化特定部分或插入内容。\n1 mark for 解释 `::before` 插入 \"New!\" 内容。\n1 mark for 说明缺少 `content` 将不会渲染伪元素。"
+            }
+          ]
         }
-      ]
+      ],
+      "time": "2026-10-02 10:00"
     }
   ]
 }

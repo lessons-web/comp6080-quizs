@@ -106,6 +106,7 @@ export interface ExamPaper {
   description?: string
   tags?: string[]
   totalMarks: number
+  time?: string
   questions: ExamQuestion[]
 }
 
