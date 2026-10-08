@@ -380,7 +380,7 @@ export function PracticePage() {
                 onChange={(v) => setWeekFilter(v as string)}
                 options={weekOptions}
                 placeholder="全部周次"
-                className="w-32 shrink-0"
+                className="w-36 shrink-0"
               />
 
               <MultiSelect
