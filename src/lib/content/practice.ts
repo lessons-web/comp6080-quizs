@@ -8,15 +8,25 @@ import type {
 
 const questionLoaders: Record<string, () => Promise<PracticeQuestionCollection>> = {
   'week-1.practice': () =>
-    import('@/content/questions/week-1.practice.json') as Promise<PracticeQuestionCollection>,
+    import('@/content/questions/week-1.practice.json').then(
+      (m) => m.default as unknown as PracticeQuestionCollection,
+    ),
   'week-2.practice': () =>
-    import('@/content/questions/week-2.practice.json') as Promise<PracticeQuestionCollection>,
+    import('@/content/questions/week-2.practice.json').then(
+      (m) => m.default as unknown as PracticeQuestionCollection,
+    ),
   'week-3.practice': () =>
-    import('@/content/questions/week-3.practice.json') as Promise<PracticeQuestionCollection>,
+    import('@/content/questions/week-3.practice.json').then(
+      (m) => m.default as unknown as PracticeQuestionCollection,
+    ),
   'week-4.practice': () =>
-    import('@/content/questions/week-4.practice.json') as Promise<PracticeQuestionCollection>,
+    import('@/content/questions/week-4.practice.json').then(
+      (m) => m.default as unknown as PracticeQuestionCollection,
+    ),
   'database': () =>
-    import('@/content/questions/database.json') as Promise<PracticeQuestionCollection>,
+    import('@/content/questions/database.json').then(
+      (m) => m.default as unknown as PracticeQuestionCollection,
+    ),
 }
 
 const DEFAULT_CREATED_AT = '2026-03-15'
