@@ -19,7 +19,6 @@ export default {
     'text-white',
     'shadow-sm',
   ],
-  darkMode: false,
   theme: {
     extend: {
       colors: {
