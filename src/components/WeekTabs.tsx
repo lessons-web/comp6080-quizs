@@ -1,4 +1,7 @@
-import { NavLink } from 'react-router-dom'
+'use client'
+
+import Link from 'next/link'
+import { usePathname } from 'next/navigation'
 
 const weeks = [1, 2, 3, 4]
 
@@ -16,16 +19,17 @@ function tabClassName(isActive: boolean) {
 }
 
 export function WeekTabs({ basePath }: WeekTabsProps) {
+  const pathname = usePathname() || ''
   return (
     <nav aria-label="周次切换" className="flex flex-wrap gap-2">
       {weeks.map((week) => (
-        <NavLink
+        <Link
           key={week}
-          className={({ isActive }) => tabClassName(isActive)}
-          to={`/${basePath}/week-${week}`}
+          className={tabClassName(pathname.includes(`/week-${week}`))}
+          href={`/${basePath}/week-${week}`}
         >
           {`Week ${week}`}
-        </NavLink>
+        </Link>
       ))}
     </nav>
   )

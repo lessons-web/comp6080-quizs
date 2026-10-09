@@ -1,5 +1,7 @@
+'use client'
+
 import { useState, useMemo } from 'react'
-import { Link } from 'react-router-dom'
+import Link from 'next/link'
 import { ContentLoading } from '../../components/ContentLoading'
 import { getAllMockExams } from '../../lib/content/mockExams'
 import { useAsyncContent } from '../../lib/hooks/useAsyncContent'
@@ -175,7 +177,7 @@ export function MockExamsPage() {
             {filteredAndSortedExams.map((exam) => (
               <Link
                 key={exam.id}
-                to={`/exams/${exam.id}`}
+                href={`/exams/${exam.id}`}
                 className="group relative flex flex-col justify-between overflow-hidden rounded-3xl border border-slate-200 bg-white p-6 shadow-sm transition-all hover:border-blue-500 hover:shadow-md hover:-translate-y-1"
               >
                 <div>
@@ -263,7 +265,7 @@ export function MockExamsPage() {
                     </td>
                     <td className="px-6 py-4 text-right">
                       <Link
-                        to={`/exams/${exam.id}`}
+                        href={`/exams/${exam.id}`}
                         className="inline-flex items-center justify-center rounded-lg bg-blue-50 px-3 py-1.5 text-xs font-medium text-blue-600 transition-colors hover:bg-blue-100"
                       >
                         开始测试

@@ -1,5 +1,4 @@
 import type { ComponentType } from 'react'
-
 import type { KnowledgePointMeta, TopicId } from '../../types/content'
 import { TOPIC_META } from '../../types/content'
 
@@ -15,10 +14,22 @@ type KpEntry = {
 
 export const SUPPORTED_TOPICS = Object.keys(TOPIC_META) as TopicId[]
 
-const kpModules = import.meta.glob<MdxFixture>(
-  '../../../content/knowledge/**/*.mdx',
-  { eager: false },
-)
+const mdxLoaders: Record<string, () => Promise<MdxFixture>> = {
+  'html/001-structure-semantics': () =>
+    import('@/content/knowledge/html/001-structure-semantics.mdx') as Promise<MdxFixture>,
+  'html/002-paths-images': () =>
+    import('@/content/knowledge/html/002-paths-images.mdx') as Promise<MdxFixture>,
+  'html/003-code-tags': () =>
+    import('@/content/knowledge/html/003-code-tags.mdx') as Promise<MdxFixture>,
+  'css/001-specificity': () =>
+    import('@/content/knowledge/css/001-specificity.mdx') as Promise<MdxFixture>,
+  'css/002-box-model': () =>
+    import('@/content/knowledge/css/002-box-model.mdx') as Promise<MdxFixture>,
+  'css/003-flexbox': () =>
+    import('@/content/knowledge/css/003-flexbox.mdx') as Promise<MdxFixture>,
+  'css/004-stacking-context': () =>
+    import('@/content/knowledge/css/004-stacking-context.mdx') as Promise<MdxFixture>,
+}
 
 export function isSupportedTopic(value: unknown): value is TopicId {
   return typeof value === 'string' && (SUPPORTED_TOPICS as string[]).includes(value)
@@ -28,16 +39,15 @@ export function getAllKnowledgeTopics(): TopicId[] {
   return SUPPORTED_TOPICS.slice()
 }
 
-type KpModuleKey = string
-function buildKpKey(topic: TopicId, id: string): KpModuleKey {
-  return `../../../content/knowledge/${topic}/${id}.mdx`
+function buildKpKey(topic: TopicId, id: string): string {
+  return `${topic}/${id}`
 }
 
 interface KpKeyParts { topic: TopicId; id: string }
-function parseKpKey(key: KpModuleKey): KpKeyParts | null {
-  const m = key.match(/\/content\/knowledge\/([^/]+)\/([^/]+)\.mdx$/)
-  if (!m) return null
-  const [, topic, id] = m
+function parseKpKey(key: string): KpKeyParts | null {
+  const parts = key.split('/')
+  if (parts.length !== 2) return null
+  const [topic, id] = parts
   if (!isSupportedTopic(topic)) return null
   return { topic, id }
 }
@@ -48,7 +58,7 @@ function sortKpList(list: KnowledgePointMeta[]): KnowledgePointMeta[] {
 
 export async function getAllTopicSummaries() {
   const counts = new Map<TopicId, number>()
-  const keys = Object.keys(kpModules)
+  const keys = Object.keys(mdxLoaders)
   for (const k of keys) {
     const parts = parseKpKey(k)
     if (!parts) continue
@@ -69,9 +79,7 @@ export async function getAllTopicSummaries() {
 export async function getKnowledgePointList(topic: TopicId): Promise<KnowledgePointMeta[]> {
   if (!isSupportedTopic(topic)) throw new Error('Unsupported topic')
   const result: KnowledgePointMeta[] = []
-  const prefix = `../../../content/knowledge/${topic}/`
-  for (const [key, loader] of Object.entries(kpModules)) {
-    if (!key.startsWith(prefix)) continue
+  for (const [key, loader] of Object.entries(mdxLoaders)) {
     const parts = parseKpKey(key)
     if (!parts || parts.topic !== topic) continue
     const mod = await loader()
@@ -86,7 +94,7 @@ export async function getKnowledgePoint(
 ): Promise<KpEntry> {
   if (!isSupportedTopic(topic)) throw new Error('Unsupported topic')
   const key = buildKpKey(topic, knowledgeId)
-  const loader = kpModules[key]
+  const loader = mdxLoaders[key]
   if (!loader) throw new Error('Knowledge point not found')
   const mod = await loader()
   return { Component: mod.default, meta: mod.frontmatter }

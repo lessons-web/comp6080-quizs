@@ -1,5 +1,8 @@
+'use client'
+
 import { useEffect, useMemo, useState } from 'react'
-import { Link, useLocation, useNavigate } from 'react-router-dom'
+import Link from 'next/link'
+import { usePathname, useRouter } from 'next/navigation'
 
 import type { KnowledgePointMeta, TopicId } from '../../../types/content'
 import { TOPIC_META } from '../../../types/content'
@@ -12,8 +15,8 @@ export interface KnowledgeSidebarProps {
 }
 
 export function KnowledgeSidebar({ topic }: KnowledgeSidebarProps) {
-  const navigate = useNavigate()
-  const { pathname } = useLocation()
+  const router = useRouter()
+  const pathname = usePathname() || ''
 
   const { data: list, loading: listLoading } = useAsyncContent(
     () => getKnowledgePointList(topic),
@@ -58,7 +61,7 @@ export function KnowledgeSidebar({ topic }: KnowledgeSidebarProps) {
     <aside className="flex h-full w-[320px] shrink-0 flex-col overflow-hidden border-r border-slate-200 bg-white">
       <div className="flex items-center gap-2 border-b border-slate-100 px-5 py-4">
         <Link
-          to="/knowledge"
+          href="/knowledge"
           className="inline-flex shrink-0 items-center gap-1 rounded-md px-1.5 py-1 text-sm text-slate-500 hover:bg-slate-100 hover:text-slate-800"
         >
           <svg
@@ -128,7 +131,7 @@ export function KnowledgeSidebar({ topic }: KnowledgeSidebarProps) {
                 meta={m}
                 active={activeKnowledgeId === m.id}
                 highlight={debounced}
-                onClick={() => navigate(`/knowledge/${topic}/${m.id}`)}
+                onClick={() => router.push(`/knowledge/${topic}/${m.id}`)}
               />
             ))}
           </div>

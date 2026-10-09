@@ -1,4 +1,6 @@
-import { useParams, useNavigate } from 'react-router-dom'
+'use client'
+
+import { useParams, useRouter } from 'next/navigation'
 import { ContentLoading } from '../../components/ContentLoading'
 import { getMockExamById } from '../../lib/content/mockExams'
 import { useAsyncContent } from '../../lib/hooks/useAsyncContent'
@@ -43,11 +45,12 @@ function PageShell({ children }: { children: React.ReactNode }) {
 }
 
 export function MockExamDetailPage() {
-  const { id } = useParams<{ id: string }>()
-  const navigate = useNavigate()
+  const params = useParams<{ id: string }>()
+  const id = params?.id
+  const router = useRouter()
 
   const { data: exam, loading, error } = useAsyncContent(
-    () => (id ? getMockExamById(id) : Promise.resolve(null)),
+    () => (id ? getMockExamById(id as string) : Promise.resolve(null)),
     [id],
   )
 
@@ -89,7 +92,7 @@ export function MockExamDetailPage() {
     <PageShell>
       <section className="flex w-full flex-col gap-6">
         <button
-          onClick={() => navigate('/exams')}
+          onClick={() => router.push('/exams')}
           className="flex w-fit items-center gap-2 rounded-full px-4 py-2 text-sm font-medium text-slate-600 transition-colors hover:bg-slate-100 hover:text-slate-900"
         >
           <ArrowLeftIcon className="h-4 w-4" />

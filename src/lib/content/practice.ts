@@ -6,10 +6,18 @@ import type {
   WeekTag,
 } from '../../types/content'
 
-const practiceModules = import.meta.glob<PracticeQuestionCollection>(
-  '../../../content/questions/*.json',
-  { eager: false },
-)
+const questionLoaders: Record<string, () => Promise<PracticeQuestionCollection>> = {
+  'week-1.practice': () =>
+    import('@/content/questions/week-1.practice.json') as Promise<PracticeQuestionCollection>,
+  'week-2.practice': () =>
+    import('@/content/questions/week-2.practice.json') as Promise<PracticeQuestionCollection>,
+  'week-3.practice': () =>
+    import('@/content/questions/week-3.practice.json') as Promise<PracticeQuestionCollection>,
+  'week-4.practice': () =>
+    import('@/content/questions/week-4.practice.json') as Promise<PracticeQuestionCollection>,
+  'database': () =>
+    import('@/content/questions/database.json') as Promise<PracticeQuestionCollection>,
+}
 
 const DEFAULT_CREATED_AT = '2026-03-15'
 
@@ -112,8 +120,8 @@ export function normalizeCollection(raw: any): PracticeQuestionCollection | null
 }
 
 async function importWeekModule(week: number): Promise<PracticeQuestionCollection | null> {
-  const key = `../../../content/questions/week-${week}.practice.json`
-  const loader = practiceModules[key]
+  const key = `week-${week}.practice`
+  const loader = questionLoaders[key]
   if (!loader) return null
   const raw = await loader()
   return normalizeCollection({
@@ -127,11 +135,11 @@ export async function getPracticeQuestionsByWeek(week: number) {
 }
 
 export async function getAllPracticeQuestions(): Promise<PracticeQuestion[]> {
-  const keys = Object.keys(practiceModules)
+  const keys = Object.keys(questionLoaders)
   const results = await Promise.all(
     keys.map(async (key) => {
       try {
-        const loader = practiceModules[key]
+        const loader = questionLoaders[key]
         const raw = await loader()
         return Array.isArray((raw as any).questions)
           ? (raw as any).questions.map(normalizeQuestion)
@@ -142,7 +150,6 @@ export async function getAllPracticeQuestions(): Promise<PracticeQuestion[]> {
     }),
   )
   const flatQuestions = results.flat()
-  // 按创建时间倒序排列 (最新的在前)
   flatQuestions.sort((a, b) => b.createdAt.localeCompare(a.createdAt))
   return flatQuestions
 }

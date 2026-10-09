@@ -1,5 +1,7 @@
+'use client'
+
 import { useEffect } from 'react'
-import { useNavigate, useParams } from 'react-router-dom'
+import { useParams, useRouter } from 'next/navigation'
 
 import { TopicCardGrid } from './components/TopicCardGrid'
 import { KnowledgeDetailPanel } from './components/KnowledgeDetailPanel'
@@ -13,15 +15,16 @@ import {
 import { useAsyncContent } from '../../lib/hooks/useAsyncContent'
 import type { TopicId } from '../../types/content'
 
-function extractKnowledgeSegments(rest: string | undefined): string[] {
+function extractKnowledgeSegments(rest: string | string[] | undefined): string[] {
   if (!rest) return []
+  if (Array.isArray(rest)) return rest.filter(Boolean)
   return rest.split('/').filter(Boolean)
 }
 
 export function KnowledgePage() {
-  const { '*': rest } = useParams()
-  const navigate = useNavigate()
-  const [topicStr, knowledgeId] = extractKnowledgeSegments(rest)
+  const params = useParams<{ slug?: string[] }>()
+  const router = useRouter()
+  const [topicStr, knowledgeId] = extractKnowledgeSegments(params?.slug)
   const topic: TopicId | null =
     topicStr && isSupportedTopic(topicStr) ? topicStr : null
 
@@ -36,8 +39,8 @@ export function KnowledgePage() {
     if (!topic) return
     if (knowledgeId) return
     if (!list || list.length === 0) return
-    navigate(`/knowledge/${topic}/${list[0].id}`, { replace: true })
-  }, [topic, knowledgeId, list, navigate])
+    router.replace(`/knowledge/${topic}/${list[0].id}`)
+  }, [topic, knowledgeId, list, router])
 
   const {
     data: detail,

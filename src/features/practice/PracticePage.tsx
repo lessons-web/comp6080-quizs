@@ -1,5 +1,7 @@
+'use client'
+
 import { useEffect, useMemo, useState } from 'react'
-import { useNavigate, useParams } from 'react-router-dom'
+import { useParams, useRouter } from 'next/navigation'
 
 import { ContentLoading } from '../../components/ContentLoading'
 import { useLocalStoragePref } from '../../lib/hooks/useLocalStoragePref'
@@ -135,13 +137,17 @@ const DIFF_STAT_CLASS: Record<Difficulty, string> = {
 }
 
 export function PracticePage() {
-  const { '*': rest } = useParams()
-  const navigate = useNavigate()
+  const params = useParams<{ topic?: string; qid?: string }>()
+  const router = useRouter()
+  const segments: string[] = []
+  if (params?.topic) segments.push(params.topic)
+  if (params?.qid) segments.push(params.qid)
+
   const initialTopic = useMemo(() => {
-    const seg = rest?.split('/').filter(Boolean)[0]
+    const seg = segments[0]
     if (seg && isSupportedTopic(seg)) return seg as TopicId
     return 'all' as const
-  }, [rest])
+  }, [segments])
 
   const { data: allQuestions, loading, error } = useAsyncContent(
     () => getAllPracticeQuestions(),
@@ -416,7 +422,7 @@ export function PracticePage() {
           <QuestionBankTable
             questions={filtered}
             highlight={debouncedSearch}
-            onSelect={(id) => navigate(`/practice/question/${id}`)}
+            onSelect={(id) => router.push(`/practice/question/${id}`)}
           />
         ) : (
           <div className={gridClass}>
@@ -425,7 +431,7 @@ export function PracticePage() {
                 key={q.id}
                 question={q}
                 highlight={debouncedSearch}
-                onClick={() => navigate(`/practice/question/${q.id}`)}
+                onClick={() => router.push(`/practice/question/${q.id}`)}
               />
             ))}
           </div>

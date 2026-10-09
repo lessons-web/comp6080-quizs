@@ -1,5 +1,8 @@
+'use client'
+
 import React, { useMemo, useState } from 'react'
-import { Link, useNavigate, useParams } from 'react-router-dom'
+import { useParams, useRouter } from 'next/navigation'
+import Link from 'next/link'
 import ReactMarkdown from 'react-markdown'
 import remarkGfm from 'remark-gfm'
 
@@ -136,7 +139,7 @@ function RelatedQuestionRow({ q }: { q: PracticeQuestion }) {
   const topicMeta = TOPIC_META[q.topic]
   return (
     <Link
-      to={`/practice/question/${q.id}`}
+      href={`/practice/question/${q.id}`}
       className="group flex flex-col gap-2 rounded-xl border border-slate-200/70 bg-white p-3 transition hover:border-slate-300 hover:bg-slate-50/80 hover:shadow-[0_4px_12px_-6px_rgba(15,23,42,0.12)]"
     >
       <div className="flex items-center gap-2">
@@ -218,11 +221,11 @@ function RelatedQuestionsCard({
 }
 
 function BackButton() {
-  const navigate = useNavigate()
+  const router = useRouter()
   return (
     <button
       type="button"
-      onClick={() => navigate(-1)}
+      onClick={() => router.back()}
       className="inline-flex items-center gap-1.5 rounded-lg border border-slate-200 bg-white px-2.5 py-1.5 text-[12px] font-medium text-slate-600 shadow-sm transition hover:border-slate-300 hover:bg-slate-50 hover:text-slate-800"
     >
       <svg viewBox="0 0 16 16" aria-hidden="true" className="h-3.5 w-3.5">
@@ -344,7 +347,8 @@ function AnswerCard({
 }
 
 export function QuestionDetailPage() {
-  const { questionId } = useParams()
+  const params = useParams<{ questionId: string }>()
+  const questionId = params?.questionId
   const [answerOpen, setAnswerOpen] = useState(false)
 
   const { data: all, loading: loadingAll } = useAsyncContent(
@@ -387,7 +391,7 @@ export function QuestionDetailPage() {
             </p>
             <div className="mt-4">
               <Link
-                to="/practice"
+                href="/practice"
                 className="inline-flex items-center gap-1.5 rounded-full bg-rose-600 px-4 py-2 text-sm font-medium text-white transition hover:bg-rose-700"
               >
                 返回题库列表

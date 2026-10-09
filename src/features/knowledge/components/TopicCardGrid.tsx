@@ -1,3 +1,5 @@
+'use client'
+
 import { getAllTopicSummaries } from '../../../lib/content/knowledge'
 import { useAsyncContent } from '../../../lib/hooks/useAsyncContent'
 import { TopicCard } from './TopicCard'
@@ -50,7 +52,6 @@ export function TopicCardGrid() {
             topic={s.topic}
             label={s.label}
             description={s.description}
-            accent={s.accent}
             pointCount={s.pointCount}
           />
         ))}

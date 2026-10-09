@@ -12,6 +12,16 @@ dist
 dist-ssr
 *.local
 
+# Next.js
+.next/
+out/
+build
+
+# Env
+.env
+.env.local
+.env*.local
+
 # Git worktrees
 .worktrees
 
