@@ -9,6 +9,7 @@ const secretKey = encoder.encode(SECRET_KEY)
 function isPublicPath(pathname: string): boolean {
   if (pathname === '/' || pathname.startsWith('/knowledge')) return true
   if (pathname.startsWith('/api/auth/')) return true
+  if (pathname === '/api/setup') return true
   if (pathname === '/login') return true
   if (pathname.startsWith('/_next') || pathname.startsWith('/favicon')) return true
   return false
