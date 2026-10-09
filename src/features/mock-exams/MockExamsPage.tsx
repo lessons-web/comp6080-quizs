@@ -5,6 +5,7 @@ import Link from 'next/link'
 import { ContentLoading } from '../../components/ContentLoading'
 import { getAllMockExams } from '../../lib/content/mockExams'
 import { useAsyncContent } from '../../lib/hooks/useAsyncContent'
+import { useLocalStoragePref } from '../../lib/hooks/useLocalStoragePref'
 
 const SearchIcon = ({ className }: { className?: string }) => (
   <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}>
@@ -59,13 +60,14 @@ export function MockExamsPage() {
   )
 
   const [searchQuery, setSearchQuery] = useState('')
-  const [layoutMode, setLayoutMode] = useState<'card' | 'table'>(() => {
-    return (localStorage.getItem('comp6080:pref:exam-layout') as 'card' | 'table') || 'card'
-  })
+  const [layoutMode, setLayoutMode] = useLocalStoragePref<'card' | 'table'>(
+    'comp6080:pref:exam-layout',
+    'card',
+    (v) => v === 'card' || v === 'table',
+  )
 
   const updateLayoutMode = (mode: 'card' | 'table') => {
     setLayoutMode(mode)
-    localStorage.setItem('comp6080:pref:exam-layout', mode)
   }
 
   const filteredAndSortedExams = useMemo(() => {
