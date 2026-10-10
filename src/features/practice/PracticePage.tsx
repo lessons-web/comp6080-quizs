@@ -13,6 +13,7 @@ import { QuestionBankCard } from './QuestionBankCard'
 import { QuestionBankTable } from './QuestionBankTable'
 import Select, { type SelectOption } from '../../components/form/Select'
 import MultiSelect from '../../components/form/MultiSelect'
+import { GuestNoticeInline, useGuestLimit } from '../../components/GuestNotice'
 
 const LAYOUT_KEY = 'comp6080:pref:practice-layout'
 type LayoutPref = '1' | '2' | 'table'
@@ -210,23 +211,23 @@ export function PracticePage() {
 
   const topicOptions: SelectOption[] = useMemo(
     () =>
-      TOPIC_FILTERS.map((f) => ({
-        value: f.value,
-        label: f.label,
-        suffix: f.value === 'all' ? undefined : `· ${topicCounts[f.value] ?? 0}`,
+      TOPIC_FILTERS.map((opt) => ({
+        value: opt.value,
+        label: opt.label,
+        suffix: opt.value === 'all' ? undefined : `· ${topicCounts[opt.value] ?? 0}`,
       })),
     [topicCounts],
   )
   const diffOptions: SelectOption[] = useMemo(
-    () => DIFF_FILTERS.map((f) => ({ value: f.value, label: f.label })),
+    () => DIFF_FILTERS.map((opt) => ({ value: opt.value, label: opt.label })),
     [],
   )
   const weekOptions: SelectOption[] = useMemo(
     () =>
-      WEEK_FILTERS.map((f) => ({
-        value: f.value,
-        label: f.label,
-        suffix: f.value === 'all' ? undefined : `· ${weekCounts[f.value] ?? 0}`,
+      WEEK_FILTERS.map((opt) => ({
+        value: opt.value,
+        label: opt.label,
+        suffix: opt.value === 'all' ? undefined : `· ${weekCounts[opt.value] ?? 0}`,
       })),
     [weekCounts],
   )
@@ -237,6 +238,8 @@ export function PracticePage() {
       matchQuestion(q, debouncedSearch, topicFilter, diffFilter, weekFilter, selectedTags),
     )
   }, [allQuestions, debouncedSearch, topicFilter, diffFilter, weekFilter, selectedTags])
+
+  const { list: displayList, isGuest: guestOnPage, hiddenCount } = useGuestLimit(filtered)
 
   if (loading) {
     return (
@@ -277,16 +280,17 @@ export function PracticePage() {
           <div className="flex flex-col gap-5">
             <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
               <div className="max-w-3xl flex-1">
-                <div className="flex items-center gap-2">
+                <div className="flex flex-wrap items-center gap-2">
                   <p className="text-sm font-semibold uppercase tracking-[0.2em] text-blue-600">
                     Question Bank
                   </p>
                   <span className="rounded-full border border-slate-200 bg-slate-50 px-2.5 py-0.5 text-[11px] font-semibold text-slate-600">
                     共 {allQuestions.length} 题
                   </span>
+                  <GuestNoticeInline />
                 </div>
                 <h2 className="mt-2 text-3xl font-semibold tracking-tight text-slate-950">
-                  模拟题库
+                  题库中心
                 </h2>
                 <p className="mt-3 text-sm leading-6 text-slate-600">
                   所有试题总览，支持按关键词、领域、难度与标签多维筛选；点击卡片或表格行可展开答案与解析进行独立复盘。
@@ -398,8 +402,11 @@ export function PracticePage() {
               />
 
               <div className="ml-auto text-[12px] font-medium text-slate-500">
-                筛选后 <span className="font-semibold text-slate-800">{filtered.length}</span> /{' '}
+                筛选后 <span className="font-semibold text-slate-800">{guestOnPage ? displayList.length : filtered.length}</span> /{' '}
                 {allQuestions.length} 题
+                {guestOnPage && hiddenCount > 0 ? (
+                  <span className="ml-1 text-blue-600">（访客仅展示前 {displayList.length} 题）</span>
+                ) : null}
               </div>
             </div>
           </div>
@@ -420,13 +427,13 @@ export function PracticePage() {
 
         {layoutPref === 'table' ? (
           <QuestionBankTable
-            questions={filtered}
+            questions={displayList}
             highlight={debouncedSearch}
             onSelect={(id) => router.push(`/practice/question/${id}`)}
           />
         ) : (
           <div className={gridClass}>
-            {filtered.map((q) => (
+            {displayList.map((q) => (
               <QuestionBankCard
                 key={q.id}
                 question={q}

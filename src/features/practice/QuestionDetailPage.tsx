@@ -15,6 +15,9 @@ import {
 } from '../../lib/content/practice'
 import { TOPIC_META, type Difficulty, type PracticeQuestion, type TopicId } from '../../types/content'
 import { QuestionCard } from './QuestionCard'
+import { GuestNoticeInline, useIsGuest } from '../../components/GuestNotice'
+
+const GUEST_LIMIT = 10
 
 const DIFF_META: Record<Difficulty, { label: string; dot: string; text: string; bg: string; ring: string }> = {
   easy: {
@@ -350,6 +353,7 @@ export function QuestionDetailPage() {
   const params = useParams<{ questionId: string }>()
   const questionId = params?.questionId
   const [answerOpen, setAnswerOpen] = useState(false)
+  const isGuest = useIsGuest()
 
   const { data: all, loading: loadingAll } = useAsyncContent(
     () => getAllPracticeQuestions(),
@@ -362,6 +366,10 @@ export function QuestionDetailPage() {
   )
 
   const loading = loadingAll || loadingQuestion
+
+  const guestBlocked = isGuest && all && question
+    ? all.findIndex((q) => q.id === question.id) >= GUEST_LIMIT
+    : false
 
   if (loading) {
     return (
@@ -403,6 +411,44 @@ export function QuestionDetailPage() {
     )
   }
 
+  if (guestBlocked) {
+    return (
+      <PageShell>
+        <section className="flex w-full flex-col gap-6 pb-16">
+          <div className="flex items-center gap-2">
+            <BackButton />
+            <GuestNoticeInline />
+          </div>
+          <div className="w-full max-w-3xl mx-auto rounded-[1.75rem] border border-slate-200 bg-white p-8 shadow-sm">
+            <div className="flex items-center gap-2">
+              <span className="rounded-md bg-slate-900/5 px-2.5 py-1 font-mono text-[13px] font-semibold tracking-tight text-slate-700 ring-1 ring-slate-900/5">
+                {question.id}
+              </span>
+            </div>
+            <h2 className="mt-4 text-2xl font-semibold tracking-tight text-slate-950 line-clamp-2">
+              {question.question}
+            </h2>
+            <div className="mt-6 rounded-2xl border border-dashed border-blue-300 bg-blue-50/60 p-6">
+              <div className="flex items-start gap-3">
+                <svg viewBox="0 0 24 24" aria-hidden="true" className="h-6 w-6 shrink-0 text-blue-600">
+                  <path fill="currentColor" d="M17 8V7a5 5 0 0 0-10 0v1H5a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-9a2 2 0 0 0-2-2h-2Zm-8-1a3 3 0 0 1 6 0v1H9V7Zm3 10a2 2 0 1 1 0-4 2 2 0 0 1 0 4Z" />
+                </svg>
+                <div className="flex-1">
+                  <p className="text-base font-semibold text-slate-900">
+                    本题不在访客预览范围内
+                  </p>
+                  <p className="mt-1 text-sm leading-6 text-slate-600">
+                    访客仅可预览前 {GUEST_LIMIT} 道题目的答案与解析。请登录账号或扫码咨询老师以解锁完整题库。
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+      </PageShell>
+    )
+  }
+
   return (
     <PageShell>
       <section className="flex flex-1 flex-col gap-5 lg:min-w-0 lg:flex-[2]">
@@ -417,7 +463,7 @@ export function QuestionDetailPage() {
 
       <aside className="flex w-full shrink-0 flex-col gap-4 lg:w-[380px]">
         <StatsCard />
-        {all ? <RelatedQuestionsCard current={question} all={all} /> : null}
+        {all ? <RelatedQuestionsCard current={question} all={isGuest ? all.slice(0, GUEST_LIMIT) : all} /> : null}
       </aside>
     </PageShell>
   )

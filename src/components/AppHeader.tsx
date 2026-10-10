@@ -8,14 +8,14 @@ import { ROLE_LABELS } from '@/lib/auth/types'
 import { ChangePasswordModal } from '@/components/ChangePasswordModal'
 
 const navItems = [
-  { label: '知识点解析', href: '/knowledge' },
-  { label: '模拟题库', href: '/practice', requiresAuth: true },
-  { label: '模拟真题', href: '/exams', requiresAuth: true },
+  { label: '知识点解析', href: '/knowledge', requiresAuth: false },
+  { label: '题库中心', href: '/practice', requiresAuth: true, guestNote: '仅前 10 题预览' },
+  { label: '模拟真题', href: '/exams', requiresAuth: true, guestNote: '仅开放 2 套' },
 ]
 
 function navClassName(isActive: boolean) {
   return [
-    'rounded-full px-4 py-2 text-sm font-medium transition',
+    'inline-flex items-center gap-1.5 rounded-full px-4 py-2 text-sm font-medium transition',
     isActive
       ? 'bg-blue-600 text-white shadow-sm'
       : 'text-slate-600 hover:bg-blue-50 hover:text-blue-700',
@@ -85,18 +85,36 @@ export function AppHeader() {
         </Link>
 
         <nav aria-label="模块导航" className="flex flex-wrap items-center justify-center gap-2">
-          {navItems.map((item) => (
-            <Link
-              key={item.href}
-              href={item.href}
-              className={navClassName(isNavActive(item.href))}
-            >
-              {item.label}
-              {item.requiresAuth && !user && (
-                <span className="ml-1.5 text-[10px] text-amber-500">🔒</span>
-              )}
-            </Link>
-          ))}
+          {navItems.map((item) => {
+            const isGuest = !user || user.role === 'guest'
+            const showLock = item.requiresAuth && isGuest
+            const active = isNavActive(item.href)
+            return (
+              <Link
+                key={item.href}
+                href={item.href}
+                className={navClassName(active)}
+                title={showLock && item.guestNote ? `访客模式 · ${item.guestNote}` : undefined}
+              >
+                <span>{item.label}</span>
+                {showLock ? (
+                  <span
+                    className={[
+                      'inline-flex items-center gap-1 rounded-full px-1.5 py-0.5 text-[10px] font-semibold',
+                      active
+                        ? 'bg-white/15 text-white ring-1 ring-white/20'
+                        : 'bg-amber-50 text-amber-700 ring-1 ring-amber-200',
+                    ].join(' ')}
+                  >
+                    <svg viewBox="0 0 12 12" aria-hidden="true" className="h-2.5 w-2.5">
+                      <path fill="currentColor" d="M8.5 4.5V4a2.5 2.5 0 0 0-5 0v.5H2.5A1.5 1.5 0 0 0 1 6v3.5A1.5 1.5 0 0 0 2.5 11h7A1.5 1.5 0 0 0 10.5 9.5V6A1.5 1.5 0 0 0 9 4.5h-.5Zm-4 0V4a1.5 1.5 0 0 1 3 0v.5h-3ZM6 9A1 1 0 1 1 6 7a1 1 0 0 1 0 2Z" />
+                    </svg>
+                    {item.guestNote}
+                  </span>
+                ) : null}
+              </Link>
+            )
+          })}
         </nav>
 
         <div className="flex shrink-0 items-center gap-4">

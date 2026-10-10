@@ -1,6 +1,7 @@
 'use client'
 
 import { useEffect, useState } from 'react'
+import { createPortal } from 'react-dom'
 import { useAuth } from '@/lib/auth/AuthContext'
 
 interface ChangePasswordModalProps {
@@ -59,9 +60,10 @@ export function ChangePasswordModal({ open, onClose }: ChangePasswordModalProps)
   }
 
   if (!open) return null
+  if (typeof document === 'undefined') return null
 
-  return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/50 backdrop-blur-sm">
+  const modalNode = (
+    <div className="fixed inset-0 z-[9999] flex items-center justify-center p-4 bg-slate-900/50 backdrop-blur-sm">
       <div className="w-full max-w-md rounded-2xl border border-slate-200 bg-white p-6 shadow-xl">
         <div className="flex items-center justify-between mb-4">
           <h3 className="text-lg font-semibold text-slate-900">修改密码</h3>
@@ -166,4 +168,6 @@ export function ChangePasswordModal({ open, onClose }: ChangePasswordModalProps)
       </div>
     </div>
   )
+
+  return createPortal(modalNode, document.body)
 }

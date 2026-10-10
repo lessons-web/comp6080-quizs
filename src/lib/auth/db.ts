@@ -7,6 +7,7 @@ function toPublicUser(user: User): PublicUser {
     id: user.id,
     email: user.email,
     role: user.role,
+    disabled: user.disabled,
     created_at: user.created_at,
   }
 }
@@ -36,12 +37,16 @@ export async function findUserByEmail(email: string): Promise<User | null> {
   }
   const client = await getSqlClient()
   const result = await client<User>`
-    SELECT id, email, password_hash, role, created_at, updated_at
+    SELECT id, email, password_hash, role, disabled, created_at, updated_at
     FROM users
     WHERE email = ${email.toLowerCase()}
     LIMIT 1
   `
-  return result.rows[0] || null
+  const row = result.rows[0] || null
+  if (row) {
+    row.disabled = Boolean(row.disabled)
+  }
+  return row
 }
 
 export async function findUserById(id: string): Promise<User | null> {
@@ -52,6 +57,7 @@ export async function findUserById(id: string): Promise<User | null> {
         email: DEV_ADMIN_USER.email,
         password_hash: '',
         role: DEV_ADMIN_USER.role,
+        disabled: false,
         created_at: new Date().toISOString(),
         updated_at: new Date().toISOString(),
       }
@@ -60,12 +66,16 @@ export async function findUserById(id: string): Promise<User | null> {
   }
   const client = await getSqlClient()
   const result = await client<User>`
-    SELECT id, email, password_hash, role, created_at, updated_at
+    SELECT id, email, password_hash, role, disabled, created_at, updated_at
     FROM users
     WHERE id = ${id}
     LIMIT 1
   `
-  return result.rows[0] || null
+  const row = result.rows[0] || null
+  if (row) {
+    row.disabled = Boolean(row.disabled)
+  }
+  return row
 }
 
 export async function listAllUsers(): Promise<PublicUser[]> {
@@ -76,6 +86,7 @@ export async function listAllUsers(): Promise<PublicUser[]> {
       email: DEV_ADMIN_USER.email,
       password_hash: '',
       role: DEV_ADMIN_USER.role,
+      disabled: false,
       created_at: new Date().toISOString(),
       updated_at: new Date().toISOString(),
     })
@@ -84,11 +95,12 @@ export async function listAllUsers(): Promise<PublicUser[]> {
   }
   const client = await getSqlClient()
   const result = await client<User>`
-    SELECT id, email, password_hash, role, created_at, updated_at
+    SELECT id, email, password_hash, role, disabled, created_at, updated_at
     FROM users
     ORDER BY created_at DESC
   `
-  return result.rows.map(toPublicUser)
+  const rows = result.rows.map((r) => ({ ...r, disabled: Boolean(r.disabled) }))
+  return rows.map(toPublicUser)
 }
 
 export async function createUser(
@@ -106,6 +118,7 @@ export async function createUser(
       email: email.toLowerCase(),
       password_hash: passwordHash,
       role,
+      disabled: false,
       created_at: now,
       updated_at: now,
     }
@@ -115,11 +128,55 @@ export async function createUser(
 
   const client = await getSqlClient()
   const result = await client<User>`
-    INSERT INTO users (email, password_hash, role)
-    VALUES (${email.toLowerCase()}, ${passwordHash}, ${role})
-    RETURNING id, email, password_hash, role, created_at, updated_at
+    INSERT INTO users (email, password_hash, role, disabled)
+    VALUES (${email.toLowerCase()}, ${passwordHash}, ${role}, FALSE)
+    RETURNING id, email, password_hash, role, disabled, created_at, updated_at
   `
-  return toPublicUser(result.rows[0])
+  const row = { ...result.rows[0], disabled: Boolean(result.rows[0].disabled) }
+  return toPublicUser(row)
+}
+
+export async function toggleUserDisabled(userId: string, disabled: boolean): Promise<PublicUser | null> {
+  if (isLocalDevBypass()) {
+    const idx = mockUsersStore.findIndex((u) => u.id === userId)
+    if (idx >= 0) {
+      mockUsersStore[idx] = {
+        ...mockUsersStore[idx],
+        disabled,
+        updated_at: new Date().toISOString(),
+      }
+      return toPublicUser(mockUsersStore[idx])
+    }
+    return null
+  }
+
+  const client = await getSqlClient()
+  const result = await client<User>`
+    UPDATE users
+    SET disabled = ${disabled}, updated_at = CURRENT_TIMESTAMP
+    WHERE id = ${userId}
+    RETURNING id, email, password_hash, role, disabled, created_at, updated_at
+  `
+  if (!result.rows[0]) return null
+  const row = { ...result.rows[0], disabled: Boolean(result.rows[0].disabled) }
+  return toPublicUser(row)
+}
+
+export async function deleteUser(userId: string): Promise<boolean> {
+  if (isLocalDevBypass()) {
+    const idx = mockUsersStore.findIndex((u) => u.id === userId)
+    if (idx >= 0) {
+      mockUsersStore.splice(idx, 1)
+      return true
+    }
+    return false
+  }
+
+  const client = await getSqlClient()
+  const result = await client`
+    DELETE FROM users WHERE id = ${userId}
+  `
+  return (result.rowCount ?? 0) > 0
 }
 
 export async function updateUserPassword(userId: string, newPassword: string): Promise<void> {

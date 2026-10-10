@@ -1,6 +1,7 @@
 import { Suspense } from 'react'
 import { AppHeader } from '@/components/AppHeader'
 import { AppFooter } from '@/components/AppFooter'
+import { GuestNoticeFloating } from '@/components/GuestNotice'
 
 export default function AppShellLayout({
   children,
@@ -18,6 +19,7 @@ export default function AppShellLayout({
         </div>
       </main>
       <AppFooter />
+      <GuestNoticeFloating />
     </div>
   )
 }

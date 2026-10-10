@@ -42,7 +42,7 @@ export function TopicCardGrid() {
           知识点解析
         </h1>
         <p className="mt-1 text-sm text-slate-500">
-          选择一个技术领域进入知识点讲解，按知识点颗粒度学习，结合模拟题库巩固记忆。
+          选择一个技术领域进入知识点讲解，按知识点颗粒度学习，结合题库中心巩固记忆。
         </p>
       </div>
       <div className="grid grid-cols-4 gap-5">

@@ -2,7 +2,14 @@
 
 import { useState, useMemo } from 'react'
 import Link from 'next/link'
+import { usePathname } from 'next/navigation'
 import { ContentLoading } from '../../components/ContentLoading'
+import {
+  GuestNoticeInline,
+  GUEST_OPENED_EXAM_IDS,
+  isExamAllowedForGuest,
+  useIsGuest,
+} from '../../components/GuestNotice'
 import { getAllMockExams } from '../../lib/content/mockExams'
 import { useAsyncContent } from '../../lib/hooks/useAsyncContent'
 import { useLocalStoragePref } from '../../lib/hooks/useLocalStoragePref'
@@ -58,6 +65,9 @@ export function MockExamsPage() {
     () => getAllMockExams(),
     [],
   )
+  const isGuest = useIsGuest()
+  const pathname = usePathname()
+  const loginHref = `/login${pathname ? `?redirect=${encodeURIComponent(pathname)}` : ''}`
 
   const [searchQuery, setSearchQuery] = useState('')
   const [layoutMode, setLayoutMode] = useLocalStoragePref<'card' | 'table'>(
@@ -83,14 +93,25 @@ export function MockExamsPage() {
       )
     }
 
-    result.sort((a, b) => {
-      const timeA = a.time ? new Date(a.time).getTime() : 0
-      const timeB = b.time ? new Date(b.time).getTime() : 0
-      return timeB - timeA
-    })
+    if (isGuest) {
+      result.sort((a, b) => {
+        const aOpen = isExamAllowedForGuest(a.id) ? 0 : 1
+        const bOpen = isExamAllowedForGuest(b.id) ? 0 : 1
+        if (aOpen !== bOpen) return aOpen - bOpen
+        const timeA = a.time ? new Date(a.time).getTime() : 0
+        const timeB = b.time ? new Date(b.time).getTime() : 0
+        return timeB - timeA
+      })
+    } else {
+      result.sort((a, b) => {
+        const timeA = a.time ? new Date(a.time).getTime() : 0
+        const timeB = b.time ? new Date(b.time).getTime() : 0
+        return timeB - timeA
+      })
+    }
 
     return result
-  }, [exams, searchQuery])
+  }, [exams, searchQuery, isGuest])
 
   if (loading) {
     return (
@@ -124,14 +145,22 @@ export function MockExamsPage() {
         <div className="rounded-[2rem] border border-slate-200 bg-white p-6 shadow-sm sm:p-8">
           <div className="flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">
             <div className="max-w-3xl">
-              <p className="text-sm font-semibold uppercase tracking-[0.2em] text-blue-600">
-                Mock Exams
-              </p>
+              <div className="flex flex-wrap items-center gap-2">
+                <p className="text-sm font-semibold uppercase tracking-[0.2em] text-blue-600">
+                  Mock Exams
+                </p>
+                <GuestNoticeInline />
+              </div>
               <h2 className="mt-2 text-3xl font-semibold tracking-tight text-slate-950">
                 模拟真题列表
               </h2>
               <p className="mt-3 text-sm leading-6 text-slate-600">
                 先完成整卷题目，再对照下方答案进行复盘，训练考试节奏与表达完整度。
+                {isGuest ? (
+                  <span className="ml-1 font-medium text-blue-700">
+                    （访客仅开放 {GUEST_OPENED_EXAM_IDS.length} 套试卷预览，每套前 10 题）
+                  </span>
+                ) : null}
               </p>
             </div>
             
@@ -176,50 +205,104 @@ export function MockExamsPage() {
           </div>
         ) : layoutMode === 'card' ? (
           <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
-            {filteredAndSortedExams.map((exam) => (
-              <Link
-                key={exam.id}
-                href={`/exams/${exam.id}`}
-                className="group relative flex flex-col justify-between overflow-hidden rounded-3xl border border-slate-200 bg-white p-6 shadow-sm transition-all hover:border-blue-500 hover:shadow-md hover:-translate-y-1"
-              >
-                <div>
-                  <div className="flex items-start justify-between gap-4">
-                    <h3 className="text-xl font-semibold text-slate-900 group-hover:text-blue-600">
-                      {exam.title}
-                    </h3>
-                    {exam.tags && exam.tags.length > 0 && (
-                      <div className="flex flex-wrap gap-2 shrink-0">
-                        {exam.tags.map(tag => (
-                          <span key={tag} className={`inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium ring-1 ring-inset ${
-                            tag === '真题' 
-                              ? 'bg-red-50 text-red-700 ring-red-600/10'
-                              : 'bg-blue-50 text-blue-700 ring-blue-700/10'
-                          }`}>
-                            {tag}
-                          </span>
-                        ))}
+            {filteredAndSortedExams.map((exam) => {
+              const locked = isGuest && !isExamAllowedForGuest(exam.id)
+              if (locked) {
+                return (
+                  <div
+                    key={exam.id}
+                    aria-disabled
+                    className="group relative flex flex-col justify-between overflow-hidden rounded-3xl border border-slate-200 bg-slate-50 p-6 shadow-sm opacity-95"
+                  >
+                    <div aria-hidden className="absolute inset-0 pointer-events-none bg-slate-50/60 backdrop-blur-[1px]" />
+                    <div className="relative">
+                      <div className="flex items-start justify-between gap-4">
+                        <h3 className="text-xl font-semibold text-slate-700">
+                          {exam.title}
+                        </h3>
+                        <span className="inline-flex items-center gap-1 rounded-full bg-slate-200 px-2.5 py-0.5 text-[11px] font-semibold text-slate-600 ring-1 ring-slate-300 shrink-0">
+                          <svg viewBox="0 0 12 12" aria-hidden="true" className="h-3 w-3">
+                            <path fill="currentColor" d="M8.5 4.5V4a2.5 2.5 0 0 0-5 0v.5H2.5A1.5 1.5 0 0 0 1 6v3.5A1.5 1.5 0 0 0 2.5 11h7A1.5 1.5 0 0 0 10.5 9.5V6A1.5 1.5 0 0 0 9 4.5h-.5Zm-4 0V4a1.5 1.5 0 0 1 3 0v.5h-3ZM6 9A1 1 0 1 1 6 7a1 1 0 0 1 0 2Z" />
+                          </svg>
+                          仅登录后可查看
+                        </span>
                       </div>
+                      {exam.description && (
+                        <p className="mt-3 text-sm text-slate-500 line-clamp-2">
+                          {exam.description}
+                        </p>
+                      )}
+                      {exam.time && (
+                        <p className="mt-2 text-xs text-slate-400">
+                          发布于：{new Date(exam.time).toLocaleDateString('zh-CN', { year: 'numeric', month: '2-digit', day: '2-digit' })}
+                        </p>
+                      )}
+                      <div className="mt-4 rounded-xl border border-dashed border-slate-300 bg-white/60 p-3 text-[12px] leading-5 text-slate-500">
+                        访客仅开放「模拟试卷 1」和「2026 Term 3 Quiz 1」两套试卷。登录或扫码咨询老师解锁全部。
+                      </div>
+                    </div>
+                    <div className="relative mt-6 flex items-center justify-between text-sm text-slate-400">
+                      <span>总分: {exam.totalMarks}</span>
+                      <Link
+                        href={loginHref}
+                        className="font-medium text-blue-600 hover:text-blue-700"
+                      >
+                        登录解锁 →
+                      </Link>
+                    </div>
+                  </div>
+                )
+              }
+              return (
+                <Link
+                  key={exam.id}
+                  href={`/exams/${exam.id}`}
+                  className="group relative flex flex-col justify-between overflow-hidden rounded-3xl border border-slate-200 bg-white p-6 shadow-sm transition-all hover:border-blue-500 hover:shadow-md hover:-translate-y-1"
+                >
+                  <div>
+                    <div className="flex items-start justify-between gap-4">
+                      <h3 className="text-xl font-semibold text-slate-900 group-hover:text-blue-600">
+                        {exam.title}
+                      </h3>
+                      <div className="flex flex-wrap gap-2 shrink-0">
+                        <span className="inline-flex items-center gap-1 rounded-full bg-emerald-50 px-2.5 py-0.5 text-xs font-medium text-emerald-700 ring-1 ring-inset ring-emerald-600/10">
+                          访客可预览
+                        </span>
+                        {exam.tags && exam.tags.length > 0 && (
+                          <div className="flex flex-wrap gap-2 shrink-0">
+                            {exam.tags.map(tag => (
+                              <span key={tag} className={`inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium ring-1 ring-inset ${
+                                tag === '真题' 
+                                  ? 'bg-red-50 text-red-700 ring-red-600/10'
+                                  : 'bg-blue-50 text-blue-700 ring-blue-700/10'
+                              }`}>
+                                {tag}
+                              </span>
+                            ))}
+                          </div>
+                        )}
+                      </div>
+                    </div>
+                    {exam.description && (
+                      <p className="mt-3 text-sm text-slate-600 line-clamp-2">
+                        {exam.description}
+                      </p>
+                    )}
+                    {exam.time && (
+                      <p className="mt-2 text-xs text-slate-400">
+                        发布于：{new Date(exam.time).toLocaleDateString('zh-CN', { year: 'numeric', month: '2-digit', day: '2-digit' })}
+                      </p>
                     )}
                   </div>
-                  {exam.description && (
-                    <p className="mt-3 text-sm text-slate-600 line-clamp-2">
-                      {exam.description}
-                    </p>
-                  )}
-                  {exam.time && (
-                    <p className="mt-2 text-xs text-slate-400">
-                      发布于：{new Date(exam.time).toLocaleDateString('zh-CN', { year: 'numeric', month: '2-digit', day: '2-digit' })}
-                    </p>
-                  )}
-                </div>
-                <div className="mt-6 flex items-center justify-between text-sm text-slate-500">
-                  <span>总分: {exam.totalMarks}</span>
-                  <span className="font-medium text-blue-600 opacity-0 transition-opacity group-hover:opacity-100">
-                    开始测试 →
-                  </span>
-                </div>
-              </Link>
-            ))}
+                  <div className="mt-6 flex items-center justify-between text-sm text-slate-500">
+                    <span>总分: {exam.totalMarks}</span>
+                    <span className="font-medium text-blue-600 opacity-0 transition-opacity group-hover:opacity-100">
+                      开始测试 →
+                    </span>
+                  </div>
+                </Link>
+              )
+            })}
           </div>
         ) : (
           <div className="overflow-hidden rounded-3xl border border-slate-200 bg-white shadow-sm">
@@ -234,47 +317,79 @@ export function MockExamsPage() {
                 </tr>
               </thead>
               <tbody className="divide-y divide-slate-100">
-                {filteredAndSortedExams.map(exam => (
-                  <tr key={exam.id} className="group transition-colors hover:bg-slate-50/50">
-                    <td className="px-6 py-4">
-                      <div className="font-medium text-slate-900 group-hover:text-blue-600">
-                        {exam.title}
-                      </div>
-                      {exam.description && (
-                        <div className="mt-1 text-slate-500 line-clamp-1">{exam.description}</div>
-                      )}
-                    </td>
-                    <td className="px-6 py-4">
-                      {exam.tags && (
-                        <div className="flex flex-wrap gap-2">
-                          {exam.tags.map(tag => (
-                            <span key={tag} className={`inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium ring-1 ring-inset ${
-                              tag === '真题' 
-                                ? 'bg-red-50 text-red-700 ring-red-600/10'
-                                : 'bg-blue-50 text-blue-700 ring-blue-700/10'
-                            }`}>
-                              {tag}
+                {filteredAndSortedExams.map(exam => {
+                  const locked = isGuest && !isExamAllowedForGuest(exam.id)
+                  return (
+                    <tr key={exam.id} className={[
+                      'group transition-colors',
+                      locked ? 'bg-slate-50/60' : 'hover:bg-slate-50/50',
+                    ].join(' ')}>
+                      <td className="px-6 py-4">
+                        <div className="flex items-center gap-2">
+                          <div className={[
+                            'font-medium',
+                            locked ? 'text-slate-500' : 'text-slate-900 group-hover:text-blue-600',
+                          ].join(' ')}>
+                            {exam.title}
+                          </div>
+                          {locked ? (
+                            <span className="inline-flex items-center gap-1 rounded-full bg-slate-200 px-2 py-0.5 text-[10px] font-semibold text-slate-600 ring-1 ring-slate-300">
+                              <svg viewBox="0 0 12 12" aria-hidden="true" className="h-2.5 w-2.5">
+                                <path fill="currentColor" d="M8.5 4.5V4a2.5 2.5 0 0 0-5 0v.5H2.5A1.5 1.5 0 0 0 1 6v3.5A1.5 1.5 0 0 0 2.5 11h7A1.5 1.5 0 0 0 10.5 9.5V6A1.5 1.5 0 0 0 9 4.5h-.5Zm-4 0V4a1.5 1.5 0 0 1 3 0v.5h-3ZM6 9A1 1 0 1 1 6 7a1 1 0 0 1 0 2Z" />
+                              </svg>
+                              锁定
                             </span>
-                          ))}
+                          ) : (
+                            <span className="inline-flex items-center gap-1 rounded-full bg-emerald-50 px-2 py-0.5 text-[10px] font-medium text-emerald-700 ring-1 ring-inset ring-emerald-600/10">
+                              可预览
+                            </span>
+                          )}
                         </div>
-                      )}
-                    </td>
-                    <td className="px-6 py-4 text-slate-500 whitespace-nowrap">
-                      {exam.time ? new Date(exam.time).toLocaleDateString('zh-CN', { year: 'numeric', month: '2-digit', day: '2-digit' }) : '-'}
-                    </td>
-                    <td className="px-6 py-4 text-slate-500 whitespace-nowrap">
-                      {exam.totalMarks} 分
-                    </td>
-                    <td className="px-6 py-4 text-right">
-                      <Link
-                        href={`/exams/${exam.id}`}
-                        className="inline-flex items-center justify-center rounded-lg bg-blue-50 px-3 py-1.5 text-xs font-medium text-blue-600 transition-colors hover:bg-blue-100"
-                      >
-                        开始测试
-                      </Link>
-                    </td>
-                  </tr>
-                ))}
+                        {exam.description && (
+                          <div className="mt-1 text-slate-500 line-clamp-1">{exam.description}</div>
+                        )}
+                      </td>
+                      <td className="px-6 py-4">
+                        {exam.tags && (
+                          <div className="flex flex-wrap gap-2">
+                            {exam.tags.map(tag => (
+                              <span key={tag} className={`inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium ring-1 ring-inset ${
+                                tag === '真题' 
+                                  ? 'bg-red-50 text-red-700 ring-red-600/10'
+                                  : 'bg-blue-50 text-blue-700 ring-blue-700/10'
+                              }`}>
+                                {tag}
+                              </span>
+                            ))}
+                          </div>
+                        )}
+                      </td>
+                      <td className="px-6 py-4 text-slate-500 whitespace-nowrap">
+                        {exam.time ? new Date(exam.time).toLocaleDateString('zh-CN', { year: 'numeric', month: '2-digit', day: '2-digit' }) : '-'}
+                      </td>
+                      <td className="px-6 py-4 text-slate-500 whitespace-nowrap">
+                        {exam.totalMarks} 分
+                      </td>
+                      <td className="px-6 py-4 text-right">
+                        {locked ? (
+                          <Link
+                            href={loginHref}
+                            className="inline-flex items-center justify-center rounded-lg bg-slate-100 px-3 py-1.5 text-xs font-medium text-slate-600 transition-colors hover:bg-slate-200 hover:text-slate-800"
+                          >
+                            登录解锁
+                          </Link>
+                        ) : (
+                          <Link
+                            href={`/exams/${exam.id}`}
+                            className="inline-flex items-center justify-center rounded-lg bg-blue-50 px-3 py-1.5 text-xs font-medium text-blue-600 transition-colors hover:bg-blue-100"
+                          >
+                            开始测试
+                          </Link>
+                        )}
+                      </td>
+                    </tr>
+                  )
+                })}
               </tbody>
             </table>
           </div>

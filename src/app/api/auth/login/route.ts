@@ -30,6 +30,13 @@ export async function POST(request: NextRequest) {
       )
     }
 
+    if (user.disabled) {
+      return NextResponse.json(
+        { error: '账号已禁用，请联系管理员' },
+        { status: 403 },
+      )
+    }
+
     await createSession(user.id, user.email, user.role)
 
     return NextResponse.json({

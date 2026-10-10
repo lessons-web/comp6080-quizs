@@ -166,13 +166,13 @@ return (
           <div className="px-8 pb-8">
             <div className="flex items-center justify-between rounded-lg border border-indigo-100 bg-indigo-50 p-4">
               <div className="text-sm text-indigo-800">
-                想巩固这个知识点？去 {topicLabel} 模拟题库练习。
+                想巩固这个知识点？去 {topicLabel} 题库中心练习。
               </div>
               <Link
                 href={`/practice/${topic}`}
                 className="inline-flex items-center gap-1 rounded-md bg-indigo-600 px-3 py-1.5 text-sm font-medium text-white transition hover:bg-indigo-700"
               >
-                进入模拟题库
+                进入题库中心
                 <svg
                   viewBox="0 0 24 24"
                   className="h-4 w-4"

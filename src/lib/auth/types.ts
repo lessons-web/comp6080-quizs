@@ -5,6 +5,7 @@ export interface User {
   email: string
   password_hash: string
   role: UserRole
+  disabled: boolean
   created_at: string
   updated_at: string
 }
@@ -13,6 +14,7 @@ export interface PublicUser {
   id: string
   email: string
   role: UserRole
+  disabled: boolean
   created_at: string
 }
 

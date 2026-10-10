@@ -16,7 +16,11 @@ function isPublicPath(pathname: string): boolean {
 }
 
 function isGuestRestricted(pathname: string): boolean {
-  return pathname.startsWith('/practice') || pathname.startsWith('/exams') || pathname.startsWith('/admin')
+  return pathname.startsWith('/admin')
+}
+
+function isGuestAllowedPath(pathname: string): boolean {
+  return pathname.startsWith('/practice') || pathname.startsWith('/exams')
 }
 
 const isLocalDev = process.env.NODE_ENV === 'development' && process.env.AUTH_FORCE !== '1'
@@ -38,9 +42,12 @@ export async function middleware(request: NextRequest) {
 
   if (isPublicPath(pathname)) {
     if (isLocalDev && pathname === '/login') {
-      const url = request.nextUrl.clone()
-      url.pathname = '/knowledge'
-      return NextResponse.redirect(url)
+      const hasRedirect = request.nextUrl.searchParams.has('redirect')
+      if (!hasRedirect) {
+        const url = request.nextUrl.clone()
+        url.pathname = '/knowledge'
+        return NextResponse.redirect(url)
+      }
     }
     return NextResponse.next()
   }
@@ -61,6 +68,9 @@ export async function middleware(request: NextRequest) {
   }
 
   if (!token) {
+    if (isGuestAllowedPath(pathname)) {
+      return NextResponse.next()
+    }
     const loginUrl = new URL('/login', request.url)
     loginUrl.searchParams.set('redirect', pathname)
     return NextResponse.redirect(loginUrl)

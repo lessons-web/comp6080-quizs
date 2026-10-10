@@ -24,12 +24,14 @@ export async function GET() {
         email TEXT UNIQUE NOT NULL,
         password_hash TEXT NOT NULL,
         role TEXT NOT NULL CHECK (role IN ('admin', 'student', 'guest')) DEFAULT 'student',
+        disabled BOOLEAN NOT NULL DEFAULT FALSE,
         created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
         updated_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
       )
     `
 
     await sql`CREATE INDEX IF NOT EXISTS idx_users_email ON users(email)`
+    await sql`ALTER TABLE users ADD COLUMN IF NOT EXISTS disabled BOOLEAN NOT NULL DEFAULT FALSE`
 
     await ensureAdminUser()
 
