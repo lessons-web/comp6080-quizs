@@ -29,6 +29,10 @@ const mdxLoaders: Record<string, () => Promise<MdxFixture>> = {
     import('@/content/knowledge/css/003-flexbox.mdx') as Promise<MdxFixture>,
   'css/004-stacking-context': () =>
     import('@/content/knowledge/css/004-stacking-context.mdx') as Promise<MdxFixture>,
+  'javascript/001-dom-operations': () =>
+    import('@/content/knowledge/javascript/001-dom-operations.mdx') as Promise<MdxFixture>,
+  'javascript/002-form-operations': () =>
+    import('@/content/knowledge/javascript/002-form-operations.mdx') as Promise<MdxFixture>,
 }
 
 export function isSupportedTopic(value: unknown): value is TopicId {

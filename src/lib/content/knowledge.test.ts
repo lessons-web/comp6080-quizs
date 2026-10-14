@@ -15,7 +15,7 @@ describe('knowledge content layer', () => {
     const counts = Object.fromEntries(list.map((s) => [s.topic, s.pointCount]))
     expect(counts.html).toBe(3)
     expect(counts.css).toBe(4)
-    expect(counts.javascript).toBe(0)
+    expect(counts.javascript).toBe(2)
     expect(counts.react).toBe(0)
     expect(counts.nodejs).toBe(0)
     for (const s of list) {

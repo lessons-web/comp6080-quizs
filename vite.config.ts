@@ -1,5 +1,6 @@
+import { fileURLToPath, URL } from 'node:url'
+
 import mdx from '@mdx-js/rollup'
-import tailwindcss from '@tailwindcss/vite'
 import react from '@vitejs/plugin-react'
 import remarkFrontmatter from 'remark-frontmatter'
 import remarkGfm from 'remark-gfm'
@@ -16,8 +17,13 @@ export default defineConfig({
   plugins: [
     { ...mdxPlugin, enforce: 'pre' },
     react({ include: /\.(mdx|[jt]sx?)$/ }),
-    tailwindcss(),
   ],
+  resolve: {
+    alias: [
+      { find: '@/content', replacement: fileURLToPath(new URL('./content', import.meta.url)) },
+      { find: '@', replacement: fileURLToPath(new URL('./src', import.meta.url)) },
+    ],
+  },
   test: {
     environment: 'jsdom',
     globals: true,
