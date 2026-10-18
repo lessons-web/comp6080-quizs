@@ -1,0 +1,321 @@
+{
+  "topic": "ui-ux",
+  "questions": [
+    {
+      "id": "UIUX-Q1",
+      "topic": "ui-ux",
+      "weeks": [
+        "week-5"
+      ],
+      "difficulty": "easy",
+      "tags": [
+        "UI与UX",
+        "概念辨析"
+      ],
+      "question": "在课程中，研究操作流程是否合乎逻辑、并进行用户访谈与测试，更偏向 UX 还是 UI？而设计按钮的颜色、阴影与品牌视觉，又更偏向哪一个？请说明理由。",
+      "knowledgePoint": "UI 与 UX 的区别",
+      "answerExplanation": "前者偏 UX。UX 关注可用性（usability）与用户研究（如访谈、测试），核心是判断用起来是否合乎逻辑、是否好用。后者偏 UI。UI 关注图形与文案、颜色、像素、阴影等视觉设计以及品牌（branding）一致性。需要强调的是，UI 的终极目标仍是让 app 更好用，不能把好看等同于 UI 的全部。",
+      "codeBlocks": [],
+      "images": [],
+      "createdAt": "2026-10-18"
+    },
+    {
+      "id": "UIUX-Q2",
+      "topic": "ui-ux",
+      "weeks": [
+        "week-5"
+      ],
+      "difficulty": "easy",
+      "tags": [
+        "网格",
+        "对齐"
+      ],
+      "question": "课程里的内容页样式规定：内容区宽度上限 `1200px`，采用 `12 列` 网格，列间间距（gutter）为 `16px`。为什么列数选 12 而不是 10？",
+      "knowledgePoint": "对齐与网格系统",
+      "answerExplanation": "因为 12 可以被 1、2、3、4、6 整除，能灵活拆成两栏、三栏、四栏、六栏等常见布局；而 10 只能被 1、2、5 整除，拆分能力弱。1200px 的内容区上限是为了控制每行文本长度、保证可读性，16px 是列之间的 gutter。另外要注意内容应对齐到列边缘，而不是进入 margin。",
+      "codeBlocks": [],
+      "images": [],
+      "createdAt": "2026-10-18"
+    },
+    {
+      "id": "UIUX-Q3",
+      "topic": "ui-ux",
+      "weeks": [
+        "week-5"
+      ],
+      "difficulty": "easy",
+      "tags": [
+        "字体",
+        "排版"
+      ],
+      "question": "一个页面同时使用了 5 种不同的 font family，会带来什么问题？字体数量一般建议控制在多少？",
+      "knowledgePoint": "字体与和谐配色",
+      "answerExplanation": "字体种类过多会破坏一致性、增加认知负担，让界面显得杂乱。原则是 less is more，一个项目一般最多使用 2 个 font family（例如一个标题字体加一个正文字体），并预先建立 type scale 统一字号层级，而不是临时为每个元素挑字体。",
+      "codeBlocks": [],
+      "images": [],
+      "createdAt": "2026-10-18"
+    },
+    {
+      "id": "UIUX-Q4",
+      "topic": "ui-ux",
+      "weeks": [
+        "week-5"
+      ],
+      "difficulty": "medium",
+      "tags": [
+        "配色",
+        "HSL"
+      ],
+      "question": "下面两组 HSL 颜色，哪一组更可能构成和谐的配色？为什么？\nA：`(199,86,51)`、`(199,100,35)`、`(199,86,90)`\nB：`(277,96,47)`、`(230,100,89)`",
+      "knowledgePoint": "字体与和谐配色",
+      "answerExplanation": "A 组更和谐。和谐配色的核心判据是色相（HUE）相同，只改变亮度与饱和度：A 组的 H 都是 199，属于同一色相的不同变体；B 组的 H 分别是 277 和 230，色相不同，会显得杂乱并分散注意力。判断是否同色相时用 HSL 比 RGB 更直观，因为 HSL 把色相单独拆了出来。",
+      "codeBlocks": [],
+      "images": [],
+      "createdAt": "2026-10-18"
+    },
+    {
+      "id": "UIUX-Q5",
+      "topic": "ui-ux",
+      "weeks": [
+        "week-5"
+      ],
+      "difficulty": "medium",
+      "tags": [
+        "视觉层级",
+        "强调"
+      ],
+      "question": "设计师想让界面中限时优惠这句话最突出，可以动用视觉层级的哪些手段？请至少说出 4 个。",
+      "knowledgePoint": "视觉层级六要素",
+      "answerExplanation": "视觉层级六要素：Size（越大越重要）、Color（越亮越重要）、Contrast（对比越强越吸睛）、Spacing（用大 margin 制造重要感）、Alignment（在整齐布局中刻意不对齐反而更跳）、Repetition（让其余元素重复成组，间接把它单独强调）。注意 Repetition 也可以反向使用，用来降低次要信息的层级，让它们更容易被忽略。",
+      "codeBlocks": [],
+      "images": [],
+      "createdAt": "2026-10-18"
+    },
+    {
+      "id": "UIUX-Q6",
+      "topic": "ui-ux",
+      "weeks": [
+        "week-5"
+      ],
+      "difficulty": "medium",
+      "tags": [
+        "示能性",
+        "交互设计"
+      ],
+      "question": "简述示能性（Affordance）的三种类型，并说明哪一种必须尽量避免，为什么。",
+      "knowledgePoint": "示能性 Affordance",
+      "answerExplanation": "三种类型：①Explicit 显式示能——明确告知交互方式，例如文字直接写着 Click here；②Pattern 模式示能——用约定俗成的模式暗示，例如蓝色带下划线的文字表示链接、汉堡图标表示菜单；③False 虚假示能——看起来能操作、实际没有功能。虚假示能必须避免，因为它会误导用户、造成困惑。还要注意示能是交互前的提示，不要与交互后的反馈（feedback）混淆。",
+      "codeBlocks": [],
+      "images": [],
+      "createdAt": "2026-10-18"
+    },
+    {
+      "id": "UIUX-Q7",
+      "topic": "ui-ux",
+      "weeks": [
+        "week-5"
+      ],
+      "difficulty": "medium",
+      "tags": [
+        "设计清单",
+        "可用性"
+      ],
+      "question": "某表单的提交按钮在输入框为空时依然可以点击，且点击后页面没有任何变化。这至少违反了 12 条设计检查清单中的哪几条？请分别解释。",
+      "knowledgePoint": "UI 设计检查清单 12 条",
+      "answerExplanation": "至少违反：①约束（Constraints）——空输入时应禁用提交，事前限制用户犯错；②反馈（Feedback）——操作后应有明确的成功或失败提示，超过 1.5s 的任务应显示 loading；③可见性（Visibility）——用户不知道当前处于什么状态、下一步该做什么；④一致性（Consistency）——状态与行为应符合用户已有预期。改进方向是：空输入时禁用按钮，并在提交后给出明确反馈。",
+      "codeBlocks": [],
+      "images": [],
+      "createdAt": "2026-10-18"
+    },
+    {
+      "id": "UIUX-Q8",
+      "topic": "ui-ux",
+      "weeks": [
+        "week-5"
+      ],
+      "difficulty": "hard",
+      "tags": [
+        "安全性",
+        "约束"
+      ],
+      "question": "辨析：空输入时禁用提交按钮与为删除操作提供撤销，分别对应 12 条设计检查清单里的哪一条？为什么这两条容易混淆？",
+      "knowledgePoint": "UI 设计检查清单 12 条",
+      "answerExplanation": "前者对应约束（Constraints），是事前限制，目的是防止用户犯错；后者对应安全性（Safety），是事后保护，目的是让用户能从错误中恢复。二者容易混淆，是因为都跟防错相关，但发生的时间点不同：约束发生在操作之前，安全发生在操作之后（若操作不可撤销，至少应给出警告）。",
+      "codeBlocks": [],
+      "images": [],
+      "createdAt": "2026-10-18"
+    },
+    {
+      "id": "UIUX-Q9",
+      "topic": "ui-ux",
+      "weeks": [
+        "week-5"
+      ],
+      "difficulty": "hard",
+      "tags": [
+        "认知负荷",
+        "暗色模式"
+      ],
+      "question": "课程提到了 Dark Mode、Microinteractions、Designing for Emotions、Cognitive Load 这些进阶概念。为什么说降低认知负荷与限制配色、字体数量的目标是相同的？",
+      "knowledgePoint": "UI 进阶概念",
+      "answerExplanation": "认知负荷指用户处理界面信息时需要消耗的心智资源。配色和字体一旦失控，用户就要不断辨认这些颜色或字体是否代表不同含义，无谓地消耗注意力；而受限的调色板（同色相加灰阶）与最多 2 个字体能建立统一感（cohesion），把注意力留给真正重要的内容，从而降低认知负荷。Dark Mode 同理：它通过减少强对比的亮色刺激，在特定环境下降低视觉负担，但仍需保证对比度满足可读性。",
+      "codeBlocks": [],
+      "images": [],
+      "createdAt": "2026-10-18"
+    },
+    {
+      "id": "REACT-Q1",
+      "topic": "react",
+      "weeks": [
+        "week-5"
+      ],
+      "difficulty": "medium",
+      "tags": [
+        "命令式",
+        "声明式"
+      ],
+      "question": "下面 A、B 两种写法，哪一种属于声明式？为什么 React 更推崇声明式？",
+      "knowledgePoint": "命令式 vs 声明式",
+      "answerExplanation": "B 是声明式。A 是命令式：一步步指定怎么做（拿到元素、逐个赋值），关注的是过程；B 只描述结果，即期望 UI 长什么样，由 React 负责把它转成真实的 DOM 操作。声明式的价值在于状态转换的数量会组合爆炸：3 个状态有 6 种转换，50 个页面最少有 2450 种转换；命令式要逐一处理每种转换，声明式只需描述 50 个状态本身。要注意声明式的代码往往并不更少，但扩展性和可维护性更好。",
+      "codeBlocks": [
+        {
+          "language": "js",
+          "code": "// A\ndocument.body.style.backgroundColor = 'green'"
+        },
+        {
+          "language": "jsx",
+          "code": "// B\nreturn <body style={{ backgroundColor: 'green' }} />"
+        }
+      ],
+      "images": [],
+      "createdAt": "2026-10-18"
+    },
+    {
+      "id": "REACT-Q2",
+      "topic": "react",
+      "weeks": [
+        "week-5"
+      ],
+      "difficulty": "easy",
+      "tags": [
+        "JSX",
+        "语法"
+      ],
+      "question": "下面这段 JSX 至少存在两个问题，请指出并给出改正后的写法。",
+      "knowledgePoint": "JSX 语法",
+      "answerExplanation": "问题一：使用了 `class`，JSX 中必须写成 `className`；问题二：JSX 要求单一根节点，而这里有两个并列元素。改正：用一个父元素（如 `<div>` 或空标签 `<>...</>`）包裹，并把 `class` 换成 `className`，例如 `const el = (<div className=\"card\"><span>Hello</span><span>!</span></div>)`。另外还要注意 `{}` 里只能放表达式（如三元运算），不能放 `if` 这类语句。",
+      "codeBlocks": [
+        {
+          "language": "jsx",
+          "code": "const el = (\n  <div class=\"card\">Hello</div>\n  <span>!</span>\n)"
+        }
+      ],
+      "images": [],
+      "createdAt": "2026-10-18"
+    },
+    {
+      "id": "REACT-Q3",
+      "topic": "react",
+      "weeks": [
+        "week-5"
+      ],
+      "difficulty": "easy",
+      "tags": [
+        "挂载",
+        "createRoot"
+      ],
+      "question": "在 React 19 项目中，入口文件 `src/main.tsx` 应该怎样把根组件挂载到页面上的 `#root` 容器？请说明用到的 API 与参数含义。",
+      "knowledgePoint": "项目结构与挂载（Mounting）",
+      "answerExplanation": "React 19 的挂载方式是：从 `react-dom/client` 导入 `createRoot`，然后 `createRoot(document.getElementById('root')!).render(<App />)`。`createRoot` 接收挂载容器（一个真实 DOM 节点），返回的根对象再调用 `render` 渲染根组件。要注意旧写法 `ReactDOM.render(<App />, el)` 在 React 18+ 已废弃，课程 slides 里基于旧版的 `create-react-app` 脚手架也已不适用。",
+      "codeBlocks": [
+        {
+          "language": "html",
+          "code": "<div id=\"root\"></div>"
+        }
+      ],
+      "images": [],
+      "createdAt": "2026-10-18"
+    },
+    {
+      "id": "REACT-Q4",
+      "topic": "react",
+      "weeks": [
+        "week-5"
+      ],
+      "difficulty": "easy",
+      "tags": [
+        "内联样式",
+        "className"
+      ],
+      "question": "下面 A、B 两种写法哪种正确？另一种错在哪里？",
+      "knowledgePoint": "React 中引入 CSS：Inline Style 与 className",
+      "answerExplanation": "B 正确。React 的 `style` 属性接收的是一个 JS 对象（所以用双花括号：外层 `{}` 表示表达式，内层 `{}` 表示对象），且属性名要用 camelCase，`font-size` 应写成 `fontSize`。A 把整个样式写成了字符串，还使用了 kebab-case，在 React 中不会生效。若要复用类样式，应使用 `className=\"App\"` 配合 `import './App.css'`，两种方式也可以组合使用。",
+      "codeBlocks": [
+        {
+          "language": "jsx",
+          "code": "// A\n<div style=\"color: red; font-size: 12px\">Hi</div>"
+        },
+        {
+          "language": "jsx",
+          "code": "// B\n<div style={{ color: 'red', fontSize: '12px' }}>Hi</div>"
+        }
+      ],
+      "images": [],
+      "createdAt": "2026-10-18"
+    },
+    {
+      "id": "REACT-Q5",
+      "topic": "react",
+      "weeks": [
+        "week-5"
+      ],
+      "difficulty": "medium",
+      "tags": [
+        "CSS作用域",
+        "全局污染"
+      ],
+      "question": "同学在 `A.tsx` 里写了 `import './A.css'`，本以为只有 A 组件能用这些类，结果 B 组件也受到了影响。为什么？应如何解决？",
+      "knowledgePoint": "CSS 作用域陷阱与隔离方案",
+      "answerExplanation": "因为在某个文件里 `import './A.css'` 并不代表这些 class 只属于该文件。只要这份 CSS 被任何地方 import 过，它的所有 class 就都进入全局作用域，任何组件都可能命中，从而产生全局污染：A 的样式会意外影响 B。ES module 的 import 并不会给 CSS 带来隔离作用域。解决方向是使用 CSS Modules、CSS-in-JS 等能提供作用域隔离的方案。",
+      "codeBlocks": [],
+      "images": [],
+      "createdAt": "2026-10-18"
+    },
+    {
+      "id": "REACT-Q6",
+      "topic": "react",
+      "weeks": [
+        "week-5"
+      ],
+      "difficulty": "hard",
+      "tags": [
+        "虚拟DOM",
+        "渲染原理"
+      ],
+      "question": "解释虚拟 DOM 与 Diff 如何减少真实 DOM 的更新开销。为什么不能说虚拟 DOM 让 DOM 本身变快了？",
+      "knowledgePoint": "虚拟 DOM 与 Diff 算法",
+      "answerExplanation": "流程是：①在 JS 内存中保留一份 HTML 层级的副本（虚拟 DOM）；②状态变化时先在副本上做改动，避免真实 layout 重算；③对新旧两棵树做 Diff；④只把差异以外科手术式地更新到真实 DOM，而不是整棵树重建。真实 DOM 频繁改动会触发大量 layout reflow，这才是慢的根源。要注意虚拟 DOM 并没有让 DOM 操作本身变快，它只是减少不必要的 DOM 操作；而且它是框架自建的一层抽象，不是浏览器自带的能力。",
+      "codeBlocks": [],
+      "images": [],
+      "createdAt": "2026-10-18"
+    },
+    {
+      "id": "REACT-Q7",
+      "topic": "react",
+      "weeks": [
+        "week-5"
+      ],
+      "difficulty": "medium",
+      "tags": [
+        "useState",
+        "状态管理"
+      ],
+      "question": "`const [count, setCount] = useState(0)`，点击一次按钮执行 `setCount(count + 1)`。为什么说 state 的更新是异步的？更新之后页面为什么会变化？",
+      "knowledgePoint": "useState 与渲染循环",
+      "answerExplanation": "调用 `setCount(count + 1)` 并不会立刻改变 `count` 变量，React 会把这次更新异步排队处理，因此不能在紧接的下一行读到新值。更新完成后，React 会重新执行 render，并把新的 `count` 传进去，从而生成新的 UI 描述并呈现到屏幕上。完整闭环是：render → 改 state → 再 render。另外 state 必须通过 setter 修改，直接给 `count` 赋值不会触发重渲染。",
+      "codeBlocks": [],
+      "images": [],
+      "createdAt": "2026-10-18"
+    }
+  ]
+}

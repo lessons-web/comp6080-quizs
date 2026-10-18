@@ -38,6 +38,7 @@ const TOPIC_CHIP: Record<TopicId, string> = {
   javascript: 'bg-yellow-50 text-yellow-800 ring-yellow-100',
   react: 'bg-cyan-50 text-cyan-700 ring-cyan-100',
   nodejs: 'bg-emerald-50 text-emerald-700 ring-emerald-100',
+  'ui-ux': 'bg-violet-50 text-violet-700 ring-violet-100',
 }
 
 function formatDate(iso: string) {

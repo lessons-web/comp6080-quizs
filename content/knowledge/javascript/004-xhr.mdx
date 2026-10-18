@@ -1,0 +1,134 @@
+---
+id: "004-xhr"
+title: "XMLHttpRequest 与回调式网络请求"
+topic: "javascript"
+category: "异步编程"
+difficulty: "medium"
+tags: ["week-4"]
+summary: "XMLHttpRequest 的基本用法、错误处理策略与回调地狱的规避"
+createdAt: "2026-10-18T12:00:00.000Z"
+---
+
+有了事件循环，JavaScript 已经能把任务异步执行了，但还缺一个「用什么事件去做网络请求」的答案。第一代方案就是 **XMLHttpRequest**，虽然如今已被 fetch 取代，但遗留代码库里到处都是它，必须能读懂。
+
+## 1. XMLHttpRequest 是什么
+
+- 浏览器**内置的 API**，无需引入任何库；
+- 可以创建一个**代表某次请求的句柄（handle）**；
+- **默认就是异步的**；
+- 可调节的「旋钮」非常多（详见官方文档）；
+- 通过**回调（callback）**做定制，主要回调是 `xhr.onload` 与 `xhr.onerror`。
+
+## 2. 错误处理机制
+
+XHR 的错误分两条路传达：
+
+- **异常（exception）**：网络错误、请求发送失败会**抛异常**；
+- **状态码（status code）**：正常的 HTTP 错误通过 `xhr.status` 传达。
+
+> ⚠️ 常见误区：以为「请求失败一定走 `onerror`」或「有响应就等于成功」。事实是：**网络层面**的失败走异常或 `onerror`，而**HTTP 层面**的错误（如 404、500）请求本身是成功的，必须靠 `xhr.status` 判断。
+
+## 3. 最小可运行的示例
+
+```js
+const xhr = new XMLHttpRequest();
+xhr.open("GET", "https://api.example.com/cats");
+
+xhr.onload = () => {
+  if (xhr.status === 200) {
+    const cats = JSON.parse(xhr.responseText);
+    console.log(cats);
+  } else {
+    console.error(`HTTP 错误，状态码：${xhr.status}`);
+  }
+};
+
+xhr.onerror = () => {
+  console.error("网络错误：请求根本没发出去");
+};
+
+xhr.send();
+```
+
+分工很清晰：`onload` 里用状态码区分「HTTP 成功」与「HTTP 错误」，`onerror` 兜住「根本没连上」的网络错误。
+
+## 4. 现状：已被 fetch 取代
+
+- XHR **已经不再受青睐**（fallen out of favour），现代代码优先用 `fetch`；
+- 但**遗留代码库中仍大量存在**，阅读与维护旧项目时必须能看懂它。
+
+所以本节的定位是「能读懂、能判断错误」，而不是推荐用它写新代码。
+
+## 5. 错误分类：预期错误 vs 意外错误
+
+| 类别 | 例子 | 如何发现 |
+|---|---|---|
+| **预期错误（expected）** | 认证失败、参数错误、域名不存在 | 靠 **HTTP 状态码** |
+| **意外错误（unexpected）** | 网络连接问题、远程连接突然断开、超时 | 必须用 **try/catch** 处理 |
+
+**HTTP 状态码**的读法：
+
+- **4xx**：说明**调用方式不对**（客户端用错了 API）；
+- **5xx**：**服务端内部错误**；
+- **200**：**没有错误**。
+
+> ⚠️ 常见误区：把「请求返回了」当成「请求成功了」。404 与 500 都是「成功返回的响应」，只是状态码告诉你这次调用失败了，必须显式检查。
+
+## 6. 意外错误的最佳策略：重试
+
+意外错误往往**不是代码写错了**，而是环境抖动。最常见的处理策略是**重试**，并且配合**指数退避（exponential back-off）**：每次失败后等待更久再试，避免一下把服务端打垮。
+
+```text
+第 1 次失败 → 等 1s → 第 2 次失败 → 等 2s → 第 3 次失败 → 等 4s …
+                        （等待时间逐次翻倍）
+```
+
+同时，这类错误要用 **try/catch** 包起来，避免程序直接崩掉。
+
+## 7. 避免回调地狱
+
+**回调地狱（Callback Hell）** 指**回调的深层嵌套**，代码会像金字塔一样不断向右塌陷。常见成因：
+
+- **多人协作**同一份代码，风格不统一；
+- **临时决策（ad-hoc decision making）**不断叠加。
+
+两个软件工程原则依然适用：
+
+- **SRP（单一职责）**：一个函数只做一件事；
+- **DRY（不要重复自己）**：重复的动作抽成一个函数。
+
+核心结论是 **扁平优于嵌套（Flat beats Nested）**：
+
+- 回调应写成**命名函数**，可读、可测试、可复用；
+- 只有**一行就能搞定**的，才用箭头函数。
+
+```js
+// ❌ 深层嵌套，难读
+const load = () => {
+  getA((a) => {
+    getB(a, (b) => {
+      getC(b, (c) => {
+        console.log(c);
+      });
+    });
+  });
+};
+
+// ✅ 先命名，再组合，层次扁平
+const handleC = (c) => console.log(c);
+const handleB = (b) => getC(b, handleC);
+const handleA = (a) => getB(a, handleB);
+const load = () => getA(handleA);
+```
+
+> ⚠️ 常见误区：为了「少写函数」而把回调都塞进内联箭头函数的层层嵌套里。真正省事的做法恰恰相反——**抽出命名函数**，让每一层都独立可见。
+
+## 自查清单
+
+- ✅ 知道 XHR 是浏览器**内置 API**，创建一个请求句柄，且**默认异步**？
+- ✅ 能区分网络错误（异常或 `onerror`）与 HTTP 错误（`xhr.status`）？
+- ✅ 能写出 `xhr.open → onload / onerror → xhr.send` 的最小示例？
+- ✅ 记得 XHR 已被 `fetch` 取代，但**遗留代码**里仍要能读懂？
+- ✅ 能背出状态码读法：4xx 调用不对、5xx 服务端错误、200 无错误？
+- ✅ 知道意外错误靠 **try/catch**，最佳策略是**重试 + 指数退避**？
+- ✅ 能用 **SRP / DRY** 与「扁平优于嵌套」缓解回调地狱？

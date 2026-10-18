@@ -4,6 +4,7 @@ import react from '@vitejs/plugin-react'
 import remarkFrontmatter from 'remark-frontmatter'
 import remarkGfm from 'remark-gfm'
 import remarkMdxFrontmatter from 'remark-mdx-frontmatter'
+import { fileURLToPath } from 'node:url'
 import { defineConfig } from 'vitest/config'
 
 const mdxPlugin = mdx({
@@ -13,6 +14,12 @@ const mdxPlugin = mdx({
 // https://vite.dev/config/
 export default defineConfig({
   base: './',
+  resolve: {
+    alias: {
+      '@/content': fileURLToPath(new URL('./content', import.meta.url)),
+      '@': fileURLToPath(new URL('./src', import.meta.url)),
+    },
+  },
   plugins: [
     { ...mdxPlugin, enforce: 'pre' },
     react({ include: /\.(mdx|[jt]sx?)$/ }),

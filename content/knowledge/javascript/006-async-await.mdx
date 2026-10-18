@@ -1,0 +1,143 @@
+---
+id: "006-async-await"
+title: "async / await：把异步写成同步的样子"
+topic: "javascript"
+category: "异步编程"
+difficulty: "medium"
+tags: ["week-4"]
+summary: "async/await 的核心规则、底层直觉，以及它与 Promise 的取舍，让异步代码回归同步写法"
+createdAt: "2026-10-18T12:00:00.000Z"
+---
+
+我们已经有了回调，也有了 Promise，但两者有个共同的毛病：**写出来的代码不像我们习惯的普通函数**——逻辑被拆进 `.then()` 的链条里，读起来是「跳着」的。`async / await` 就是为消除这种陌生感而生的语法糖。
+
+## 1. 动机：回调与 Promise 都不像普通函数
+
+- 回调把「后续逻辑」塞进参数，嵌套一深就形成回调地狱。
+- Promise 用链式改善了控制流，但**同步的直觉**仍然被打断：先拿到 `response`，再 `return response.json()`，再下一层 `.then`。
+- 我们真正想要的，是**像写同步代码那样从上往下一行行读**，让异步的等待「隐形」。
+
+`async / await` 正是为此而生：它让我们**重新用熟悉、直观的方式写异步**。
+
+## 2. async / await 是什么
+
+- **ES2017 引入**的关键字，**几乎所有浏览器都支持**。
+- 本质是所谓的「**协程（coroutine）**」，也就是**可恢复的函数**：中途可以让出、之后再从原地继续。
+- 它**建立在 Promise 之上**——不是替代 Promise，而是让 Promise 更好写。
+
+## 3. 两条核心规则
+
+> ⚠️ 记住这两条，`async / await` 的行为就能推导出大半。
+
+1. **`async` 函数总是返回一个 Promise**：无论你 `return` 什么，都会被自动包成 Promise。
+2. **`await` 表达式总是「解包」一个已 resolve 的 Promise**：它拿到的是**兑现值**；如果 Promise 是 **rejected**，则**作为异常抛出**。
+
+```js
+const loadValue = async () => {
+  const value = await Promise.resolve(42); // 解包，拿到 42
+  return value;                            // 自动包成 Promise
+};
+
+loadValue().then((v) => console.log(v)); // 42
+```
+
+## 4. 底层直觉：它凭什么看起来像同步
+
+下面是一种**直觉理解**——注意，这只是「**好像如此**」，并非真实实现，也不是真实代码：
+
+- **非 Promise 的值与 thenable 也能 await**：它们会被**包成一个 Promise**，所以 `await 42` 也成立。
+- 这个 Promise 会被**链上一段注入的逻辑**，用于在 `await` 的位置**恢复**函数。
+- 当执行到 `await` 时，**JS 运行时挂起当前函数**，同时**向调用方返回一个 Promise**，这个返回的 Promise 代表「**挂起函数最终的结果**」。
+- 当函数被恢复、并**执行到函数体末尾**时，这个返回的 Promise 才 **resolve**。
+
+```text
+调用 async 函数
+   │
+   ▼
+执行到 await → 挂起本函数，向调用方返回一个 Promise（pending）
+   │
+   ▼
+等待的 Promise 兑现 → 恢复函数，从 await 处继续
+   │
+   ▼
+函数体执行到末尾 → 返回给调用方的 Promise 终于 resolve
+```
+
+## 5. 错误处理：用回 try / catch
+
+与 Promise 不同，`async / await` **始终保持函数作用域**：错误和 rejection 可以**重新用 `try / catch` 处理**，因为我们「看起来」还站在同一个同步函数里。
+
+```js
+const loadCats = async (url) => {
+  try {
+    const response = await fetch(url);
+    if (!response.ok) throw new Error(`HTTP ${response.status}`);
+    const data = await response.json();
+    return data;
+  } catch (err) {
+    console.error('请求失败：', err);
+  }
+};
+```
+
+## 6. 两个必须注意的点
+
+> ⚠️ 陷阱一：**`await` 一个 rejected 的 Promise 会抛出异常**。若函数里没有 `try / catch`，这个异常会变成该 async 函数返回 Promise 的 rejection，交给调用方去接。
+
+> ⚠️ 陷阱二：**同步地调用一个 async 函数，它仍然返回一个 pending Promise**。哪怕函数体里全是同步代码，返回值也是被 Promise 包住的，不会立刻拿到结果。
+
+```js
+const p = loadValue(); // 拿到的是 Promise（此刻可能仍 pending）
+console.log(p instanceof Promise); // true
+```
+
+## 7. async/await 与 Promise 的取舍
+
+两者不是替代关系，各有适用场景：
+
+| 维度 | Promise | async / await |
+|---|---|---|
+| 传递与组合 | 可四处传递、可附加**不同** handler | 更偏向就地顺序书写 |
+| 内存 | 维护调用栈 trace，**更占内存** | 相对更省 |
+| 老浏览器 | **支持更好** | 需要 ES2017 |
+| 可读性 | 链式，稍绕 | **更易读、更符合直觉** |
+| 调试 | 断点较直观 | **调试器会跳读源码**，较难调试 |
+| 性能 | — | **某些场景更好** |
+
+```text
+可传递 / 省堆栈 / 老浏览器友好  →  倾向 Promise
+好读 / 直觉 / 某些场景更快       →  倾向 async / await
+```
+
+> ⚠️ 常见误区：以为「`async / await` 一定优于 Promise」。**调试时它反而更绕**（调试器会在源码里跳来跳去），选哪个最终取决于你的**具体需求、运行环境与目标平台**。
+
+## 8. 收尾：JS 异步网络的三种方式
+
+至此，我们已经能把「JavaScript 如何做异步网络请求」讲成一条清晰的演进线：
+
+| 方式 | 定位 |
+|---|---|
+| `XMLHttpRequest` | **legacy**（老方案），事件回调，兼容性最好 |
+| `fetch` + Promise | 基于 Promise 的链式写法 |
+| `fetch` + `async / await` | 读起来几乎和同步代码一样 |
+
+```js
+// fetch + async/await：从上往下一行行读，最接近同步直觉
+const loadCats = async (url) => {
+  const response = await fetch(url);
+  if (!response.ok) throw new Error(`HTTP ${response.status}`);
+  return response.json();
+};
+```
+
+> AJAX 技术在持续演进，但**底层原理很少改变**：发起请求、异步等待、处理结果与错误——只是写法越来越贴近我们的直觉。
+
+## 自查清单
+
+- ✅ 能说出 `async / await` 要解决的痛点是「异步代码不像普通函数」。
+- ✅ 记得它 **ES2017 引入**、本质是**协程**、**建立在 Promise 之上**。
+- ✅ 能背出两条核心规则：async 函数总返回 Promise，await 总是解包一个已 resolve 的 Promise。
+- ✅ 能用「挂起函数并返回 Promise、执行到末尾才 resolve」解释它的直觉语义。
+- ✅ 知道它保留了函数作用域，错误可重新用 `try / catch` 处理。
+- ✅ 记住两个陷阱：await rejected 会抛异常；同步调用 async 函数仍返回 pending Promise。
+- ✅ 能列出 Promise 与 async/await 的取舍，并说出 JS 异步网络的三种方式。

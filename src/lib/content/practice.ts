@@ -23,6 +23,10 @@ const questionLoaders: Record<string, () => Promise<PracticeQuestionCollection>>
     import('@/content/questions/week-4.practice.json').then(
       (m) => m.default as unknown as PracticeQuestionCollection,
     ),
+  'week-5.practice': () =>
+    import('@/content/questions/week-5.practice.json').then(
+      (m) => m.default as unknown as PracticeQuestionCollection,
+    ),
   'database': () =>
     import('@/content/questions/database.json').then(
       (m) => m.default as unknown as PracticeQuestionCollection,
@@ -37,6 +41,7 @@ const TOPIC_DEFAULT_WEEK: Record<TopicId, WeekTag> = {
   javascript: 'week-2',
   react: 'week-3',
   nodejs: 'week-4',
+  'ui-ux': 'week-5',
 }
 
 function guessDifficulty(question: string, knowledgePoint: string): Difficulty {
@@ -85,6 +90,7 @@ function normalizeTopic(raw: string): TopicId {
   const low = raw.toLowerCase()
   if (low === 'javascript') return 'javascript'
   if (low === 'node.js' || low === 'nodejs') return 'nodejs'
+  if (low === 'ui/ux' || low === 'ui-ux' || low === 'uiux') return 'ui-ux'
   if (low in TOPIC_DEFAULT_WEEK) return low as TopicId
   return 'html'
 }

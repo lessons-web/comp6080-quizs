@@ -33,6 +33,12 @@ export const TOPIC_META = {
     description: '服务端运行时与生态',
     accent: 'from-emerald-500 to-green-600',
   },
+  'ui-ux': {
+    label: 'UI/UX',
+    defaultWeek: 'week-5',
+    description: '界面设计与交互体验',
+    accent: 'from-violet-500 to-purple-600',
+  },
 } satisfies Record<string, {
   label: string
   defaultWeek: WeekTag

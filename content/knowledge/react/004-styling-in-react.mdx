@@ -1,0 +1,116 @@
+---
+id: "004-styling-in-react"
+title: "React 中的样式：内联样式与 className"
+topic: "react"
+category: "样式方案"
+difficulty: "easy"
+tags: ["week-5"]
+summary: "内联样式对象、camelCase 属性名与 className 的配合使用"
+createdAt: "2026-10-18T12:00:00.000Z"
+---
+
+在 React 里给元素加样式主要有两条路：**内联样式（inline style）** 和 **`className` + 外部 CSS**。它们语法各有坑，也经常组合使用。这篇把两者的写法与常见错误讲清楚。
+
+## 1. 内联样式：`style` 接收一个 JS 对象
+
+React 的 `style` 属性**不是字符串**，而是一个 **JavaScript 对象**。因此要写**双花括号**：外层 `{}` 是 JSX 插值，内层 `{}` 是对象字面量。
+
+```jsx
+<div style={{ color: 'red' }}>红色文字</div>
+
+<button style={{ backgroundColor: 'green', color: 'white' }}>
+  确定
+</button>
+```
+
+| 写法 | 说明 |
+|---|---|
+| `style={{ color: 'red' }}` | 外层 `{}` = 插值，内层 `{}` = 对象。 |
+| `style={{ backgroundColor: 'green' }}` | 值用**字符串**（也可用数字/变量）。 |
+| `style={{ fontSize: '12px' }}` | 属性名用 **camelCase**。 |
+
+## 2. 属性名必须 camelCase
+
+因为接收的是 JS 对象，CSS 里带连字符的属性名（kebab-case）在对象里非法，必须转成 **camelCase**：
+
+| CSS 写法 | React 对象里应写成 |
+|---|---|
+| `font-size` | `fontSize` |
+| `background-color` | `backgroundColor` |
+| `border-radius` | `borderRadius` |
+| `text-align` | `textAlign` |
+| `z-index` | `zIndex` |
+
+```jsx
+// ❌ 错：kebab-case 属性名在对象里不合法
+<div style={{ 'font-size': '12px' }}>…</div>
+
+// ✅ 对
+<div style={{ fontSize: '12px' }}>…</div>
+```
+
+> 值的写法：长度单位仍要带单位（`'12px'`、`'1.5rem'`）；数值型的 `fontSize` 也可写 `12` 但更推荐显式加单位。
+
+## 3. `className` + 外部 CSS
+
+大多数样式仍应交给 CSS 文件，元素上用 **`className`** 挂类名（**不是 `class`**），并在组件文件顶部引入样式文件：
+
+```tsx
+// App.tsx
+import './App.css'
+
+export default function App() {
+  return <div className="App">Hello</div>
+}
+```
+
+```css
+/* App.css */
+.App {
+  padding: 16px;
+  background-color: #f5f5f5;
+}
+```
+
+本项目用 CSS Modules 做组件级隔离时，写法是 `import styles from './Card.module.css'`，然后 `className={styles.card}` —— 类名会被自动哈希，避免全局冲突（详见 next：CSS 作用域陷阱）。
+
+## 4. 组合使用：`className` 打底 + 内联样式微调
+
+两者可以叠加：用 `className` 承载**静态、复用**的样式，用内联样式处理**动态、随状态变化**的少量属性。
+
+```tsx
+// 外层用 className，动态颜色用内联样式覆盖
+<div className="card" style={{ borderColor: isActive ? 'green' : '#ddd' }}>
+  {children}
+</div>
+```
+
+| 场景 | 推荐方式 |
+|---|---|
+| 大量静态样式、需要伪类/媒体查询 | `className` + CSS / CSS Modules |
+| 跟随 state/props 变化的少量样式 | 内联 `style={{...}}` |
+| 需要在 JS 里计算颜色/尺寸 | 内联样式传入变量 |
+
+## 5. 常见反模式（❌ 别这么写）
+
+```jsx
+// ❌ 把 style 写成字符串（这是 HTML 语法，不是 React）
+<div style="color: red">…</div>
+
+// ❌ 用 kebab-case 属性名
+<div style={{ 'font-size': '12px' }}>…</div>
+
+// ❌ 忘了双花括号（只包了一层对象外又少一层）
+<div style={color: 'red'}>…</div>
+
+// ❌ 用 class 而不是 className
+<div class="App">…</div>
+```
+
+## 6. 自查清单
+
+- ✅ `style` 传的是**对象**、且写了**双花括号** `{{ }}` 吗？
+- ✅ 所有 CSS 属性名都转成 **camelCase** 了吗（`fontSize` / `backgroundColor`）？
+- ✅ 用 `className` 而非 `class` 了吗？
+- ✅ 外部 CSS 是否已在组件文件顶部 `import`？
+- ✅ 动态样式与静态样式是否分工合理（class 打底 + 内联微调）？

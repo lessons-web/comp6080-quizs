@@ -1,0 +1,154 @@
+---
+id: "001-http-server"
+title: "HTTP 服务器与 Express：API 与 CRUD"
+topic: "nodejs"
+category: "网络与数据"
+difficulty: "medium"
+tags: ["week-4"]
+summary: "从 Network、Internet、WWW 的区分到用 Express 搭建 HTTP 服务器，掌握 API 与 RESTful CRUD"
+createdAt: "2026-10-18T12:00:00.000Z"
+---
+
+前端负责「怎么显示」，后端负责「数据从哪来、怎么改」。本篇从最底层的网络概念出发，一路搭到能用 Express 写出的 RESTful API 服务：你会看到客户端与服务器如何用 HTTP 对话，以及 CRUD 四种操作如何映射到四种 HTTP 方法。
+
+## 1. 三个容易混淆的概念：Network、Internet 与 WWW
+
+这三个词经常被当成同义词，但它们的抽象层级完全不同：
+
+| 概念 | 定义 | 关键点 |
+|---|---|---|
+| Network（网络） | 一组互相连接、可以通信的计算机 | 规模任意，小到两台机器，大到整个机房 |
+| Internet（互联网） | 把全世界计算机连接在一起的全球性基础设施 | 强调「全球互连」这一层底座 |
+| World Wide Web（万维网） | 通过 URL 访问的、互相链接的文档与资源系统 | 跑在 Internet 之上的一种应用系统 |
+
+一句话概括：Internet 是基础设施，Web 是跑在这套基础设施上、用 URL 互相链接起来的资源系统。Web 只是 Internet 承载的应用之一，邮件、文件传输等同样跑在 Internet 上。
+
+> ⚠️ 常见误区：把 Web 等同于 Internet。Web 是 Internet 上众多应用系统中的一种，没有 Web 的 Internet 依然存在。
+
+## 2. 网络协议与 HTTP
+
+网络上的通信必须有「结构」，双方才能互相理解。人类每天都在用这样的约定：挥手、握手、鼓掌，都是标准化的信息交换流程（standard operation procedure）。计算机之间同样需要这样的约定，它就是**协议（protocol）**。
+
+- 不同的通信类型使用不同的协议。传网页用一种协议，发邮件用另一种。
+- **HTTP（Hypertext Transfer Protocol，超文本传输协议）** 就是 Web 的协议，也是浏览器访问 URL 时所使用的主要协议。
+- HTTP 最初的用途是收发 HTML 文档，如今它承载的内容早已远超 HTML。
+
+浏览器是**客户端（client）**，负责发起请求；Web 服务器是**服务端（server）**，负责接收请求并返回响应，二者来回往返地通信。
+
+> ⚠️ 常见误区：认为 HTTP 只能传 HTML。它如今承载 JSON、图片、视频等各类资源，HTML 只是最初的用途。
+
+## 3. 用 Express 起一个最小服务器
+
+为了让 NodeJS 跑起自己的 HTTP 服务器，我们使用流行的 npm 库 **Express**。下面是一个最小可运行示例：
+
+```ts
+import express from 'express';
+
+const app = express();
+const port = 3000;
+
+app.use(express.text());
+
+app.get('/', (req, res) => {
+  res.send('Hello World!');
+});
+
+app.listen(port, () => {
+  console.log(`Listening on port ${port}`);
+});
+```
+
+## 4. 逐行拆解这段代码
+
+- `import express from 'express'`：导入 express 库。
+- `const app = express()`：创建一个服务器实例。
+- `const port = 3000`：指定服务器监听的**端口**。端口是计算机进出的网络通道之一，通常大约有 65000 个。
+- `app.use(express.text())`：express 的一个要求（quirk），必须加上，才能让许多请求的数据被正确解析。
+- `app.get('/', handler)`：含义是「当 URL `/` 被访问时，调用这个函数」。`req` 是请求对象，`res` 是响应对象，`res.send` 把文本发给访问者；想做得更多，就多写几个这样的路由。
+- `app.listen(port, callback)`：真正启动服务器。它本质上是一个**无限循环**，让程序永远运行、持续等待新的访问者通过某个 URL 访问它。
+
+> ⚠️ 常见误区：以为脚本执行到末尾就结束了。`app.listen` 会让进程常驻，程序不会退出，这正是服务器「一直在跑」的原因。
+
+## 5. API：把服务当成黑盒的契约
+
+**API（Application Programming Interface，应用程序编程接口）** 指某个软件对外暴露出来的接口。最常见的用法是 **Web API**：它是某个服务提供的一种**契约（contract）**，把这个服务当成一个**黑盒**——对于特定的 endpoint，只要给定特定的输入，客户端就可以预期收到特定的输出。你不需要知道服务内部怎么实现，只需要遵守契约即可。
+
+## 6. RESTful API 与 CRUD 的映射
+
+**RESTful API** 是一类使用 HTTP 请求来操作数据的 API。它用四个 HTTP 方法描述请求的「性质」，恰好对应 CRUD 四种操作：读用 GET、创建用 POST、更新用 PUT、删除用 DELETE。
+
+| Method | Operation |
+|---|---|
+| POST | Create |
+| GET | Read |
+| PUT | Update |
+| DELETE | Delete |
+
+## 7. 取参方式与 JSON 输出
+
+不同的 CRUD 操作取输入的方式不同，但**所有输出都统一打包成 JSON**：GET 与 DELETE 通过 `req.query` 从 URL 取参数，PUT 与 POST 通过 `req.body` 从请求体取参数。
+
+不引入额外特性时，需要手动序列化：
+
+```ts
+app.get('/apple', (req, res) => {
+  const name = req.query.name;
+  res.send(JSON.stringify({ msg: `Hi ${name}, thanks for sending apple!` }));
+});
+app.post('/orange', (req, res) => {
+  const body = JSON.parse(req.body);
+  res.send(JSON.stringify({ msg: `Hi ${name}, thanks for sending orange!` }));
+});
+```
+
+- ❌ 手动写 `JSON.parse` 与 `JSON.stringify` 很啰嗦，且容易漏掉某一步。
+- ✅ 如果全程拥抱 JSON，可以让 express 替你处理：
+
+```ts
+app.use(express.json());
+
+app.get('/apple', (req, res) => {
+  const name = req.query.name;
+  res.json({ msg: `Hi ${name}, thanks for sending apple!` });
+});
+app.post('/orange', (req, res) => {
+  const name = req.body.name;
+  res.json({ msg: `Hi ${name}, thanks for sending orange!` });
+});
+```
+
+`app.use(express.json())` 负责自动解析请求体，`res.json()` 负责自动序列化响应，代码因此干净很多。
+
+## 8. 客户端如何跟服务器对话
+
+作为客户端，向 Web 服务器发起请求主要有三种方式：**API 客户端**（ARC、Postman，适合手动调试）、**浏览器**（直接在地址栏访问 URL）、**npm 库**（如 `sync-request`，可在代码里程序化发送请求）。
+
+```ts
+import request from 'sync-request';
+
+// 直接把参数写在 URL 里
+const res = request('GET', 'http://localhost:3001/apple?name=Hayden');
+console.log(JSON.parse(String(res.getBody())));
+
+// jest 测试：GET 用 qs 组织查询参数
+const getRes = request('GET', 'http://localhost:3001/apple', { qs: { name: 'Hayden' } });
+expect(JSON.parse(String(getRes.getBody())).msg).toBe('Hi Hayden, thanks for sending apple!');
+
+// jest 测试：POST 用 body + headers 发送数据
+const postRes = request('POST', 'http://localhost:3001/orange', {
+  body: JSON.stringify({ name: 'Hayden' }),
+  headers: { 'Content-type': 'application/json' },
+});
+```
+
+最后有两个可选的提效手段：安装 `nodemon` 并替换启动命令，让 node 在文件变化时自动重启；给 `tsc` 加上 `--watch`，让源码改动后自动编译。
+
+## 自查清单
+
+- ✅ 能区分 Network、Internet、WWW：Internet 是基础设施，Web 是通过 URL 链接的资源系统。
+- ✅ 能解释协议的作用：不同通信类型需要不同结构，HTTP 是 Web 的协议。
+- ✅ 能默写 Express 最小服务器，并逐行说明端口、`express.text()`、`app.get`、`app.listen` 的作用。
+- ✅ 能说出 API 是黑盒契约：给定输入，客户端可预期特定输出。
+- ✅ 能背出 Method 与 CRUD 的映射：POST=Create、GET=Read、PUT=Update、DELETE=Delete。
+- ✅ 知道 GET 与 DELETE 用 `req.query` 取参、PUT 与 POST 用 `req.body` 取参，输出统一为 JSON。
+- ✅ 会用 `express.json()` 与 `res.json()` 替代手动的 `JSON.parse` 与 `JSON.stringify`。

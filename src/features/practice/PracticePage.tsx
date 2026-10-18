@@ -33,6 +33,7 @@ const TOPIC_FILTERS: Array<{ value: 'all' | TopicId; label: string }> = [
   { value: 'javascript', label: TOPIC_META.javascript.label },
   { value: 'react', label: TOPIC_META.react.label },
   { value: 'nodejs', label: TOPIC_META.nodejs.label },
+  { value: 'ui-ux', label: TOPIC_META['ui-ux'].label },
 ]
 
 const WEEK_FILTERS: Array<{ value: 'all' | string; label: string }> = [
@@ -95,7 +96,7 @@ function UnsupportedTopicCard() {
   return (
     <section className="w-full rounded-3xl border border-amber-200 bg-amber-50 p-6 text-amber-900">
       <h2 className="text-xl font-semibold">暂不支持这个领域</h2>
-      <p className="mt-2 text-sm leading-6">请选择 `HTML` / `CSS` / `JavaScript` / `React` / `Node.js`。</p>
+      <p className="mt-2 text-sm leading-6">请选择 `HTML` / `CSS` / `JavaScript` / `React` / `Node.js` / `UI/UX`。</p>
     </section>
   )
 }

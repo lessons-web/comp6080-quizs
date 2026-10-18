@@ -1,0 +1,160 @@
+---
+id: "001-data-interchange"
+title: "数据交换格式：JSON / YAML / XML"
+topic: "javascript"
+category: "网络与数据"
+difficulty: "medium"
+tags: ["week-4"]
+summary: "标准接口的意义，以及 JSON / YAML / XML 三种数据交换格式的差异与取舍"
+createdAt: "2026-10-18T12:00:00.000Z"
+---
+
+一个用 C 写的程序，怎么把自己的运算结果交给一个 JavaScript 程序？两边运行在不同的操作系统、服务器与编程语言上，内存布局和类型系统都不一样，直接共享内存并不现实。**数据交换格式**（data interchange format）就是为这个问题准备的「通用插头」。这一篇讲清楚它为什么存在，以及 JSON、YAML、XML 三种主流格式的区别。
+
+## 1. 为什么需要标准接口
+
+先想现实世界的例子：不同国家的插座形状不同，于是插座、USB 接口、集装箱尺寸都成了**标准接口（standard interface）**——一种把不同系统连到一起的通用方法。
+
+软件世界面临同样的问题：
+
+- 一个 C 程序的结果，要交给一个 JavaScript 程序使用；两边语言不同、内存模型不同。
+- 不同操作系统、不同服务器之间要互相传数据。
+
+答案就是**为数据也定一套标准接口**：大家不直接交换「内存」，而是交换一段**约定格式的文本**，各自读完再转成自己语言里的数据结构。这样才能实现跨操作系统、跨服务器、跨编程语言的通用通信。
+
+## 2. 数据交换格式的本质
+
+所谓数据交换格式，本质上是**极其简单的标记语言（markup language）**，只由几样基本构件组成：
+
+| 构件 | 作用 |
+|---|---|
+| 数组 array | 有序的一组值 |
+| 对象 object | 一组键值对 |
+| 数字 number | 数值 |
+| 字符串 string | 文本 |
+| 布尔值 boolean | true / false |
+
+只要双方都支持这几样构件，就能无损地描述绝大多数数据。主流格式有三种：**JSON、YAML、XML**。
+
+## 3. JSON：最贴近 JavaScript 的格式
+
+**JSON**（JavaScript Object Notation，标准 RFC 7159）用**花括号表示对象**、**方括号表示数组**，所有**非数字的值都必须用引号包裹**。它和 JavaScript 的字面量极度相似，例如一份「含多个地点的列表」：
+
+```json
+{
+  "locations": [
+    { "suburb": "Kensington", "postcode": 2033 },
+    { "suburb": "Mascot", "postcode": 2020 },
+    { "suburb": "Sydney CBD", "postcode": 2000 }
+  ]
+}
+```
+
+> ⚠️ 常见误区：以为「JSON 就是 JavaScript 对象」。它**长得像但不是** JavaScript，有两条硬性差异：
+
+- ❌ 不允许尾逗号：最后一个元素后面**不能**再多一个逗号。
+- ❌ 对象的 key **必须是带引号的字符串**，不能写成没有引号的标识符。
+
+```json
+// ❌ 非法 JSON：尾逗号 + key 没加引号
+{ suburb: "Kensington", postcode: 2033, }
+
+// ✅ 合法 JSON
+{ "suburb": "Kensington", "postcode": 2033 }
+```
+
+## 4. 在 Node 里读写 JSON
+
+大多数语言都内置或通过库支持读写 JSON，通常负责在**语言内的数据结构**与**字符串化的文本**之间互相转换。Node 里写入用 `JSON.stringify` 加 `fs.writeFileSync`：
+
+```js
+import fs from 'fs';
+
+const DATA_STRUCTURE = {
+  names: [
+    { first: 'Bob', last: 'Carr' },
+    { first: 'Julia', last: 'Gillard' },
+    { first: 'Ken', last: 'Henry' },
+  ],
+};
+
+const data = JSON.stringify(DATA_STRUCTURE);
+fs.writeFileSync('export.json', data, { flag: 'w' });
+```
+
+读回来则是 `fs.readFileSync` 拿到文本、再用 `JSON.parse` 还原成对象：
+
+```js
+import fs from 'fs';
+
+const json = fs.readFileSync('export.json', { flag: 'r' });
+const data = JSON.parse(json);
+console.log(data);
+```
+
+记住这对方向：**stringify 是「对象变文本」，parse 是「文本变对象」**。
+
+## 5. YAML：缩进敏感、适合写配置
+
+**YAML**（YAML Ain't Markup Language）是一种流行的现代交换格式，胜在**易编辑、简洁**。它同样可以表达上面那份地点列表：
+
+```yaml
+locations:
+  - suburb: Kensington
+    postcode: 2033
+  - suburb: Mascot
+    postcode: 2020
+  - suburb: Sydney CBD
+    postcode: 2000
+```
+
+它的两个关键特征：
+
+- **缩进敏感**：层级完全靠缩进表达，缩进错了含义就变了（这点和 JavaScript 不同）。
+- **短横线 `-` 表示列表项**：一个 `-` 开头即代表数组里的一项。
+
+正因为简洁，YAML **在配置文件里非常常见**，而且网上有很多工具可以在 JSON 与 YAML 之间一键互转。
+
+## 6. XML：遗留格式，但仍在服役
+
+**XML**（eXtensible Markup Language）用**成对的开闭标签**描述数据：
+
+```xml
+<?xml version="1.0" encoding="UTF-8"?>
+<root>
+  <locations>
+    <element><postcode>2033</postcode><suburb>Kensington</suburb></element>
+    <element><postcode>2020</postcode><suburb>Mascot</suburb></element>
+    <element><postcode>2000</postcode><suburb>Sydney CBD</suburb></element>
+  </locations>
+</root>
+```
+
+XML 的三大问题：
+
+- **更啰嗦**：信息被标签包住，很难一眼看清结构。
+- **处理/解析成本更高**：标签、嵌套、转义等让读写更费劲。
+- **字节数更多**：因为每个值都要配一对开闭标签，同样内容占的空间更大。
+
+所以现代应用**很少主动选 XML** 做交换格式，但很多**遗留系统（legacy systems）**仍用它存数据——读旧系统数据时你还是会遇到它。
+
+## 7. 三者对比
+
+| 维度 | JSON | YAML | XML |
+|---|---|---|---|
+| 可读性 | 高（贴近 JS） | 最高（简洁） | 低（标签冗长） |
+| 冗长程度 | 中 | 低 | 高 |
+| 典型用途 | API 传输、数据存储 | 配置文件 | 遗留系统数据 |
+| 现状 | 事实标准 | 配置领域流行 | 逐步被淘汰 |
+
+一句话记忆：**传数据优先 JSON，写配置常用 YAML，见到 XML 多半是在维护老系统。**
+
+## 8. 自查清单
+
+- ✅ 能说出为什么需要标准接口（跨操作系统、服务器、语言的通用通信方式）？
+- ✅ 知道数据交换格式本质是「数组 / 对象 / 数字 / 字符串 / 布尔」构成的极简标记语言？
+- ✅ 记得 JSON = 花括号对象 + 方括号数组，且和 JS 的两点差异（无尾逗号、key 要加引号）？
+- ✅ 能写出 Node 里 `JSON.stringify` 写入、`JSON.parse` 读取的成对用法？
+- ✅ 知道 YAML 缩进敏感、`-` 表示列表项、常用于配置文件？
+- ✅ 能说出 XML 的三个缺点（啰嗦、难解析、字节多），属于 legacy 格式？
+- ✅ 能用一张表对比三者的可读性、冗长程度与典型用途？

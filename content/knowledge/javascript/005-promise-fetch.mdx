@@ -1,0 +1,165 @@
+---
+id: "005-promise-fetch"
+title: "Promise 与 fetch API"
+topic: "javascript"
+category: "异步编程"
+difficulty: "hard"
+tags: ["week-4"]
+summary: "Promise 的状态、链式与分支语义，以及基于 Promise 的 fetch 网络请求"
+createdAt: "2026-10-18T12:00:00.000Z"
+---
+
+用 `XMLHttpRequest` 做异步请求要写一堆事件回调，代码零散又容易出错。ES2015 引入了 **Promise** 与 **fetch**，让我们能用「链式」的方式组织异步流程。这篇把 Promise 的语义与 fetch 的行为彻底讲清——它是理解后续 `async / await` 的地基。
+
+## 1. 为什么需要 Promise
+
+`XMLHttpRequest`（XHR）是早期异步请求的唯一方式，但它有几个天然的痛点：
+
+- **回调式写法**：要手动绑定 `onload`、`onerror`、`onprogress` 等事件，控制流被打散在各处。
+- **状态机复杂**：`readyState` 有多个取值，判断「成功」往往要同时检查状态码与 `readyState`。
+- **难以组合**：多个请求串行或并发时，回调嵌套会形成「回调地狱」。
+
+ES2015 引入了两样东西来解决它：**Promise**（一种描述未来异步结果的对象）与 **fetch**（基于 Promise 的原生网络 API）。
+
+## 2. Promise 是什么：四种状态
+
+**Promise** 可以理解成「**某个未来值的代理**」：它代表一个此刻还没有、但将来会有的结果。它被**异步求值**，并支持**链式、分支与错误处理**。
+
+一个 Promise 任何时刻都处于下面四种状态之一：
+
+| 状态 | 英文 | 含义 |
+|---|---|---|
+| 未求值 | Pending | 还没有结果，正在等待 |
+| 成功求值 | Fulfilled | 成功拿到了结果 |
+| 求值失败 | Rejected | 求值失败（出错或被拒绝） |
+| 已定型 | Settled | 已经落定，即 Rejected 或 Fulfilled 之一 |
+
+> ⚠️ 常见误区：把 `Fulfilled` 与 `Settled` 混为一谈。`Settled` 是**已定型**的上位概念，它同时包含成功与失败；一个 Promise 一旦 Settled，状态**不可逆转**，而且**只定型一次**。
+
+## 3. 构造函数：resolve 与 reject
+
+用 `new Promise(...)` 创建时，构造函数**接收一个回调，这个回调又接收 `resolve` 与 `reject` 两个函数**：
+
+- 调用 `resolve(value)` 表示**兑现（fulfillment）**，把值传给后续的 `.then`。
+- 调用 `reject(reason)` 表示**拒绝（rejection）**，把错误传给后续的 `.catch`。
+
+```js
+const fetchData = new Promise((resolve, reject) => {
+  const ok = true;
+  if (ok) {
+    resolve('data ready');      // 兑现
+  } else {
+    reject(new Error('boom'));  // 拒绝
+  }
+});
+```
+
+## 4. 链式调用：.then / .catch / .finally
+
+三种最常用的方法：
+
+| 方法 | 作用 |
+|---|---|
+| `.then(onFulfilled)` | 链式的主力：**上一个兑现**才会执行下一个 |
+| `.catch(onRejected)` | 捕获**它上方整条链**上的错误与拒绝 |
+| `.finally(onFinally)` | **无论成功还是失败都会执行**，常用于收尾清理 |
+
+```js
+fetchData
+  .then((value) => value.toUpperCase())
+  .then((upper) => console.log(upper))
+  .catch((err) => console.error(err))
+  .finally(() => console.log('done'));
+```
+
+## 5. 链式的语义：俄罗斯套娃与执行栈
+
+链式是「**依赖操作的有序嵌套执行**」：每一个 `.then()` 都**返回一个全新的 Promise，包裹住上一个**——**即使回调里没有返回 Promise**，也会被包一层。
+
+- **存储上像俄罗斯套娃**：每层都套着上一层。
+- **执行上像栈**：最后套进去的（**最内层**）最先发生。
+- **任何错误或拒绝都会传给最近的那个 `.catch()`**，`.catch()` 之后还能继续挂操作。
+
+## 6. 分支：一个父 Promise，多个 .then
+
+在**同一个 Promise** 上挂**多个 `.then()`**，就叫**分支（branching）**：父 Promise 兑现后，**所有 `.then()` 会按顺序全部被调用**。这让我们能在「兑现」这一事件上编排复杂的控制流。
+
+```js
+const startToPrepareDinner = new Promise((resolve) => {
+  resolve('start'); // 父 Promise 兑现
+});
+
+startToPrepareDinner.then(() => lightBBQ());    // 分支 1
+startToPrepareDinner.then(() => cookSteak());   // 分支 2
+startToPrepareDinner.then(() => watchSunset()); // 分支 3
+```
+
+父 Promise 一兑现，`lightBBQ`、`cookSteak`、`watchSunset` 会被**依次**触发；但它们是**各自独立的链**，某一条分支里的错误**不会**影响其他分支。
+
+## 7. 错误处理的陷阱
+
+规则是：**错误与异常总是造成拒绝（rejection）**——显式拒绝靠 `reject()`，而任何抛出的异常会造成**隐式拒绝**。
+
+真正的陷阱在于：
+
+> ⚠️ 常见误区：**用 `try / catch` 去包一个 Promise，是抓不到它内部错误的**。Promise **总是异步的**，**当前函数的上下文一定会先执行完，Promise 才会 Settled**；等它 Settled 时，`try / catch` 那一帧早就退出了。
+
+```js
+// ❌ 抓不到：Promise 还没 Settled，try / catch 已经结束
+try {
+  doAsyncThing(); // 内部的 reject 发生在“之后”
+} catch (err) {
+  console.error(err);
+}
+// ✅ 正确姿势：用 .catch()，或在 window 上兜底
+doAsyncThing().catch((err) => console.error(err));
+window.addEventListener('unhandledrejection', (e) => console.error(e.reason));
+```
+
+给 `window` 加一个 `unhandledrejection` 监听，是防止「未处理的拒绝」被悄悄吞掉的好习惯。
+
+## 8. 编排工具与 Thenable
+
+`Promise` 类自带一组**编排（orchestration）**工具，用来组合多个 Promise：
+
+| 工具 | 语义 |
+|---|---|
+| `Promise.all()` | **全部兑现**才兑现；任一拒绝则整体拒绝 |
+| `Promise.allSettled()` | 等**全部落定**（无论成功失败）后兑现 |
+| `Promise.any()` | **至少一个兑现**即兑现 |
+| `Promise.race()` | **最先落定**的那个决定结果 |
+| `Promise.resolve()` | 立即返回一个已兑现的 Promise |
+| `Promise.reject()` | 立即返回一个已拒绝的 Promise |
+
+另外，**任何带有 `then()` 方法的对象或类**都算「**Promise-like**」，也就是 **Thenable**，可以直接参与 Promise 链，从而为**自定义类型**精细控制链式行为。
+
+## 9. fetch API：基于 Promise 的网络请求
+
+**fetch** 是**基于 Promise 的原生 JS API**，用来下载远程资源。它有一个反直觉但极其重要的行为：
+
+> ⚠️ 常见误区：以为「HTTP 状态码不是 200，fetch 就会 reject」。事实相反：**只要收到了 Response，fetch 就 resolve，哪怕状态码是 404 或 500**；**只有发生网络错误（根本没拿到 Response）时才 reject**。因此状态码必须自己查。
+
+- 第二个可选参数是一个配置对象，可控制 **认证、CORS、HTTP method** 等请求选项。
+- 请求结果通过**链式 `.then()`** 逐层取出（通常先取 `response`，再解析 body）。
+
+```js
+fetch('/api/cats', { credentials: 'include' }) // 第二参数控制认证 / CORS / method
+  .then((response) => {
+    if (!response.ok) throw new Error(`HTTP ${response.status}`); // 自查状态码
+    return response.json();
+  })
+  .then((data) => console.log(data))
+  .catch((err) => console.error(err));
+```
+
+**fetch 也有局限**：它**依赖 Promise 支持**（现代浏览器已不是问题）、**Promise 不易取消**、更复杂的功能要靠 **Streams API**（学习曲线陡）。对比 **XHR 的优势**：**极老的浏览器也能用**、**能获取大文件的下载进度**、**容易取消**。
+
+## 自查清单
+
+- ✅ 能说出 ES2015 用 Promise 与 fetch 取代 XHR 的动机。
+- ✅ 能背出 Promise 四种状态，并分清 Fulfilled 与 Settled 的区别。
+- ✅ 知道构造函数接收的回调里有 `resolve` 与 `reject`，以及 `.then / .catch / .finally` 各自的作用。
+- ✅ 能用「俄罗斯套娃存、栈执行」解释链式，用同一父 Promise 上多个 `.then` 解释分支。
+- ✅ 清楚 Promise 总是异步的，`try / catch` 包不住，需用 `.catch()` 或 `unhandledrejection`。
+- ✅ 记得 fetch **收到 Response 就 resolve**、**只有网络错误才 reject**，状态码要自查。
+- ✅ 知道 Thenable 的定义，以及 fetch 与 XHR 的优劣取舍。

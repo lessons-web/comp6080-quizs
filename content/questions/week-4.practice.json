@@ -1,4 +1,282 @@
 {
-  "topic": "nodejs",
-  "questions": []
+  "topic": "javascript",
+  "questions": [
+    {
+      "id": "JS-Q1",
+      "topic": "javascript",
+      "weeks": [
+        "week-4"
+      ],
+      "difficulty": "easy",
+      "tags": [
+        "数据格式",
+        "JSON"
+      ],
+      "question": "在网络传输中，JSON、YAML、XML 都可以用来表示结构化数据。请说明三者的典型取舍，并指出 JSON 相比 JavaScript 对象字面量在语法上有哪些限制。",
+      "knowledgePoint": "数据交换格式：JSON vs YAML vs XML",
+      "answerExplanation": "JSON 体积小、解析快、与 JavaScript 天然契合，是 Web API 的主流数据格式；YAML 用缩进表达层级、可读性好，常用于配置文件；XML 用标签描述结构，表达力强但冗长，如今多用于特定领域。相比 JavaScript 对象字面量，JSON 要求键名必须用双引号包裹，不允许尾随逗号，也不支持注释，且不能表示函数或 undefined。因此把对象发给服务器前，往往需要先做序列化。",
+      "codeBlocks": [],
+      "images": [],
+      "createdAt": "2026-10-18"
+    },
+    {
+      "id": "JS-Q2",
+      "topic": "javascript",
+      "weeks": [
+        "week-4"
+      ],
+      "difficulty": "easy",
+      "tags": [
+        "JSON",
+        "序列化"
+      ],
+      "question": "`JSON.stringify` 与 `JSON.parse` 各自的作用是什么？为什么说它们是一对方向相反、需要配对使用的操作？",
+      "knowledgePoint": "JSON 序列化：stringify 与 parse",
+      "answerExplanation": "`JSON.stringify` 把 JavaScript 值转换成 JSON 字符串，用于发送或存储；`JSON.parse` 把 JSON 字符串还原成 JavaScript 值，用于接收后再处理。二者方向相反，一个序列化、一个反序列化，通常成对出现：服务端发送前 stringify，客户端接收后 parse。还要注意，parse 遇到非法 JSON 会直接抛出异常，调用方需要处理这种失败。",
+      "codeBlocks": [
+        {
+          "language": "js",
+          "code": "const json = JSON.stringify({ a: 1 }); // '{\"a\":1}'\nconst obj = JSON.parse(json);            // { a: 1 }"
+        }
+      ],
+      "images": [],
+      "createdAt": "2026-10-18"
+    },
+    {
+      "id": "JS-Q3",
+      "topic": "javascript",
+      "weeks": [
+        "week-4"
+      ],
+      "difficulty": "medium",
+      "tags": [
+        "客户端服务器",
+        "请求响应"
+      ],
+      "question": "在客户端-服务器模型的一次请求-响应循环中，客户端与服务器各自负责什么？请说明二者的职责边界。",
+      "knowledgePoint": "客户端-服务器模型",
+      "answerExplanation": "客户端负责发起请求、展示界面、收集用户输入，并把用户意图转换成 HTTP 请求；服务器负责接收请求、处理业务逻辑与数据存取，再返回响应。二者的边界在于：客户端不应持有权威数据，服务器才是数据的权威来源，客户端只展示服务器给它的结果。一次循环就是「客户端发出请求、服务器返回响应」，如此不断往复。",
+      "codeBlocks": [],
+      "images": [],
+      "createdAt": "2026-10-18"
+    },
+    {
+      "id": "JS-Q4",
+      "topic": "javascript",
+      "weeks": [
+        "week-4"
+      ],
+      "difficulty": "medium",
+      "tags": [
+        "性能",
+        "延迟吞吐"
+      ],
+      "question": "为什么客户端更关注延迟（latency），而服务端更关注吞吐量（throughput）？请结合各自的用户规模说明。",
+      "knowledgePoint": "延迟 vs 吞吐",
+      "answerExplanation": "延迟是单次请求从发出到收到响应所花的时间，直接决定单个用户的等待感受，所以客户端优化的重点是让每个人的操作尽快得到反馈。吞吐量是单位时间内能处理的请求数量，服务器面对的是成千上万的并发用户，必须在单位时间内服务尽可能多的人。因此可以概括为：客户端追求「快」，服务端追求「多」，两者的优化方向并不相同。",
+      "codeBlocks": [],
+      "images": [],
+      "createdAt": "2026-10-18"
+    },
+    {
+      "id": "JS-Q5",
+      "topic": "javascript",
+      "weeks": [
+        "week-4"
+      ],
+      "difficulty": "easy",
+      "tags": [
+        "AJAX",
+        "概念辨析"
+      ],
+      "question": "AJAX 是一门具体的技术吗？它的全称 Asynchronous JavaScript And XML 分别代表什么含义？",
+      "knowledgePoint": "AJAX 的定义",
+      "answerExplanation": "AJAX 不是一门具体技术，而是一组用于「在页面不整体刷新的前提下与服务器异步交换数据、局部更新页面」的技术的集合。Asynchronous 指请求是异步的，不会阻塞页面；JavaScript 是发起请求所使用的语言；XML 是早期主要的数据格式，如今 JSON 已基本取代它。实际实现上，AJAX 常依赖 XMLHttpRequest 或 fetch 完成。",
+      "codeBlocks": [],
+      "images": [],
+      "createdAt": "2026-10-18"
+    },
+    {
+      "id": "JS-Q6",
+      "topic": "javascript",
+      "weeks": [
+        "week-4"
+      ],
+      "difficulty": "hard",
+      "tags": [
+        "并发模型",
+        "协作式"
+      ],
+      "question": "抢占式（preemptive）与协作式（cooperative）多任务分别适合什么场景？JavaScript 属于哪一种，这一点又会带来什么后果？",
+      "knowledgePoint": "抢占式 vs 协作式多任务",
+      "answerExplanation": "抢占式多任务由调度器在任意时刻强制切换任务，适合需要公平调度、防止单个任务霸占 CPU 的系统级场景，例如操作系统进程调度。协作式多任务由任务自己主动让出控制权，实现简单、开销小。JavaScript 属于协作式：只有当前执行栈清空后，事件循环才能推进下一个任务，因此一个长时间运行的 handler 会把后续任务和渲染全部堵住。",
+      "codeBlocks": [],
+      "images": [],
+      "createdAt": "2026-10-18"
+    },
+    {
+      "id": "JS-Q7",
+      "topic": "javascript",
+      "weeks": [
+        "week-4"
+      ],
+      "difficulty": "hard",
+      "tags": [
+        "事件循环",
+        "阻塞"
+      ],
+      "question": "请按顺序说明事件循环（Event Loop）的四个步骤，并解释为什么一个长时间运行的 handler 会让页面卡死。",
+      "knowledgePoint": "事件循环",
+      "answerExplanation": "经典模型的四步顺序是：①执行同步调用栈中的代码；②清空微任务队列；③必要时渲染；④从宏任务队列取出下一个任务执行，再回到第一步。由于 JavaScript 是协作式的单线程模型，当前 handler 不返回，事件循环就无法进入下一步，队列中的其他任务与页面渲染都会被阻塞。所以只要某个 handler 长时间占用，用户操作与界面更新都会停摆，表现为页面卡死。",
+      "codeBlocks": [],
+      "images": [],
+      "createdAt": "2026-10-18"
+    },
+    {
+      "id": "JS-Q8",
+      "topic": "javascript",
+      "weeks": [
+        "week-4"
+      ],
+      "difficulty": "medium",
+      "tags": [
+        "XMLHttpRequest",
+        "状态码"
+      ],
+      "question": "使用 XMLHttpRequest 时，哪些情况会进入异常（error）回调，哪些情况要靠 status 状态码判断？请分别解释 200、4xx、5xx 的含义。",
+      "knowledgePoint": "XMLHttpRequest：异常与状态码",
+      "answerExplanation": "只有网络层面的失败才会进入 error 回调，例如连接不上服务器、请求被中断；如果服务器成功返回了响应、只是业务上失败（如 404、500），并不会触发 error，需要在 load 或 readystatechange 中检查 status。200 表示成功；4xx 表示客户端错误（如 404 资源不存在、400 参数错误）；5xx 表示服务端错误（如 500 内部异常）。要特别注意，4xx 与 5xx 仍属于「收到响应」，应走 status 判断分支。",
+      "codeBlocks": [
+        {
+          "language": "js",
+          "code": "xhr.onerror = () => { /* 网络层失败，如连不上服务器 */ };\nxhr.onload = () => {\n  if (xhr.status === 200) { /* 成功 */ }\n  else if (xhr.status >= 400) { /* 4xx 客户端错误 / 5xx 服务端错误 */ }\n};"
+        }
+      ],
+      "images": [],
+      "createdAt": "2026-10-18"
+    },
+    {
+      "id": "JS-Q9",
+      "topic": "javascript",
+      "weeks": [
+        "week-4"
+      ],
+      "difficulty": "medium",
+      "tags": [
+        "Promise",
+        "异步"
+      ],
+      "question": "Promise 有哪几种状态？请说明 `.then`、`.catch`、`.finally` 各自的分工。",
+      "knowledgePoint": "Promise 的状态与回调",
+      "answerExplanation": "Promise 有四种状态：pending（待定）、fulfilled（已兑现）、rejected（已拒绝），以及 settled（已定型，即已兑现与已拒绝的统称）。`then` 用于处理成功结果，并返回一个新的 Promise 以支持链式调用；`catch` 用于捕获链上抛出的错误或拒绝；`finally` 无论成功失败都会执行，常用于清理工作。要记住状态一旦从 pending 变为 fulfilled 或 rejected 就不可再变。",
+      "codeBlocks": [],
+      "images": [],
+      "createdAt": "2026-10-18"
+    },
+    {
+      "id": "JS-Q10",
+      "topic": "javascript",
+      "weeks": [
+        "week-4"
+      ],
+      "difficulty": "medium",
+      "tags": [
+        "async",
+        "await"
+      ],
+      "question": "`async` 函数的返回值有什么特性？`await` 做了什么？为什么用 `async/await` 后错误处理可以回归 `try/catch`？",
+      "knowledgePoint": "async/await",
+      "answerExplanation": "`async` 函数总是返回一个 Promise：即使 return 一个普通值，也会被自动包装成已兑现的 Promise；函数内抛出的错误则变成拒绝的 Promise。`await` 会暂停当前 async 函数的执行，等待其后的 Promise 定型，再取出兑现值，若被拒绝则在此处抛出异常。因为被拒绝的 Promise 会在 await 处抛出，所以可以用同步风格的 `try/catch` 统一捕获错误。不过 await 只是语法糖，本质仍然是基于 Promise 的异步。",
+      "codeBlocks": [
+        {
+          "language": "js",
+          "code": "async function load() {\n  try {\n    const res = await fetch('/api/user');\n    const data = await res.json();\n    return data;\n  } catch (err) {\n    console.error(err); // 被拒绝的 Promise 会在这里被捕获\n  }\n}"
+        }
+      ],
+      "images": [],
+      "createdAt": "2026-10-18"
+    },
+    {
+      "id": "NODE-Q1",
+      "topic": "nodejs",
+      "weeks": [
+        "week-4"
+      ],
+      "difficulty": "easy",
+      "tags": [
+        "网络概念",
+        "WWW"
+      ],
+      "question": "请区分 Network、Internet 与 World Wide Web 三个概念，并说明它们之间的层级关系。",
+      "knowledgePoint": "Network / Internet / WWW 的区别",
+      "answerExplanation": "Network 是一组互相连接、可以通信的计算机，规模可大可小；Internet 是把全世界计算机连接起来的全球性基础设施；World Wide Web 是通过 URL 访问的、互相链接的文档与资源系统。层级关系是：Web 运行在 Internet 之上，而 Internet 又由无数个 Network 组成。Web 只是 Internet 承载的应用之一，二者不能等同。",
+      "codeBlocks": [],
+      "images": [],
+      "createdAt": "2026-10-18"
+    },
+    {
+      "id": "NODE-Q2",
+      "topic": "nodejs",
+      "weeks": [
+        "week-4"
+      ],
+      "difficulty": "easy",
+      "tags": [
+        "HTTP",
+        "网络协议"
+      ],
+      "question": "为什么网络通信需要协议？HTTP 是什么的缩写、用途是什么，它在网络协议中处于什么位置？",
+      "knowledgePoint": "HTTP 与网络协议",
+      "answerExplanation": "网络通信必须有「结构」，双方才能互相理解，就像人类用挥手、握手、鼓掌等约定来交换信息一样，这种约定就是协议。不同通信类型使用不同协议，而 HTTP 即 Hypertext Transfer Protocol（超文本传输协议），是 Web 的协议，也是浏览器访问 URL 时使用的主要协议。它最初用于收发 HTML 文档，如今承载的内容远不止 HTML，JSON、图片、视频等都在其列。",
+      "codeBlocks": [],
+      "images": [],
+      "createdAt": "2026-10-18"
+    },
+    {
+      "id": "NODE-Q3",
+      "topic": "nodejs",
+      "weeks": [
+        "week-4"
+      ],
+      "difficulty": "easy",
+      "tags": [
+        "RESTful",
+        "CRUD"
+      ],
+      "question": "RESTful API 中四种 HTTP 方法分别对应 CRUD 中的哪个操作？请说明这组对应关系，并解释这样设计的意义。",
+      "knowledgePoint": "RESTful API 与 CRUD 的映射",
+      "answerExplanation": "对应关系是：POST=Create（创建）、GET=Read（读取）、PUT=Update（更新）、DELETE=Delete（删除）。这样设计的意义在于，用 HTTP 方法本身就表达出这次请求的「性质」——同一个 endpoint 配合不同方法就能表达增、删、改、查。客户端与服务端因此共享一套可预期的语义约定，接口更统一、更好理解。",
+      "codeBlocks": [
+        {
+          "language": "text",
+          "code": "POST   -> Create\nGET    -> Read\nPUT    -> Update\nDELETE -> Delete"
+        }
+      ],
+      "images": [],
+      "createdAt": "2026-10-18"
+    },
+    {
+      "id": "NODE-Q4",
+      "topic": "nodejs",
+      "weeks": [
+        "week-4"
+      ],
+      "difficulty": "medium",
+      "tags": [
+        "Express",
+        "取参"
+      ],
+      "question": "在 Express 中，GET/DELETE 与 PUT/POST 的取参方式有什么不同？为什么所有输出都应统一打包成 JSON？",
+      "knowledgePoint": "req.query 与 req.body 的取参差异",
+      "answerExplanation": "GET 与 DELETE 通过 `req.query` 从 URL 查询字符串中取参数；PUT 与 POST 通过 `req.body` 从请求体中取数据。前者适合把简单标识直接放在 URL 上，后者适合携带结构化的数据。输出统一用 JSON，是为了让客户端的解析方式一致、前后端契约清晰，也便于配合 `express.json()` 与 `res.json()` 简化序列化，免去手写 `JSON.parse` 与 `JSON.stringify`。",
+      "codeBlocks": [
+        {
+          "language": "ts",
+          "code": "app.get('/apple', (req, res) => {\n  const name = req.query.name; // GET：从 URL 取参\n  res.json({ msg: `Hi ${name}` });\n});\n\napp.post('/orange', (req, res) => {\n  const name = req.body.name; // POST：从请求体取参\n  res.json({ msg: `Hi ${name}` });\n});"
+        }
+      ],
+      "images": [],
+      "createdAt": "2026-10-18"
+    }
+  ]
 }

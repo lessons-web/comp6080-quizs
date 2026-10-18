@@ -29,6 +29,48 @@ const mdxLoaders: Record<string, () => Promise<MdxFixture>> = {
     import('@/content/knowledge/css/003-flexbox.mdx') as Promise<MdxFixture>,
   'css/004-stacking-context': () =>
     import('@/content/knowledge/css/004-stacking-context.mdx') as Promise<MdxFixture>,
+  'ui-ux/001-ui-vs-ux': () =>
+    import('@/content/knowledge/ui-ux/001-ui-vs-ux.mdx') as Promise<MdxFixture>,
+  'ui-ux/002-alignment-grid': () =>
+    import('@/content/knowledge/ui-ux/002-alignment-grid.mdx') as Promise<MdxFixture>,
+  'ui-ux/003-typography-color': () =>
+    import('@/content/knowledge/ui-ux/003-typography-color.mdx') as Promise<MdxFixture>,
+  'ui-ux/004-visual-hierarchy': () =>
+    import('@/content/knowledge/ui-ux/004-visual-hierarchy.mdx') as Promise<MdxFixture>,
+  'ui-ux/005-affordance': () =>
+    import('@/content/knowledge/ui-ux/005-affordance.mdx') as Promise<MdxFixture>,
+  'ui-ux/006-good-vs-bad-ui': () =>
+    import('@/content/knowledge/ui-ux/006-good-vs-bad-ui.mdx') as Promise<MdxFixture>,
+  'ui-ux/007-ui-extras': () =>
+    import('@/content/knowledge/ui-ux/007-ui-extras.mdx') as Promise<MdxFixture>,
+  'react/001-declarative-vs-imperative': () =>
+    import('@/content/knowledge/react/001-declarative-vs-imperative.mdx') as Promise<MdxFixture>,
+  'react/002-jsx': () =>
+    import('@/content/knowledge/react/002-jsx.mdx') as Promise<MdxFixture>,
+  'react/003-project-structure-mounting': () =>
+    import('@/content/knowledge/react/003-project-structure-mounting.mdx') as Promise<MdxFixture>,
+  'react/004-styling-in-react': () =>
+    import('@/content/knowledge/react/004-styling-in-react.mdx') as Promise<MdxFixture>,
+  'react/005-css-scoping': () =>
+    import('@/content/knowledge/react/005-css-scoping.mdx') as Promise<MdxFixture>,
+  'react/006-virtual-dom': () =>
+    import('@/content/knowledge/react/006-virtual-dom.mdx') as Promise<MdxFixture>,
+  'react/007-usestate-render-cycle': () =>
+    import('@/content/knowledge/react/007-usestate-render-cycle.mdx') as Promise<MdxFixture>,
+  'javascript/001-data-interchange': () =>
+    import('@/content/knowledge/javascript/001-data-interchange.mdx') as Promise<MdxFixture>,
+  'javascript/002-client-server-ajax': () =>
+    import('@/content/knowledge/javascript/002-client-server-ajax.mdx') as Promise<MdxFixture>,
+  'javascript/003-event-loop': () =>
+    import('@/content/knowledge/javascript/003-event-loop.mdx') as Promise<MdxFixture>,
+  'javascript/004-xhr': () =>
+    import('@/content/knowledge/javascript/004-xhr.mdx') as Promise<MdxFixture>,
+  'javascript/005-promise-fetch': () =>
+    import('@/content/knowledge/javascript/005-promise-fetch.mdx') as Promise<MdxFixture>,
+  'javascript/006-async-await': () =>
+    import('@/content/knowledge/javascript/006-async-await.mdx') as Promise<MdxFixture>,
+  'nodejs/001-http-server': () =>
+    import('@/content/knowledge/nodejs/001-http-server.mdx') as Promise<MdxFixture>,
 }
 
 export function isSupportedTopic(value: unknown): value is TopicId {

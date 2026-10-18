@@ -1,0 +1,148 @@
+---
+id: "002-jsx"
+title: "JSX 语法"
+topic: "react"
+category: "语法基础"
+difficulty: "easy"
+tags: ["week-5"]
+summary: "JSX 本质、表达式插值、className 与常见书写规范"
+createdAt: "2026-10-18T12:00:00.000Z"
+---
+
+JSX 是 React 里写界面最直观的部分：它长得像 HTML，但其实是 JavaScript 的一种**语法扩展**。理解「它本质是 JS」，很多看似奇怪的规则就都说得通了。
+
+## 1. JSX 是什么
+
+**JSX = JavaScript XML**。它不是 HTML，也不是模板语言，而是让 HTML 标记可以像 JS 值一样被使用：
+
+- 可以**存进变量**
+- 可以**作为函数返回值**
+- 可以用 `{}` **嵌入任意 JS 表达式**
+- 可以配合**三元运算符**等逻辑
+
+> 术语对照：JSX（JavaScript XML）/ expression（表达式）/ interpolation（插值）/ className。
+
+## 2. 把 JSX 当普通 JS 值用
+
+既然 JSX 是一个值，就能存变量、也能拿去做逻辑分支：
+
+```jsx
+// 直接存进变量
+const hello = <h1>Hello, JSX!</h1>
+
+// 用三元表达式选择要渲染的内容
+const parity = isEven(n) ? <h1>Even</h1> : <h1>Odd</h1>
+
+// 用 {} 插值一个表达式
+const line = <h1>Value: {isOdd(n)}</h1>
+```
+
+`parity` 和 `line` 都是「一段界面」，它们和普通字符串变量没有本质区别 —— 只是可以交给 React 去渲染。
+
+## 3. `{}` 插值：只能放表达式
+
+`{}` 里是**表达式（expression）**，也就是「能算出一个值的东西」：
+
+| 能写（表达式） | 示例 |
+|---|---|
+| 变量 | `{name}` |
+| 运算与函数调用 | `{a + b}`、`{format(x)}` |
+| 三元 | `{ok ? <Yes /> : <No />}` |
+| 逻辑与 | `{visible && <List />}` |
+| 对象字面量（用于 style） | `style={{ color: 'red' }}` |
+
+而**语句（statement）不能写**，因为它们不产生值：
+
+```jsx
+// ❌ 错：if 是语句，不返回值
+<div>{ if (ok) { return 'yes' } }</div>
+```
+
+> 要表达条件分支，用**三元**或 **`&&`**，而不是 `if` / `for` 这类语句。
+
+## 4. `className` 而非 `class`
+
+HTML 里用 `class` 指定 CSS 类；JSX 里必须写成 **`className`**，因为 `class` 是 JavaScript 的保留字。
+
+```jsx
+// ❌ 错
+<div class="card">…</div>
+
+// ✅ 对
+<div className="card">…</div>
+```
+
+同理，`<label>` 的 `for` 要写成 **`htmlFor`**，因为 `for` 也是 JS 保留字。
+
+## 5. 单一根节点与多行写法
+
+一个 JSX 片段**必须只有唯一一个根节点**：
+
+```jsx
+// ❌ 错：两个平级根节点
+return (
+  <h1>标题</h1>
+  <p>正文</p>
+)
+
+// ✅ 对：包一层父节点
+return (
+  <div>
+    <h1>标题</h1>
+    <p>正文</p>
+  </div>
+)
+```
+
+如果不想额外套一个 `<div>` 污染 DOM，可用 **Fragment（`<>...</>`）**：
+
+```jsx
+// ✅ 用 Fragment 做「透明」容器
+return (
+  <>
+    <h1>标题</h1>
+    <p>正文</p>
+  </>
+)
+```
+
+当 JSX **跨多行**时，用 `()` 把返回值包裹起来，可避免「自动分号插入」带来的隐式 `return` 问题：
+
+```jsx
+// ✅ 多行建议加括号
+const view = (
+  <section>
+    <h2>标题</h2>
+    <p>内容</p>
+  </section>
+)
+```
+
+## 6. 还需要手动引入 React 吗
+
+旧版 React 里每个组件文件开头都要**手动引入 React 包**。React 17+ 启用了**新的 JSX 转换**，编译器会自动引入所需运行时，因此**不再需要手动引入**。本项目使用 React 19，写组件时请**不要再手动引入 `React`**。
+
+## 7. 常见反模式（❌ 别这么写）
+
+```jsx
+// ❌ 用了 class
+<div class="card">…</div>
+
+// ❌ 忘了 {}，把变量当字面量
+<div>Hello, name</div>          // 渲染成 "Hello, name"
+<div>Hello, {name}</div>        // ✅
+
+// ❌ {} 里写语句
+{ items.forEach(i => <li>{i}</li>) }   // forEach 不返回值
+
+// ❌ 多个根节点
+return <h1>A</h1><p>B</p>
+```
+
+## 8. 自查清单
+
+- ✅ JSX 里所有 class 相关属性都写成 `className` / `htmlFor` 了吗？
+- ✅ `{}` 里放的都是**表达式**，没有 `if` / `for` / 赋值语句吗？
+- ✅ 每个 `return` 的 JSX 都只有**一个根节点**（或用了 Fragment）吗？
+- ✅ 多行 JSX 用 `()` 包裹了吗？
+- ✅ 文件开头没有多余的 React 手动引入吧？

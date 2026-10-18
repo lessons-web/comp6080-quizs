@@ -1,0 +1,134 @@
+---
+id: "003-project-structure-mounting"
+title: "React 项目结构与挂载"
+topic: "react"
+category: "工程结构"
+difficulty: "easy"
+tags: ["week-5"]
+summary: "入口文件、挂载容器与 createRoot，以及 Next.js 下的挂载方式"
+createdAt: "2026-10-18T12:00:00.000Z"
+---
+
+React 应用最终要落在真实的 HTML 页面上。它如何从「一个空容器」变成「一整套界面」，取决于项目怎么组织入口、把根组件**挂载（mount）**到哪里。这篇同时说明纯 SPA 的 `createRoot` 写法与本项目（Next.js）下的框架接管方式。
+
+## 1. 入口 HTML：一个挂载容器
+
+React 需要一个 DOM 节点作为「落脚点」，通常是 `index.html` 里一个空容器：
+
+```html
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <title>My App</title>
+  </head>
+  <body>
+    <!-- 挂载容器：React 会把整棵树渲染进这里 -->
+    <div id="root"></div>
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
+</html>
+```
+
+- 容器本身是**空**的，页面加载后由 JS 把内容填进去。
+- 这个带 `id` 的容器节点，就是**挂载点（mount point）**。
+
+## 2. React 19 的挂载写法：`createRoot`
+
+在纯客户端应用（如 Vite + React 的 SPA）里，入口文件负责把根组件挂载到容器上：
+
+```tsx
+// src/main.tsx
+import { StrictMode } from 'react'
+import { createRoot } from 'react-dom/client'
+import App from './App'
+
+createRoot(document.getElementById('root')!).render(
+  <StrictMode>
+    <App />
+  </StrictMode>,
+)
+```
+
+要点：
+
+| 部分 | 作用 |
+|---|---|
+| `react-dom/client` | React 19 里客户端渲染的入口模块。 |
+| `document.getElementById('root')!` | 找到挂载容器；`!` 是 TS 的「非空断言」。 |
+| `createRoot(el)` | 在容器上创建一个 React 根，**取代**旧的渲染入口 API。 |
+| `.render(<App />)` | 把根组件渲染进容器，此后由 React 全权接管该节点。 |
+
+> ⚠️ 旧教程里那种「把根组件和容器一起传给旧渲染函数」的写法，自 React 18 起已被废弃，不要再使用；React 19 请统一用 `createRoot(el).render(...)`。
+
+## 3. 本项目（Next.js App Router）怎么挂载
+
+本项目实际技术栈是 **React 19 + Next.js 15（App Router）**。在这种模式下，**挂载由框架接管**，你**不需要**手写 `createRoot`：
+
+| 文件 | 职责 |
+|---|---|
+| `app/layout.tsx` | 根布局（Root Layout），渲染 `<html>` / `<body>` 骨架，等价于「挂载容器的持有者」。 |
+| `app/page.tsx` | 首页路由组件，是 `/` 路径下实际渲染的内容。 |
+
+也就是说，Next.js 已经帮你生成了「入口 HTML + 挂载逻辑」，开发者编写的是**路由组件**（`page.tsx` / `layout.tsx`），而不是 `main.tsx` 里的 `createRoot` 调用。
+
+```tsx
+// app/layout.tsx（Next.js App Router 的根布局，框架据此挂载整个应用）
+export default function RootLayout({
+  children,
+}: {
+  children: React.ReactNode
+}) {
+  return (
+    <html lang="zh-CN">
+      <body>{children}</body>
+    </html>
+  )
+}
+```
+
+> 结论：**纯 Vite/SPA 场景**才需要你手写 `createRoot(...).render(<App />)`；**Next.js App Router 场景**由 `app/layout.tsx` + `app/page.tsx` 接管，无需手写挂载代码。
+
+## 4. 文件扩展名与项目结构
+
+本项目使用 TypeScript，组件与入口一律用 **`.tsx`**（含 JSX 的文件）或 **`.ts`**（不含 JSX 的纯逻辑）。典型结构：
+
+```text
+project/
+├─ app/
+│  ├─ layout.tsx      # 根布局：<html>/<body> 骨架
+│  ├─ page.tsx        # 首页路由组件
+│  └─ globals.css     # 全局样式
+├─ components/
+│  └─ Button.tsx      # 可复用组件（.tsx）
+├─ package.json
+└─ tsconfig.json
+```
+
+| 关注点 | 约定 |
+|---|---|
+| 组件文件 | `.tsx`（例：`Card.tsx`） |
+| 纯工具/类型 | `.ts`（例：`format.ts`、`types.ts`） |
+| 样式文件 | 全局 `globals.css`、组件级 CSS Modules `Card.module.css` |
+
+## 5. 开发体验：HMR（热更新）
+
+开发服务器提供 **HMR（Hot Module Reloading）**：你保存文件后，浏览器**无需手动刷新**即可看到更新，且尽量保留当前组件状态。这让你改样式/改逻辑时反馈几乎是即时的。
+
+> 术语对照：mount（挂载）/ mount point（挂载点）/ createRoot / HMR（Hot Module Reloading）/ App Router。
+
+## 6. 常见反模式（❌ 别这么写）
+
+```tsx
+// ❌ 使用已废弃的旧版渲染函数挂载（React 18 起废弃，React 19 请用 createRoot）
+// ❌ 把组件文件写成 .js 扩展名（本项目统一用 .tsx）
+// ❌ 在 Next.js App Router 里手动再写一遍 createRoot 挂载
+```
+
+## 7. 自查清单
+
+- ✅ 知道挂载容器是谁（纯 SPA 里的 `#root`，或 Next.js 的根布局）。
+- ✅ 能用 React 19 正确写出 `createRoot(el).render(<App />)`。
+- ✅ 能说清 `app/layout.tsx` 与 `app/page.tsx` 的分工。
+- ✅ 组件文件统一用 `.tsx`，不再出现 `.js` 组件文件名。
+- ✅ 知道 HMR 是什么、解决什么体验问题。

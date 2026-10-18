@@ -1,0 +1,124 @@
+---
+id: "005-css-scoping"
+title: "CSS 作用域陷阱与隔离方案"
+topic: "react"
+category: "样式方案"
+difficulty: "medium"
+tags: ["week-5"]
+summary: "为何 import 的 CSS 会全局生效，以及 CSS Modules / CSS-in-JS 的隔离思路"
+createdAt: "2026-10-18T12:00:00.000Z"
+---
+
+「我在这个组件文件里 `import` 了 CSS，这些样式应该只影响这个组件吧？」——这是 React 初学者最常踩的坑之一。答案是：**并不会**。这篇讲清全局污染从哪来，以及现代项目怎么隔离。
+
+## 1. 核心陷阱：import CSS ≠ 局部作用域
+
+在文件里 `import './App.css'`，**并不代表**只有这个文件能用它的 class。真相是：
+
+- 该 CSS 一旦**被任意地方 import 过**，它就会被注入页面，并**全局生效**。
+- 从此文件里定义的所有 class 名，在**全应用范围内**都可被任何元素命中。
+- 也就是说：**CSS 的 `import` 只是「加载」，并不会创建 ES Module 那样的隔离作用域。**
+
+```tsx
+// A.tsx
+import './A.css'   // 你以为只影响 A…
+
+export default function A() {
+  return <div className="title">A 的标题</div>
+}
+```
+
+```css
+/* A.css */
+.title { color: red; }   /* 实际上 .title 现在全局可用 */
+```
+
+```tsx
+// B.tsx —— 没 import 任何 CSS，却「莫名其妙」变红
+export default function B() {
+  return <div className="title">B 的标题</div>   // 也被染红！
+}
+```
+
+## 2. 为什么会全局污染
+
+CSS 的设计初衷是**文档级样式表**：选择器天生就是**全局**匹配的，浏览器不认识「这个 class 只属于某个组件」这种概念。
+
+| 环节 | 行为 |
+|---|---|
+| `import './x.css'` | 构建工具把它**注入到页面**（如 `<style>` 或打包进 CSS 文件）。 |
+| class 选择器 `.title` | 浏览器按**全局**规则匹配页面里**所有** `.title`。 |
+| 组件边界 | CSS **完全不感知**，没有作用域概念。 |
+
+结果：A 组件的样式可能**意外影响** B 组件；多人协作时命名冲突（都叫 `.title`、`.container`）屡见不鲜。
+
+> 术语对照：scoping（作用域）/ global stylesheet（全局样式表）/ CSS Modules / CSS-in-JS / class name collision（类名冲突）。
+
+## 3. 常见后果
+
+- **样式串味**：改了 A 的 `.card`，B 的卡片跟着变。
+- **难排查**：出问题的组件和写样式的组件**根本不在同一个文件**，定位成本高。
+- **依赖加载顺序**：同名 class 谁后加载谁生效，行为随打包顺序漂移。
+
+## 4. 隔离方案一：CSS Modules
+
+**CSS Modules** 的思路：让构建工具把类名**自动哈希成唯一名字**，从而天然避免冲突。
+
+```css
+/* Card.module.css */
+.card { border: 1px solid #ddd; }
+```
+
+```tsx
+// Card.tsx
+import styles from './Card.module.css'
+
+export default function Card() {
+  // styles.card 实际是类似 "_card_x8k2p" 的唯一类名
+  return <div className={styles.card}>…</div>
+}
+```
+
+- 文件命名约定为 `*.module.css`。
+- 类名默认**局部（local）**，编译后变成哈希名，不会与别处冲突。
+- 想暴露全局类名可显式写 `:global(...)`。
+
+## 5. 隔离方案二：CSS-in-JS
+
+**CSS-in-JS** 把样式直接写进 JS/TS，作用域随组件生成：
+
+```tsx
+// 概念示意：样式与组件同源，生成唯一类名
+const styles = {
+  card: { border: '1px solid #ddd', padding: 16 },
+}
+```
+
+其共同点：样式**跟随组件定义**、编译期/运行期生成**唯一类名**，从而隔离。代价是引入运行时或额外的编译步骤。
+
+| 方案 | 隔离方式 | 适用 |
+|---|---|---|
+| 全局 CSS（裸 `import`） | ❌ 无隔离 | 极简页面、reset、全局主题变量 |
+| **CSS Modules** | 类名哈希 | 组件级样式（现代项目主流） |
+| **CSS-in-JS** | 运行时/编译期生成唯一类名 | 需要动态主题、强封装 |
+| 原子化 CSS（工具类） | 工具类天然无冲突 | 追求少写自定义类名 |
+
+## 6. 常见反模式（❌ 别这么写）
+
+```tsx
+// ❌ 用过于通用的全局类名，撞名概率极高
+import './style.css'   // .title / .container / .card 全是全局的
+
+// ❌ 误以为「只有 import 了 CSS 的组件才会被它影响」
+//    —— 只要被任何地方 import 过，样式就对全应用生效
+```
+
+> ⚠️ 常见误区：**以为 ES Module 的 `import` 会给 CSS 带来隔离作用域**。ESM 的隔离只作用于 **JS 模块的导出/导入**，对 CSS 完全无效 —— CSS 依旧是全局的。
+
+## 7. 自查清单
+
+- ✅ 能解释「import 了 CSS，为什么会影响别的组件」。
+- ✅ 知道全局污染源于 **CSS 选择器天生是全局的**，与 `import` 语义无关。
+- ✅ 能说出至少两种隔离方案（CSS Modules / CSS-in-JS）及其思路。
+- ✅ 组件级样式优先用 `*.module.css`，避免通用全局类名。
+- ✅ 明白「ESM import 隔离」不适用于 CSS。

@@ -8,16 +8,17 @@ import {
 } from './knowledge'
 
 describe('knowledge content layer', () => {
-  it('getAllTopicSummaries returns 5 topics with point counts', async () => {
+  it('getAllTopicSummaries returns 6 topics with point counts', async () => {
     const list = await getAllTopicSummaries()
-    expect(list).toHaveLength(5)
+    expect(list).toHaveLength(6)
     expect(list.map((s) => s.topic)).toEqual(SUPPORTED_TOPICS)
     const counts = Object.fromEntries(list.map((s) => [s.topic, s.pointCount]))
     expect(counts.html).toBe(3)
     expect(counts.css).toBe(4)
-    expect(counts.javascript).toBe(0)
-    expect(counts.react).toBe(0)
-    expect(counts.nodejs).toBe(0)
+    expect(counts.javascript).toBe(6)
+    expect(counts.react).toBe(7)
+    expect(counts.nodejs).toBe(1)
+    expect(counts['ui-ux']).toBe(7)
     for (const s of list) {
       expect(s.label).toBeTruthy()
       expect(s.description).toBeTruthy()
