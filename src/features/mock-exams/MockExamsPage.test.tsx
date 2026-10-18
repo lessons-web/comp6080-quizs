@@ -1,8 +1,13 @@
 import { render, screen } from '@testing-library/react'
-import { RouterProvider, createMemoryRouter } from 'react-router-dom'
 import { describe, expect, it, vi } from 'vitest'
 
-import { MockExamsPage } from './MockExamsPage'
+vi.mock('next/navigation', () => ({
+  usePathname: () => '/exams',
+}))
+
+vi.mock('../../lib/auth/AuthContext', () => ({
+  useAuth: () => ({ user: { id: '1', role: 'student' }, loading: false }),
+}))
 
 vi.mock('../../lib/content/mockExams', () => ({
   getAllMockExams: vi.fn().mockResolvedValue([
@@ -17,18 +22,16 @@ vi.mock('../../lib/content/mockExams', () => ({
   ]),
 }))
 
+import { MockExamsPage } from './MockExamsPage'
+
 describe('MockExamsPage', () => {
   it('renders a list of mock exams', async () => {
-    const router = createMemoryRouter([
-      { path: '/', element: <MockExamsPage /> },
-    ])
-
-    render(<RouterProvider router={router} />)
+    render(<MockExamsPage />)
 
     expect(
       await screen.findByRole('heading', { level: 2, name: '模拟真题列表' }),
     ).toBeInTheDocument()
-    
+
     expect(
       screen.getByRole('heading', {
         level: 3,

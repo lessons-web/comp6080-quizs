@@ -1,0 +1,286 @@
+---
+id: "002-form-operations"
+title: "原生 JS 操作表单项"
+topic: "javascript"
+category: "表单操作"
+difficulty: "medium"
+tags: ["week-2"]
+summary: "input / select / radio / checkbox 取值与设置；含完整表单提交案例"
+createdAt: "2026-10-12T08:00:00.000Z"
+---
+
+> 题面："JS 怎么读表单里的值？怎么选中某个 radio？提交时怎么拿全部数据？"
+> 回答：**表单元素都有统一的 `value` 属性，特殊控件用 `checked` / `selectedIndex`，提交时用 `FormData` 或手动收集。**
+
+表单是前端与用户交互最频繁的地方。原生 JS 操作表单的关键是搞清楚**每类控件读值、设值的方式**，以及**提交时怎么阻止默认行为并收集数据**。
+
+## 1. 先拿到表单和它的元素
+
+```html
+<form id="login-form">
+  <input  name="username" />
+  <input  name="password" type="password" />
+  <button type="submit">登录</button>
+</form>
+```
+
+```js
+// 方式一：按 id 拿
+const form = document.getElementById('login-form')
+
+// 方式二：document.forms（按 name 或下标）
+const form2 = document.forms['login-form']
+const form3 = document.forms[0]
+
+// 方式三：拿到表单后，按 name 取元素
+const username = form.elements['username']   // 或 form.username
+const password = form.elements['password']
+```
+
+- `form.elements` 是一个类数组集合，包含表单里所有**有 name 的**控件（input / select / textarea / button 等）；
+- 可以用 `form.elements['name']` 或 `form.name` 直接取（注意 name 不能和表单已有属性冲突）。
+
+## 2. input 文本框 / textarea
+
+文本类控件（`text`、`password`、`email`、`number`、`textarea` 等）统一用 **`value`**：
+
+```js
+const input = form.elements['username']
+
+// 读值
+console.log(input.value)
+
+// 设值
+input.value = '张三'
+
+// 清空
+input.value = ''
+```
+
+常用事件：
+
+```js
+input.addEventListener('input', e => {
+  console.log('实时变化：', e.target.value)   // 每次按键都触发
+})
+
+input.addEventListener('change', e => {
+  console.log('失焦且变化：', e.target.value) // 失去焦点且值变了才触发
+})
+
+input.addEventListener('focus', () => input.classList.add('focused'))
+input.addEventListener('blur',  () => input.classList.remove('focused'))
+```
+
+> 💡 区别：`input` 事件在值改变时**实时**触发，适合做实时校验/搜索联想；`change` 事件在**失焦且值改变**后触发，适合做最终校验。
+
+## 3. select 下拉框
+
+```html
+<select name="city">
+  <option value="">请选择</option>
+  <option value="bj">北京</option>
+  <option value="sh">上海</option>
+  <option value="gz" selected>广州</option>
+</select>
+```
+
+```js
+const select = form.elements['city']
+
+// 读值：直接 value 就是选中 option 的 value
+console.log(select.value)              // 'gz'
+
+// 读选中项的文本
+console.log(select.options[select.selectedIndex].text)  // '广州'
+
+// 设值：把 value 赋回去即可
+select.value = 'sh'
+
+// 按索引设
+select.selectedIndex = 1
+```
+
+动态添加 / 删除选项：
+
+```js
+// 新增一个 option
+const opt = document.createElement('option')
+opt.value = 'sz'
+opt.textContent = '深圳'
+select.append(opt)
+
+// 也可以直接用 Option 构造函数
+select.add(new Option('杭州', 'hz'))
+
+// 移除某一项
+select.remove(2)
+```
+
+## 4. radio 单选框
+
+radio 是 **name 相同的一组**中只能选一个，关键是找到 `checked` 为 true 的那个。
+
+```html
+<label><input type="radio" name="gender" value="male" /> 男</label>
+<label><input type="radio" name="gender" value="female" /> 女</label>
+```
+
+```js
+const radios = form.elements['gender']   // 返回一个 RadioNodeList
+
+// 读值：直接对这个集合取 value
+console.log(radios.value)   // 选中项的 value，都没选返回 ''
+
+// 设值：把对应选项的 checked 设为 true
+radios.value = 'female'                    // 方式一（推荐）
+form.elements['gender'][1].checked = true  // 方式二
+
+// 手动遍历找选中项
+const checked = Array.from(radios).find(r => r.checked)
+console.log(checked?.value)
+```
+
+> 💡 `form.elements['gender']` 对同名 radio 返回 **RadioNodeList**，它有 `.value` 属性直接给出选中值，非常方便。
+
+## 5. checkbox 复选框
+
+checkbox 是独立的布尔控件，用 **`checked`** 属性，取值看 `value`。
+
+```html
+<label><input type="checkbox" name="hobby" value="read" /> 阅读</label>
+<label><input type="checkbox" name="hobby" value="music" /> 音乐</label>
+<label><input type="checkbox" name="hobby" value="sport" /> 运动</label>
+```
+
+```js
+const boxes = form.elements['hobby']   // NodeList
+
+// 读：收集所有被选中的 value
+const checkedValues = Array.from(boxes)
+  .filter(b => b.checked)
+  .map(b => b.value)
+console.log(checkedValues)   // ['read', 'sport']
+
+// 设：选中某一个
+form.elements['hobby'][0].checked = true
+
+// 单个 checkbox（比如"同意协议"）
+const agree = form.elements['agree']
+agree.checked = true
+console.log(agree.checked)   // true
+```
+
+## 6. textarea
+
+textarea 跟文本 input 一样，用 `value`：
+
+```js
+const ta = form.elements['bio']
+ta.value = '你好'
+console.log(ta.value)
+```
+
+> 注意：textarea 的内容不要用 `innerHTML` 去读，初始值写在标签内部，但**当前值永远看 `value`**。
+
+## 7. 综合案例：一个完整的表单提交
+
+```html
+<form id="register-form">
+  <input name="username" placeholder="用户名" />
+  <input name="email" type="email" placeholder="邮箱" />
+
+  <label><input type="radio" name="gender" value="male" /> 男</label>
+  <label><input type="radio" name="gender" value="female" /> 女</label>
+
+  <select name="city">
+    <option value="">请选择城市</option>
+    <option value="bj">北京</option>
+    <option value="sh">上海</option>
+  </select>
+
+  <label><input type="checkbox" name="hobby" value="read" /> 阅读</label>
+  <label><input type="checkbox" name="hobby" value="music" /> 音乐</label>
+
+  <label><input type="checkbox" name="agree" /> 同意协议</label>
+
+  <button type="submit">注册</button>
+</form>
+```
+
+```js
+const form = document.getElementById('register-form')
+
+form.addEventListener('submit', e => {
+  // 1. 阻止默认提交行为（否则会刷新页面）
+  e.preventDefault()
+
+  // 2. 收集数据
+  const data = {
+    username: form.elements['username'].value.trim(),
+    email:    form.elements['email'].value.trim(),
+    gender:   form.elements['gender'].value,
+    city:     form.elements['city'].value,
+    hobby:    Array.from(form.elements['hobby'])
+                  .filter(c => c.checked)
+                  .map(c => c.value),
+    agree:    form.elements['agree'].checked,
+  }
+
+  // 3. 简单校验
+  if (!data.username) { alert('请输入用户名'); return }
+  if (!data.agree)    { alert('请同意协议');   return }
+
+  // 4. 提交（fetch 或 FormData）
+  fetch('/api/register', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(data),
+  })
+    .then(res => res.json())
+    .then(res => console.log('注册成功', res))
+    .catch(err => console.error('提交失败', err))
+})
+```
+
+### 用 FormData 一键收集
+
+如果表单字段多，不想一个个写，可以用 `FormData`：
+
+```js
+form.addEventListener('submit', e => {
+  e.preventDefault()
+  const fd = new FormData(form)
+
+  // 同名（如 hobby）会出现多个 key，用 getAll 取数组
+  const payload = {
+    username: fd.get('username'),
+    hobby:    fd.getAll('hobby'),       // ['read', 'music']
+  }
+
+  // 直接发 form-data（不用转 JSON，支持文件上传）
+  fetch('/api/register', { method: 'POST', body: fd })
+})
+```
+
+`FormData` 的优点：
+- 自动收集所有带 name 的控件；
+- 支持文件上传（`<input type="file">`）；
+- 同名自动成数组（`getAll`）。
+
+## 8. 常见坑 & 调试 checklist
+
+1. **`form.elements['name']` 的返回类型随控件变化**：单个 input 返回元素，多个同名 radio/checkbox 返回集合。用前先 `console.log` 看一眼。
+2. **checkbox 没有 value 时默认值是 `'on'`**：一定要给 checkbox 写 `value`，否则 `get('hobby')` 拿到 `'on'` 而不是你想要的值。
+3. **radio 未选中时 `radios.value` 返回空字符串**：判断用户有没有选要用 `if (!radios.value)`。
+4. **`change` vs `input`**：checkbox / radio / select 建议用 `change`；文本类实时反馈用 `input`。
+5. **禁用提交按钮**：提交中把按钮 `disabled` 掉，防止用户连点重复提交。
+
+## 9. 自我核对清单
+
+- ✅ 文本类控件统一用 `value` 读写？
+- ✅ radio 用 `form.elements[name].value` 取选中值？
+- ✅ checkbox 用 `checked` 判断是否选中，读 `value` 取实际值？
+- ✅ select 用 `value` 取选中值，用 `selectedIndex` 取位置？
+- ✅ 提交时记得 `e.preventDefault()` 阻止默认刷新？
+- ✅ 校验失败用 `return` 终止，不要继续发请求？

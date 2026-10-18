@@ -69,6 +69,10 @@ const mdxLoaders: Record<string, () => Promise<MdxFixture>> = {
     import('@/content/knowledge/javascript/005-promise-fetch.mdx') as Promise<MdxFixture>,
   'javascript/006-async-await': () =>
     import('@/content/knowledge/javascript/006-async-await.mdx') as Promise<MdxFixture>,
+  'javascript/001-dom-operations': () =>
+    import('@/content/knowledge/javascript/001-dom-operations.mdx') as Promise<MdxFixture>,
+  'javascript/002-form-operations': () =>
+    import('@/content/knowledge/javascript/002-form-operations.mdx') as Promise<MdxFixture>,
   'nodejs/001-http-server': () =>
     import('@/content/knowledge/nodejs/001-http-server.mdx') as Promise<MdxFixture>,
 }

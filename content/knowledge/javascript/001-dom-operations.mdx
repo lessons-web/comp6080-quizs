@@ -1,0 +1,193 @@
+---
+id: "001-dom-operations"
+title: "DOM 操作与元素获取"
+topic: "javascript"
+category: "DOM 操作"
+difficulty: "easy"
+tags: ["week-2"]
+summary: "getElementById / querySelector 等获取方式；核心增删改查 API 与代码示例"
+createdAt: "2026-10-12T08:00:00.000Z"
+---
+
+> 题面："JS 怎么拿到页面上的元素？拿到之后又怎么改它？"
+> 回答：**先用选择器 API 拿到元素引用，再通过节点 API 对它做增、删、改、查。**
+
+DOM（Document Object Model）把 HTML 文档解析成一棵**节点树**。JS 操作页面的本质，就是在这棵树上「定位节点 → 读写属性 → 增删子节点」。掌握获取方式和核心 API，就能用原生 JS 完成绝大多数页面交互。
+
+## 1. 获取 DOM 元素的几种方式
+
+假设有这样一段 HTML：
+
+```html
+<div id="app">
+  <input class="field" name="email" />
+  <ul class="list">
+    <li class="item">A</li>
+    <li class="item">B</li>
+  </ul>
+</div>
+```
+
+### 1.1 按 id 获取（单个元素）
+
+```js
+const app = document.getElementById('app')
+```
+
+- 返回**单个元素**或 `null`；
+- id 在文档中应唯一，重复时只返回第一个；
+- 性能最好，但只能用 id。
+
+### 1.2 按 class / 标签 / name 获取（集合）
+
+```js
+const items = document.getElementsByClassName('item')   // HTMLCollection（实时）
+const lis   = document.getElementsByTagName('li')        // HTMLCollection（实时）
+const emails = document.getElementsByName('email')       // NodeList（实时）
+```
+
+- 返回的是**类数组集合**，不是真数组；想用数组方法先 `Array.from(...)`；
+- `HTMLCollection` 是**实时**的：DOM 一变它自动更新，遍历中删除节点容易"跳着数"，要小心。
+
+### 1.3 通用选择器 querySelector / querySelectorAll（推荐日常使用）
+
+```js
+const app   = document.querySelector('#app')          // 单个元素 / null
+const item  = document.querySelector('.list .item')   // 第一个匹配
+const items = document.querySelectorAll('.item')      // NodeList（静态快照）
+```
+
+- 支持完整 CSS 选择器语法（`.a .b`, `[data-id]`, `:nth-child` 等）；
+- `querySelectorAll` 返回的 NodeList 是**静态快照**，DOM 后续变化不影响它，遍历更安全；
+- 现代代码里基本用这两个就够了。
+
+> 💡 小提示：`querySelectorAll` 返回的 NodeList 可以用 `forEach`，但 `map`/`filter` 还是需要先 `Array.from()`。
+
+### 1.4 从已有元素相对定位
+
+拿到一个元素后，可以沿着树走：
+
+```js
+const li = document.querySelector('.item')
+
+li.parentElement          // 父元素（排除文本节点）
+li.parentNode             // 父节点（可能是元素、文本、注释等）
+li.children               // 子元素集合（HTMLCollection）
+li.firstElementChild      // 第一个子元素
+li.lastElementChild       // 最后一个子元素
+li.previousElementSibling // 上一个兄弟元素
+li.nextElementSibling     // 下一个兄弟元素
+li.closest('.list')       // 向上找最近的匹配祖先（事件委托常用）
+```
+
+## 2. 核心 DOM API（增删改查）
+
+### 2.1 创建节点
+
+```js
+const li    = document.createElement('li')        // 创建元素
+const text  = document.createTextNode('Hello')    // 创建文本节点
+const clone = li.cloneNode(true)                   // 深拷贝（true 包含子节点）
+```
+
+### 2.2 添加 / 插入节点
+
+```js
+list.appendChild(li)                  // 追加到末尾
+list.append(li, '文本')               // 可同时追加多个节点/字符串
+list.prepend(li)                      // 插入到开头
+list.insertBefore(li, list.firstChild)// 在某个子节点之前插入
+list.after(li)                        // 插入到 list 后面（同级）
+list.before(li)                       // 插入到 list 前面（同级）
+```
+
+### 2.3 删除 / 替换节点
+
+```js
+li.remove()                         // 自删（现代浏览器）
+list.removeChild(li)                // 通过父节点删
+list.replaceChild(newLi, oldLi)     // 用 newLi 替换 oldLi
+```
+
+### 2.4 读写内容
+
+```js
+li.textContent = '新内容'           // 纯文本，不会解析 HTML
+li.innerHTML   = '<b>新内容</b>'    // 会解析 HTML，注意 XSS 风险
+li.innerText   = '新内容'           // 受 CSS 可见性影响，尽量少用
+```
+
+### 2.5 属性操作
+
+```js
+img.setAttribute('src', '/logo.png')
+img.getAttribute('src')
+img.removeAttribute('src')
+img.hasAttribute('alt')
+
+// data-* 有专门的 dataset 快捷方式
+el.dataset.userId = '42'          // <div data-user-id="42">
+```
+
+### 2.6 类名与样式
+
+```js
+// classList 是首选，比操作 className 字符串安全
+btn.classList.add('active')
+btn.classList.remove('active')
+btn.classList.toggle('active')         // 有就删，没有就加
+btn.classList.contains('active')
+btn.classList.replace('old', 'new')
+
+// 内联样式（尽量少用，优先用 className 切 CSS）
+box.style.color = 'red'
+box.style.backgroundColor = '#eee'     // 驼峰命名
+box.style.cssText = 'color:red;font-size:14px'
+```
+
+## 3. 综合示例：动态渲染一个任务列表
+
+```html
+<ul id="todo-list"></ul>
+<button id="add-btn">添加任务</button>
+```
+
+```js
+const list = document.getElementById('todo-list')
+const addBtn = document.getElementById('add-btn')
+
+addBtn.addEventListener('click', () => {
+  const li = document.createElement('li')
+  li.className = 'todo-item'
+  li.textContent = `任务 ${list.children.length + 1}`
+
+  // 加一个删除按钮
+  const del = document.createElement('button')
+  del.textContent = '删除'
+  del.addEventListener('click', () => li.remove())
+
+  li.append(del)
+  list.append(li)
+})
+```
+
+要点：
+- 用 `createElement` + `textContent` 构建内容，避免 `innerHTML` 带来的 XSS；
+- 删除用 `li.remove()` 简洁直观；
+- 每个 li 独立绑定点击事件，列表项多时可改用**事件委托**（把 click 绑在 `list` 上）。
+
+## 4. 常见坑 & 调试 checklist
+
+1. **`querySelectorAll` 拿到的是静态 NodeList**，删完节点后它的长度不变；要拿到"最新"集合就重新查询，或用 `getElementsByClassName` 的实时集合。
+2. **`innerHTML` 会重新解析并销毁内部节点**，之前给子节点绑的事件监听会全部丢失。需要保留事件时改用 `createElement` + `append`。
+3. **类数组不能直接用数组方法**：`items.map(...)` 会报错，先 `Array.from(items).map(...)`。
+4. **样式属性是驼峰**：`background-color` → `backgroundColor`；`float` → `cssFloat`。
+5. **`getElementById` 只在 `document` 上有**，元素节点上没有这个方法；要用就在元素上 `querySelector('#id')`。
+
+## 5. 自我核对清单
+
+- ✅ 单个元素用 `getElementById` 或 `querySelector`，多个用 `querySelectorAll`？
+- ✅ 需要遍历集合时，先 `Array.from()` 或用 `forEach`，避免直接当数组用？
+- ✅ 修改文本用 `textContent`，只有明确需要解析 HTML 时才用 `innerHTML`？
+- ✅ 切换样式优先 `classList`，而不是直接改 `style`？
+- ✅ 创建节点用 `createElement`，动态内容避免拼接字符串造成 XSS？
