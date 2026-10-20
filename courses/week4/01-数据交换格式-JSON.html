@@ -1,0 +1,706 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>01 · 数据交换格式与 JSON · COMP6080 Week 4</title>
+  <meta name="description" content="JSON / YAML / XML 的取舍，JSON.stringify 与 JSON.parse 的完整用法，以及 JSON 与 localStorage 的配合。" />
+  <link rel="icon" href="data:," />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600&family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="assets/demo.css" />
+</head>
+<body data-page="01">
+
+  <header class="topbar">
+    <nav class="crumb" data-topbar></nav>
+    <span class="topbar-spacer"></span>
+    <span class="topbar-badge" data-topbar-badge></span>
+  </header>
+
+  <main class="doc">
+    <!-- ============================================= 左栏：讲解 ========= -->
+    <article class="doc-main">
+
+      <div class="page-head reveal">
+        <div class="kicker">知识点 01 · 对应课件 3.1 Data Interchange</div>
+        <h1 class="page-title">数据在传出去之前，<span class="mark">先变成字符串</span></h1>
+        <p class="lede">
+          前面几周页面里的内容都是写死在 HTML 里的。一旦内容要来自服务器，
+          第一个问题就出现了：<strong>两种不同的语言、不同的系统之间，靠什么格式交换数据？</strong>
+          这一节先把这件事说清楚，再落到前端最常用的两个方法
+          <code class="inline">JSON.stringify</code> 与 <code class="inline">JSON.parse</code>。
+        </p>
+        <div class="tag-row">
+          <span class="tag hot">必考</span>
+          <span class="tag">JSON / YAML / XML</span>
+          <span class="tag">stringify / parse</span>
+          <span class="tag">localStorage</span>
+        </div>
+      </div>
+
+      <!-- 1. 为什么需要 -->
+      <section class="sec reveal" style="--d:60ms">
+        <div class="sec-head">
+          <span class="sec-num">1.1</span>
+          <h2>为什么需要「数据交换格式」<span class="en">standard interfaces</span></h2>
+        </div>
+
+        <p>
+          想象你要把一段 C 程序算出来的结果交给一个 JavaScript 程序用。
+          C 有结构体，JS 有对象，Python 有字典 —— 三套内存模型互不认识。
+          所以软件世界里需要一种<strong>标准接口</strong>：一个双方都认的中间格式。
+        </p>
+
+        <div class="cards">
+          <div class="card">
+            <div class="card-t">物理世界</div>
+            <h3>插座 / USB</h3>
+            <p>插头和插座的形状被事先约定好，所以任何厂家都能互通。</p>
+          </div>
+          <div class="card cool">
+            <div class="card-t">数据世界</div>
+            <h3>数据交换格式</h3>
+            <p>一种极简的「标记语言」，内容只是数组、对象、数字、字符串、布尔值的组合。</p>
+          </div>
+          <div class="card cool">
+            <div class="card-t">关键动作</div>
+            <h3>结构化 → 字符串</h3>
+            <p>先序列化成纯文本才能传输，接收方再反序列化回自己的数据结构。</p>
+          </div>
+        </div>
+
+        <div class="note rule">
+          <span class="ico">一句话</span>
+          <div>
+            <strong>数据交换格式的本质，是把「结构化数据」变成「可以传输的字符串」。</strong>
+            传输通道（网线、HTTP）只能搬字节，搬不了内存里的对象。
+          </div>
+        </div>
+      </section>
+
+      <!-- 2. 三种格式 -->
+      <section class="sec reveal" style="--d:120ms">
+        <div class="sec-head">
+          <span class="sec-num">1.2</span>
+          <h2>JSON / YAML / XML 三者的取舍<span class="en">pick your format</span></h2>
+        </div>
+
+        <p>下面用同一份数据（三个地点的 suburb 与 postcode）写出三种格式，横向对比一下就能看出差别。</p>
+
+        <div class="code">
+          <div class="code-head">
+            <span class="code-lang">json</span>
+            <span class="code-file">locations.json</span>
+          </div>
+          <pre><code data-lang="json">{
+  "locations": [
+    { "suburb": "Kensington", "postcode": 2033 },
+    { "suburb": "Mascot",     "postcode": 2020 },
+    { "suburb": "Sydney CBD", "postcode": 2000 }
+  ]
+}</code></pre>
+        </div>
+
+        <div class="code">
+          <div class="code-head">
+            <span class="code-lang">yaml</span>
+            <span class="code-file">locations.yaml</span>
+          </div>
+          <pre><code data-lang="text">---
+locations:
+- suburb: Kensington
+  postcode: 2033
+- suburb: Mascot
+  postcode: 2020
+- suburb: Sydney CBD
+  postcode: 2000</code></pre>
+        </div>
+
+        <div class="code">
+          <div class="code-head">
+            <span class="code-lang">xml</span>
+            <span class="code-file">locations.xml</span>
+          </div>
+          <pre><code data-lang="xml">&lt;?xml version="1.0" encoding="UTF-8"?&gt;
+&lt;root&gt;
+  &lt;locations&gt;
+    &lt;element&gt;
+      &lt;postcode&gt;2033&lt;/postcode&gt;
+      &lt;suburb&gt;Kensington&lt;/suburb&gt;
+    &lt;/element&gt;
+    &lt;element&gt;
+      &lt;postcode&gt;2020&lt;/postcode&gt;
+      &lt;suburb&gt;Mascot&lt;/suburb&gt;
+    &lt;/element&gt;
+  &lt;/locations&gt;
+&lt;/root&gt;</code></pre>
+        </div>
+
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>格式</th>
+                <th>可读性</th>
+                <th>体积</th>
+                <th>解析成本</th>
+                <th>典型用途</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td class="mono">JSON</td>
+                <td>不错</td>
+                <td class="mono">小</td>
+                <td class="mono">低（原生支持）</td>
+                <td>前后端 API 通信，事实标准</td>
+              </tr>
+              <tr>
+                <td class="mono">YAML</td>
+                <td>最好（可以写注释）</td>
+                <td class="mono">小</td>
+                <td class="mono">中（需第三方库）</td>
+                <td>各种配置文件（CI、K8s、docker-compose）</td>
+              </tr>
+              <tr>
+                <td class="mono">XML</td>
+                <td>差（开闭标签太吵）</td>
+                <td class="mono">大</td>
+                <td class="mono">高</td>
+                <td>遗留系统、RSS、部分企业接口</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <h3>XML 的三个现实问题</h3>
+        <ul class="clean">
+          <li><strong>更啰嗦</strong>：同样的数据，开闭标签让一句话要读好几遍。</li>
+          <li><strong>更费力</strong>：解析器要处理属性、命名空间、DTD，理解和实现成本都更高。</li>
+          <li><strong>更多字节</strong>：同样的信息占用更多带宽，移动网络下代价明显。</li>
+        </ul>
+
+        <div class="note tip">
+          <span class="ico">取舍</span>
+          <div>
+            <strong>选格式看场景，不是看新旧。</strong>
+            前后端通信选 JSON，因为体积小、解析快、和 JS 最亲近；
+            写配置选 YAML，因为能写注释、可读性最好；
+            对接老旧系统时你依然会遇到 XML —— 不是因为它好，而是因为它已经在那里了。
+          </div>
+        </div>
+      </section>
+
+      <!-- 3. JSON 的语法限制 -->
+      <section class="sec reveal" style="--d:180ms">
+        <div class="sec-head">
+          <span class="sec-num">1.3</span>
+          <h2>JSON 不等于 JS 对象字面量<span class="en">four syntax limits</span></h2>
+        </div>
+
+        <p>
+          这是最容易在考试里丢分的一点：JSON 的语法<strong>是 JavaScript 对象字面量的一个严格子集</strong>。
+          JS 里能写的东西，JSON 里不一定能写。
+        </p>
+
+        <div class="versus">
+          <div class="vs bad">
+            <div class="vs-t">✗ 这一段是合法的 JS，但不是合法 JSON</div>
+            <pre><code data-lang="js">const bad = {
+  name: 'Bob',        // key 没加引号
+  age: 23,            // 尾逗号
+  // 这里有一行注释
+  nickname: undefined,
+  greet: () =&gt; 'hi',
+};</code></pre>
+          </div>
+          <div class="vs good">
+            <div class="vs-t">✓ 同一份数据，合法的 JSON</div>
+            <pre><code data-lang="json">{
+  "name": "Bob",
+  "age": 23
+}</code></pre>
+          </div>
+        </div>
+
+        <h4>四条必须记住的限制</h4>
+        <ul class="clean">
+          <li><strong>key 必须是双引号字符串</strong>：<code class="inline">"name"</code> 可以，<code class="inline">name</code> 和 <code class="inline">'name'</code> 都不行。</li>
+          <li><strong>不能有尾逗号</strong>：最后一个成员后面不能多一个逗号。</li>
+          <li><strong>不能写注释</strong>：JSON 没有任何注释语法（这也是 YAML 在配置文件里更受欢迎的原因）。</li>
+          <li><strong>不支持 <code class="inline">undefined</code>、函数、<code class="inline">NaN</code></strong>：这些值在序列化时会被丢掉或被强制转换。</li>
+        </ul>
+
+        <div class="note trap">
+          <span class="ico">陷阱</span>
+          <div>
+            因为<code class="inline">JSON.parse</code> 遇到语法错误会<strong>直接抛异常</strong>，
+            所以任何来自外部的 JSON 字符串都要放进 <code class="inline">try / catch</code>。
+            右边演示台的第 3 个按钮专门演示这件事。
+          </div>
+        </div>
+      </section>
+
+      <!-- 4. 两个方法 -->
+      <section class="sec reveal" style="--d:240ms">
+        <div class="sec-head">
+          <span class="sec-num">1.4</span>
+          <h2>前端最常用的两个方法<span class="en">stringify &amp; parse</span></h2>
+        </div>
+
+        <div class="code">
+          <div class="code-head">
+            <span class="code-lang">javascript</span>
+            <span class="code-file">01-json-basics.js</span>
+          </div>
+          <pre><code data-lang="js">const DATA = {
+  names: [
+    { first: 'Bob',   last: 'Carr' },
+    { first: 'Julia', last: 'Gillard' },
+  ],
+};
+
+// ① 对象 → 字符串（序列化）
+const text = JSON.stringify(DATA);
+console.log(typeof text);        // "string"  ← 不是对象！
+console.log(text);
+// {"names":[{"first":"Bob","last":"Carr"},{"first":"Julia","last":"Gillard"}]}
+
+// ② 加缩进只为好看，服务器收到的还是同一份数据
+const pretty = JSON.stringify(DATA, null, 2);
+
+// ③ 字符串 → 对象（反序列化）
+const back = JSON.parse(text);
+console.log(back.names[0].first); // "Bob"</code></pre>
+        </div>
+
+        <h3>两个参数要注意</h3>
+        <ul>
+          <li>
+            <strong>缩进参数只影响外观</strong>：<code class="inline">JSON.stringify(v, null, 2)</code> 里的
+            <code class="inline">2</code> 只是加换行和空格，方便人看；体积反而变大，所以<strong>不要拿它当传输格式</strong>。
+          </li>
+          <li>
+            <strong>无法序列化的值会被处理掉</strong>：值为 <code class="inline">undefined</code> 或函数的键会<em>整个消失</em>，
+            <code class="inline">NaN</code> / <code class="inline">Infinity</code> 会变成 <code class="inline">null</code>，
+            <code class="inline">Date</code> 会变成 ISO 字符串。右边演示台可以直接看到结果。
+          </li>
+        </ul>
+
+        <div class="note warn">
+          <span class="ico">补充</span>
+          <div>
+            <code class="inline">JSON.stringify</code> 遇到<strong>循环引用</strong>（对象的属性指回自己）会抛
+            <code class="inline">TypeError: Converting circular structure to JSON</code>。
+            这在遍历 DOM 节点或父子上级互相引用时很常见。
+          </div>
+        </div>
+      </section>
+
+      <!-- 5. localStorage -->
+      <section class="sec reveal" style="--d:300ms">
+        <div class="sec-head">
+          <span class="sec-num">1.5</span>
+          <h2>为什么 JSON 总和 localStorage 一起出现<span class="en">persist to disk</span></h2>
+        </div>
+
+        <p>
+          <code class="inline">localStorage</code> 是浏览器给的一个键值存储，关闭标签页、重启浏览器后数据还在。
+          但它有一个硬限制：<strong>只能存字符串</strong>。
+        </p>
+
+        <div class="code">
+          <div class="code-head">
+            <span class="code-lang">javascript</span>
+            <span class="code-file">01-localstorage.js</span>
+          </div>
+          <pre><code data-lang="js">const KEY = 'w4:members';
+
+// ✗ 直接存对象：浏览器会先调用 String(obj)
+localStorage.setItem(KEY, { name: 'Bob' });
+localStorage.getItem(KEY);   // "[object Object]" —— 数据已经丢了
+
+// ✓ 正确做法：对象 → 字符串 → 存
+const members = [{ name: 'Bob' }, { name: 'Julia' }];
+localStorage.setItem(KEY, JSON.stringify(members));
+
+// ✓ 读出来必须 parse 回对象
+const raw = localStorage.getItem(KEY);      // 字符串
+const list = raw ? JSON.parse(raw) : [];     // 对象数组
+console.log(list[0].name);                   // "Bob"
+
+// ✓ 因为 parse 可能抛错，生产代码要包一层
+function loadMembers() {
+  try {
+    return JSON.parse(localStorage.getItem(KEY)) ?? [];
+  } catch (err) {
+    console.warn('本地数据损坏，已重置：', err);
+    localStorage.removeItem(KEY);
+    return [];
+  }
+}</code></pre>
+        </div>
+
+        <div class="note tip">
+          <span class="ico">规律</span>
+          <div>
+            凡是「<strong>只能存文本</strong>」的介质（localStorage、cookie、URL query、请求体），
+            都遵循同一套动作：<strong>写之前 <code class="inline">stringify</code>，读之后 <code class="inline">parse</code></strong>。
+            记住这个规律，后面几节的 HTTP 请求体会反复用到。
+          </div>
+        </div>
+      </section>
+
+      <!-- 6. 小结 -->
+      <section class="sec reveal" style="--d:360ms">
+        <div class="sec-head">
+          <span class="sec-num">1.6</span>
+          <h2>这一节要带走的三句话<span class="en">takeaways</span></h2>
+        </div>
+
+        <div class="cards">
+          <div class="card">
+            <div class="card-t">01</div>
+            <h3>JSON 是字符串，不是对象</h3>
+            <p>看到双引号包住整个结构，它就是一个 string；能用 <code class="inline">.key</code> 取值才是对象。</p>
+          </div>
+          <div class="card">
+            <div class="card-t">02</div>
+            <h3>key 必须双引号、不能有尾逗号、不能写注释</h3>
+            <p>这四条限制决定了「JS 里能跑」不等于「JSON 能解析」。</p>
+          </div>
+          <div class="card">
+            <div class="card-t">03</div>
+            <h3>写前 stringify，读后 parse</h3>
+            <p>所有只能存文本的介质都遵循这一条，且 parse 一定要包 try/catch。</p>
+          </div>
+        </div>
+      </section>
+    </article>
+
+    <!-- ============================================= 右栏：演示台 ======= -->
+    <aside class="doc-side">
+      <div class="stick">
+
+        <!-- 演示 A -->
+        <section class="demo reveal" style="--d:140ms">
+          <div class="demo-head">
+            <h3>演示 A · stringify / parse 双向转换</h3>
+            <span class="pill">live</span>
+          </div>
+          <div class="demo-body">
+            <p class="demo-sub">
+              下面输入框里的内容<strong>本身就是一个字符串</strong>。点按钮看它怎么变成对象，又怎么变回字符串。
+            </p>
+
+            <div class="field">
+              <label for="json-input">JSON 文本</label>
+              <textarea id="json-input" rows="7">{
+  "name": "Bob",
+  "age": 23,
+  "skills": ["HTML", "CSS"],
+  "active": true
+}</textarea>
+            </div>
+
+            <div class="row">
+              <button class="btn primary sm" id="btn-parse" type="button">parse → 对象</button>
+              <button class="btn sm" id="btn-stringify" type="button">stringify → 字符串</button>
+              <button class="btn ghost sm" id="btn-gotcha" type="button">看 stringify 丢掉了什么</button>
+            </div>
+
+            <div class="status-line" id="json-meta"></div>
+
+            <div class="out pre tall idle" id="json-out">点击上面任意按钮开始。</div>
+
+            <div class="field">
+              <label>换一段有问题的 JSON 试试</label>
+              <div class="row">
+                <button class="btn ghost sm" data-bad="trailing" type="button">尾逗号</button>
+                <button class="btn ghost sm" data-bad="singlequote" type="button">单引号 key</button>
+                <button class="btn ghost sm" data-bad="comment" type="button">带注释</button>
+                <button class="btn ghost sm" data-bad="undef" type="button">undefined</button>
+              </div>
+            </div>
+
+            <div class="log" id="log-json"></div>
+          </div>
+        </section>
+
+        <!-- 演示 B -->
+        <section class="demo reveal" style="--d:220ms">
+          <div class="demo-head">
+            <h3>演示 B · JSON + localStorage 持久化</h3>
+            <span class="pill">刷新后数据还在</span>
+          </div>
+          <div class="demo-body">
+            <p class="demo-sub">
+              这是一个最小学员名单。所有数据以<strong>字符串</strong>形式存在 localStorage 里，
+              刷新页面后依然在 —— 这就是「写前 stringify、读后 parse」的完整闭环。
+            </p>
+
+            <div class="row nowrap">
+              <input type="text" id="member-input" placeholder="输入姓名，例如：Alice" />
+              <button class="btn primary sm" id="btn-add" type="button">添加</button>
+            </div>
+
+            <div class="row">
+              <button class="btn ghost sm" id="btn-reload" type="button">从 localStorage 重新读取</button>
+              <button class="btn danger sm" id="btn-clear" type="button">清空</button>
+            </div>
+
+            <div class="list" id="member-list"></div>
+
+            <div class="field">
+              <label>localStorage 里真实存着的字符串</label>
+              <div class="out pre" id="raw-store">（空）</div>
+            </div>
+
+            <div class="log" id="log-ls"></div>
+          </div>
+        </section>
+
+      </div>
+    </aside>
+  </main>
+
+  <nav class="pager" data-pager></nav>
+
+  <footer class="pagefoot">
+    <span>COMP6080 26T3 · Week 4 · 知识点 01</span>
+    <span class="sig">JSON 是字符串，不是对象</span>
+  </footer>
+
+  <script src="assets/demo.js"></script>
+  <script>
+    /* ====================================================================
+       本页教学代码：只用到原生的 JSON API 与 localStorage
+       ==================================================================== */
+    const $ = W4.$;
+
+    /* ---------------------------------------------------- 演示 A：转换台 */
+    const inputEl = $('#json-input');
+    const outEl = $('#json-out');
+    const metaEl = $('#json-meta');
+    const logJson = $('#log-json');
+
+    const BAD_SAMPLES = {
+      trailing: '{\n  "name": "Bob",\n  "age": 23,\n}',
+      singlequote: "{\n  'name': 'Bob',\n  'age': 23\n}",
+      comment: '{\n  "name": "Bob"  // 这里不该有注释\n}',
+      undef: '{\n  "name": "Bob",\n  "nickname": undefined\n}'
+    };
+
+    function showMeta(chips) {
+      metaEl.innerHTML = chips
+        .map(function (c) { return '<span class="chip ' + (c.tone || '') + '">' + W4.escapeHtml(c.text) + '</span>'; })
+        .join('');
+    }
+
+    function setOut(text, tone) {
+      outEl.className = 'out pre tall ' + (tone || 'idle');
+      outEl.textContent = text;
+    }
+
+    /* ① parse：字符串 → 对象 */
+    $('#btn-parse').addEventListener('click', function () {
+      W4.resetLog(logJson);
+      const text = inputEl.value;
+      W4.log(logJson, '调用 JSON.parse()，输入 ' + text.length + ' 个字符', 'info', 'sync');
+
+      try {
+        const data = JSON.parse(text);
+        W4.log(logJson, 'parse 成功，返回值的 typeof 是 "' + typeof data + '"', 'ok', 'sync');
+        W4.log(logJson, '判断是不是数组：Array.isArray(data) === ' + Array.isArray(data), 'info', 'sync');
+
+        const keys = Object.keys(data);
+        W4.log(logJson, '拿到 ' + keys.length + ' 个顶层 key：' + keys.join(', '), 'info', 'sync');
+
+        showMeta([
+          { text: 'typeof → ' + typeof data, tone: 'ok' },
+          { text: 'Array.isArray → ' + Array.isArray(data), tone: '' },
+          { text: '顶层 key：' + keys.length, tone: 'teal' }
+        ]);
+        setOut('// 现在它是一个真正的对象，可以直接取值或遍历\n\n' + W4.pretty(data), 'ok');
+      } catch (err) {
+        W4.log(logJson, 'parse 抛出了 ' + err.name + '：' + err.message, 'err', 'sync');
+        W4.log(logJson, '所以外部来的 JSON 一定要放在 try / catch 里', 'warn', 'sync');
+        showMeta([{ text: err.name, tone: 'err' }, { text: '字符串不是合法 JSON', tone: 'err' }]);
+        setOut(err.name + ': ' + err.message, 'err');
+      }
+    });
+
+    /* ② stringify：对象 → 字符串 */
+    $('#btn-stringify').addEventListener('click', function () {
+      W4.resetLog(logJson);
+      const text = inputEl.value;
+      W4.log(logJson, '先把输入 parse 成对象', 'info', 'sync');
+
+      let data;
+      try {
+        data = JSON.parse(text);
+      } catch (err) {
+        W4.log(logJson, '输入不是合法 JSON，无法继续：' + err.message, 'err', 'sync');
+        showMeta([{ text: 'parse 失败', tone: 'err' }]);
+        setOut(err.name + ': ' + err.message, 'err');
+        return;
+      }
+
+      const compact = JSON.stringify(data);
+      const pretty = JSON.stringify(data, null, 2);
+      W4.log(logJson, 'JSON.stringify(data) 得到紧凑字符串，长度 ' + compact.length, 'ok', 'sync');
+      W4.log(logJson, 'JSON.stringify(data, null, 2) 得到美化字符串，长度 ' + pretty.length, 'info', 'sync');
+      W4.log(logJson, '美化只是给人看的，传输时反而多占 ' + (pretty.length - compact.length) + ' 个字符', 'warn', 'sync');
+
+      showMeta([
+        { text: '紧凑 ' + compact.length + ' 字符', tone: 'ok' },
+        { text: '美化 ' + pretty.length + ' 字符', tone: 'warn' },
+        { text: 'typeof → string', tone: 'teal' }
+      ]);
+      setOut(
+        '// JSON.stringify(data) —— 真正用来传输的形态\n' + compact +
+        '\n\n// JSON.stringify(data, null, 2) —— 只是给人看的\n' + pretty,
+        'ok'
+      );
+    });
+
+    /* ③ stringify 的丢失行为 */
+    $('#btn-gotcha').addEventListener('click', function () {
+      W4.resetLog(logJson);
+
+      const tricky = {
+        name: 'Bob',
+        nickname: undefined,
+        greet: function () { return 'hi'; },
+        score: NaN,
+        infinite: Infinity,
+        joined: new Date('2026-03-01T00:00:00Z')
+      };
+
+      W4.log(logJson, '构造一个含 undefined / 函数 / NaN / Date 的对象', 'info', 'sync');
+      W4.log(logJson, '原始对象有 ' + Object.keys(tricky).length + ' 个 key', 'info', 'sync');
+
+      const text = JSON.stringify(tricky);
+      const kept = Object.keys(JSON.parse(text));
+      W4.log(logJson, 'stringify 后只剩 ' + kept.length + ' 个 key：' + kept.join(', '), 'warn', 'sync');
+      W4.log(logJson, 'nickname（undefined）与 greet（函数）被整个丢掉', 'err', 'sync');
+      W4.log(logJson, 'score（NaN）与 infinite 被强制转成 null', 'err', 'sync');
+      W4.log(logJson, 'joined（Date）被转成 ISO 字符串，不再是 Date 对象', 'warn', 'sync');
+
+      showMeta([
+        { text: '原始 6 个 key', tone: '' },
+        { text: '序列化后 ' + kept.length + ' 个', tone: 'err' },
+        { text: 'JSON 不支持 undefined / 函数', tone: 'err' }
+      ]);
+      setOut('// JSON.stringify 的结果\n' + text, 'err');
+    });
+
+    /* 载入有问题的样例 */
+    W4.$$('[data-bad]').forEach(function (btn) {
+      btn.addEventListener('click', function () {
+        inputEl.value = BAD_SAMPLES[btn.dataset.bad];
+        W4.resetLog(logJson);
+        W4.log(logJson, '已载入样例：「' + btn.textContent.trim() + '」', 'info', 'sync');
+        W4.log(logJson, '点上面的「parse → 对象」看看会发生什么', 'warn', 'sync');
+        setOut('样例已载入，请点击「parse → 对象」按钮。', 'idle');
+        showMeta([]);
+      });
+    });
+
+    /* ------------------------------------------------ 演示 B：持久化 */
+    const STORE_KEY = 'w4:members';
+    const memberInput = $('#member-input');
+    const listEl = $('#member-list');
+    const rawEl = $('#raw-store');
+    const logLs = $('#log-ls');
+
+    /* 读：字符串 → 对象数组 */
+    function loadMembers() {
+      const raw = localStorage.getItem(STORE_KEY);
+      if (raw === null) return [];
+      try {
+        const parsed = JSON.parse(raw);
+        return Array.isArray(parsed) ? parsed : [];
+      } catch (err) {
+        console.warn('本地数据损坏，已重置', err);
+        localStorage.removeItem(STORE_KEY);
+        return [];
+      }
+    }
+
+    /* 写：对象数组 → 字符串 */
+    function saveMembers(list) {
+      localStorage.setItem(STORE_KEY, JSON.stringify(list));
+    }
+
+    function renderMembers(list, withLog) {
+      if (!list.length) {
+        listEl.innerHTML = '<div class="out idle">名单还是空的，在上面输入一个名字试试。</div>';
+      } else {
+        listEl.innerHTML = list.map(function (m, i) {
+          return '<div class="list-item">' +
+            '<span class="idx">' + (i + 1) + '</span>' +
+            '<span><span class="name">' + W4.escapeHtml(m.name) + '</span>' +
+            '<div class="meta">id: ' + W4.escapeHtml(m.id) + ' · 存入时间 ' + W4.escapeHtml(m.savedAt) + '</div></span>' +
+          '</div>';
+        }).join('');
+      }
+      rawEl.textContent = localStorage.getItem(STORE_KEY) ?? '（空）';
+
+      if (withLog) {
+        const raw = localStorage.getItem(STORE_KEY);
+        W4.log(logLs, 'localStorage.getItem 返回的是字符串，长度 ' +
+          (raw === null ? 0 : raw.length), 'info', 'sync');
+        W4.log(logLs, 'JSON.parse 之后得到 ' + list.length + ' 条记录', 'ok', 'sync');
+      }
+    }
+
+    $('#btn-add').addEventListener('click', function () {
+      W4.resetLog(logLs);
+      const name = memberInput.value.trim();
+      if (!name) {
+        W4.log(logLs, '名字为空，先输入内容再添加', 'warn', 'sync');
+        return;
+      }
+
+      const list = loadMembers();
+      W4.log(logLs, '从 localStorage 读取 → JSON.parse → 数组，当前 ' + list.length + ' 条', 'info', 'sync');
+
+      list.push({ id: W4.hash(name + Date.now()), name: name, savedAt: W4.clock() });
+      const text = JSON.stringify(list);
+      localStorage.setItem(STORE_KEY, text);
+      W4.log(logLs, '数组 → JSON.stringify → setItem，写入 ' + text.length + ' 个字符', 'ok', 'sync');
+
+      memberInput.value = '';
+      renderMembers(list, false);
+      W4.log(logLs, '刷新页面数据依然在，因为它在磁盘上而不在内存里', 'info', 'sync');
+    });
+
+    $('#btn-reload').addEventListener('click', function () {
+      W4.resetLog(logLs);
+      const list = loadMembers();
+      renderMembers(list, true);
+    });
+
+    $('#btn-clear').addEventListener('click', function () {
+      W4.resetLog(logLs);
+      localStorage.removeItem(STORE_KEY);
+      W4.log(logLs, 'removeItem("' + STORE_KEY + '")，本地数据已清空', 'warn', 'sync');
+      renderMembers([], false);
+    });
+
+    memberInput.addEventListener('keydown', function (e) {
+      if (e.key === 'Enter') $('#btn-add').click();
+    });
+
+    /* 首屏 */
+    (function initMembers() {
+      const list = loadMembers();
+      renderMembers(list, false);
+      W4.log(logLs, '页面加载完成，从 localStorage 恢复了 ' + list.length + ' 条记录', 'info', 'sync');
+    })();
+  </script>
+</body>
+</html>

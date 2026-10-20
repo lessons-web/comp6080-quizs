@@ -1,0 +1,774 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>04 · Promise 的状态与编排 · COMP6080 Week 4</title>
+  <meta name="description" content="Promise 的四种状态、then / catch / finally、链式与分支、错误处理，以及 all / allSettled / race / any 的差别。" />
+  <link rel="icon" href="data:," />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600&family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="assets/demo.css" />
+</head>
+<body data-page="04">
+
+  <header class="topbar">
+    <nav class="crumb" data-topbar></nav>
+    <span class="topbar-spacer"></span>
+    <span class="topbar-badge" data-topbar-badge></span>
+  </header>
+
+  <main class="doc">
+    <!-- ============================================= 左栏：讲解 ========= -->
+    <article class="doc-main">
+
+      <div class="page-head reveal">
+        <div class="kicker">知识点 04 · 对应课件 ajax-fetch 第 4–11 页</div>
+        <h1 class="page-title">Promise 是一个<span class="mark">未来值的代理</span></h1>
+        <p class="lede">
+          它代表一个「现在还没有、将来才会有」的值。关于 Promise 需要记住的事情很多，
+          但<strong>有且只有一件是必须记住的</strong>：<mark>状态一旦定型就不可再变</mark>。
+          这一节先把状态说透，再说链式和四个编排工具。
+        </p>
+        <div class="tag-row">
+          <span class="tag hot">必考</span>
+          <span class="tag">pending / fulfilled / rejected</span>
+          <span class="tag">then / catch / finally</span>
+          <span class="tag">all / allSettled / race / any</span>
+          <span class="tag">unhandledrejection</span>
+        </div>
+      </div>
+
+      <!-- 1.1 为什么需要 -->
+      <section class="sec reveal" style="--d:60ms">
+        <div class="sec-head">
+          <span class="sec-num">1.1</span>
+          <h2>为什么需要 Promise<span class="en">from callbacks to promises</span></h2>
+        </div>
+
+        <p>
+          上一节 <code class="inline">fetch</code> 已经透露了答案：网络请求的结果<strong>不是立刻就有</strong>的。
+          如果用回调来接收这个「未来才出现的结果」，那么每一步后续操作都只能塞进上一步的回调里。
+        </p>
+
+        <div class="versus">
+          <div class="vs bad">
+            <div class="vs-t">✗ 回调嵌套：层层往里缩，错误处理散落各处</div>
+            <pre><code data-lang="js">// 拿到用户 → 再拿订单 → 再拿订单详情，一层套一层
+getUser(1, function (err, user) {
+  if (err) return handle(err);
+  getOrders(user.id, function (err, orders) {
+    if (err) return handle(err);
+    getDetail(orders[0].id, function (err, detail) {
+      if (err) return handle(err);
+      render(detail);
+    });
+  });
+});</code></pre>
+          </div>
+          <div class="vs good">
+            <div class="vs-t">✓ Promise 链：未来值先传递，处理稍后再挂上去</div>
+            <pre><code data-lang="js">getUser(1)
+  .then(user =&gt; getOrders(user.id))
+  .then(orders =&gt; getDetail(orders[0].id))
+  .then(render)
+  .catch(handle);   // 任意一步出错都汇到这里</code></pre>
+          </div>
+        </div>
+
+        <div class="note rule">
+          <span class="ico">一句话</span>
+          <div>
+            <strong>Promise 把「未来值」变成一个可以先传递、后挂载处理器的对象。</strong>
+            于是链式、分支、统一的错误处理才成为可能 —— 回调做不到的事情，本质上是因为
+            <em>那个值在回调写法里根本没有名字，只能待在括号里</em>。
+          </div>
+        </div>
+      </section>
+
+      <!-- 1.2 四种状态（本页最重） -->
+      <section class="sec reveal" style="--d:120ms">
+        <div class="sec-head">
+          <span class="sec-num">1.2</span>
+          <h2>★ 四种状态，一个不可逆的性质<span class="en">the state machine</span></h2>
+        </div>
+
+        <p>
+          一个 Promise 从出生到结束，只可能在下面这四种状态里。前三个是互斥的「取值」，
+          第四个 <code class="inline">settled</code> 是后两者的统称。
+        </p>
+
+        <div class="cards">
+          <div class="card">
+            <div class="card-t">state 01</div>
+            <h3>pending · 尚未定型</h3>
+            <p>操作还在进行中，结果未知。这是 Promise 刚创建时的唯一状态。</p>
+          </div>
+          <div class="card cool">
+            <div class="card-t">state 02</div>
+            <h3>fulfilled · 成功</h3>
+            <p>操作成功完成，并带有一个「兑现值」。之后所有 <code class="inline">.then</code> 都会拿到这个值。</p>
+          </div>
+          <div class="card cool">
+            <div class="card-t">state 03</div>
+            <h3>rejected · 失败</h3>
+            <p>操作失败结束，并带有一个「拒绝原因」（通常是一个 Error）。</p>
+          </div>
+          <div class="card">
+            <div class="card-t">state 04 · 统称</div>
+            <h3>settled · 已定型</h3>
+            <p>fulfilled 与 rejected 的合称，意思是「结果已经确定，不再变了」。</p>
+          </div>
+        </div>
+
+        <div class="note trap">
+          <span class="ico">不可逆</span>
+          <div>
+            <strong>状态只能从 pending 单向变到 fulfilled 或 rejected，变过去之后就不能再变。</strong>
+            这是「链式能够成立」的前提：如果状态还能反复横跳，后续的 <code class="inline">.then</code>
+            就永远无法确定该走成功分支还是失败分支。也正因为这样，<strong>重复调用
+            <code class="inline">resolve</code> / <code class="inline">reject</code> 会被忽略</strong>——
+            只有第一次调用有效，后面的调用连一个错误都不会报，只是安静地失效。
+          </div>
+        </div>
+
+        <div class="note rule">
+          <span class="ico">为什么重要</span>
+          <div>
+            右侧演示台可以亲手验证这件事：先让它成功定型，再连点几次
+            <code class="inline">resolve</code>，你会看到状态纹丝不动。
+          </div>
+        </div>
+      </section>
+
+      <!-- 1.3 构造器与三个方法 -->
+      <section class="sec reveal" style="--d:180ms">
+        <div class="sec-head">
+          <span class="sec-num">1.3</span>
+          <h2>构造器与三个方法<span class="en">then / catch / finally</span></h2>
+        </div>
+
+        <p>
+          <code class="inline">new Promise(executor)</code> 里的函数会<strong>立刻同步执行</strong>；
+          它拿到两个参数，调用 <code class="inline">resolve(v)</code> 表示兑现，调用
+          <code class="inline">reject(e)</code> 表示拒绝。
+        </p>
+
+        <div class="code">
+          <div class="code-head">
+            <span class="code-lang">javascript</span>
+            <span class="code-file">demo/promise-basics.js</span>
+          </div>
+          <pre><code data-lang="js">// ① 构造器：里面的代码立刻同步执行
+const p = new Promise(function (resolve, reject) {
+  console.log('构造器里的代码立刻执行，这时状态是 pending');
+  setTimeout(function () {
+    resolve('来自服务器的数据');   // 第一次调用生效 → pending 变 fulfilled
+  }, 1000);
+});
+
+// ② then / catch / finally 是「先挂上去，等定型之后再被调用」
+p.then(function (value) {
+  console.log('then 成功分支：', value);
+  return value.length;            // 返回值会被自动包成一个新的 Promise
+}).catch(function (err) {
+  console.log('catch 失败分支：', err.message);
+}).finally(function () {
+  console.log('finally：无论成功还是失败都会跑，用来做收尾');
+});
+
+// 成功路径：then  → finally
+// 失败路径：      catch → finally   ← finally 在两条路径上都会执行</code></pre>
+        </div>
+
+        <ul class="clean">
+          <li><strong><code class="inline">.then(onFulfilled, onRejected)</code></strong>：处理成功，<strong>并且返回一个新的 Promise</strong>，所以能一路链下去。第二个参数一般不用，交给 <code class="inline">.catch</code>。</li>
+          <li><strong><code class="inline">.catch(fn)</code></strong>：捕获链上最近一次的拒绝，本质是 <code class="inline">.then(null, fn)</code> 的语法糖。</li>
+          <li><strong><code class="inline">.finally(fn)</code></strong>：无论成功失败都执行，用来关 loading、断开连接；<strong>它不接收值，也通常不改结果</strong>。</li>
+        </ul>
+
+        <div class="note tip">
+          <span class="ico">顺序</span>
+          <div>
+            记住这三个方法在两条路径上的位置：<strong>成功走 then → finally，失败走 catch → finally</strong>。
+            <code class="inline">finally</code> 总是最后一道，所以清理逻辑放它里面最稳。
+          </div>
+        </div>
+      </section>
+
+      <!-- 1.4 链式与分支 -->
+      <section class="sec reveal" style="--d:240ms">
+        <div class="sec-head">
+          <span class="sec-num">1.4</span>
+          <h2>链式与分支<span class="en">chaining &amp; branching</span></h2>
+        </div>
+
+        <p>
+          每个 <code class="inline">.then</code> 都会返回一个<strong>新的 Promise</strong>（课件里的比喻是像俄罗斯套娃一样层层包裹），
+          所以可以一直往下接。注意：包裹顺序是嵌套的，但<strong>执行顺序是「最内层先跑」的栈式顺序</strong>。
+        </p>
+
+        <div class="code">
+          <div class="code-head">
+            <span class="code-lang">javascript</span>
+            <span class="code-file">demo/promise-chain.js</span>
+          </div>
+          <pre><code data-lang="js">// 链式：后一个 then 收到的是前一个 then 的返回值
+Promise.resolve(1)
+  .then(function (v) {
+    console.log('第 1 层收到', v);   // 1
+    return v + 1;                    // 返回普通值，会被自动包成 Promise
+  })
+  .then(function (v) {
+    console.log('第 2 层收到', v);   // 2
+    return v * 10;
+  })
+  .then(function (v) {
+    console.log('第 3 层收到', v);   // 20
+  });
+
+// 分支：同一个 Promise 上挂多个 then，它们都会收到同一个值
+const shared = Promise.resolve('同一个值');
+shared.then(v =&gt; console.log('分支 A', v));
+shared.then(v =&gt; console.log('分支 B', v));
+shared.then(v =&gt; console.log('分支 C', v));
+// 父 Promise 定型后，三个分支按注册顺序被依次调用
+
+// ✗ 常见错误：忘了 return，下一个 then 拿到的是 undefined
+Promise.resolve(1)
+  .then(function (v) { v + 1; })            // 忘了 return
+  .then(function (v) { console.log(v); });  // 打印 undefined</code></pre>
+        </div>
+
+        <div class="note warn">
+          <span class="ico">常见坑</span>
+          <div>
+            <code class="inline">.then</code> 里忘了 <code class="inline">return</code>，
+            下一个 <code class="inline">.then</code> 收到的就是 <code class="inline">undefined</code>，
+            链看起来没断，但值是空的。<strong>想往下传东西，就一定写 return。</strong>
+          </div>
+        </div>
+      </section>
+
+      <!-- 1.5 错误处理 -->
+      <section class="sec reveal" style="--d:300ms">
+        <div class="sec-head">
+          <span class="sec-num">1.5</span>
+          <h2>错误处理与全局兜底<span class="en">errors &amp; unhandledrejection</span></h2>
+        </div>
+
+        <p>
+          Promise 在错误处理上有个很省心的约定：<strong>里面抛出的任何异常都会自动变成 rejection</strong>，
+          你不需要手动 reject。显式拒绝才需要自己调 <code class="inline">reject()</code>。
+        </p>
+
+        <div class="code">
+          <div class="code-head">
+            <span class="code-lang">javascript</span>
+            <span class="code-file">demo/promise-errors.js</span>
+          </div>
+          <pre><code data-lang="js">// ① 抛出的异常自动变成 rejection
+new Promise(function (resolve, reject) {
+  throw new Error('同步抛出的错误');
+}).catch(function (err) {
+  console.log('被 catch 接住：', err.message);
+});
+
+// ② catch 里可以继续抛，把错误交给下一个 catch
+Promise.reject(new Error('第一次失败'))
+  .catch(function (err) {
+    console.log('第 1 个 catch 处理：', err.message);
+    throw new Error('换了个错误继续抛');
+  })
+  .catch(function (err) {
+    console.log('第 2 个 catch 兜底：', err.message);
+  });
+
+// ③ catch 之后还能继续 then：失败后走备选方案再往下走
+fetchData()
+  .catch(function () { return '默认数据'; })   // 失败就退回默认值
+  .then(function (data) {
+    console.log('真数据也好、兜底数据也好，流程都能继续', data);
+  });
+
+// ④ catch 接不住「异步回调里稍后抛出」的错误
+//    课件原话：Promises always asynchronous，当前函数上下文总是先结束
+new Promise(function (resolve) {
+  setTimeout(function () {
+    throw new Error('这个错误 catch 抓不到');
+  }, 0);
+}).catch(function (err) {
+  console.log('这一行永远不会执行');
+});
+
+// ⑤ 所以要在全局挂一个兜底，专门收「没被任何 catch 处理」的拒绝
+window.addEventListener('unhandledrejection', function (event) {
+  console.warn('有 Promise 被拒绝且没人处理：', event.reason);
+  event.preventDefault();   // 阻止浏览器默认的控制台报错
+});</code></pre>
+        </div>
+
+        <div class="note trap">
+          <span class="ico">★ 最重要的一条</span>
+          <div>
+            第 ④ 点的时机问题是这一节最容易忽略的地方：<code class="inline">.catch</code> 只能捕获
+            <strong>同步执行阶段</strong>抛出的异常。如果异常是在一个稍后才运行的异步回调里抛出的，
+            那时 Promise 的执行上下文早就结束了，<code class="inline">.catch</code> 无从下手。
+            所以真实项目里几乎一定会挂一个 <code class="inline">unhandledrejection</code> 监听，
+            它才是「漏网的拒绝」的最后一层防线。
+          </div>
+        </div>
+      </section>
+
+      <!-- 1.6 编排六件套 -->
+      <section class="sec reveal" style="--d:360ms">
+        <div class="sec-head">
+          <span class="sec-num">1.6</span>
+          <h2>Promise 编排六件套<span class="en">combinators</span></h2>
+        </div>
+
+        <p>单个 Promise 只能表达一件事，多个 Promise 一起用时靠这六个静态方法决定「怎么汇总」。</p>
+
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>方法</th>
+                <th>一句话定义</th>
+                <th>什么时候用</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td class="mono">Promise.all(list)</td>
+                <td>全部成功才成功，<strong>有一个失败就立刻整体失败</strong></td>
+                <td>这些数据我全都要，缺一个就不渲染</td>
+              </tr>
+              <tr>
+                <td class="mono">Promise.allSettled(list)</td>
+                <td>等<strong>全部有结果</strong>（不管成功失败）才成功，返回每项 <code class="inline">{status, value|reason}</code></td>
+                <td>失败几个也没关系，能渲染多少就渲染多少</td>
+              </tr>
+              <tr>
+                <td class="mono">Promise.race(list)</td>
+                <td><strong>最先定型</strong>的那一个决定结果，成功失败都算</td>
+                <td>给请求加超时：拿它和一段 setTimeout 比快</td>
+              </tr>
+              <tr>
+                <td class="mono">Promise.any(list)</td>
+                <td><strong>最先成功</strong>的那一个决定结果，全部失败才失败（抛 <code class="inline">AggregateError</code>）</td>
+                <td>多个镜像源，谁先回来用谁</td>
+              </tr>
+              <tr>
+                <td class="mono">Promise.resolve(v)</td>
+                <td>立刻得到一个<strong>已兑现</strong>的 Promise</td>
+                <td>把普通值包成 Promise，统一接口</td>
+              </tr>
+              <tr>
+                <td class="mono">Promise.reject(e)</td>
+                <td>立刻得到一个<strong>已拒绝</strong>的 Promise</td>
+                <td>造一个失败态，方便写测试或做分支</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="note tip">
+          <span class="ico">一句话</span>
+          <div>
+            <code class="inline">all</code> 与 <code class="inline">allSettled</code> 的差别，
+            就是「<strong>一个都不能少</strong>」和「<strong>有几个算几个</strong>」的差别。
+            右边演示台点这两个按钮各跑一次，结论里的「成功 / 失败」会立刻分出胜负。
+          </div>
+        </div>
+      </section>
+
+      <!-- 1.7 thenable -->
+      <section class="sec reveal" style="--d:420ms">
+        <div class="sec-head">
+          <span class="sec-num">1.7</span>
+          <h2>了解即可：thenable<span class="en">promise-like</span></h2>
+        </div>
+
+        <p>
+          任何带 <code class="inline">then()</code> 方法的对象都算 <strong>thenable</strong>（也叫 promise-like），
+          可以直接参与链式调用。<code class="inline">.then()</code> 与 <code class="inline">await</code>
+          在处理返回值时，都会把这种对象当成 Promise 来看待。
+        </p>
+
+        <div class="code">
+          <div class="code-head">
+            <span class="code-lang">javascript</span>
+            <span class="code-file">demo/thenable.js</span>
+          </div>
+          <pre><code data-lang="js">// 手写一个 thenable：只要有一个 then 方法，就能「混进」链式调用
+const thenable = {
+  then: function (onFulfilled) {
+    setTimeout(function () { onFulfilled('我是 thenable 给的值'); }, 200);
+  }
+};
+
+// 把它当成返回值交给链，后面的 then 照常拿到值
+Promise.resolve()
+  .then(function () { return thenable; })
+  .then(function (value) {
+    console.log('收到：', value);   // "我是 thenable 给的值"
+  });</code></pre>
+        </div>
+
+        <div class="note tip">
+          <span class="ico">程度</span>
+          <div>
+            考官一般只要求知道这个名字和「有 then 就算数」这一条，不必手写实现。
+          </div>
+        </div>
+      </section>
+
+      <!-- 小结 -->
+      <section class="sec reveal" style="--d:480ms">
+        <div class="sec-head">
+          <span class="sec-num">1.8</span>
+          <h2>这一节要带走的三句话<span class="en">takeaways</span></h2>
+        </div>
+
+        <div class="cards">
+          <div class="card">
+            <div class="card-t">01</div>
+            <h3>pending 只能变成 fulfilled 或 rejected，且不可逆</h3>
+            <p>定型之后再调 resolve / reject 会被静默忽略。这是链式能成立的前提。</p>
+          </div>
+          <div class="card">
+            <div class="card-t">02</div>
+            <h3>每个 then 都返回一个新的 Promise</h3>
+            <p>所以能一路链下去；同一个 Promise 挂多个 then 就是分支，按注册顺序执行。</p>
+          </div>
+          <div class="card">
+            <div class="card-t">03</div>
+            <h3>all 是「一个都不能少」，allSettled 是「有几个算几个」</h3>
+            <p>再加上 race 抢最先定型、any 抢最先成功，四个工具决定多任务怎么汇总。</p>
+          </div>
+        </div>
+      </section>
+    </article>
+
+    <!-- ============================================= 右栏：演示台 ======= -->
+    <aside class="doc-side">
+      <div class="stick">
+
+        <!-- 演示 A -->
+        <section class="demo reveal" style="--d:140ms">
+          <div class="demo-head">
+            <h3>演示 A · Promise 状态机</h3>
+            <span class="pill">手动控制</span>
+          </div>
+          <div class="demo-body">
+            <p class="demo-sub">
+              点 <strong>resolve</strong> 或 <strong>reject</strong> 让这个 Promise 定型；
+              定型之后再点，状态<strong>不会变</strong>。
+            </p>
+
+            <div class="statebox">
+              <div class="state on pending" id="st-pending"><b>pending</b>尚未定型</div>
+              <div class="state" id="st-fulfilled"><b>fulfilled</b>成功</div>
+              <div class="state" id="st-rejected"><b>rejected</b>失败</div>
+            </div>
+
+            <div class="row">
+              <button class="btn sm" id="btn-new" type="button">new Promise()</button>
+              <button class="btn primary sm" id="btn-resolve" type="button">resolve(value)</button>
+              <button class="btn danger sm" id="btn-reject" type="button">reject(error)</button>
+            </div>
+            <div class="row">
+              <button class="btn ghost sm" id="btn-resolve-again" type="button">再点一次 resolve（看状态不可逆）</button>
+            </div>
+
+            <div class="status-line" id="status-state"></div>
+
+            <div class="field">
+              <label>链式 vs 分支</label>
+              <div class="row">
+                <button class="btn sm" id="btn-chain" type="button">演示链式（then → then → then）</button>
+                <button class="btn ghost sm" id="btn-branch" type="button">演示分支（同一个 Promise 挂三个 then）</button>
+              </div>
+            </div>
+
+            <div class="log" id="log-state"></div>
+          </div>
+        </section>
+
+        <!-- 演示 B -->
+        <section class="demo reveal" style="--d:220ms">
+          <div class="demo-head">
+            <h3>演示 B · 四种编排工具的差别</h3>
+            <span class="pill">计时对比</span>
+          </div>
+          <div class="demo-body">
+            <p class="demo-sub">
+              为了结果稳定可复现，这里用 <code class="inline">setTimeout</code> <strong>模拟</strong>三个网络请求；
+              真实项目里把 <code class="inline">fakeRequest</code> 换成 <code class="inline">fetch</code> 即可。
+              A 在 400ms 成功，B 在 700ms 失败，C 在 1000ms 成功。
+            </p>
+
+            <div class="row">
+              <button class="btn primary sm" id="btn-all" type="button">Promise.all</button>
+              <button class="btn sm" id="btn-allsettled" type="button">Promise.allSettled</button>
+              <button class="btn sm" id="btn-race" type="button">Promise.race</button>
+              <button class="btn sm" id="btn-any" type="button">Promise.any</button>
+            </div>
+
+            <div class="stats">
+              <div class="stat">
+                <div class="k">方法</div>
+                <div class="v" id="stat-method">—</div>
+              </div>
+              <div class="stat">
+                <div class="k">耗时 ms</div>
+                <div class="v" id="stat-time">—</div>
+              </div>
+              <div class="stat">
+                <div class="k">结论</div>
+                <div class="v" id="stat-verdict">—</div>
+              </div>
+            </div>
+
+            <div class="out pre idle" id="orch-out">点上面任意按钮开始。</div>
+
+            <div class="status-line" id="orch-chips">
+              <span class="chip" id="chip-a">A 等待中</span>
+              <span class="chip" id="chip-b">B 等待中</span>
+              <span class="chip" id="chip-c">C 等待中</span>
+            </div>
+
+            <div class="log" id="log-orchestrate"></div>
+          </div>
+        </section>
+
+      </div>
+    </aside>
+  </main>
+
+  <nav class="pager" data-pager></nav>
+
+  <footer class="pagefoot">
+    <span>COMP6080 26T3 · Week 4 · 知识点 04</span>
+    <span class="sig">状态一旦定型就不可再变，这是链式能成立的前提</span>
+  </footer>
+
+  <script src="assets/demo.js"></script>
+  <script>
+    /* ====================================================================
+       本页教学代码：只用到原生 Promise，没有任何外部库
+       ==================================================================== */
+    const $ = W4.$;
+
+    /* ------------------------------------------ 全局兜底（对应 1.5 第 ⑤ 点） */
+    window.addEventListener('unhandledrejection', function (event) {
+      W4.log($('#log-orchestrate'), '全局兜底 unhandledrejection 捕获到：' + event.reason, 'err', 'UNHANDLED');
+      event.preventDefault();
+    });
+
+    /* ==================================================== 演示 A：状态机 */
+    const stateLog = $('#log-state');
+    const stateStatus = $('#status-state');
+    const stateEls = {
+      pending: $('#st-pending'),
+      fulfilled: $('#st-fulfilled'),
+      rejected: $('#st-rejected')
+    };
+
+    let stateName = 'pending';
+    let resolveRef = null;
+    let rejectRef = null;
+
+    /* 把三个状态方块的高亮同步到当前状态 */
+    function paintState() {
+      Object.keys(stateEls).forEach(function (key) {
+        stateEls[key].className = 'state' + (key === stateName ? ' on ' + key : '');
+      });
+      const settled = stateName !== 'pending';
+      stateStatus.innerHTML =
+        '<span class="chip">当前状态：' + stateName + '</span>' +
+        '<span class="chip ' + (settled ? 'ok' : '') + '">是否已定型 settled：' + (settled ? '是' : '否') + '</span>';
+    }
+
+    /* 新建一个 Promise：把 resolve / reject 存到外部，供按钮调用 */
+    function createPromise() {
+      stateName = 'pending';
+      let res, rej;
+      const p = new Promise(function (resolve, reject) { res = resolve; rej = reject; });
+      resolveRef = res;
+      rejectRef = rej;
+      paintState();
+
+      p.then(function (value) {
+        W4.log(stateLog, 'then 被调用，收到兑现值：' + W4.pretty(value), 'ok', 'THEN');
+      }).catch(function (err) {
+        W4.log(stateLog, 'catch 被调用，收到拒绝原因：' + err.message, 'err', 'CATCH');
+      }).finally(function () {
+        W4.log(stateLog, 'finally 被调用（两条路径都会跑，用来清理资源）', 'warn', 'FINALLY');
+      });
+    }
+
+    /* 统一定型入口：定型过就不再生效 */
+    function settleWith(kind, payload) {
+      if (stateName !== 'pending') {
+        W4.log(stateLog, '这次 ' + kind + ' 被忽略了，因为状态已经定型（' + stateName + '），不会再变', 'warn', 'IGNORE');
+        return;
+      }
+      if (kind === 'resolve') {
+        stateName = 'fulfilled';
+        paintState();
+        W4.log(stateLog, '状态从 pending → fulfilled，且不可再变', 'ok', 'RESOLVE');
+        resolveRef(payload);
+      } else {
+        stateName = 'rejected';
+        paintState();
+        W4.log(stateLog, '状态从 pending → rejected，且不可再变', 'err', 'REJECT');
+        rejectRef(new Error(payload));
+      }
+    }
+
+    $('#btn-new').addEventListener('click', function () {
+      W4.resetLog(stateLog);
+      W4.log(stateLog, 'new Promise(...) 创建一个新 Promise，状态重置为 pending', 'info', 'NEW');
+      createPromise();
+    });
+
+    $('#btn-resolve').addEventListener('click', function () {
+      settleWith('resolve', '已兑现的值');
+    });
+
+    $('#btn-reject').addEventListener('click', function () {
+      settleWith('reject', '接口出错了');
+    });
+
+    $('#btn-resolve-again').addEventListener('click', function () {
+      W4.log(stateLog, '—— 再点一次 resolve，看状态还能不能变 ——', 'info', 'RETRY');
+      settleWith('resolve', '第二次 resolve 的值（不该生效）');
+    });
+
+    /* 链式：三个 then 首尾相接，值一层层往下传 */
+    $('#btn-chain').addEventListener('click', function () {
+      W4.log(stateLog, '—— 链式：then → then → then，值逐层传递 ——', 'info', 'CHAIN');
+      Promise.resolve(0)
+        .then(function (v) {
+          W4.log(stateLog, '第 1 个 then 收到 ' + v + '，返回 ' + (v + 1), 'ok', 'THEN');
+          return v + 1;
+        })
+        .then(function (v) {
+          W4.log(stateLog, '第 2 个 then 收到 ' + v + '，返回 ' + (v + 1), 'ok', 'THEN');
+          return v + 1;
+        })
+        .then(function (v) {
+          W4.log(stateLog, '第 3 个 then 收到 ' + v, 'ok', 'THEN');
+        });
+    });
+
+    /* 分支：同一个 Promise 上挂三个 then，按注册顺序依次被调用 */
+    $('#btn-branch').addEventListener('click', function () {
+      W4.log(stateLog, '—— 分支：同一个 Promise 挂三个 then，各走各的 ——', 'info', 'BRANCH');
+      const shared = Promise.resolve('同一个值');
+      shared.then(function (v) { W4.log(stateLog, '分支 A 收到 ' + v, 'ok', 'THEN'); });
+      shared.then(function (v) { W4.log(stateLog, '分支 B 收到 ' + v, 'ok', 'THEN'); });
+      shared.then(function (v) { W4.log(stateLog, '分支 C 收到 ' + v, 'ok', 'THEN'); });
+    });
+
+    /* ================================================ 演示 B：编排工具 */
+    const orchLog = $('#log-orchestrate');
+    const orchOut = $('#orch-out');
+    const chipEls = {
+      A: $('#chip-a'),
+      B: $('#chip-b'),
+      C: $('#chip-c')
+    };
+
+    /* 用 setTimeout 模拟一个网络请求：ms 毫秒后成功或失败 */
+    function fakeRequest(name, ms, shouldSucceed) {
+      const started = performance.now();
+      return new Promise(function (resolve, reject) {
+        setTimeout(function () {
+          const cost = Math.round(performance.now() - started);
+          if (shouldSucceed) {
+            setChip(name, true, cost);
+            W4.log(orchLog, name + ' 请求成功，耗时 ' + cost + 'ms，返回 "' + name + ' 的数据"', 'ok', 'RES');
+            resolve(name + ' 的数据');
+          } else {
+            setChip(name, false, cost);
+            W4.log(orchLog, name + ' 请求失败，耗时 ' + cost + 'ms，抛出 Error("' + name + ' 接口 500")', 'err', 'RES');
+            reject(new Error(name + ' 接口 500'));
+          }
+        }, ms);
+      });
+    }
+
+    function setChip(key, ok, cost) {
+      chipEls[key].className = 'chip ' + (ok ? 'ok' : 'err');
+      chipEls[key].textContent = key + ' ' + (ok ? '✓' : '✗') + ' ' + cost + 'ms';
+    }
+
+    function resetChips() {
+      ['A', 'B', 'C'].forEach(function (key) {
+        chipEls[key].className = 'chip';
+        chipEls[key].textContent = key + ' 等待中';
+      });
+    }
+
+    function setStats(method, time, verdict) {
+      $('#stat-method').textContent = method;
+      $('#stat-time').textContent = time;
+      $('#stat-verdict').textContent = verdict;
+    }
+
+    function runOrchestration(kind) {
+      resetChips();
+      W4.resetLog(orchLog);
+      setStats(kind, '—', '进行中…');
+      orchOut.className = 'out pre idle';
+      orchOut.textContent = '执行中，等一下…';
+
+      const start = performance.now();
+      /* 每次点击都重新发三个请求：A 400ms 成功、B 700ms 失败、C 1000ms 成功 */
+      const list = [
+        fakeRequest('A', 400, true),
+        fakeRequest('B', 700, false),
+        fakeRequest('C', 1000, true)
+      ];
+      W4.log(orchLog, '开始 ' + kind + '：三个请求同时发出（setTimeout 模拟）', 'info', 'START');
+
+      let runner;
+      if (kind === 'Promise.all') runner = Promise.all(list);
+      else if (kind === 'Promise.allSettled') runner = Promise.allSettled(list);
+      else if (kind === 'Promise.race') runner = Promise.race(list);
+      else runner = Promise.any(list);
+
+      runner.then(function (value) {
+        const cost = Math.round(performance.now() - start);
+        setStats(kind, cost, '成功');
+        W4.log(orchLog, kind + ' 完成，总耗时 ' + cost + 'ms', 'ok', 'DONE');
+        orchOut.className = 'out pre';
+        orchOut.textContent = W4.pretty(value);
+      }).catch(function (err) {
+        const cost = Math.round(performance.now() - start);
+        setStats(kind, cost, '失败');
+        W4.log(orchLog, kind + ' 失败结束，总耗时 ' + cost + 'ms：' + err.message, 'err', 'DONE');
+        orchOut.className = 'out pre err';
+        orchOut.textContent = err.name + ': ' + err.message;
+      });
+    }
+
+    $('#btn-all').addEventListener('click', function () { runOrchestration('Promise.all'); });
+    $('#btn-allsettled').addEventListener('click', function () { runOrchestration('Promise.allSettled'); });
+    $('#btn-race').addEventListener('click', function () { runOrchestration('Promise.race'); });
+    $('#btn-any').addEventListener('click', function () { runOrchestration('Promise.any'); });
+
+    /* ------------------------------------------------------------ 首屏 */
+    (function init() {
+      W4.log(stateLog, '页面加载完成，先创建一个处于 pending 的 Promise', 'info', 'INIT');
+      createPromise();
+      resetChips();
+      W4.log(orchLog, '点右边的按钮，观察四个编排工具分别什么时候结束、拿到什么', 'info', 'INIT');
+    })();
+  </script>
+</body>
+</html>
