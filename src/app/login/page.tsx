@@ -69,13 +69,11 @@ export default function LoginPage() {
           <div className="lg:col-span-3 flex items-center justify-center">
             <div className="w-full max-w-md">
               <div className="mb-8 text-center">
-                <div className="mb-4 inline-flex h-16 w-16 items-center justify-center rounded-2xl bg-[var(--brand-600)] shadow-[0_16px_32px_-18px_rgba(47,98,88,0.55)] ring-1 ring-[rgba(255,255,255,0.55)]">
-                  <img
-                    src="/favicon.svg"
-                    alt="COMP6080 Quiz Hub"
-                    className="h-10 w-10"
-                  />
-                </div>
+                <img
+                  src="/favicon.svg"
+                  alt="COMP6080 Quiz Hub"
+                  className="mb-4 inline-block h-16 w-16"
+                />
                 <h1 className="text-2xl font-bold text-[#1d2129]">COMP6080 Quiz Hub</h1>
                 <p className="mt-2 text-sm text-[#6a6257]">登录账号以继续使用系统</p>
               </div>
