@@ -6,8 +6,18 @@ const SECRET_KEY = process.env.AUTH_SECRET || 'default-dev-secret-change-in-prod
 const encoder = new TextEncoder()
 const secretKey = encoder.encode(SECRET_KEY)
 
+function isRestrictedCoursePath(pathname: string) {
+  if (!pathname.startsWith('/courses')) return false
+  const parts = pathname.split('/').filter(Boolean)
+  const week = parts[1]
+  if (!week) return false
+  return !['week-1', 'week-2', 'week-3'].includes(week)
+}
+
 function isPublicPath(pathname: string): boolean {
-  if (pathname === '/' || pathname.startsWith('/knowledge')) return true
+  if (pathname === '/') return true
+  if (pathname.startsWith('/knowledge')) return true
+  if (pathname.startsWith('/courses')) return !isRestrictedCoursePath(pathname)
   if (pathname.startsWith('/api/auth/')) return true
   if (pathname === '/api/setup') return true
   if (pathname === '/login') return true
@@ -45,7 +55,7 @@ export async function middleware(request: NextRequest) {
       const hasRedirect = request.nextUrl.searchParams.has('redirect')
       if (!hasRedirect) {
         const url = request.nextUrl.clone()
-        url.pathname = '/knowledge'
+        url.pathname = '/courses'
         return NextResponse.redirect(url)
       }
     }
@@ -80,14 +90,20 @@ export async function middleware(request: NextRequest) {
     const verified = await jwtVerify(token, secretKey)
     const payload = verified.payload as { userId: string; email: string; role: string }
 
+    if (payload.role === 'guest' && isRestrictedCoursePath(pathname)) {
+      const forbiddenUrl = new URL('/courses', request.url)
+      forbiddenUrl.searchParams.set('error', 'course-locked')
+      return NextResponse.redirect(forbiddenUrl)
+    }
+
     if (payload.role === 'guest' && isGuestRestricted(pathname)) {
-      const forbiddenUrl = new URL('/knowledge', request.url)
+      const forbiddenUrl = new URL('/courses', request.url)
       forbiddenUrl.searchParams.set('error', 'forbidden')
       return NextResponse.redirect(forbiddenUrl)
     }
 
     if (pathname.startsWith('/admin') && payload.role !== 'admin') {
-      const forbiddenUrl = new URL('/knowledge', request.url)
+      const forbiddenUrl = new URL('/courses', request.url)
       forbiddenUrl.searchParams.set('error', 'forbidden')
       return NextResponse.redirect(forbiddenUrl)
     }

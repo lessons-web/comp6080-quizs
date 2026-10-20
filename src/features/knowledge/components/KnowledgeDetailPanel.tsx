@@ -73,12 +73,12 @@ export function KnowledgeDetailPanel({
 
   if (loading) {
     return (
-      <div className="flex h-full w-full flex-col overflow-hidden bg-white">
-        <div className="sticky top-0 z-10 border-b border-slate-100 bg-white/90 px-8 py-3 backdrop-blur">
-          <div className="h-4 w-40 animate-pulse rounded bg-slate-200" />
+      <div className="flex h-full w-full flex-col overflow-hidden bg-[var(--paper-surface)]">
+        <div className="sticky top-0 z-10 border-b border-[var(--paper-border)] bg-[color:rgba(255,253,250,0.9)] px-8 py-3 backdrop-blur">
+          <div className="h-4 w-40 animate-pulse rounded bg-[var(--paper-chip-strong)]" />
         </div>
         <div className="flex-1 px-8 pt-6">
-          <div className="h-7 w-64 animate-pulse rounded bg-slate-200" />
+          <div className="h-7 w-64 animate-pulse rounded bg-[var(--paper-chip-strong)]" />
           <ContentLoading rows={12} className="mt-6" />
         </div>
       </div>
@@ -87,8 +87,8 @@ export function KnowledgeDetailPanel({
 
   if (error || !meta || !Component) {
     return (
-      <div className="flex h-full w-full flex-col overflow-hidden bg-white">
-        <div className="sticky top-0 z-10 flex items-center gap-2 border-b border-slate-100 bg-white/90 px-8 py-3 backdrop-blur">
+      <div className="flex h-full w-full flex-col overflow-hidden bg-[var(--paper-surface)]">
+        <div className="sticky top-0 z-10 flex items-center gap-2 border-b border-[var(--paper-border)] bg-[color:rgba(255,253,250,0.9)] px-8 py-3 backdrop-blur">
           <Link
           href="/knowledge"
           className="inline-flex items-center gap-1 text-sm text-slate-500 hover:text-slate-800"
@@ -123,8 +123,8 @@ export function KnowledgeDetailPanel({
 }
 
 return (
-  <div className="flex h-full w-full flex-col overflow-hidden bg-white">
-    <div className="sticky top-0 z-10 flex items-center gap-2 border-b border-slate-100 bg-white/90 px-8 py-3 backdrop-blur">
+  <div className="flex h-full w-full flex-col overflow-hidden bg-[var(--paper-surface)]">
+    <div className="sticky top-0 z-10 flex items-center gap-2 border-b border-[var(--paper-border)] bg-[color:rgba(255,253,250,0.9)] px-8 py-3 backdrop-blur">
       <Link
         href="/knowledge"
           className="inline-flex items-center gap-1 text-sm text-slate-500 hover:text-slate-800"
@@ -164,13 +164,13 @@ return (
             </div>
           </article>
           <div className="px-8 pb-8">
-            <div className="flex items-center justify-between rounded-lg border border-indigo-100 bg-indigo-50 p-4">
-              <div className="text-sm text-indigo-800">
+            <div className="flex items-center justify-between rounded-lg border border-[#d9dfe9] bg-[#eef3fb] p-4">
+              <div className="text-sm text-[var(--brand-800)]">
                 想巩固这个知识点？去 {topicLabel} 题库中心练习。
               </div>
               <Link
                 href={`/practice/${topic}`}
-                className="inline-flex items-center gap-1 rounded-md bg-indigo-600 px-3 py-1.5 text-sm font-medium text-white transition hover:bg-indigo-700"
+                className="inline-flex items-center gap-1 rounded-md bg-[var(--brand-600)] px-3 py-1.5 text-sm font-medium text-white transition hover:bg-[var(--brand-700)]"
               >
                 进入题库中心
                 <svg

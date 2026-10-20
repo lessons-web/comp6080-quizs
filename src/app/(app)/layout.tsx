@@ -9,8 +9,8 @@ export default function AppShellLayout({
   children: React.ReactNode
 }) {
   return (
-    <div className="flex h-screen flex-col overflow-hidden bg-slate-50 text-slate-900">
-      <Suspense fallback={<div className="h-[72px] bg-white/90 border-b border-slate-200" />}>
+    <div className="flex h-screen flex-col overflow-hidden bg-[var(--paper-bg)] text-slate-900">
+      <Suspense fallback={<div className="h-[72px] border-b border-[var(--paper-border)] bg-[color:rgba(255,253,250,0.92)]" />}>
         <AppHeader />
       </Suspense>
       <main className="flex min-h-0 flex-1 overflow-hidden">

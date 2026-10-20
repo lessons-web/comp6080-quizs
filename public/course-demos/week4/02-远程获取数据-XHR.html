@@ -1,0 +1,720 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>02 · 远程获取数据：XMLHttpRequest · COMP6080 Week 4</title>
+  <meta name="description" content="用原生 XMLHttpRequest 远程拉取数据并动态插入 DOM，讲透 readyState、status、onload / onerror 的分工与回调地狱的规避。" />
+  <link rel="icon" href="data:," />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600&family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="assets/demo.css" />
+</head>
+<body data-page="02">
+
+  <header class="topbar">
+    <nav class="crumb" data-topbar></nav>
+    <span class="topbar-spacer"></span>
+    <span class="topbar-badge" data-topbar-badge></span>
+  </header>
+
+  <main class="doc">
+    <!-- ============================================= 左栏：讲解 ========= -->
+    <article class="doc-main">
+
+      <div class="page-head reveal">
+        <div class="kicker">知识点 02 · 对应课件 AJAX 与 XMLHttpRequest</div>
+        <h1 class="page-title">不刷新页面，也能把远程数据<span class="mark">插进 DOM</span></h1>
+        <p class="lede">
+          上一节解决了「数据长什么样」，这一节解决「怎么把它拿回来」。
+          我们用最老、最底层、也最容易被考到的 <strong>XMLHttpRequest</strong> 发起请求，
+          并重点讲清一件事：<strong>什么时候走 <code class="inline">onerror</code>，什么时候只是 status 不对</strong>。
+        </p>
+        <div class="tag-row">
+          <span class="tag hot">必考</span>
+          <span class="tag">客户端-服务器</span>
+          <span class="tag">readyState / status</span>
+          <span class="tag">onload / onerror</span>
+          <span class="tag">回调地狱</span>
+        </div>
+      </div>
+
+      <!-- 1.1 请求-响应循环 -->
+      <section class="sec reveal" style="--d:60ms">
+        <div class="sec-head">
+          <span class="sec-num">1.1</span>
+          <h2>一次「请求-响应循环」<span class="en">request / response</span></h2>
+        </div>
+
+        <p>
+          客户端（你的手机、笔记本、浏览器标签）向服务器发出一个<strong>请求</strong>；
+          服务器接到后校验参数、执行业务逻辑、读写数据库，再把结果包成<strong>响应</strong>送回来；
+          客户端拿到响应后渲染 HTML/CSS 并执行 JS。整个过程里，页面不需要整页刷新。
+        </p>
+
+        <div class="cards">
+          <div class="card">
+            <div class="card-t">客户端</div>
+            <h3>发起请求、渲染界面</h3>
+            <p>浏览器只能展示与交互，<strong>它手里没有权威数据</strong>，所有内容都得向服务器要。</p>
+          </div>
+          <div class="card cool">
+            <div class="card-t">服务器</div>
+            <h3>校验 + 执行 + 返回</h3>
+            <p>唯一的<strong>数据权威来源</strong>：数据存在这里，业务规则也由这里裁决。</p>
+          </div>
+          <div class="card cool">
+            <div class="card-t">响应</div>
+            <h3>页面片段或数据</h3>
+            <p>响应可以是 HTML，也可以只是一份 JSON 数据，由浏览器再拼成最终界面。</p>
+          </div>
+        </div>
+
+        <h3>延迟 vs 吞吐：两端关心的不是同一件事</h3>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>视角</th>
+                <th>关心的指标</th>
+                <th>含义</th>
+                <th>典型优化</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td class="mono">客户端</td>
+                <td class="mono">延迟 latency</td>
+                <td>单次请求快不快：从发出到看到结果花了多久</td>
+                <td>缓存、CDN、减少请求数</td>
+              </tr>
+              <tr>
+                <td class="mono">服务器</td>
+                <td class="mono">吞吐 throughput</td>
+                <td>单位时间能扛多少请求：每秒能处理多少 QPS</td>
+                <td>加机器、加索引、连接池</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="note rule">
+          <span class="ico">定义</span>
+          <div>
+            <strong>AJAX 不是一个具体技术，而是一组技术的集合：</strong>
+            它指的是「<strong>不整页刷新就能局部更新页面</strong>」的这一类做法。
+            把名字拆开看：<em>Asynchronous</em>（异步，不阻塞页面）+
+            <em>JavaScript</em>（发起请求的语言）+
+            <em>XML</em>（早期用的数据格式，今天基本已被 JSON 取代）。
+            名字里的 XML 只是历史包袱，与今天实际用什么格式无关。
+          </div>
+        </div>
+      </section>
+
+      <!-- 1.2 XHR 是什么 -->
+      <section class="sec reveal" style="--d:120ms">
+        <div class="sec-head">
+          <span class="sec-num">1.2</span>
+          <h2>XMLHttpRequest 是什么<span class="en">the built-in request object</span></h2>
+        </div>
+
+        <p>
+          <code class="inline">XMLHttpRequest</code>（简称 XHR）是<strong>浏览器内置</strong>的 API，
+          不装任何库就能用。你创建一个请求句柄，它就代表一次请求；请求<strong>默认异步</strong>，
+          发出后主线程继续运行，等服务器回话时再通过回调通知你。
+        </p>
+
+        <p>
+          它今天<strong>已经不那么流行了</strong>（课件原话是 fallen out of favour），新代码一般直接用
+          <code class="inline">fetch</code>。但你必须看得懂它 ——
+          因为大量遗留代码、老教程、老面试题里到处是它，而且它的
+          <code class="inline">readyState</code> / <code class="inline">status</code>
+          心智模型在 <code class="inline">fetch</code> 时代依然成立。
+        </p>
+
+        <div class="cards">
+          <div class="card">
+            <div class="card-t">01</div>
+            <h3>默认异步</h3>
+            <p><code class="inline">xhr.open()</code> 不传第三个参数就是异步：请求发出后主线程不等待，继续往下跑。</p>
+          </div>
+          <div class="card">
+            <div class="card-t">02</div>
+            <h3>靠回调定制行为</h3>
+            <p>主要是 <code class="inline">xhr.onload</code>（拿到响应）与 <code class="inline">xhr.onerror</code>（网络失败）两个回调。</p>
+          </div>
+          <div class="card">
+            <div class="card-t">03</div>
+            <h3>靠状态码报错</h3>
+            <p>HTTP 层面的失败（404、500）会落在 <code class="inline">xhr.status</code> 上，得你自己判断。</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- 1.3 readyState 与 status -->
+      <section class="sec reveal" style="--d:180ms">
+        <div class="sec-head">
+          <span class="sec-num">1.3</span>
+          <h2>readyState 与 status<span class="en">two different numbers</span></h2>
+        </div>
+
+        <p>
+          XHR 会同时维护两个很容易混淆的数字：<code class="inline">readyState</code> 描述
+          <strong>请求走到哪一步了</strong>，<code class="inline">status</code> 描述
+          <strong>服务器是怎么回答的</strong>。两者必须各自检查。
+        </p>
+
+        <h3>readyState：一次请求的生命周期</h3>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th class="mono">值</th>
+                <th>常量名</th>
+                <th>含义</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr><td class="mono">0</td><td class="mono">UNSENT</td><td>尚未调用 <code class="inline">open()</code></td></tr>
+              <tr><td class="mono">1</td><td class="mono">OPENED</td><td>已调用 <code class="inline">open()</code>，请求已建立</td></tr>
+              <tr><td class="mono">2</td><td class="mono">HEADERS_RECEIVED</td><td>已收到响应头（还没拿到响应体）</td></tr>
+              <tr><td class="mono">3</td><td class="mono">LOADING</td><td>正在下载响应体</td></tr>
+              <tr><td class="mono">4</td><td class="mono">DONE</td><td>完成，响应体已经收全</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <p>
+          所以在 <code class="inline">readystatechange</code> 里，只有
+          <code class="inline">readyState === 4</code> 的时候，<code class="inline">responseText</code>
+          才是完整的、可以读的。还要注意：<strong>只要 HTTP 响应回来了，readyState 就会走到 4</strong>，
+          哪怕是 404 —— 因为 4 只代表「通信结束」，不代表「成功」。
+        </p>
+
+        <h3>status：服务器是怎么回答的</h3>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th class="mono">状态码</th>
+                <th>归类</th>
+                <th>含义</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr><td class="mono">200</td><td>成功</td><td>请求正常完成，响应体就是你要的数据</td></tr>
+              <tr><td class="mono">4xx</td><td>客户端错误</td><td>你把 API 用错了：<code class="inline">404</code> 资源不存在、<code class="inline">400</code> 参数不对、<code class="inline">401</code> 没登录</td></tr>
+              <tr><td class="mono">5xx</td><td>服务端错误</td><td>服务器自己内部出错：<code class="inline">500</code>、<code class="inline">502</code>、<code class="inline">503</code></td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="note warn">
+          <span class="ico">区分</span>
+          <div>
+            <code class="inline">readyState === 4</code> 说的是「<strong>通信结束了</strong>」；
+            <code class="inline">status === 200</code> 说的才是「<strong>业务成功了</strong>」。
+            两个数字都要各自检查一次，缺一个都会写出 bug。
+          </div>
+        </div>
+      </section>
+
+      <!-- 1.4 错误处理的分工 -->
+      <section class="sec reveal" style="--d:240ms">
+        <div class="sec-head">
+          <span class="sec-num">1.4</span>
+          <h2>★ 错误处理的分工<span class="en">expected vs unexpected</span></h2>
+        </div>
+
+        <p>
+          这是这一页最重要、也最容易被考倒的一点：<strong>要把错误分成两类，分别处理。</strong>
+        </p>
+
+        <div class="cards">
+          <div class="card">
+            <div class="card-t">预期内的错误 · Expected</div>
+            <h3>服务器已经正常回话</h3>
+            <p>
+              认证失败、参数错误、资源不存在……服务器<strong>已经回话了</strong>，只是这次业务失败。
+              它会正常走 <code class="inline">onload</code>，你必须自己检查 <code class="inline">xhr.status</code>。
+            </p>
+          </div>
+          <div class="card cool">
+            <div class="card-t">预期外的错误 · Unexpected</div>
+            <h3>根本没拿到响应</h3>
+            <p>
+              网络不通、连接突然中断、请求超时……这时才会进入
+              <code class="inline">xhr.onerror</code>，
+              此时 <code class="inline">xhr.status</code> 是 <code class="inline">0</code>。
+            </p>
+          </div>
+        </div>
+
+        <div class="note trap">
+          <span class="ico">最容易错</span>
+          <div>
+            <strong>4xx / 5xx 不会触发 <code class="inline">onerror</code>，<code class="inline">fetch</code> 也一样。</strong>
+            <code class="inline">onerror</code> 只负责<strong>网络层</strong>的失败；
+            只要服务器回了 HTTP 响应（哪怕是 404、500），对 XHR 来说这也是一次「成功通信」，
+            一定会走 <code class="inline">onload</code>。这条规则后面几节还会用到。
+          </div>
+        </div>
+
+        <div class="note tip">
+          <span class="ico">策略</span>
+          <div>
+            处理「预期外错误」（网络抖动、超时）时的常见策略是<strong>重试 + 指数退避</strong>：
+            失败后等一个越来越长的时间再重试（如 0.5s → 1s → 2s → 4s），
+            既能扛过短暂抖动，又不会一窝蜂重试把服务器再打垮，也不会让用户对着空白页面干等。
+          </div>
+        </div>
+      </section>
+
+      <!-- 1.5 完整示例 -->
+      <section class="sec reveal" style="--d:300ms">
+        <div class="sec-head">
+          <span class="sec-num">1.5</span>
+          <h2>完整示例代码<span class="en">a complete example</span></h2>
+        </div>
+
+        <p>
+          下面把整条链路串起来：创建句柄 → <code class="inline">open()</code> →
+          在 <code class="inline">onload</code> 里按 <code class="inline">status</code> 分支 →
+          在 <code class="inline">onerror</code> 里处理网络失败 → <code class="inline">send()</code>。
+          另外加了一段<strong>本地兜底</strong>：远程失败时改读同构的本地 JSON，保证演示在断网时也能出结果。
+        </p>
+
+        <div class="code">
+          <div class="code-head">
+            <span class="code-lang">javascript</span>
+            <span class="code-file">demo/xhr-basic.js</span>
+          </div>
+          <pre><code data-lang="js">
+// ① 创建一个请求句柄
+const xhr = new XMLHttpRequest();
+
+// ② 配置请求：GET，默认异步（第三个参数省略即为 true）
+xhr.open('GET', 'https://jsonplaceholder.typicode.com/users');
+
+// ③ 定制回调：load = 收到响应；error = 网络层失败
+xhr.onload = function () {
+  // 关键：onload 只代表「通信结束」，不代表「业务成功」
+  if (xhr.status &gt;= 200 &amp;&amp; xhr.status &lt; 300) {
+    const users = JSON.parse(xhr.responseText);   // 响应体是字符串
+    render(users);                                // 把数据渲染进页面
+  } else {
+    // 4xx / 5xx：属于「预期内错误」，onerror 根本不会来
+    console.warn('业务失败，HTTP ' + xhr.status);
+    loadFallback();                               // 改用本地兜底数据
+  }
+};
+
+xhr.onerror = function () {
+  // 网络层失败：连不上 / 中断 / 超时，此时 status 是 0
+  console.error('网络失败，status = ' + xhr.status);  // 0
+  loadFallback();
+};
+
+// ④ 真正把请求发出去
+xhr.send();
+
+// ⑤ 本地兜底：远程失败时改读结构相同的本地 JSON
+function loadFallback() {
+  const fb = new XMLHttpRequest();
+  fb.open('GET', 'assets/fallback-users.json');
+  fb.onload = function () {
+    if (fb.status === 200) render(JSON.parse(fb.responseText));
+  };
+  fb.send();
+}
+
+function render(users) {
+  const box = document.querySelector('#user-list');
+  box.innerHTML = users.map(function (u) {
+    return '&lt;div class="list-item"&gt;' + u.name + '&lt;/div&gt;';
+  }).join('');
+}</code></pre>
+        </div>
+
+        <div class="note tip">
+          <span class="ico">要点</span>
+          <div>
+            注意 <code class="inline">onload</code> 里那句 <code class="inline">if</code>：
+            它判断的是 <code class="inline">xhr.status</code>，而不是「有没有触发 onload」。
+            因为 <strong>404 也会触发 onload</strong>，只有把 status 拿出来看，才知道这次到底是成是败。
+          </div>
+        </div>
+      </section>
+
+      <!-- 1.6 回调地狱 -->
+      <section class="sec reveal" style="--d:360ms">
+        <div class="sec-head">
+          <span class="sec-num">1.6</span>
+          <h2>回调地狱与规避<span class="en">avoid callback hell</span></h2>
+        </div>
+
+        <p>
+          当异步操作要按顺序串起来（先拿用户 → 再拿订单 → 再拿详情），
+          每一层都得在回调里再写一个回调，代码就向右不断「长出一棵圣诞树」，
+          这就是<strong>回调地狱（callback hell）</strong>。
+          它的成因通常不是技术问题，而是<strong>多人协作 + 临时决策</strong>：
+          每个人都顺手往里塞一层，最后没人敢动。
+        </p>
+
+        <div class="versus">
+          <div class="vs bad">
+            <div class="vs-t">✗ 嵌套写法：越写越深</div>
+            <pre><code data-lang="js">getUser(1, function (user) {
+  getOrders(user.id, function (orders) {
+    getDetail(orders[0].id, function (detail) {
+      render(detail, function () {
+        // 出错时根本不知道该在哪一层处理
+      });
+    });
+  });
+});</code></pre>
+          </div>
+          <div class="vs good">
+            <div class="vs-t">✓ 扁平化写法：具名函数，一层一个职责</div>
+            <pre><code data-lang="js">function onDetail(detail) { render(detail); }
+function onOrders(orders) { getDetail(orders[0].id, onDetail); }
+function onUser(user)    { getOrders(user.id, onOrders); }
+
+getUser(1, onUser);   // 读起来是从上往下的直线</code></pre>
+          </div>
+        </div>
+
+        <h4>三条规避原则</h4>
+        <ul class="clean">
+          <li><strong>回调用具名函数</strong>：把匿名回调提出来起个名字，扁平（flat）永远优于嵌套（nested）。</li>
+          <li><strong>遵守 SRP 与 DRY</strong>：一个函数只做一件事（单一职责）；重复逻辑抽出来复用（不要重复自己）。</li>
+          <li><strong>Lambda 只用于一行代码</strong>：像 <code class="inline">users.map(u =&gt; u.name)</code> 这种一行箭头函数很清晰；一旦超过一行，就该提成具名函数。</li>
+        </ul>
+
+        <p>
+          后面几节会看到，<code class="inline">Promise</code> 与 <code class="inline">async / await</code>
+          正是为了把这种「层层嵌套」重新拉直成一条从上往下的线。
+        </p>
+      </section>
+
+      <!-- 小结 -->
+      <section class="sec reveal" style="--d:420ms">
+        <div class="sec-head">
+          <span class="sec-num">小结</span>
+          <h2>这一节要带走的三句话<span class="en">takeaways</span></h2>
+        </div>
+
+        <div class="cards">
+          <div class="card">
+            <div class="card-t">01</div>
+            <h3>客户端不持有权威数据</h3>
+            <p>数据在服务器上，客户端只负责发起请求、渲染响应；别把业务真相寄托在前端内存里。</p>
+          </div>
+          <div class="card">
+            <div class="card-t">02</div>
+            <h3>readyState 到 4 之后才有内容</h3>
+            <p>只有 <code class="inline">readyState === 4</code> 时 <code class="inline">responseText</code> 才完整可读；但 4 只代表通信结束，不代表成功。</p>
+          </div>
+          <div class="card">
+            <div class="card-t">03</div>
+            <h3>4xx / 5xx 走 status，不走 onerror</h3>
+            <p><code class="inline">onerror</code> 只管网络层失败（status = 0）；服务器只要回话就走 <code class="inline">onload</code>，成败靠自己看 status。</p>
+          </div>
+        </div>
+      </section>
+    </article>
+
+    <!-- ============================================= 右栏：演示台 ======= -->
+    <aside class="doc-side">
+      <div class="stick">
+
+        <!-- 演示 A -->
+        <section class="demo reveal" style="--d:140ms">
+          <div class="demo-head">
+            <h3>演示 A · 最小 XHR GET</h3>
+            <span class="pill">live</span>
+          </div>
+          <div class="demo-body">
+            <p class="demo-sub">
+              点按钮真的发一次 <code class="inline">XMLHttpRequest</code>，把返回的用户数组渲染成列表。
+              盯住日志里 <code class="inline">readyState</code> 的变化，以及 <code class="inline">onload</code> / <code class="inline">onerror</code> 的取舍。
+            </p>
+
+            <div class="btn-row">
+              <button class="btn primary sm" id="btn-xhr-remote" type="button">发送请求（远程 API）</button>
+              <button class="btn sm" id="btn-xhr-local" type="button">发送请求（本地兜底）</button>
+              <button class="btn ghost sm" id="btn-xhr-404" type="button">请求不存在的路径（404）</button>
+            </div>
+
+            <div class="status-line" id="xhr-meta"></div>
+
+            <div class="list" id="user-list">
+              <div class="out idle">还没有请求，点上面任意按钮开始。</div>
+            </div>
+
+            <div class="log" id="log-xhr"></div>
+          </div>
+        </section>
+
+        <!-- 演示 B -->
+        <section class="demo reveal" style="--d:220ms">
+          <div class="demo-head">
+            <h3>演示 B · 两条错误路径对照</h3>
+            <span class="pill">对比</span>
+          </div>
+          <div class="demo-body">
+            <p class="demo-sub">
+              同样是「失败」，但一个走 <code class="inline">onload</code>、一个走 <code class="inline">onerror</code>。
+              点两个按钮，对照日志看到底走了哪个回调、status 是多少。
+            </p>
+
+            <div class="btn-row">
+              <button class="btn sm" id="btn-err-404" type="button">① 触发 4xx（资源不存在）</button>
+              <button class="btn danger sm" id="btn-err-net" type="button">② 触发网络错误（域名不存在）</button>
+            </div>
+
+            <div class="status-line" id="err-meta"></div>
+
+            <div class="out pre idle" id="err-out">还没有请求，点上面任意按钮开始。</div>
+
+            <div class="log" id="log-err"></div>
+          </div>
+        </section>
+
+      </div>
+    </aside>
+  </main>
+
+  <nav class="pager" data-pager></nav>
+
+  <footer class="pagefoot">
+    <span>COMP6080 26T3 · Week 4 · 知识点 02</span>
+    <span class="sig">只有连不上才叫 error，404/500 都得自己看 status</span>
+  </footer>
+
+  <script src="assets/demo.js"></script>
+  <script>
+    /* ====================================================================
+       本页教学代码：原生 XMLHttpRequest，无任何外部库
+       ==================================================================== */
+    const $ = W4.$;
+
+    /* --------------------------------------------------- 网络地址常量 */
+    const API = 'https://jsonplaceholder.typicode.com';
+    const URL_OK = API + '/users';                        // 200，返回 10 个用户
+    const URL_404 = API + '/nonexistent-path-404';        // 404
+    const URL_NETFAIL = 'https://this-host-should-not-exist.invalid/users'; // 网络错误
+    const FALLBACK = 'assets/fallback-users.json';        // 本地兜底（结构同远程一致）
+
+    const READY_TEXT = {
+      0: 'UNSENT 尚未 open',
+      1: 'OPENED 已 open',
+      2: 'HEADERS_RECEIVED 已收到响应头',
+      3: 'LOADING 正在下载响应体',
+      4: 'DONE 完成'
+    };
+
+    /* -------------------------------------------------------- 渲染工具 */
+    function setChips(metaEl, chips) {
+      if (!metaEl) return;
+      metaEl.innerHTML = chips.map(function (c) {
+        return '<span class="chip ' + (c.tone || '') + '">' + W4.escapeHtml(c.text) + '</span>';
+      }).join('');
+    }
+
+    function renderSkeletons(container, n) {
+      let html = '';
+      for (let i = 0; i < n; i++) html += '<div class="skeleton"></div>';
+      container.innerHTML = html;
+    }
+
+    function renderUsers(container, users) {
+      const list = Array.isArray(users) ? users : [];
+      container.innerHTML = list.map(function (u, i) {
+        const name = u.name || u.username || '未命名';
+        const email = u.email || '（无邮箱）';
+        const city = (u.address && u.address.city) || '（未知城市）';
+        const company = (u.company && u.company.name) || '（无公司）';
+        return '<div class="list-item">' +
+          '<span class="idx">' + (i + 1) + '</span>' +
+          '<span><span class="name">' + W4.escapeHtml(name) + '</span>' +
+          '<div class="meta">' + W4.escapeHtml(email) + ' · ' +
+          W4.escapeHtml(city) + ' · ' + W4.escapeHtml(company) + '</div></span>' +
+          '</div>';
+      }).join('');
+    }
+
+    /* ================================================== 演示 A：最小 XHR */
+    const logXhr = $('#log-xhr');
+    const userList = $('#user-list');
+    const xhrMeta = $('#xhr-meta');
+
+    function requestUsers(url, label, allowFallback) {
+      const started = performance.now();
+      const xhr = new XMLHttpRequest();
+
+      W4.log(logXhr, '准备请求「' + label + '」：' + url, 'info', 'XHR');
+      W4.log(logXhr, 'new XMLHttpRequest() 创建句柄，readyState = ' + xhr.readyState, 'sync', 'STATE');
+
+      renderSkeletons(userList, 3);
+      setChips(xhrMeta, [{ text: '请求中…', tone: 'warn' }, { text: label, tone: '' }]);
+
+      // ① readyState 每次变化都会触发，用来看请求走到哪一步
+      xhr.addEventListener('readystatechange', function () {
+        W4.log(logXhr, 'readyState → ' + xhr.readyState + '（' + READY_TEXT[xhr.readyState] + '）', 'sync', 'STATE');
+      });
+
+      // ② onload：只要服务器回了 HTTP 响应就会触发（哪怕 404 / 500）
+      xhr.addEventListener('load', function () {
+        const ms = Math.round(performance.now() - started);
+        W4.log(logXhr, 'onload 触发：收到响应，status = ' + xhr.status + '，耗时 ' + ms + 'ms', 'info', 'LOAD');
+
+        if (xhr.status >= 200 && xhr.status < 300) {
+          let users;
+          try {
+            users = JSON.parse(xhr.responseText);
+          } catch (err) {
+            W4.log(logXhr, '响应体不是合法 JSON：' + err.message, 'err', 'ERROR');
+            setChips(xhrMeta, [{ text: 'status ' + xhr.status, tone: 'err' }, { text: 'JSON 解析失败', tone: 'err' }]);
+            userList.innerHTML = '<div class="out err">响应内容无法解析为 JSON。</div>';
+            return;
+          }
+          const n = Array.isArray(users) ? users.length : 0;
+          W4.log(logXhr, 'status 是 2xx → 业务成功，解析出 ' + n + ' 条记录', 'ok', 'STATUS');
+          W4.log(logXhr, '把 ' + n + ' 条数据渲染进 DOM', 'ok', 'RENDER');
+          renderUsers(userList, users);
+          setChips(xhrMeta, [
+            { text: 'status ' + xhr.status, tone: 'ok' },
+            { text: '耗时 ' + ms + 'ms', tone: 'teal' },
+            { text: 'readyState ' + xhr.readyState, tone: '' },
+            { text: n + ' 条', tone: 'accent' }
+          ]);
+          W4.log(logXhr, '✔ 完成：' + label, 'ok', 'XHR');
+          return;
+        }
+
+        // 非 2xx：onerror 不会触发，必须自己看 status
+        W4.log(logXhr, '⚠ onload 触发了，但 status = ' + xhr.status + '，所以业务失败', 'warn', 'STATUS');
+        W4.log(logXhr, '4xx / 5xx 属于「预期内错误」，不会进入 onerror', 'err', 'STATUS');
+        setChips(xhrMeta, [
+          { text: 'status ' + xhr.status, tone: 'err' },
+          { text: '走了 onload', tone: 'warn' },
+          { text: 'onerror 未触发', tone: 'err' }
+        ]);
+
+        if (allowFallback) {
+          userList.innerHTML = '<div class="out err">远程返回 HTTP ' + xhr.status + '，正在切换本地兜底数据…</div>';
+          W4.log(logXhr, '远程失败 → 已切换到本地兜底数据：' + FALLBACK, 'warn', 'FALLBACK');
+          requestUsers(FALLBACK, '本地兜底', false);
+        } else {
+          userList.innerHTML = '<div class="out err">请求失败：HTTP ' + xhr.status + '，没有可渲染的数据。</div>';
+          W4.log(logXhr, '✘ 结束：' + label + '（HTTP ' + xhr.status + '）', 'err', 'XHR');
+        }
+      });
+
+      // ③ onerror：只有网络层失败（连不上 / 中断 / 超时）才会触发
+      xhr.addEventListener('error', function () {
+        const ms = Math.round(performance.now() - started);
+        W4.log(logXhr, 'onerror 触发！根本没拿到响应，xhr.status = ' + xhr.status, 'err', 'ERROR');
+        W4.log(logXhr, '这属于「预期外错误」：域名解析失败 / 连接中断 / 超时', 'err', 'ERROR');
+        setChips(xhrMeta, [
+          { text: 'status ' + xhr.status, tone: 'err' },
+          { text: '走了 onerror', tone: 'err' },
+          { text: '耗时 ' + ms + 'ms', tone: 'teal' }
+        ]);
+
+        if (allowFallback) {
+          userList.innerHTML = '<div class="out err">网络错误，正在切换本地兜底数据…</div>';
+          W4.log(logXhr, '网络失败 → 已切换到本地兜底数据：' + FALLBACK, 'warn', 'FALLBACK');
+          requestUsers(FALLBACK, '本地兜底', false);
+        } else {
+          userList.innerHTML = '<div class="out err">网络错误，没有任何响应可用。</div>';
+          W4.log(logXhr, '✘ 结束：' + label + '（网络失败）', 'err', 'XHR');
+        }
+      });
+
+      // ④ 真正发出请求
+      xhr.open('GET', url);
+      W4.log(logXhr, 'xhr.open("GET", url) 已调用', 'sync', 'XHR');
+      xhr.send();
+      W4.log(logXhr, 'xhr.send() 已发出，请求进入飞行状态，主线程不被阻塞', 'info', 'XHR');
+    }
+
+    $('#btn-xhr-remote').addEventListener('click', function () {
+      W4.resetLog(logXhr);
+      requestUsers(URL_OK, '远程 API', true);
+    });
+    $('#btn-xhr-local').addEventListener('click', function () {
+      W4.resetLog(logXhr);
+      requestUsers(FALLBACK, '本地兜底', false);
+    });
+    $('#btn-xhr-404').addEventListener('click', function () {
+      W4.resetLog(logXhr);
+      requestUsers(URL_404, '远程 404', true);
+    });
+
+    /* ============================================ 演示 B：两条错误路径 */
+    const logErr = $('#log-err');
+    const errOut = $('#err-out');
+    const errMeta = $('#err-meta');
+
+    function runErrorPath(kind) {
+      W4.resetLog(logErr);
+      errOut.className = 'out pre idle';
+      errOut.textContent = '请求已发出，等待回调…';
+      setChips(errMeta, [{ text: '等待中…', tone: 'warn' }]);
+
+      const isNet = kind === 'net';
+      const url = isNet ? URL_NETFAIL : URL_404;
+      const started = performance.now();
+      const xhr = new XMLHttpRequest();
+
+      W4.log(logErr, '发起请求：' + (isNet ? '② 网络错误（域名不存在）' : '① 4xx（资源不存在）'), 'info', 'XHR');
+      W4.log(logErr, 'URL = ' + url, 'info', 'XHR');
+
+      xhr.onload = function () {
+        const ms = Math.round(performance.now() - started);
+        W4.log(logErr, 'onload 被触发，status = ' + xhr.status, 'warn', 'LOAD');
+        W4.log(logErr, '结论：onload 被触发 → status = ' + xhr.status +
+          ' → 属于「预期内错误」，必须自己判断 status，onerror 不会执行', 'err', 'STATUS');
+        W4.log(logErr, '耗时 ' + ms + 'ms', 'sync', 'XHR');
+        setChips(errMeta, [
+          { text: '走了 onload', tone: 'warn' },
+          { text: 'status = ' + xhr.status, tone: 'err' },
+          { text: 'onerror 未触发', tone: 'err' }
+        ]);
+        errOut.className = 'out pre err';
+        errOut.textContent =
+          '情况①：onload 被触发 → status = ' + xhr.status + '\n' +
+          '属于「预期内错误」：服务器已经正常回话，只是这次业务失败\n' +
+          '→ 必须自己判断 status，onerror 不会执行';
+      };
+
+      xhr.onerror = function () {
+        const ms = Math.round(performance.now() - started);
+        W4.log(logErr, 'onerror 被触发，xhr.status = ' + xhr.status, 'err', 'ERROR');
+        W4.log(logErr, '结论：onerror 被触发 → status = 0 → 属于「预期外错误」，说明根本没拿到响应', 'err', 'ERROR');
+        W4.log(logErr, '耗时 ' + ms + 'ms', 'sync', 'XHR');
+        setChips(errMeta, [
+          { text: '走了 onerror', tone: 'err' },
+          { text: 'status = ' + xhr.status, tone: 'err' },
+          { text: 'onerror 已触发', tone: 'err' }
+        ]);
+        errOut.className = 'out pre err';
+        errOut.textContent =
+          '情况②：onerror 被触发 → status = ' + xhr.status + '\n' +
+          '属于「预期外错误」：网络不通 / 连接中断 / 超时\n' +
+          '→ 说明根本没拿到响应，服务器从未回话';
+      };
+
+      xhr.open('GET', url);
+      xhr.send();
+      W4.log(logErr, 'xhr.open + xhr.send 完成，等待回调…', 'sync', 'XHR');
+    }
+
+    $('#btn-err-404').addEventListener('click', function () { runErrorPath('404'); });
+    $('#btn-err-net').addEventListener('click', function () { runErrorPath('net'); });
+  </script>
+</body>
+</html>

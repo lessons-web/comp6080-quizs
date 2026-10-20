@@ -58,11 +58,11 @@ export function KnowledgeSidebar({ topic }: KnowledgeSidebarProps) {
   const topicLabel = TOPIC_META[topic].label
 
   return (
-    <aside className="flex h-full w-[320px] shrink-0 flex-col overflow-hidden border-r border-slate-200 bg-white">
-      <div className="flex items-center gap-2 border-b border-slate-100 px-5 py-4">
+    <aside className="flex h-full w-[320px] shrink-0 flex-col overflow-hidden border-r border-[var(--paper-border)] bg-[var(--paper-surface-soft)]">
+      <div className="flex items-center gap-2 border-b border-[var(--paper-border)] px-5 py-4">
         <Link
           href="/knowledge"
-          className="inline-flex shrink-0 items-center gap-1 rounded-md px-1.5 py-1 text-sm text-slate-500 hover:bg-slate-100 hover:text-slate-800"
+          className="inline-flex shrink-0 items-center gap-1 rounded-md px-1.5 py-1 text-sm text-slate-500 hover:bg-[var(--paper-chip)] hover:text-slate-800"
         >
           <svg
             viewBox="0 0 24 24"
@@ -77,12 +77,12 @@ export function KnowledgeSidebar({ topic }: KnowledgeSidebarProps) {
           </svg>
           返回
         </Link>
-        <div className="ml-auto flex shrink-0 items-center gap-1.5 rounded-full bg-slate-100 px-2.5 py-0.5 text-xs font-medium text-slate-600">
+        <div className="ml-auto flex shrink-0 items-center gap-1.5 rounded-full bg-[var(--paper-chip)] px-2.5 py-0.5 text-xs font-medium text-slate-600">
           {topicLabel} · {listData.length} 项
         </div>
       </div>
 
-      <div className="border-b border-slate-100 px-5 py-4">
+      <div className="border-b border-[var(--paper-border)] px-5 py-4">
         <div className="relative">
           <svg
             aria-hidden
@@ -102,7 +102,7 @@ export function KnowledgeSidebar({ topic }: KnowledgeSidebarProps) {
             placeholder="搜索标题 / 类别 / 标签"
             value={query}
             onChange={(e) => setQuery(e.target.value)}
-            className="w-full rounded-lg border border-slate-200 bg-white py-2 pl-9 pr-3 text-sm placeholder:text-slate-400 focus:border-blue-400 focus:outline-none focus:ring-2 focus:ring-blue-100"
+            className="w-full rounded-lg border border-[var(--paper-border)] bg-[var(--paper-surface)] py-2 pl-9 pr-3 text-sm placeholder:text-slate-400 focus:border-[var(--brand-500)] focus:outline-none focus:ring-2 focus:ring-[var(--brand-ring)]"
           />
         </div>
       </div>
@@ -113,7 +113,7 @@ export function KnowledgeSidebar({ topic }: KnowledgeSidebarProps) {
             {Array.from({ length: 3 }).map((_, i) => (
               <div
                 key={i}
-                className="h-14 animate-pulse rounded-lg bg-slate-100"
+                className="h-14 animate-pulse rounded-lg bg-[var(--paper-chip)]"
               />
             ))}
           </div>

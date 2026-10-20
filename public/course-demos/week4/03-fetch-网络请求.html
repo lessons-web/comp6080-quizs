@@ -1,0 +1,735 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>03 · fetch 与 Response · COMP6080 Week 4</title>
+  <meta name="description" content="fetch 是 Promise 化的请求方式：它只在网络失败时 reject，404 / 500 也会 resolve，所以必须自己判 res.ok；响应体只能读一次。" />
+  <link rel="icon" href="data:," />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600&family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="assets/demo.css" />
+</head>
+<body data-page="03">
+
+  <header class="topbar">
+    <nav class="crumb" data-topbar></nav>
+    <span class="topbar-spacer"></span>
+    <span class="topbar-badge" data-topbar-badge></span>
+  </header>
+
+  <main class="doc">
+    <!-- ============================================= 左栏：讲解 ========= -->
+    <article class="doc-main">
+
+      <div class="page-head reveal">
+        <div class="kicker">知识点 03 · 对应课件 ajax-fetch 第 12–14 页</div>
+        <h1 class="page-title">fetch 会 resolve，<span class="mark">但不代表请求成功</span></h1>
+        <p class="lede">
+          上一节的 <code class="inline">XMLHttpRequest</code> 什么都得自己来：手动 <code class="inline">open</code> / <code class="inline">send</code>、
+          两个回调、自己读 <code class="inline">responseText</code>、自己判状态码。
+          ES2015 给了我们 <strong>fetch</strong>：一个 Promise 化的原生请求 API。
+          它更好写，但有一个<strong>必须记住的坑</strong> —— 它会「对 HTTP 错误装作没看见」。
+        </p>
+        <div class="tag-row">
+          <span class="tag hot">必考</span>
+          <span class="tag">fetch</span>
+          <span class="tag">Response</span>
+          <span class="tag">res.ok</span>
+          <span class="tag">AbortController</span>
+        </div>
+      </div>
+
+      <!-- 1.1 为什么会有 fetch -->
+      <section class="sec reveal" style="--d:60ms">
+        <div class="sec-head">
+          <span class="sec-num">1.1</span>
+          <h2>为什么会有 fetch<span class="en">promise-based fetching</span></h2>
+        </div>
+
+        <p>
+          上一节用 XHR 拉一个接口，要写一串样板代码：<code class="inline">open</code>、<code class="inline">send</code>、
+          挂 <code class="inline">onload</code> 与 <code class="inline">onerror</code> 两个回调，
+          还要手动 <code class="inline">JSON.parse(xhr.responseText)</code>、手动判断 <code class="inline">status</code> 是否在 200 段。
+          繁琐，而且很容易漏掉某一步。
+        </p>
+        <p>
+          ES2015 引入的 <strong>fetch</strong> 是浏览器原生的、<strong>Promise-based 的 JS API</strong>，
+          专门用来下载远程资源。它把「发起请求」这一步变成一个 Promise，
+          后面既可以接 <code class="inline">.then</code> 链，也可以配 <code class="inline">async / await</code>（下一节细讲）。
+          左右两段代码做的是同一件事，对比一下就看得出差别。
+        </p>
+
+        <div class="versus">
+          <div class="vs bad">
+            <div class="vs-t">✗ XHR：命令式，一堆手动步骤</div>
+            <pre><code data-lang="js">
+// 手动 open / send，两个回调，自己 parse、自己判状态码
+const xhr = new XMLHttpRequest();
+xhr.open('GET', '/api/users');
+xhr.onload = function () {
+  if (xhr.status &gt;= 200 &amp;&amp; xhr.status &lt; 300) {
+    const data = JSON.parse(xhr.responseText);  // 自己 parse
+    render(data);
+  } else {
+    showError(xhr.status);                      // 自己判状态码
+  }
+};
+xhr.onerror = function () { showError('网络错误'); };
+xhr.send();</code></pre>
+          </div>
+          <div class="vs good">
+            <div class="vs-t">✓ fetch：Promise 化，一条链读完</div>
+            <pre><code data-lang="js">
+// 发起请求就是拿到一个 Promise，之后接 then 就行
+fetch('/api/users')
+  .then(res =&gt; res.json())     // 读响应体
+  .then(data =&gt; render(data))  // 拿到数据
+  .catch(err =&gt; showError(err));
+// 状态码仍然要自己判，见 1.3</code></pre>
+          </div>
+        </div>
+      </section>
+
+      <!-- 1.2 基本形态 -->
+      <section class="sec reveal" style="--d:120ms">
+        <div class="sec-head">
+          <span class="sec-num">1.2</span>
+          <h2>fetch 的基本形态<span class="en">it resolves to a Response</span></h2>
+        </div>
+
+        <p>
+          <code class="inline">fetch(url)</code> 返回一个 Promise。一定要记住它 resolve 出来的是什么：
+          <strong>不是数据本身，而是一个 <code class="inline">Response</code> 对象</strong> ——
+          它描述的是「这次 HTTP 交互」，里面有状态码、响应头，以及一条还没读的响应体流。
+        </p>
+        <p>
+          想拿到 JSON 数据，必须<strong>再等一次</strong>：调用 <code class="inline">res.json()</code>
+          （返回的是纯文本就用 <code class="inline">res.text()</code>）。
+          原因很简单：<strong>响应体是流，只能读一次</strong>，读的动作是异步的。
+        </p>
+
+        <div class="code">
+          <div class="code-head">
+            <span class="code-lang">javascript</span>
+            <span class="code-file">demo/fetch-basic.js</span>
+          </div>
+          <pre><code data-lang="js">
+// 最短可用形态：两次 then
+fetch(url)
+  .then(res =&gt; res.json())   // 第 1 步：把响应体读成 JSON（异步）
+  .then(data =&gt; console.log(data))
+  .catch(err =&gt; console.error(err));
+
+// 等价的 async / await 写法（下一节细讲）
+const res  = await fetch(url);   // res 是 Response，不是数据
+const data = await res.json();   // 这一步才拿到数据</code></pre>
+        </div>
+
+        <div class="note tip">
+          <span class="ico">补充</span>
+          <div>
+            <code class="inline">fetch(url, options)</code> 的第二个参数控制请求方式：
+            <code class="inline">method</code>（GET / POST …）、<code class="inline">headers</code>、
+            <code class="inline">body</code>、认证信息（<code class="inline">credentials</code>）以及
+            <code class="inline">mode</code> / CORS 相关设置。不传就是最简单的 GET。右边演示 B 专门演示它。
+          </div>
+        </div>
+      </section>
+
+      <!-- 1.3 ★ 最关键 -->
+      <section class="sec reveal" style="--d:180ms">
+        <div class="sec-head">
+          <span class="sec-num">1.3</span>
+          <h2>最关键的一条：只在网络失败时 reject<span class="en">404 is not an error</span></h2>
+        </div>
+
+        <p>
+          这一条是本页的核心，也是最容易在作业里踩的坑。fetch 的 Promise：
+        </p>
+        <ul class="clean">
+          <li><strong>收到任何 Response 就 resolve</strong> —— 哪怕 HTTP 状态码不是 200。</li>
+          <li><strong>只有网络层面失败才 reject</strong> —— 比如断网、域名解析不了、请求被 CORS 拦下。</li>
+        </ul>
+        <p>
+          也就是说：<code class="inline">404</code>、<code class="inline">500</code> 这些<strong>统统会 resolve</strong>，
+          根本不会进你的 <code class="inline">catch</code>。所以服务器告诉你「找不到」，
+          而 fetch 却像什么都没发生一样把 Promise 标记为成功。
+        </p>
+        <p>
+          因此必须<strong>自己判</strong>：<code class="inline">if (!res.ok) throw new Error(...)</code>。
+          <code class="inline">res.ok</code> 等价于 <code class="inline">status &gt;= 200 &amp;&amp; status &lt; 300</code>。
+        </p>
+
+        <div class="note trap">
+          <span class="ico">口诀</span>
+          <div>
+            <strong>fetch 不认 404，自己判 res.ok。</strong>
+            拿到 <code class="inline">Response</code> 之后、读 body 之前，先写这一行。
+          </div>
+        </div>
+
+        <div class="versus">
+          <div class="vs bad">
+            <div class="vs-t">✗ 不判 res.ok：把 404 当成功继续渲染</div>
+            <pre><code data-lang="js">
+// 404 时 Promise 依然 resolve，于是这里继续往下走
+const res = await fetch('/api/nonexistent');
+const data = await res.json();   // 得到的是空对象 {}
+renderUsers(data);               // 拿错误当数据渲染 → 用户看到空白页
+// catch 永远不会被触发！</code></pre>
+          </div>
+          <div class="vs good">
+            <div class="vs-t">✓ 判了 res.ok：明确抛错，走到 catch</div>
+            <pre><code data-lang="js">
+try {
+  const res = await fetch('/api/nonexistent');
+  if (!res.ok) {
+    throw new Error('HTTP ' + res.status);  // 主动抛错
+  }
+  renderUsers(await res.json());            // 只有 OK 才读 body
+} catch (err) {
+  showError(err);                           // 404 在这里被接住
+}</code></pre>
+          </div>
+        </div>
+      </section>
+
+      <!-- 1.4 Response 对象 -->
+      <section class="sec reveal" style="--d:240ms">
+        <div class="sec-head">
+          <span class="sec-num">1.4</span>
+          <h2>Response 对象上有什么<span class="en">inspect the response</span></h2>
+        </div>
+
+        <p>
+          既然 <code class="inline">fetch</code> 交给你的是 <code class="inline">Response</code>，
+          那就要熟悉它上面能看的东西。下面是排查问题时最常用的一批。
+        </p>
+
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>属性 / 方法</th>
+                <th>含义</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td class="mono">res.status</td>
+                <td>数字状态码（200 / 404 / 500 …），HTTP 层面的结果</td>
+              </tr>
+              <tr>
+                <td class="mono">res.statusText</td>
+                <td>状态码对应的文本，如 <code class="inline">OK</code> / <code class="inline">Not Found</code></td>
+              </tr>
+              <tr>
+                <td class="mono">res.ok</td>
+                <td>布尔值，<code class="inline">status &gt;= 200 &amp;&amp; status &lt; 300</code> 时为 true</td>
+              </tr>
+              <tr>
+                <td class="mono">res.headers.get('content-type')</td>
+                <td>读响应头，据此判断返回的是 JSON 还是 HTML</td>
+              </tr>
+              <tr>
+                <td class="mono">res.url</td>
+                <td>实际发生的请求地址（跟随重定向之后的最终地址）</td>
+              </tr>
+              <tr>
+                <td class="mono">res.redirected</td>
+                <td>是否发生过重定向</td>
+              </tr>
+              <tr>
+                <td class="mono">res.json()</td>
+                <td>把响应体读成 JSON 对象（异步，返回 Promise）</td>
+              </tr>
+              <tr>
+                <td class="mono">res.text()</td>
+                <td>把响应体读成纯文本（异步，返回 Promise）</td>
+              </tr>
+              <tr>
+                <td class="mono">res.clone()</td>
+                <td>克隆一份 Response，用于确实需要读两次的场景</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="note warn">
+          <span class="ico">注意</span>
+          <div>
+            <strong>响应体只能读一次。</strong>
+            调用过 <code class="inline">res.json()</code> 之后，再调 <code class="inline">res.text()</code>
+            会抛出 <code class="inline">TypeError: body stream already read</code>。
+            如果确实需要读两遍（比如既想解析又想留原始文本），必须先克隆：
+            <code class="inline">const copy = res.clone();</code>，两份各读一次。右边演示 B 的第二个按钮会复现这个报错。
+          </div>
+        </div>
+      </section>
+
+      <!-- 1.5 取舍 -->
+      <section class="sec reveal" style="--d:300ms">
+        <div class="sec-head">
+          <span class="sec-num">1.5</span>
+          <h2>与 XMLHttpRequest 的取舍<span class="en">xhr vs fetch</span></h2>
+        </div>
+
+        <p>
+          fetch 更现代，但 XHR 并没有「过时到不能用」。做选择前，先看清它们在几个关键维度上的差异。
+        </p>
+
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>维度</th>
+                <th>XMLHttpRequest</th>
+                <th>fetch</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>语法可读性</td>
+                <td>命令式：open / send + 多个回调</td>
+                <td>Promise 链 / async-await，更直观</td>
+              </tr>
+              <tr>
+                <td>老浏览器支持</td>
+                <td>极好（很老的 IE 也支持）</td>
+                <td>现代浏览器才有，兼容老环境要 polyfill</td>
+              </tr>
+              <tr>
+                <td>上传 / 下载进度</td>
+                <td>原生支持 <code class="inline">onprogress</code></td>
+                <td>需配合 Streams API，学习曲线陡</td>
+              </tr>
+              <tr>
+                <td>可取消性</td>
+                <td>直接 <code class="inline">xhr.abort()</code></td>
+                <td>需要 <code class="inline">AbortController</code> + <code class="inline">signal</code></td>
+              </tr>
+              <tr>
+                <td>Promise 原生支持</td>
+                <td>没有，要自己包一层</td>
+                <td>天生返回 Promise</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="note rule">
+          <span class="ico">结论</span>
+          <div>
+            <strong>新项目用 fetch + async/await；读老代码时你要认识 XHR。</strong>
+            进度条、需要直接 abort 的场景，XHR 反而省事；其余大多数接口请求，fetch 都更清爽。
+          </div>
+        </div>
+      </section>
+
+      <!-- 1.6 健壮封装 -->
+      <section class="sec reveal" style="--d:360ms">
+        <div class="sec-head">
+          <span class="sec-num">1.6</span>
+          <h2>一段健壮的 fetch 封装<span class="en">robust wrapper</span></h2>
+        </div>
+
+        <p>
+          把前面几条拼起来，就得到一个可以在项目里直接用的封装：自己判 <code class="inline">res.ok</code>、
+          用 <code class="inline">try / catch</code> 兜住错误，再用 <code class="inline">AbortController</code> 做一个超时。
+        </p>
+
+        <div class="code">
+          <div class="code-head">
+            <span class="code-lang">javascript</span>
+            <span class="code-file">demo/fetch-robust.js</span>
+          </div>
+          <pre><code data-lang="js">
+async function fetchJSON(url, options = {}) {
+  const { timeout = 5000 } = options;
+  const controller = new AbortController();
+  const timer = setTimeout(() =&gt; controller.abort(), timeout);
+
+  try {
+    // ① 网络错误才会 reject；404 / 500 会照常 resolve
+    const res = await fetch(url, { signal: controller.signal });
+
+    // ② 关键一步：自己判状态码是否在 200~299
+    if (!res.ok) {
+      throw new Error('HTTP ' + res.status + ' ' + res.statusText);
+    }
+
+    // ③ 状态码 OK 之后才读取响应体（响应体只能读一次）
+    return await res.json();
+  } catch (err) {
+    // ④ 区分「超时被中断」与其它错误
+    if (err.name === 'AbortError') {
+      throw new Error('请求超时（&gt;' + timeout + 'ms），已中断');
+    }
+    throw err;                 // 网络错误 / 状态码错误原样抛出
+  } finally {
+    clearTimeout(timer);       // 无论成败都要清理定时器
+  }
+}</code></pre>
+        </div>
+
+        <div class="note tip">
+          <span class="ico">用法</span>
+          <div>
+            调用时只要 <code class="inline">try { const data = await fetchJSON(url); } catch (err) { … }</code>，
+            无论是 404、500 还是超时，都会统一进入 <code class="inline">catch</code> —— 这才是符合直觉的「失败」。
+          </div>
+        </div>
+      </section>
+
+      <!-- 1.7 小结 -->
+      <section class="sec reveal" style="--d:420ms">
+        <div class="sec-head">
+          <span class="sec-num">1.7</span>
+          <h2>这一节要带走的三句话<span class="en">takeaways</span></h2>
+        </div>
+
+        <div class="cards">
+          <div class="card">
+            <div class="card-t">01</div>
+            <h3>fetch 只在网络失败时 reject</h3>
+            <p>收到任何 Response 就 resolve，哪怕状态码是 404 或 500；只有断网之类的网络错误才进 catch。</p>
+          </div>
+          <div class="card">
+            <div class="card-t">02</div>
+            <h3>res.ok 必须自己判</h3>
+            <p>拿到 Response 后先写 <code class="inline">if (!res.ok) throw …</code>，再决定要不要读 body。</p>
+          </div>
+          <div class="card">
+            <div class="card-t">03</div>
+            <h3>响应体只能读一次</h3>
+            <p><code class="inline">res.json()</code> 之后再读会抛错；确实要读两遍就用 <code class="inline">res.clone()</code>。</p>
+          </div>
+        </div>
+      </section>
+    </article>
+
+    <!-- ============================================= 右栏：演示台 ======= -->
+    <aside class="doc-side">
+      <div class="stick">
+
+        <!-- 演示 A -->
+        <section class="demo reveal" style="--d:140ms">
+          <div class="demo-head">
+            <h3>演示 A · fetch 与 Response 检视器</h3>
+            <span class="pill">live</span>
+          </div>
+          <div class="demo-body">
+            <p class="demo-sub">
+              点「请求不存在的路径（404）」时，<strong>先不勾选</strong>下面的开关试一次，再 <strong>勾选</strong>试一次：
+              你会看到 fetch 对 404 完全不同的两种反应。
+            </p>
+
+            <div class="row">
+              <input type="checkbox" id="check-ok" />
+              <label for="check-ok">开启 res.ok 检查</label>
+            </div>
+
+            <div class="row">
+              <button class="btn primary sm" id="btn-get-remote" type="button">请求远程 API</button>
+              <button class="btn sm" id="btn-get-fallback" type="button">请求本地兜底</button>
+              <button class="btn ghost sm" id="btn-get-404" type="button">请求不存在的路径（404）</button>
+            </div>
+
+            <div class="stats" id="fetch-stats"></div>
+
+            <div class="status-line" id="fetch-chips"></div>
+
+            <div class="out pre tall idle" id="fetch-out">点击上面任意按钮开始。</div>
+
+            <p class="demo-sub">
+              远程接口不可用时会自动切换到本地 <code class="inline">assets/fallback-users.json</code> 兜底（日志里会体现）。
+            </p>
+
+            <div class="log" id="log-fetch"></div>
+          </div>
+        </section>
+
+        <!-- 演示 B -->
+        <section class="demo reveal" style="--d:220ms">
+          <div class="demo-head">
+            <h3>演示 B · 第二个参数：POST 与 body</h3>
+            <span class="pill">method / headers / body</span>
+          </div>
+          <div class="demo-body">
+            <p class="demo-sub">
+              <code class="inline">fetch(url, options)</code> 的第二个参数控制请求方式。
+              注意：<strong>POST 的 body 只能是字符串</strong>，所以对象要先 <code class="inline">JSON.stringify</code>（呼应第 01 节的规律）。
+            </p>
+
+            <div class="grid-2">
+              <div class="field">
+                <label for="post-title">title</label>
+                <input type="text" id="post-title" value="COMP6080 第 4 周" />
+              </div>
+              <div class="field">
+                <label for="post-user">userId</label>
+                <input type="number" id="post-user" value="1" min="1" />
+              </div>
+            </div>
+
+            <div class="row">
+              <button class="btn primary sm" id="btn-post" type="button">发送 POST 请求（提交表单）</button>
+              <button class="btn ghost sm" id="btn-body-twice" type="button">演示「body 只能读一次」</button>
+            </div>
+
+            <div class="stats" id="post-stats"></div>
+
+            <div class="out pre tall idle" id="post-out">点击按钮开始。</div>
+
+            <div class="log" id="log-post"></div>
+          </div>
+        </section>
+
+      </div>
+    </aside>
+  </main>
+
+  <nav class="pager" data-pager></nav>
+
+  <footer class="pagefoot">
+    <span>COMP6080 26T3 · Week 4 · 知识点 03</span>
+    <span class="sig">fetch 不认 404，自己判 res.ok</span>
+  </footer>
+
+  <script src="assets/demo.js"></script>
+  <script>
+    /* ====================================================================
+       本页教学代码：只用原生 fetch / AbortController，无任何第三方库
+       ==================================================================== */
+
+    /* 网络地址常量 */
+    const API = 'https://jsonplaceholder.typicode.com';
+    const URL_OK = API + '/users';                     // 200
+    const URL_404 = API + '/nonexistent-path-404';     // 404
+    const URL_POST = API + '/posts';                   // POST 返回 201
+    const FALLBACK = 'assets/fallback-users.json';     // 本地兜底，结构同远程一致
+
+    const $ = W4.$;
+
+    /* ---------------------------------------------------- 公共小工具 */
+    function renderStats(el, items) {
+      el.innerHTML = items.map(function (it) {
+        return '<div class="stat"><span class="k">' + W4.escapeHtml(it.k) + '</span>' +
+          '<span class="v">' + W4.escapeHtml(it.v) + '</span></div>';
+      }).join('');
+    }
+
+    function renderChips(el, chips) {
+      el.innerHTML = chips.map(function (c) {
+        return '<span class="chip ' + (c.tone || '') + '">' + W4.escapeHtml(c.text) + '</span>';
+      }).join('');
+    }
+
+    function truncate(text, limit) {
+      const max = limit || 600;
+      if (text.length <= max) return text;
+      return text.slice(0, max) + '\n…（已截断，完整长度 ' + text.length + ' 字符）';
+    }
+
+    /* ================================================== 演示 A：GET + res.ok */
+    const checkOkEl = $('#check-ok');
+    const fetchStats = $('#fetch-stats');
+    const fetchChips = $('#fetch-chips');
+    const fetchOut = $('#fetch-out');
+    const logFetch = $('#log-fetch');
+
+    function setFetchOut(text, tone) {
+      fetchOut.className = 'out pre tall ' + (tone || 'idle');
+      fetchOut.textContent = text;
+    }
+
+    async function runGet(url, useFallback) {
+      W4.resetLog(logFetch);
+      renderStats(fetchStats, []);
+      renderChips(fetchChips, []);
+      setFetchOut('请求进行中…', 'idle');
+
+      const checkOk = checkOkEl.checked;
+      const t0 = performance.now();
+      W4.log(logFetch, '① 发起 fetch("' + url + '") —— 返回一个 Promise', 'info', 'p');
+      W4.log(logFetch, '② res.ok 检查已' + (checkOk ? '开启' : '关闭'), 'sync', 'p');
+
+      /* —— 第 1 步：fetch 本身，只有网络错误才会 reject —— */
+      let res;
+      try {
+        res = await fetch(url);
+      } catch (netErr) {
+        W4.log(logFetch, '✗ 网络层失败，Promise 被 reject：' + netErr.message, 'err', 'x');
+        if (useFallback) {
+          W4.log(logFetch, '→ 自动切换到本地兜底资源 ' + FALLBACK, 'warn', 'x');
+          try {
+            res = await fetch(FALLBACK);
+            W4.log(logFetch, '✓ 兜底资源请求成功', 'ok', 'x');
+          } catch (e2) {
+            renderChips(fetchChips, [{ text: 'reject（网络不可用）', tone: 'err' }]);
+            setFetchOut('网络错误：' + e2.message, 'err');
+            return;
+          }
+        } else {
+          renderChips(fetchChips, [{ text: 'reject（网络错误）', tone: 'err' }]);
+          setFetchOut('网络错误：' + netErr.message, 'err');
+          W4.log(logFetch, '✗ 结论：Promise reject', 'err', 'x');
+          return;
+        }
+      }
+
+      const ms = Math.round(performance.now() - t0);
+      const ctype = (res.headers.get('content-type') || '(无)').split(';')[0];
+
+      /* —— 第 2 步：拿到 Response，注意此刻还没有数据 —— */
+      W4.log(logFetch, '③ 拿到 Response：status=' + res.status + '，statusText="' + res.statusText + '"', 'info', 'r');
+      W4.log(logFetch, '   res.ok = ' + res.ok + '（等价于 status >= 200 且 status < 300）', res.ok ? 'ok' : 'warn', 'r');
+      W4.log(logFetch, '   此时还没有数据！响应体是一条流，要读一次才有内容', 'warn', 'r');
+
+      renderStats(fetchStats, [
+        { k: 'status', v: String(res.status) },
+        { k: 'ok', v: String(res.ok) },
+        { k: '耗时(ms)', v: String(ms) },
+        { k: 'content-type', v: ctype }
+      ]);
+
+      /* —— 第 3 步：关键的 res.ok 判断 —— */
+      if (checkOk && !res.ok) {
+        W4.log(logFetch, '④ 开启了 res.ok 检查且 res.ok=false → 主动 throw new Error("HTTP ' + res.status + '")', 'err', 'c');
+        W4.log(logFetch, '   因此不会再读 body，直接进入 catch 分支', 'err', 'c');
+        renderChips(fetchChips, [{ text: '被 catch 抓到：HTTP ' + res.status, tone: 'err' }]);
+        setFetchOut(
+          '✗ 抛出异常：HTTP ' + res.status + ' ' + res.statusText + '\n\n' +
+          '// 因为开启了 res.ok 检查，404 被当成错误处理，\n' +
+          '// 没有继续读取响应体，流程进入 catch 分支。',
+          'err'
+        );
+        W4.log(logFetch, '⑤ 结论：Promise reject（进入 catch）', 'err', 'c');
+        return;
+      }
+
+      /* —— 第 4 步：读响应体 —— */
+      W4.log(logFetch, '④ 开始读 body：await res.json()（响应体只能读一次）', 'info', 'b');
+      let data;
+      try {
+        data = await res.json();
+      } catch (parseErr) {
+        W4.log(logFetch, '✗ res.json() 失败：' + parseErr.message, 'err', 'b');
+        renderChips(fetchChips, [{ text: 'body 读取 / 解析失败', tone: 'err' }]);
+        setFetchOut('读取响应体失败：' + parseErr.message, 'err');
+        return;
+      }
+      W4.log(logFetch, '✓ res.json() 完成，拿到了真正的数据', 'ok', 'b');
+
+      /* —— 第 5 步：按状态码给出最终结论 —— */
+      if (!res.ok) {
+        W4.log(logFetch, '⚠ 注意：status=' + res.status + ' 但 Promise 并没有 reject！', 'warn', 'c');
+        W4.log(logFetch, '   这就是 fetch 的坑：404 / 500 也会 resolve', 'warn', 'c');
+        renderChips(fetchChips, [{ text: '你以为成功了，其实状态码是 ' + res.status, tone: 'warn' }]);
+        setFetchOut(
+          '// 没有检查 res.ok，直接把响应体当成数据用了：\n' +
+          truncate(W4.pretty(data)) + '\n\n' +
+          '// 真实状态码是 ' + res.status + '，这只是 fetch 制造的「成功」假象，\n' +
+          '// 用户最终看到的会是空白页面。',
+          'ok'
+        );
+        W4.log(logFetch, '⑤ 结论：Promise resolve（假成功）→ 页面渲染空白', 'warn', 'c');
+        return;
+      }
+
+      W4.log(logFetch, '⑤ 结论：Promise resolve，状态码正常，数据可用', 'ok', 'c');
+      renderChips(fetchChips, [{ text: 'resolve · ' + res.status + ' OK', tone: 'ok' }]);
+      setFetchOut('// 数据预览（已截断）：\n' + truncate(W4.pretty(data)), 'ok');
+    }
+
+    $('#btn-get-remote').addEventListener('click', function () { runGet(URL_OK, true); });
+    $('#btn-get-fallback').addEventListener('click', function () { runGet(FALLBACK, false); });
+    $('#btn-get-404').addEventListener('click', function () { runGet(URL_404, false); });
+
+    /* ================================================== 演示 B：POST 与 body */
+    const postTitle = $('#post-title');
+    const postUser = $('#post-user');
+    const postStats = $('#post-stats');
+    const postOut = $('#post-out');
+    const logPost = $('#log-post');
+
+    function setPostOut(text, tone) {
+      postOut.className = 'out pre tall ' + (tone || 'idle');
+      postOut.textContent = text;
+    }
+
+    async function runPost() {
+      W4.resetLog(logPost);
+      const title = postTitle.value.trim() || 'COMP6080 第 4 周';
+      const userId = Number(postUser.value) || 1;
+      const payload = { title: title, body: '演示 fetch POST 的请求体', userId: userId };
+
+      renderStats(postStats, []);
+      setPostOut('发送中…', 'idle');
+
+      W4.log(logPost, '① 构造要发送的数据对象：' + JSON.stringify(payload), 'info', 'p');
+      W4.log(logPost, '② body 只能是字符串，所以先 JSON.stringify(payload)', 'warn', 'p');
+
+      const t0 = performance.now();
+      try {
+        const res = await fetch(URL_POST, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload)
+        });
+        const ms = Math.round(performance.now() - t0);
+        W4.log(logPost, '③ 服务器返回 status=' + res.status + '（创建成功通常是 201）', 'info', 'r');
+
+        if (!res.ok) throw new Error('HTTP ' + res.status);
+        const data = await res.json();
+        W4.log(logPost, '④ await res.json() 读回服务器生成的对象，新 id=' + data.id, 'ok', 'b');
+
+        renderStats(postStats, [
+          { k: 'status', v: String(res.status) },
+          { k: 'ok', v: String(res.ok) },
+          { k: '耗时(ms)', v: String(ms) }
+        ]);
+        setPostOut('// 服务器回显的对象（注意新生成的 id）\n' + W4.pretty(data), 'ok');
+      } catch (err) {
+        W4.log(logPost, '✗ 请求失败：' + err.message, 'err', 'x');
+        setPostOut('请求失败：' + err.message, 'err');
+      }
+    }
+
+    async function runBodyTwice() {
+      W4.resetLog(logPost);
+      renderStats(postStats, []);
+      setPostOut('请求中…', 'idle');
+
+      try {
+        const res = await fetch(URL_OK);
+        W4.log(logPost, '① 请求成功，拿到 Response（status=' + res.status + '）', 'info', 'r');
+
+        const first = await res.json();
+        W4.log(logPost, '② 第一次 await res.json() 成功，读到 ' + first.length + ' 条数据', 'ok', 'b');
+
+        W4.log(logPost, '③ 现在对同一个 res 再读一次 body…', 'warn', 'b');
+        await res.json();  // 这里会抛出 TypeError
+        W4.log(logPost, '不会执行到这里', 'err', 'b');
+      } catch (err) {
+        W4.log(logPost, '✗ 抛出 ' + err.name + '：' + err.message, 'err', 'b');
+        W4.log(logPost, '④ 需要读两次时先克隆：const copy = res.clone();', 'ok', 'tip');
+        setPostOut(
+          '✗ ' + err.name + ': ' + err.message + '\n\n' +
+          '// 响应体是一条流，只能被消费一次。\n' +
+          '// 想读两次必须先克隆出一份：\n\n' +
+          'const copy = res.clone();\n' +
+          'const a = await res.json();\n' +
+          'const b = await copy.json();  // 各读各的，互不影响',
+          'err'
+        );
+      }
+    }
+
+    $('#btn-post').addEventListener('click', runPost);
+    $('#btn-body-twice').addEventListener('click', runBodyTwice);
+  </script>
+</body>
+</html>

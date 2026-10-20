@@ -8,7 +8,7 @@ import { ROLE_LABELS } from '@/lib/auth/types'
 import { ChangePasswordModal } from '@/components/ChangePasswordModal'
 
 const navItems = [
-  { label: '知识点解析', href: '/knowledge', requiresAuth: false },
+  { label: '课程', href: '/courses', requiresAuth: false },
   { label: '题库中心', href: '/practice', requiresAuth: true, guestNote: '仅前 10 题预览' },
   { label: '模拟真题', href: '/exams', requiresAuth: true, guestNote: '仅开放 2 套' },
 ]
@@ -17,8 +17,8 @@ function navClassName(isActive: boolean) {
   return [
     'inline-flex items-center gap-1.5 rounded-full px-4 py-2 text-sm font-medium transition',
     isActive
-      ? 'bg-blue-600 text-white shadow-sm'
-      : 'text-slate-600 hover:bg-blue-50 hover:text-blue-700',
+      ? 'bg-[var(--brand-600)] text-white shadow-sm'
+      : 'text-slate-600 hover:bg-[var(--paper-chip)] hover:text-[var(--brand-700)]',
   ].join(' ')
 }
 
@@ -68,18 +68,18 @@ export function AppHeader() {
   }
 
   const isNavActive = (href: string) => {
-    if (href === '/knowledge') return pathname?.startsWith('/knowledge')
+    if (href === '/courses') return pathname?.startsWith('/courses')
     if (href === '/practice') return pathname?.startsWith('/practice')
     if (href === '/exams') return pathname?.startsWith('/exams')
     return false
   }
 
   return (
-    <header className="border-b border-slate-200 bg-white/90 backdrop-blur shrink-0">
+    <header className="shrink-0 border-b border-[var(--paper-border)] bg-[color:rgba(251,248,241,0.94)] backdrop-blur">
       <div className="mx-auto flex h-[72px] w-full items-center justify-between gap-6 px-8">
-        <Link href="/knowledge" className="flex items-center gap-3 shrink-0">
+        <Link href="/courses" className="flex items-center gap-3 shrink-0">
           <img src="/favicon.svg" alt="COMP6080 Quiz Hub" className="h-12 w-12" />
-          <span className="text-2xl font-semibold uppercase tracking-[0.1em] text-blue-600">
+          <span className="text-2xl font-semibold uppercase tracking-[0.1em] text-[var(--brand-600)]">
             COMP6080 Quiz Hub
           </span>
         </Link>
@@ -121,7 +121,7 @@ export function AppHeader() {
           {user && user.role === 'admin' && (
             <Link
               href="/admin"
-              className="rounded-full px-3 py-1.5 text-xs font-semibold text-purple-600 bg-purple-50 hover:bg-purple-100 transition"
+              className="rounded-full bg-[var(--paper-chip)] px-3 py-1.5 text-xs font-semibold text-[var(--brand-700)] transition hover:bg-[var(--paper-chip-strong)]"
             >
               管理后台
             </Link>
@@ -130,7 +130,7 @@ export function AppHeader() {
           <button
             type="button"
             aria-label="消息提醒"
-            className="relative flex h-10 w-10 items-center justify-center rounded-full bg-slate-100 text-slate-600 transition hover:bg-slate-200 hover:text-slate-800"
+            className="relative flex h-10 w-10 items-center justify-center rounded-full bg-[var(--paper-chip)] text-slate-600 transition hover:bg-[var(--paper-chip-strong)] hover:text-slate-800"
           >
             <svg viewBox="0 0 24 24" className="h-5 w-5" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
               <path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9" />
@@ -138,14 +138,14 @@ export function AppHeader() {
             </svg>
           </button>
 
-          <span aria-hidden className="h-8 w-px bg-slate-200" />
+          <span aria-hidden className="h-8 w-px bg-[var(--paper-border)]" />
 
           {user ? (
             <div className="relative" ref={wrapperRef}>
               <button
                 type="button"
                 onClick={() => setOpenDropdown((v) => !v)}
-                className="group flex items-center gap-3 rounded-full hover:bg-slate-50 transition px-2 py-1 focus:outline-none focus:ring-2 focus:ring-blue-200"
+                className="group flex items-center gap-3 rounded-full px-2 py-1 transition hover:bg-[var(--paper-chip)] focus:outline-none focus:ring-2 focus:ring-[var(--brand-ring)]"
                 aria-haspopup="menu"
                 aria-expanded={openDropdown}
               >
@@ -160,7 +160,7 @@ export function AppHeader() {
                 <div className="flex items-center gap-2">
                   <span
                     aria-hidden
-                    className="flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br from-indigo-500 to-violet-500 text-base font-semibold text-white shadow-sm ring-2 ring-white group-hover:ring-slate-100 transition"
+                    className="flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br from-[var(--brand-600)] to-[var(--brand-500)] text-base font-semibold text-white shadow-sm ring-2 ring-white transition group-hover:ring-[var(--paper-chip)]"
                   >
                     {initials(user.email)}
                   </span>
@@ -173,12 +173,12 @@ export function AppHeader() {
               {openDropdown && (
                 <div
                   role="menu"
-                  className="absolute right-0 mt-3 w-52 origin-top-right rounded-xl border border-slate-200 bg-white p-2 shadow-xl ring-1 ring-black/5 focus:outline-none z-40"
+                  className="absolute right-0 z-40 mt-3 w-52 origin-top-right rounded-xl border border-[var(--paper-border)] bg-[var(--paper-surface)] p-2 shadow-xl ring-1 ring-black/5 focus:outline-none"
                 >
-                  <div className="mb-1 flex items-center gap-3 rounded-lg bg-slate-50 px-3 py-2 sm:hidden">
+                  <div className="mb-1 flex items-center gap-3 rounded-lg bg-[var(--paper-chip)] px-3 py-2 sm:hidden">
                     <span
                       aria-hidden
-                      className="flex h-8 w-8 items-center justify-center rounded-lg bg-gradient-to-br from-indigo-500 to-violet-500 text-xs font-semibold text-white"
+                      className="flex h-8 w-8 items-center justify-center rounded-lg bg-gradient-to-br from-[var(--brand-600)] to-[var(--brand-500)] text-xs font-semibold text-white"
                     >
                       {initials(user.email)}
                     </span>
@@ -191,12 +191,12 @@ export function AppHeader() {
                       </p>
                     </div>
                   </div>
-                  <div className="my-1 h-px bg-slate-100" />
+                  <div className="my-1 h-px bg-[var(--paper-border)]" />
                   <button
                     role="menuitem"
                     type="button"
                     onClick={openChangePasswordModal}
-                    className="flex w-full items-center gap-2 rounded-lg px-3 py-2 text-left text-sm font-medium text-slate-700 transition hover:bg-blue-50 hover:text-blue-700"
+                    className="flex w-full items-center gap-2 rounded-lg px-3 py-2 text-left text-sm font-medium text-slate-700 transition hover:bg-[var(--paper-chip)] hover:text-[var(--brand-700)]"
                   >
                     <svg className="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                       <rect x="3" y="11" width="18" height="11" rx="2" ry="2" />
@@ -204,7 +204,7 @@ export function AppHeader() {
                     </svg>
                     修改密码
                   </button>
-                  <div className="my-1 h-px bg-slate-100" />
+                  <div className="my-1 h-px bg-[var(--paper-border)]" />
                   <button
                     role="menuitem"
                     type="button"
@@ -224,7 +224,7 @@ export function AppHeader() {
           ) : (
             <Link
               href="/login"
-              className="flex items-center gap-2 rounded-full bg-blue-600 px-4 py-2 text-sm font-medium text-white hover:bg-blue-700 transition"
+              className="flex items-center gap-2 rounded-full bg-[var(--brand-600)] px-4 py-2 text-sm font-medium text-white transition hover:bg-[var(--brand-700)]"
             >
               登录
               <svg viewBox="0 0 20 20" className="h-4 w-4" fill="currentColor">

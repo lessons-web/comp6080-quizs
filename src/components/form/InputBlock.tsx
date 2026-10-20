@@ -17,7 +17,7 @@ export default function InputBlock({
 }: InputBlockProps) {
   return (
     <div>
-      <label className="block text-sm text-slate-700 mb-1.5">
+      <label className="mb-1.5 block text-sm text-slate-700">
         {label}
         {required && <span className="text-rose-500 ml-1">*</span>}
       </label>
@@ -26,7 +26,7 @@ export default function InputBlock({
         value={value || ''}
         onChange={(e) => onChange?.(e.target.value)}
         placeholder={placeholder}
-        className="w-full h-11 rounded-xl border border-slate-200 px-3 text-sm outline-none focus:ring-1 focus:ring-brand-500 focus:border-brand-500 bg-white"
+        className="h-11 w-full rounded-xl border border-[var(--paper-border)] bg-[var(--paper-surface)] px-3 text-sm outline-none focus:border-brand-500 focus:ring-1 focus:ring-brand-500"
       />
     </div>
   )

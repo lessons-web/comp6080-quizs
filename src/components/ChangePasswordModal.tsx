@@ -63,14 +63,14 @@ export function ChangePasswordModal({ open, onClose }: ChangePasswordModalProps)
   if (typeof document === 'undefined') return null
 
   const modalNode = (
-    <div className="fixed inset-0 z-[9999] flex items-center justify-center p-4 bg-slate-900/50 backdrop-blur-sm">
-      <div className="w-full max-w-md rounded-2xl border border-slate-200 bg-white p-6 shadow-xl">
+    <div className="fixed inset-0 z-[9999] flex items-center justify-center bg-slate-900/50 p-4 backdrop-blur-sm">
+      <div className="w-full max-w-md rounded-2xl border border-[var(--paper-border)] bg-[var(--paper-surface)] p-6 shadow-xl">
         <div className="flex items-center justify-between mb-4">
           <h3 className="text-lg font-semibold text-slate-900">修改密码</h3>
           <button
             type="button"
             onClick={onClose}
-            className="rounded-lg p-1.5 text-slate-400 hover:text-slate-600 hover:bg-slate-100 transition"
+            className="rounded-lg p-1.5 text-slate-400 transition hover:bg-[var(--paper-chip)] hover:text-slate-600"
             disabled={pwdSubmitting}
           >
             <svg className="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
@@ -90,7 +90,7 @@ export function ChangePasswordModal({ open, onClose }: ChangePasswordModalProps)
               value={currentPwd}
               onChange={(e) => setCurrentPwd(e.target.value)}
               placeholder="请输入当前密码"
-              className="w-full rounded-lg border border-slate-300 bg-white px-4 py-2.5 text-sm text-slate-900 placeholder-slate-400 outline-none transition focus:border-blue-500 focus:ring-2 focus:ring-blue-100"
+              className="w-full rounded-lg border border-[var(--paper-border-strong)] bg-[var(--paper-surface)] px-4 py-2.5 text-sm text-slate-900 placeholder-slate-400 outline-none transition focus:border-[var(--brand-500)] focus:ring-2 focus:ring-[var(--brand-ring)]"
               autoComplete="current-password"
               disabled={pwdSubmitting}
             />
@@ -105,7 +105,7 @@ export function ChangePasswordModal({ open, onClose }: ChangePasswordModalProps)
               value={newPwd}
               onChange={(e) => setNewPwd(e.target.value)}
               placeholder="至少 6 位"
-              className="w-full rounded-lg border border-slate-300 bg-white px-4 py-2.5 text-sm text-slate-900 placeholder-slate-400 outline-none transition focus:border-blue-500 focus:ring-2 focus:ring-blue-100"
+              className="w-full rounded-lg border border-[var(--paper-border-strong)] bg-[var(--paper-surface)] px-4 py-2.5 text-sm text-slate-900 placeholder-slate-400 outline-none transition focus:border-[var(--brand-500)] focus:ring-2 focus:ring-[var(--brand-ring)]"
               autoComplete="new-password"
               disabled={pwdSubmitting}
             />
@@ -120,7 +120,7 @@ export function ChangePasswordModal({ open, onClose }: ChangePasswordModalProps)
               value={confirmPwd}
               onChange={(e) => setConfirmPwd(e.target.value)}
               placeholder="再次输入新密码"
-              className="w-full rounded-lg border border-slate-300 bg-white px-4 py-2.5 text-sm text-slate-900 placeholder-slate-400 outline-none transition focus:border-blue-500 focus:ring-2 focus:ring-blue-100"
+              className="w-full rounded-lg border border-[var(--paper-border-strong)] bg-[var(--paper-surface)] px-4 py-2.5 text-sm text-slate-900 placeholder-slate-400 outline-none transition focus:border-[var(--brand-500)] focus:ring-2 focus:ring-[var(--brand-ring)]"
               autoComplete="new-password"
               disabled={pwdSubmitting}
             />
@@ -142,14 +142,14 @@ export function ChangePasswordModal({ open, onClose }: ChangePasswordModalProps)
               type="button"
               onClick={onClose}
               disabled={pwdSubmitting}
-              className="flex-1 rounded-lg border border-slate-200 bg-white px-4 py-2.5 text-sm font-medium text-slate-700 transition hover:bg-slate-50 disabled:opacity-50"
+              className="flex-1 rounded-lg border border-[var(--paper-border)] bg-[var(--paper-surface)] px-4 py-2.5 text-sm font-medium text-slate-700 transition hover:bg-[var(--paper-chip)] disabled:opacity-50"
             >
               取消
             </button>
             <button
               type="submit"
               disabled={pwdSubmitting}
-              className="flex-1 inline-flex items-center justify-center gap-2 rounded-lg bg-blue-600 px-4 py-2.5 text-sm font-semibold text-white shadow-sm transition hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed"
+              className="flex-1 inline-flex items-center justify-center gap-2 rounded-lg bg-[var(--brand-600)] px-4 py-2.5 text-sm font-semibold text-white shadow-sm transition hover:bg-[var(--brand-700)] disabled:cursor-not-allowed disabled:opacity-50"
             >
               {pwdSubmitting ? (
                 <>

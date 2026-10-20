@@ -167,9 +167,9 @@ export default function Select({
         onClick={() => !disabled && setOpen((prev) => !prev)}
         onKeyDown={onTriggerKeyDown}
         className={classNames(
-          'w-full h-11 shrink-0 rounded-xl border border-slate-200 bg-slate-50 px-3 text-sm text-left flex items-center justify-between gap-3 shadow-sm transition',
-          'outline-none focus:border-blue-500 focus:bg-white focus:ring-2 focus:ring-blue-500/20',
-          disabled ? 'bg-slate-100 text-slate-400 cursor-not-allowed' : 'hover:bg-white hover:border-slate-300',
+          'flex h-11 w-full shrink-0 items-center justify-between gap-3 rounded-xl border border-[var(--paper-border)] bg-[var(--paper-surface-soft)] px-3 text-left text-sm shadow-sm transition',
+          'outline-none focus:border-[var(--brand-500)] focus:bg-[var(--paper-surface)] focus:ring-2 focus:ring-[var(--brand-ring)]',
+          disabled ? 'cursor-not-allowed bg-[var(--paper-chip)] text-slate-400' : 'hover:border-[var(--paper-border-strong)] hover:bg-[var(--paper-surface)]',
           triggerClassName,
         )}
       >
@@ -179,7 +179,7 @@ export default function Select({
         <ChevronDown
           className={classNames(
             'h-4 w-4 shrink-0 text-slate-400 transition-transform duration-200',
-            open && 'rotate-180 text-blue-600',
+            open && 'rotate-180 text-[var(--brand-600)]',
           )}
         />
       </button>
@@ -189,7 +189,7 @@ export default function Select({
           role="listbox"
           tabIndex={-1}
           onKeyDown={onListKeyDown}
-          className="absolute z-50 mt-2 min-w-full overflow-hidden rounded-xl border border-slate-200 bg-white shadow-[0_10px_25px_-8px_rgba(15,23,42,0.12),0_4px_10px_-4px_rgba(15,23,42,0.08)]"
+          className="absolute z-50 mt-2 min-w-full overflow-hidden rounded-xl border border-[var(--paper-border)] bg-[var(--paper-surface)] shadow-[0_10px_25px_-8px_rgba(15,23,42,0.12),0_4px_10px_-4px_rgba(15,23,42,0.08)]"
         >
           <div className="max-h-72 overflow-auto p-1">
             {enabledOptions.length === 0 ? (
@@ -215,7 +215,7 @@ export default function Select({
                   }}
                   className={classNames(
                     'w-full flex items-center justify-between gap-3 px-3 py-2 rounded-lg text-sm text-left transition-colors',
-                    activeNow ? 'bg-blue-50 text-blue-700' : 'text-slate-700 hover:bg-slate-50',
+                    activeNow ? 'bg-[var(--brand-50)] text-[var(--brand-700)]' : 'text-slate-700 hover:bg-[var(--paper-chip)]',
                     selectedNow && 'font-semibold',
                   )}
                 >
@@ -226,7 +226,7 @@ export default function Select({
                     ) : null}
                   </span>
                   {selectedNow ? (
-                    <Check className="h-4 w-4 shrink-0 text-blue-600" />
+                    <Check className="h-4 w-4 shrink-0 text-[var(--brand-600)]" />
                   ) : (
                     <span className="h-4 w-4 shrink-0" />
                   )}

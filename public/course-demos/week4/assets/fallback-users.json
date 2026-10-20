@@ -1,0 +1,66 @@
+[
+  {
+    "id": 1,
+    "name": "张伟",
+    "username": "zhangwei",
+    "email": "zhangwei@example.com",
+    "address": { "city": "Sydney", "zipcode": "2000" },
+    "company": { "name": "Kensington Labs" }
+  },
+  {
+    "id": 2,
+    "name": "李娜",
+    "username": "lina",
+    "email": "lina@example.com",
+    "address": { "city": "Mascot", "zipcode": "2020" },
+    "company": { "name": "Mascot Digital" }
+  },
+  {
+    "id": 3,
+    "name": "王强",
+    "username": "wangqiang",
+    "email": "wangqiang@example.com",
+    "address": { "city": "Chatswood", "zipcode": "2067" },
+    "company": { "name": "North Shore Tech" }
+  },
+  {
+    "id": 4,
+    "name": "陈静",
+    "username": "chenjing",
+    "email": "chenjing@example.com",
+    "address": { "city": "Parramatta", "zipcode": "2150" },
+    "company": { "name": "Parramatta Works" }
+  },
+  {
+    "id": 5,
+    "name": "刘洋",
+    "username": "liuyang",
+    "email": "liuyang@example.com",
+    "address": { "city": "Hurstville", "zipcode": "2220" },
+    "company": { "name": "Southline Studio" }
+  },
+  {
+    "id": 6,
+    "name": "赵敏",
+    "username": "zhaomin",
+    "email": "zhaomin@example.com",
+    "address": { "city": "Bondi", "zipcode": "2026" },
+    "company": { "name": "Bondi Collective" }
+  },
+  {
+    "id": 7,
+    "name": "孙鹏",
+    "username": "sunpeng",
+    "email": "sunpeng@example.com",
+    "address": { "city": "Ryde", "zipcode": "2112" },
+    "company": { "name": "Ryde Systems" }
+  },
+  {
+    "id": 8,
+    "name": "周琳",
+    "username": "zhoulin",
+    "email": "zhoulin@example.com",
+    "address": { "city": "Kogarah", "zipcode": "2217" },
+    "company": { "name": "Kogarah Media" }
+  }
+]

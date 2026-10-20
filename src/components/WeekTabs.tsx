@@ -13,8 +13,8 @@ function tabClassName(isActive: boolean) {
   return [
     'rounded-full border px-3 py-1.5 text-sm font-medium transition',
     isActive
-      ? 'border-blue-600 bg-blue-50 text-blue-700'
-      : 'border-slate-200 bg-white text-slate-600 hover:border-blue-200 hover:text-blue-700',
+      ? 'border-[var(--brand-600)] bg-[var(--brand-50)] text-[var(--brand-700)]'
+      : 'border-[var(--paper-border)] bg-[var(--paper-surface)] text-slate-600 hover:border-[var(--brand-200)] hover:text-[var(--brand-700)]',
   ].join(' ')
 }
 

@@ -42,7 +42,7 @@ export default function LoginPage() {
   const [error, setError] = useState<string | null>(null)
   const [submitting, setSubmitting] = useState(false)
 
-  const redirect = searchParams.get('redirect') || '/knowledge'
+  const redirect = searchParams.get('redirect') || '/courses'
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault()
@@ -138,8 +138,8 @@ export default function LoginPage() {
 
               <p className="mt-6 text-center text-sm text-slate-500">
                 访客可直接浏览{' '}
-                <Link href="/knowledge" className="font-medium text-blue-600 hover:text-blue-700">
-                  知识点解析
+                <Link href="/courses" className="font-medium text-blue-600 hover:text-blue-700">
+                  课程内容
                 </Link>
                 ，或预览{' '}
                 <Link href="/practice" className="font-medium text-blue-600 hover:text-blue-700">

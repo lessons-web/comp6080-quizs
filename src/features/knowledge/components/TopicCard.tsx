@@ -93,7 +93,7 @@ export function TopicCard({ topic, label, description, pointCount }: TopicCardPr
   return (
     <Link
       href={`/knowledge/${topic}`}
-      className="group relative flex h-[160px] flex-col overflow-hidden rounded-xl bg-white p-5 shadow-sm ring-1 ring-slate-200 transition-all duration-200 hover:-translate-y-0.5 hover:shadow-md hover:ring-slate-300"
+      className="group relative flex h-[160px] flex-col overflow-hidden rounded-xl bg-[var(--paper-surface)] p-5 shadow-sm ring-1 ring-[var(--paper-border)] transition-all duration-200 hover:-translate-y-0.5 hover:shadow-md hover:ring-[var(--paper-border-strong)]"
     >
       <div className={`flex h-10 w-10 items-center justify-center rounded-lg text-white shadow-sm ${boxCls}`}>
         <TopicIcon name={topic} className="h-5 w-5" />
@@ -101,11 +101,11 @@ export function TopicCard({ topic, label, description, pointCount }: TopicCardPr
       <div className="mt-3 text-base font-semibold text-slate-900 group-hover:text-slate-950">
         {label}
       </div>
-      <div className="mt-1 line-clamp-2 text-sm leading-5 text-slate-500">
+      <div className="mt-1 line-clamp-2 text-sm leading-5 text-[var(--paper-text-soft)]">
         {description}
       </div>
       <div className="mt-auto flex items-center justify-end">
-        <span className="text-xs font-medium text-slate-500">{pointCount} 篇</span>
+        <span className="text-xs font-medium text-[var(--paper-text-soft)]">{pointCount} 篇</span>
       </div>
     </Link>
   )

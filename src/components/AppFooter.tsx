@@ -1,7 +1,7 @@
 export function AppFooter() {
   return (
-    <footer className="border-t border-slate-200 bg-white shrink-0">
-      <div className="mx-auto flex w-full max-w-6xl flex-col gap-2 px-4 py-5 text-sm text-slate-500 sm:flex-row sm:items-center sm:justify-between sm:px-6 lg:px-8">
+    <footer className="shrink-0 border-t border-[var(--paper-border)] bg-[color:rgba(251,248,241,0.96)]">
+      <div className="mx-auto flex w-full max-w-6xl flex-col gap-2 px-4 py-5 text-sm text-[#6a6257] sm:flex-row sm:items-center sm:justify-between sm:px-6 lg:px-8">
         <div className="flex items-center gap-2">
           <p>© {new Date().getFullYear()} COMP6080 Quiz Hub</p>
         </div>
@@ -10,7 +10,7 @@ export function AppFooter() {
           <svg
             aria-hidden
             viewBox="0 0 24 24"
-            className="h-4 w-4 text-red-600"
+            className="h-4 w-4 text-[var(--accent-600)]"
             fill="none"
             stroke="currentColor"
             strokeWidth="2"

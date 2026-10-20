@@ -1,0 +1,183 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>COMP6080 Week 4 · 知识点演示 · 目录</title>
+  <meta name="description" content="COMP6080 Week 4 异步与网络：数据交换格式、XMLHttpRequest、fetch、Promise、async/await 的可运行演示。" />
+  <link rel="icon" href="data:," />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600&family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="assets/demo.css" />
+</head>
+<body data-page="index">
+
+  <header class="topbar">
+    <nav class="crumb" data-topbar></nav>
+    <span class="topbar-spacer"></span>
+    <span class="topbar-badge">Week 4 · 异步与网络</span>
+  </header>
+
+  <section class="hero">
+    <div class="kicker">COMP6080 · Week 4</div>
+    <h1>数据怎么从服务器来：<br /><span class="mark">5 个可以当场跑起来</span>的知识点演示</h1>
+    <p class="lede">
+      每个知识点一个 HTML 文件，左边讲透概念、右边是可交互的演示台。所有网络请求都带
+      <strong>本地兜底数据</strong>，课堂断网也能演示成功与失败两条路径。
+    </p>
+    <div class="hero-meta">
+      <div>
+        <div class="k">主线</div>
+        <div class="v">字符串 → 请求 → Promise → 语法糖</div>
+      </div>
+      <div>
+        <div class="k">技术栈</div>
+        <div class="v">原生 HTML + CSS + JS，零依赖、零构建</div>
+      </div>
+      <div>
+        <div class="k">数据源</div>
+        <div class="v">jsonplaceholder.typicode.com（CORS 开放、免 key）</div>
+      </div>
+      <div>
+        <div class="k">对应大纲</div>
+        <div class="v">Part 1 · Week 4 异步与网络（8 节压缩为 5 个演示）</div>
+      </div>
+    </div>
+  </section>
+
+  <section class="flow">
+    <div class="flow-line">
+      <span class="node">浏览器里写死的 HTML</span>
+      <span class="arrow">→</span>
+      <span class="node hi">数据交换格式（JSON）</span>
+      <span class="arrow">→</span>
+      <span class="node hi">XMLHttpRequest</span>
+      <span class="arrow">→</span>
+      <span class="node hi">fetch</span>
+      <span class="arrow">→</span>
+      <span class="node hi">Promise</span>
+      <span class="arrow">→</span>
+      <span class="node hi">async / await</span>
+      <span class="arrow">→</span>
+      <span class="node">数据变成界面</span>
+    </div>
+  </section>
+
+  <section class="catalog" data-catalog></section>
+
+  <section class="doc" style="grid-template-columns: minmax(0,1fr); padding-top: 8px;">
+    <div class="doc-main" style="max-width: 78ch;">
+      <div class="sec">
+        <div class="sec-head">
+          <span class="sec-num">课前</span>
+          <h2>怎么运行这些演示<span class="en">serve locally</span></h2>
+        </div>
+
+        <p>
+          第 01 节双击打开就能用；但 <strong>02–05 节涉及网络请求和本地兜底文件</strong>，
+          浏览器在 <code class="inline">file://</code> 协议下会拦截这类读取，所以请用本地服务器打开整个
+          <code class="inline">week4</code> 目录。
+        </p>
+
+        <div class="code">
+          <div class="code-head">
+            <span class="code-lang">bash</span>
+            <span class="code-file">在 COMP6080/2026T3/week4 目录下执行</span>
+          </div>
+          <pre><code data-lang="bash"># 任选一种，然后在浏览器打开 http://localhost:8080
+python3 -m http.server 8080
+
+# 或者
+npx serve .</code></pre>
+        </div>
+
+        <div class="note tip">
+          <span class="ico">提示</span>
+          <div>
+            <strong>课堂断网的预案：</strong>02–05 节的演示台都带「本地兜底」开关。
+            远程接口失败时，代码会转去读 <code class="inline">assets/fallback-users.json</code>，
+            返回结构与远程接口<strong>同构</strong>，页面渲染逻辑完全不用改 —— 这本身就是一次真实的错误处理示范。
+          </div>
+        </div>
+
+        <div class="note warn">
+          <span class="ico">注意</span>
+          <div>
+            <strong>这些页面的代码不依赖任何库。</strong>
+            没有 jQuery、没有 axios、没有构建工具。每一页的 <code class="inline">&lt;script&gt;</code>
+            就是课上的全部代码，学生可以直接「查看网页源代码」对照。
+          </div>
+        </div>
+      </div>
+
+      <div class="sec">
+        <div class="sec-head">
+          <span class="sec-num">索引</span>
+          <h2>这 5 节各回答什么问题<span class="en">what each page answers</span></h2>
+        </div>
+
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th class="mono">#</th>
+                <th>回答的问题</th>
+                <th>核心 API</th>
+                <th>最容易被考的点</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td class="mono">01</td>
+                <td>数据在传过去之前，长什么样？</td>
+                <td class="mono">JSON.stringify / parse</td>
+                <td>JSON 是字符串，不是对象；key 必须双引号、无尾逗号</td>
+              </tr>
+              <tr>
+                <td class="mono">02</td>
+                <td>不刷新页面，怎么把服务器数据插进 DOM？</td>
+                <td class="mono">XMLHttpRequest</td>
+                <td>只有网络层失败才走 onerror；4xx/5xx 要走 status</td>
+              </tr>
+              <tr>
+                <td class="mono">03</td>
+                <td>有没有更好用的请求方式？</td>
+                <td class="mono">fetch()</td>
+                <td>fetch 遇到 404 不会 reject，必须自己判 res.ok</td>
+              </tr>
+              <tr>
+                <td class="mono">04</td>
+                <td>「未来才会有的值」怎么被组织和编排？</td>
+                <td class="mono">Promise</td>
+                <td>状态不可逆；all / race / allSettled 的差别</td>
+              </tr>
+              <tr>
+                <td class="mono">05</td>
+                <td>能不能写得像同步代码一样？</td>
+                <td class="mono">async / await</td>
+                <td>async 总是返回 Promise；await 失败即抛出，所以能 try/catch</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="note rule">
+          <span class="ico">口诀</span>
+          <div>
+            一句话串起来：<strong>先把数据变成字符串（01）→ 用 XHR 送出去（02）→ 换成 fetch 更好用（03）
+            → 背后是 Promise（04）→ 最后用 async/await 写得像同步（05）。</strong>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <footer class="pagefoot">
+    <span>COMP6080 26T3 · Week 4 知识点演示</span>
+    <span class="sig">字符串 → 请求 → Promise → 语法糖</span>
+  </footer>
+
+  <script src="assets/demo.js"></script>
+</body>
+</html>

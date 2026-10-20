@@ -1,0 +1,995 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>05 · async / await · COMP6080 Week 4</title>
+  <meta name="description" content="async/await 本质是 Promise 的语法糖：async 总返回 Promise，await 暂停并取值、失败即抛出，错误处理回归 try/catch；串行 await 与 Promise.all 的差别。" />
+  <link rel="icon" href="data:," />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600&family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="assets/demo.css" />
+</head>
+<body data-page="05">
+
+  <header class="topbar">
+    <nav class="crumb" data-topbar></nav>
+    <span class="topbar-spacer"></span>
+    <span class="topbar-badge" data-topbar-badge></span>
+  </header>
+
+  <main class="doc">
+    <!-- ============================================= 左栏：讲解 ========= -->
+    <article class="doc-main">
+
+      <div class="page-head reveal">
+        <div class="kicker">知识点 05 · 对应课件 javascript-async-await</div>
+        <h1 class="page-title">async / await：<span class="mark">写起来像同步，本质还是 Promise</span></h1>
+        <p class="lede">
+          上一节我们用 <code class="inline">then / catch</code> 编排 Promise。这一节换成
+          <code class="inline">async / await</code>，代码一下子变得像同步：从上往下读，就是执行顺序。
+          但要记住一句话 —— <strong>它没有把异步变成同步，只是把异步写得更像同步</strong>，
+          最大的实际收益是<strong>错误处理重新回到 <code class="inline">try / catch</code></strong>。
+        </p>
+        <div class="tag-row">
+          <span class="tag hot">必考</span>
+          <span class="tag">async / await</span>
+          <span class="tag">协程 coroutine</span>
+          <span class="tag">try / catch / finally</span>
+          <span class="tag">串行 vs 并行</span>
+        </div>
+      </div>
+
+      <!-- 1.1 三种写法 -->
+      <section class="sec reveal" style="--d:60ms">
+        <div class="sec-head">
+          <span class="sec-num">1.1</span>
+          <h2>三种写法的演进<span class="en">callback → promise → async/await</span></h2>
+        </div>
+
+        <p>
+          同一个「取数据 → 渲染」逻辑，历史上一共有三种写法。它们<strong>能力完全等价</strong>，
+          差别只在<strong>可读性</strong>：写法一变，错误处理的形状也跟着变。
+        </p>
+
+        <h4>① 回调（callback）</h4>
+        <div class="code">
+          <div class="code-head">
+            <span class="code-lang">javascript</span>
+            <span class="code-file">demo/three-styles.js</span>
+          </div>
+          <pre><code data-lang="js">
+// 错误是第一参数，必须每次手动判断
+getData(url, function (err, data) {
+  if (err) {
+    console.error('出错了：', err);
+    return;
+  }
+  render(data);
+});</code></pre>
+        </div>
+
+        <h4>② Promise 链</h4>
+        <div class="code">
+          <div class="code-head">
+            <span class="code-lang">javascript</span>
+            <span class="code-file">demo/three-styles.js</span>
+          </div>
+          <pre><code data-lang="js">
+// 错误集中到链条末尾的 catch
+getData(url)
+  .then(function (data) {
+    render(data);
+  })
+  .catch(function (err) {
+    console.error('出错了：', err);
+  });</code></pre>
+        </div>
+
+        <h4>③ async / await</h4>
+        <div class="code">
+          <div class="code-head">
+            <span class="code-lang">javascript</span>
+            <span class="code-file">demo/three-styles.js</span>
+          </div>
+          <pre><code data-lang="js">
+// 像同步一样从上往下写，错误回到 try / catch
+async function main() {
+  try {
+    const data = await getData(url);
+    render(data);
+  } catch (err) {
+    console.error('出错了：', err);
+  }
+}
+main();</code></pre>
+        </div>
+
+        <div class="note rule">
+          <span class="ico">一句话</span>
+          <div>
+            <strong>三种写法能力等价，演进方向是「可读性」，不是「能力」。</strong>
+            <code class="inline">async / await</code> 底下跑的还是 Promise，只是把 <code class="inline">.then</code>
+            藏了起来，换来了「顺序阅读」和「统一错误处理」。
+          </div>
+        </div>
+      </section>
+
+      <!-- 1.2 两条核心规则 -->
+      <section class="sec reveal" style="--d:120ms">
+        <div class="sec-head">
+          <span class="sec-num">1.2</span>
+          <h2>两条核心规则<span class="en">two rules to remember</span></h2>
+        </div>
+
+        <p>理解 async / await，只需要牢记两条规则，其他结论都能从它们推导出来。</p>
+
+        <h3>规则一：<code class="inline">async</code> 函数总是返回 Promise</h3>
+        <p>
+          <strong>return 一个普通值，会被自动包装成一个「已兑现」的 Promise；
+          函数内部抛出错误，会变成一个「已拒绝」的 Promise。</strong>
+          换句话说，调用一个 async 函数，你<em>永远不会</em>直接拿到值，拿到的永远是一个 Promise。
+        </p>
+
+        <div class="code">
+          <div class="code-head">
+            <span class="code-lang">javascript</span>
+            <span class="code-file">demo/async-rules.js</span>
+          </div>
+          <pre><code data-lang="js">
+async function f() {
+  return 1;                  // 普通值 → 自动包成已兑现的 Promise
+}
+f() instanceof Promise;                   // true
+f().then(function (v) { console.log(v); }); // 1
+
+async function g() {
+  throw new Error('boom');   // 抛错 → 变成被拒绝的 Promise
+}
+g().catch(function (err) { console.log(err.message); }); // boom</code></pre>
+        </div>
+
+        <h3>规则二：<code class="inline">await</code> 暂停并取值，失败就在该行抛出</h3>
+        <p>
+          <code class="inline">await</code> 会<strong>暂停当前 async 函数的执行</strong>，
+          等后面的表达式（Promise）<strong>定型</strong>之后，把兑现的值取出来；
+          如果这个 Promise 被<strong>拒绝</strong>，就会在 <code class="inline">await</code> 这一行
+          <strong>抛出异常</strong>。正因为是「抛出」，它才能被外层的 <code class="inline">try / catch</code> 统一接住。
+        </p>
+
+        <h3>术语：协程（coroutine）</h3>
+        <p>
+          async / await 是 <mark>ES2017</mark> 引入的语法，底层的概念叫「<strong>协程</strong>」——
+          也就是<strong>可恢复的函数</strong>：函数在 <code class="inline">await</code> 处<em>挂起</em>，
+          把控制权交还给调用方；等 Promise 定型后，再从挂起的地方<em>继续</em>往下执行。
+          这也解释了为什么调用 async 函数时拿到的是 pending 的 Promise —— 那一刻函数体还没跑完。
+        </p>
+
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>写法</th>
+                <th>实际发生什么</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td class="mono">async function f() { return 1 }</td>
+                <td>返回一个<strong>已兑现</strong>的 Promise，兑现值是 <code class="inline">1</code>（普通值被自动包装）。</td>
+              </tr>
+              <tr>
+                <td class="mono">async function f() { throw err }</td>
+                <td>返回一个<strong>已拒绝</strong>的 Promise，拒绝原因就是抛出的 <code class="inline">err</code>。</td>
+              </tr>
+              <tr>
+                <td class="mono">await 1</td>
+                <td>直接得到 <code class="inline">1</code>。非 Promise 值也能 await，会被当成已兑现的 Promise 立刻取出。</td>
+              </tr>
+              <tr>
+                <td class="mono">await Promise.resolve(2)</td>
+                <td>暂停当前 async 函数，等它定型后取出 <code class="inline">2</code>，再从挂起处继续。</td>
+              </tr>
+              <tr>
+                <td class="mono">await Promise.reject(new Error('x'))</td>
+                <td>在 <strong>await 这一行抛出异常</strong>，可以被外层 try / catch 捕获。</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="note rule">
+          <span class="ico">口诀</span>
+          <div>
+            <strong>async 总返回 Promise，await 失败即抛出，所以错误处理能回归 try/catch。</strong>
+          </div>
+        </div>
+      </section>
+
+      <!-- 1.3 错误处理 -->
+      <section class="sec reveal" style="--d:180ms">
+        <div class="sec-head">
+          <span class="sec-num">1.3</span>
+          <h2>错误处理回归 try / catch<span class="en">unified error handling</span></h2>
+        </div>
+
+        <p>
+          这是 async / await 最大的实际收益：<strong>一次 <code class="inline">try / catch</code>
+          就能同时接住三种失败</strong> —— 网络错误、非 2xx 响应、以及 <code class="inline">res.json()</code> 解析失败。
+          收尾动作统一放进 <code class="inline">finally</code>（例如关闭 loading）。
+        </p>
+
+        <div class="code">
+          <div class="code-head">
+            <span class="code-lang">javascript</span>
+            <span class="code-file">demo/try-catch.js</span>
+          </div>
+          <pre><code data-lang="js">
+async function load(url) {
+  const loading = document.querySelector('#loading');
+  loading.hidden = false;
+
+  try {
+    const res = await fetch(url);
+    if (!res.ok) {
+      throw new Error('HTTP ' + res.status);   // 非 2xx：手动抛错
+    }
+    const data = await res.json();             // 解析失败也会抛错
+    return data;
+  } catch (err) {
+    // 网络错误、非 2xx、JSON 解析失败，全都在这里被捕获
+    console.error('加载失败：', err);
+    return null;
+  } finally {
+    // 无论成功还是失败都会执行，用来收尾（关 loading）
+    loading.hidden = true;
+  }
+}</code></pre>
+        </div>
+
+        <div class="note warn">
+          <span class="ico">小心</span>
+          <div>
+            <strong>① <code class="inline">await</code> 一个被拒绝的 Promise 会抛出异常</strong>，
+            所以必须在 async 函数内用 <code class="inline">try / catch</code> 包住，否则就变成一个没人处理的拒绝。
+            <br />
+            <strong>② 同步调用一个 async 函数时，拿到的仍然是 pending 的 Promise</strong>
+            （因为函数体还没执行完）。所以 <code class="inline">console.log(load())</code> 打印出来是
+            <code class="inline">Promise { &lt;pending&gt; }</code>，而不是数据。
+          </div>
+        </div>
+      </section>
+
+      <!-- 1.4 四个易错点 -->
+      <section class="sec reveal" style="--d:240ms">
+        <div class="sec-head">
+          <span class="sec-num">1.4</span>
+          <h2>四个常见易错点<span class="en">common pitfalls</span></h2>
+        </div>
+
+        <ul class="clean">
+          <li><strong>await 只能用在 async 函数内部</strong>（模块顶层 await 是另一个新特性，别混用）。</li>
+          <li><strong>忘记写 await</strong>：拿到的是 Promise 而不是数据，<code class="inline">data.name</code> 会是 <code class="inline">undefined</code>。</li>
+          <li><strong>forEach + await 不生效</strong>：forEach 不会等待回调，循环会立刻跑完。</li>
+          <li><strong>串行 await 的代价</strong>：三个互不依赖的请求写成三个连续 await，总耗时是三者之和。</li>
+        </ul>
+
+        <h3>① await 只能用在 async 函数内部</h3>
+        <div class="code">
+          <div class="code-head">
+            <span class="code-lang">javascript</span>
+            <span class="code-file">demo/pitfalls.js</span>
+          </div>
+          <pre><code data-lang="js">
+// ✗ 语法错误：await 不能出现在普通函数里
+function bad() {
+  const data = await fetch(url);   // SyntaxError
+}
+
+// ✓ 必须把所在的函数声明成 async
+async function good() {
+  const data = await fetch(url);
+}</code></pre>
+        </div>
+
+        <h3>② 忘记写 await</h3>
+        <div class="code">
+          <div class="code-head">
+            <span class="code-lang">javascript</span>
+            <span class="code-file">demo/pitfalls.js</span>
+          </div>
+          <pre><code data-lang="js">
+// ✗ 忘了 await：data 是 Promise，不是数据
+async function wrong() {
+  const data = fetch(url);
+  console.log(data.name);   // undefined —— Promise 上没有 name
+}
+
+// ✓ 写上 await 才有真正的数据
+async function right() {
+  const res = await fetch(url);
+  const data = await res.json();
+  console.log(data.name);   // 真实的姓名
+}</code></pre>
+        </div>
+
+        <h3>③ forEach + await 不生效</h3>
+        <div class="code">
+          <div class="code-head">
+            <span class="code-lang">javascript</span>
+            <span class="code-file">demo/pitfalls.js</span>
+          </div>
+          <pre><code data-lang="js">
+const ids = [1, 2, 3];
+
+// ✗ forEach 不会等待回调，循环立刻跑完，顺序无法保证
+ids.forEach(async function (id) {
+  const data = await fetchUser(id);
+  console.log(data);
+});
+
+// ✓ 需要按顺序等待：用 for...of
+for (const id of ids) {
+  const data = await fetchUser(id);   // 严格按 1 → 2 → 3
+  console.log(data);
+}
+
+// ✓ 需要并行：map 产生 Promise 数组，再交给 Promise.all
+const all = await Promise.all(ids.map(function (id) {
+  return fetchUser(id);
+}));</code></pre>
+        </div>
+
+        <h3>④ 串行 await 的代价</h3>
+        <div class="code">
+          <div class="code-head">
+            <span class="code-lang">javascript</span>
+            <span class="code-file">demo/pitfalls.js</span>
+          </div>
+          <pre><code data-lang="js">
+// ✗ 串行：三个互不依赖的请求，总耗时 = 三次之和
+const a = await fetchUser(1);   // 约 300ms
+const b = await fetchUser(2);   // 约 300ms
+const c = await fetchUser(3);   // 约 300ms
+// 合计约 900ms
+
+// ✓ 并行：同时发出，总耗时 = 最慢的那一次
+const [a2, b2, c2] = await Promise.all([
+  fetchUser(1),
+  fetchUser(2),
+  fetchUser(3),
+]);
+// 合计约 300ms</code></pre>
+        </div>
+
+        <div class="note tip">
+          <span class="ico">判断</span>
+          <div>
+            问自己一句：<strong>后一个请求需要前一个的结果吗？</strong>
+            需要就串行（for…of / 连续 await），不需要就用 <code class="inline">Promise.all</code> 并行。
+            右边演示 A 可以当场量出两者耗时差多少。
+          </div>
+        </div>
+      </section>
+
+      <!-- 1.5 Promise 还是 async/await -->
+      <section class="sec reveal" style="--d:300ms">
+        <div class="sec-head">
+          <span class="sec-num">1.5</span>
+          <h2>Promise 还是 async / await<span class="en">which one to use</span></h2>
+        </div>
+
+        <p>
+          两者不是取代关系。课件给出了一张对比：<code class="inline">async / await</code> 更好读，
+          但在<strong>调试、传递复用、内存与老环境支持</strong>上各有取舍。
+        </p>
+
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>维度</th>
+                <th>Promise 链</th>
+                <th>async / await</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td class="mono">可读性</td>
+                <td>then / catch 链式，长了会有嵌套感</td>
+                <td>像同步代码，顺序清晰，<strong>更好读</strong></td>
+              </tr>
+              <tr>
+                <td class="mono">调试</td>
+                <td>调用栈相对连续</td>
+                <td>调用栈会<strong>跳来跳去</strong>，断点与单步更难受</td>
+              </tr>
+              <tr>
+                <td class="mono">传递与复用</td>
+                <td>Promise 对象可以随意传递、挂多个处理器</td>
+                <td>值被 await 取出后继续往下走，复用性弱一些</td>
+              </tr>
+              <tr>
+                <td class="mono">内存与栈回溯</td>
+                <td>链式实现保留完整栈信息，<strong>占用更多内存</strong></td>
+                <td>相对更轻</td>
+              </tr>
+              <tr>
+                <td class="mono">老浏览器支持</td>
+                <td>更好（ES6 普及更早）</td>
+                <td>需要 ES2017，老环境要先转译</td>
+              </tr>
+              <tr>
+                <td class="mono">性能</td>
+                <td>一般</td>
+                <td>课件说在某些场景更优</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="note tip">
+          <span class="ico">结论</span>
+          <div>
+            <strong>按具体需求、环境和目标选择，不是谁取代谁。</strong>
+            日常业务代码优先 async / await（好读、好写错误处理）；
+            需要把一个「未来的值」到处传递、给多个地方挂处理器时，直接用 Promise 更自然。
+          </div>
+        </div>
+      </section>
+
+      <!-- 1.6 健壮封装 -->
+      <section class="sec reveal" style="--d:360ms">
+        <div class="sec-head">
+          <span class="sec-num">1.6</span>
+          <h2>一段健壮的 async / await 封装<span class="en">a robust wrapper</span></h2>
+        </div>
+
+        <p>
+          把前面所有知识点拼起来：<code class="inline">await fetch(url)</code> →
+          判断 <code class="inline">!res.ok</code> 手动抛错 → <code class="inline">await res.json()</code> →
+          统一 <code class="inline">try / catch / finally</code>。这段代码可以直接抄进作业。
+        </p>
+
+        <div class="code">
+          <div class="code-head">
+            <span class="code-lang">javascript</span>
+            <span class="code-file">demo/async-robust.js</span>
+          </div>
+          <pre><code data-lang="js">
+// 一个健壮的请求封装：把三类错误翻译成人话
+async function fetchJSON(url, options) {
+  let res;
+  try {
+    res = await fetch(url, options);
+  } catch (err) {
+    throw new Error('网络错误：' + err.message);   // 断网 / DNS / CORS
+  }
+
+  if (!res.ok) {
+    throw new Error('HTTP ' + res.status + ' ' + res.statusText); // 4xx / 5xx
+  }
+
+  const type = res.headers.get('content-type') || '';
+  if (!type.includes('application/json')) {
+    throw new Error('响应不是 JSON：' + type);
+  }
+
+  try {
+    return await res.json();                        // 解析失败也会抛
+  } catch (err) {
+    throw new Error('JSON 解析失败：' + err.message);
+  }
+}
+
+// 使用：错误统一回到 try / catch，收尾统一放 finally
+async function main() {
+  showLoading(true);
+  try {
+    const user = await fetchJSON(API + '/users/1');
+    render(user);
+  } catch (err) {
+    showError(err.message);
+  } finally {
+    showLoading(false);
+  }
+}</code></pre>
+        </div>
+
+        <div class="note rule">
+          <span class="ico">规律</span>
+          <div>
+            所有「可能失败」的动作都<strong>抛</strong>出去，只在最外层
+            <code class="inline">try / catch</code> 收一次；<code class="inline">finally</code> 只负责收尾。
+            这样错误处理只有一个入口，不会散在各处。
+          </div>
+        </div>
+      </section>
+
+      <!-- 1.7 小结 -->
+      <section class="sec reveal" style="--d:420ms">
+        <div class="sec-head">
+          <span class="sec-num">1.7</span>
+          <h2>这一节要带走的三句话<span class="en">takeaways</span></h2>
+        </div>
+
+        <div class="cards">
+          <div class="card">
+            <div class="card-t">01</div>
+            <h3>async 总是返回 Promise</h3>
+            <p>return 普通值会被自动包装成已兑现的 Promise；函数内抛错会变成被拒绝的 Promise。</p>
+          </div>
+          <div class="card cool">
+            <div class="card-t">02</div>
+            <h3>await 失败即抛出，所以能 try / catch</h3>
+            <p>await 被拒绝的 Promise 会在那一行抛异常，错误处理因此回归同步风格的 try / catch / finally。</p>
+          </div>
+          <div class="card cool">
+            <div class="card-t">03</div>
+            <h3>串行 await 是三者之和</h3>
+            <p>互不依赖的请求写成连续 await 会累加耗时；用 Promise.all 并行，总耗时约等于最慢的那一个。</p>
+          </div>
+        </div>
+      </section>
+    </article>
+
+    <!-- ============================================= 右栏：演示台 ======= -->
+    <aside class="doc-side">
+      <div class="stick">
+
+        <!-- 演示 A -->
+        <section class="demo reveal" style="--d:140ms">
+          <div class="demo-head">
+            <h3>演示 A · 串行 await 与并行 Promise.all</h3>
+            <span class="pill">计时对比</span>
+          </div>
+          <div class="demo-body">
+            <p class="demo-sub">
+              这里请求三个<strong>互不依赖</strong>的真实接口
+              <code class="inline">/users/1</code>、<code class="inline">/users/2</code>、<code class="inline">/users/3</code>，
+              比较串行与并行的总耗时。断网时会自动改用本地兜底数据，同样能量出耗时差。
+            </p>
+
+            <div class="row">
+              <button class="btn primary sm" id="btn-serial" type="button">串行：三个 await 依次等</button>
+              <button class="btn teal sm" id="btn-parallel" type="button">并行：Promise.all</button>
+              <button class="btn ghost sm" id="btn-order" type="button">执行顺序演示（同步 / 微任务 / 宏任务）</button>
+            </div>
+
+            <div class="stats">
+              <div class="stat">
+                <div class="k">总耗时</div>
+                <div class="v" id="stat-total">—</div>
+              </div>
+              <div class="stat">
+                <div class="k">拿到数据</div>
+                <div class="v" id="stat-count">—</div>
+              </div>
+              <div class="stat">
+                <div class="k">结论</div>
+                <div class="v" id="stat-note" style="font-size:12.5px">等待运行</div>
+              </div>
+            </div>
+
+            <div class="status-line" id="chips-time"></div>
+
+            <div class="field">
+              <label>执行顺序时间轴（同步 / 微任务 / 宏任务）</label>
+              <div class="timeline" id="tl"></div>
+            </div>
+
+            <div class="log" id="log-time"></div>
+          </div>
+        </section>
+
+        <!-- 演示 B -->
+        <section class="demo reveal" style="--d:220ms">
+          <div class="demo-head">
+            <h3>演示 B · try / catch / finally 与三个易错点</h3>
+            <span class="pill">对照实验</span>
+          </div>
+          <div class="demo-body">
+            <p class="demo-sub">
+              同一个「取数据」动作，换三种姿势：<strong>404 走 catch</strong>、
+              <strong>忘记 await</strong>、<strong>forEach + await</strong>。看错误怎么被接住、坑在哪里。
+            </p>
+
+            <div class="row">
+              <button class="btn primary sm" id="btn-try" type="button">try / catch / finally（请求 404）</button>
+              <button class="btn sm" id="btn-noawait" type="button">忘记 await 会怎样</button>
+              <button class="btn ghost sm" id="btn-foreach" type="button">forEach + await 陷阱</button>
+            </div>
+
+            <div class="out pre tall idle" id="out-trap">点击上面任意按钮开始。</div>
+
+            <div class="status-line" id="chips-trap"></div>
+
+            <div class="log" id="log-trap"></div>
+          </div>
+        </section>
+
+      </div>
+    </aside>
+  </main>
+
+  <nav class="pager" data-pager></nav>
+
+  <footer class="pagefoot">
+    <span>COMP6080 26T3 · Week 4 · 知识点 05</span>
+    <span class="sig">写起来像同步，本质还是 Promise</span>
+  </footer>
+
+  <script src="assets/demo.js"></script>
+  <script>
+    /* ====================================================================
+       本页教学代码：只用到原生 fetch / Promise / async-await，零依赖
+       ==================================================================== */
+    const $ = W4.$;
+
+    /* ---------------------------------------------------- 网络地址常量 */
+    const API = 'https://jsonplaceholder.typicode.com';
+    const URL_ONE = id => API + '/users/' + id;        // id: 1 / 2 / 3
+    const URL_404 = API + '/nonexistent-path-404';     // 404
+    const FALLBACK = 'assets/fallback-users.json';     // 本地兜底
+
+    /* ======================================================== 演示 A ==== */
+    const logT = $('#log-time');
+    const tl = $('#tl');
+    const chipsT = $('#chips-time');
+    const statTotal = $('#stat-total');
+    const statCount = $('#stat-count');
+    const statNote = $('#stat-note');
+
+    const btnSerial = $('#btn-serial');
+    const btnParallel = $('#btn-parallel');
+    const btnOrder = $('#btn-order');
+
+    function setStats(total, count, note) {
+      statTotal.textContent = total;
+      statCount.textContent = count;
+      statNote.textContent = note;
+    }
+
+    function setChips(rows) {
+      chipsT.innerHTML = rows.map(function (r) {
+        return '<span class="chip ' + (r.tone || '') + '">' + W4.escapeHtml(r.text) + '</span>';
+      }).join('');
+    }
+
+    function busy(on) {
+      [btnSerial, btnParallel, btnOrder].forEach(function (b) { b.disabled = on; });
+    }
+
+    /* 本地兜底：断网时读 assets/fallback-users.json（结构与远程接口同构）*/
+    let fallbackCache = null;
+    function getFallback() {
+      if (fallbackCache) return Promise.resolve(fallbackCache);
+      return fetch(FALLBACK)
+        .then(function (res) {
+          if (!res.ok) throw new Error('HTTP ' + res.status);
+          return res.json();
+        })
+        .then(function (list) {
+          fallbackCache = list;
+          return list;
+        });
+    }
+
+    /* 取一个用户：优先远程，失败自动切兜底 */
+    async function fetchUser(id) {
+      const t0 = performance.now();
+      W4.log(logT, '→ 发出请求 users/' + id, 'info', 'sync');
+      try {
+        const res = await fetch(URL_ONE(id));
+        if (!res.ok) throw new Error('HTTP ' + res.status);
+        const data = await res.json();
+        const ms = performance.now() - t0;
+        W4.log(logT, '← users/' + id + ' 成功，用时 ' + Math.round(ms) + 'ms', 'ok', 'sync');
+        return { id: id, ms: ms, data: data, from: '远程' };
+      } catch (err) {
+        W4.log(logT, '✗ users/' + id + ' 请求失败（' + err.message + '），已切换到本地兜底', 'warn', 'sync');
+        let list = [];
+        try {
+          list = await getFallback();
+        } catch (e2) {
+          W4.log(logT, '本地兜底也不可用：' + e2.message, 'err', 'sync');
+        }
+        const record = (list || []).filter(function (u) { return u.id === id; })[0] || null;
+        const ms = performance.now() - t0;
+        W4.log(logT, '← users/' + id + ' 用兜底数据完成，用时 ' + Math.round(ms) + 'ms', 'ok', 'sync');
+        return { id: id, ms: ms, data: record, from: '兜底' };
+      }
+    }
+
+    function finish(results, total, mode) {
+      const done = results.slice().sort(function (a, b) { return a.ms - b.ms; });
+      setChips(done.map(function (r) {
+        return {
+          text: '#' + r.id + ' ' + Math.round(r.ms) + 'ms（' + r.from + '）',
+          tone: r.from === '远程' ? 'ok' : 'warn'
+        };
+      }));
+
+      const sum = results.reduce(function (s, r) { return s + r.ms; }, 0);
+      const slowest = results.reduce(function (m, r) { return r.ms > m ? r.ms : m; }, 0);
+      const got = results.filter(function (r) { return r.data; }).length;
+
+      const note = mode === 'serial'
+        ? '串行 ≈ 各次之和（约 ' + Math.round(sum) + 'ms）'
+        : '并行 ≈ 最慢的那一次（约 ' + Math.round(slowest) + 'ms）';
+
+      setStats(Math.round(total) + 'ms', got + ' 条', note);
+      W4.log(logT, (mode === 'serial' ? '串行' : '并行') + '总耗时 ' +
+        Math.round(total) + 'ms —— ' + note, mode === 'serial' ? 'warn' : 'ok', 'sync');
+    }
+
+    async function runSerial() {
+      busy(true);
+      try {
+        W4.resetLog(logT);
+        setChips([]);
+        setStats('…', '…', '串行执行中');
+        tl.innerHTML = '';
+        W4.log(logT, '串行：一个 await 结束，才发下一个请求', 'info', 'sync');
+        const t0 = performance.now();
+        const results = [];
+        for (const id of [1, 2, 3]) {
+          results.push(await fetchUser(id));
+        }
+        finish(results, performance.now() - t0, 'serial');
+      } finally {
+        busy(false);
+      }
+    }
+
+    async function runParallel() {
+      busy(true);
+      try {
+        W4.resetLog(logT);
+        setChips([]);
+        setStats('…', '…', '并行执行中');
+        tl.innerHTML = '';
+        W4.log(logT, '并行：三个请求同时发出，用 Promise.all 等齐', 'info', 'sync');
+        const t0 = performance.now();
+        const results = await Promise.all([fetchUser(1), fetchUser(2), fetchUser(3)]);
+        finish(results, performance.now() - t0, 'parallel');
+      } finally {
+        busy(false);
+      }
+    }
+
+    /* 执行顺序：同步 → 微任务 → 宏任务 */
+    let seq = 0;
+    function addStep(type, text) {
+      seq += 1;
+      const span = document.createElement('span');
+      span.className = 'tl-step ' + type;
+      span.innerHTML = '<span class="n">' + seq + '</span>' + W4.escapeHtml(text);
+      tl.appendChild(span);
+    }
+
+    function runOrder() {
+      W4.resetLog(logT);
+      tl.innerHTML = '';
+      seq = 0;
+      setStats('—', '—', '看时间轴');
+
+      W4.log(logT, "console.log('1 同步')", 'sync', 'sync');
+      addStep('sync', '同步');
+
+      setTimeout(function () {
+        W4.log(logT, "console.log('4 宏任务 setTimeout')", 'macro', 'macro');
+        addStep('macro', '宏任务 setTimeout');
+      }, 0);
+
+      Promise.resolve().then(function () {
+        W4.log(logT, "console.log('3 微任务 then')", 'micro', 'micro');
+        addStep('micro', '微任务 then');
+      });
+
+      W4.log(logT, "console.log('2 同步')", 'sync', 'sync');
+      addStep('sync', '同步');
+
+      W4.log(logT, '同步代码跑完，先清空微任务队列', 'warn', 'micro');
+
+      setTimeout(function () {
+        W4.log(logT, '结论：同步 → 清空微任务 → 渲染 → 取下一个宏任务', 'ok', 'macro');
+        W4.log(logT, 'setTimeout 的延迟写 0 也不等于立刻执行', 'warn', 'macro');
+      }, 40);
+    }
+
+    btnSerial.addEventListener('click', runSerial);
+    btnParallel.addEventListener('click', runParallel);
+    btnOrder.addEventListener('click', runOrder);
+
+    /* ======================================================== 演示 B ==== */
+    const logTrap = $('#log-trap');
+    const outTrap = $('#out-trap');
+    const chipsTrap = $('#chips-trap');
+
+    const btnTry = $('#btn-try');
+    const btnNoAwait = $('#btn-noawait');
+    const btnForEach = $('#btn-foreach');
+
+    function setOut(text, tone) {
+      outTrap.className = 'out pre tall ' + (tone || 'idle');
+      outTrap.textContent = text;
+    }
+
+    function setTrapChips(rows) {
+      chipsTrap.innerHTML = rows.map(function (r) {
+        return '<span class="chip ' + (r.tone || '') + '">' + W4.escapeHtml(r.text) + '</span>';
+      }).join('');
+    }
+
+    function busyTrap(on) {
+      [btnTry, btnNoAwait, btnForEach].forEach(function (b) { b.disabled = on; });
+    }
+
+    /* ① try / catch / finally：请求 404 */
+    async function demoTry() {
+      busyTrap(true);
+      try {
+        W4.resetLog(logTrap);
+        setTrapChips([]);
+        setOut('请求进行中…', 'idle');
+        W4.log(logTrap, '请求一个不存在的路径，预期返回 404：' + URL_404, 'info', 'sync');
+
+        let name = '';
+        let message = '';
+
+        try {
+          const res = await fetch(URL_404);
+          W4.log(logTrap, 'fetch 本身没有抛错，res.status = ' + res.status, 'warn', 'sync');
+          if (!res.ok) {
+            throw new Error('HTTP ' + res.status + (res.statusText ? ' ' + res.statusText : ''));
+          }
+          await res.json();
+          W4.log(logTrap, '不该执行到这里', 'err', 'sync');
+        } catch (err) {
+          name = err.name;
+          message = err.message;
+          W4.log(logTrap, 'catch 捕获：' + name + ' — ' + message, 'err', 'sync');
+        } finally {
+          W4.log(logTrap, 'finally 执行：无论成功还是失败都会走到这里', 'ok', 'sync');
+        }
+
+        setOut(
+          'try 里：await fetch → 判断 !res.ok 手动抛错\n' +
+          'catch 里：err.name    = ' + name + '\n' +
+          '          err.message = ' + message + '\n\n' +
+          'finally 里：收尾代码一定会执行（例如关闭 loading）',
+          'err'
+        );
+        setTrapChips([
+          { text: 'err.name = ' + name, tone: 'err' },
+          { text: 'err.message = ' + message, tone: 'err' },
+          { text: 'finally 已执行', tone: 'ok' }
+        ]);
+      } finally {
+        busyTrap(false);
+      }
+    }
+
+    /* 模拟一次「未来的值」*/
+    function loadSample() {
+      return new Promise(function (resolve) {
+        setTimeout(function () { resolve({ id: 1, name: '张伟' }); }, 60);
+      });
+    }
+
+    /* ② 忘记 await 会怎样 */
+    async function demoNoAwait() {
+      busyTrap(true);
+      try {
+        W4.resetLog(logTrap);
+        setTrapChips([]);
+        setOut('对比进行中…', 'idle');
+
+        W4.log(logTrap, '① 忘记 await：const data = loadSample()', 'warn', 'sync');
+        const data = loadSample();
+        W4.log(logTrap, 'data 的 typeof = ' + typeof data +
+          '，instanceof Promise = ' + (data instanceof Promise), 'err', 'sync');
+        W4.log(logTrap, 'console.log 出来的其实是：Promise { <pending> }', 'err', 'sync');
+        W4.log(logTrap, 'data.name = ' + String(data.name) + '（Promise 上没有 name）', 'err', 'sync');
+
+        const missed = String(data.name);
+        const resolvedLate = await data;
+        W4.log(logTrap, '等它定型后确实拿到了 ' + resolvedLate.name +
+          '，可你的 data 早就用错了', 'info', 'sync');
+
+        W4.log(logTrap, '② 正确写法：const data2 = await loadSample()', 'info', 'sync');
+        const data2 = await loadSample();
+        W4.log(logTrap, 'data2.name = ' + data2.name, 'ok', 'sync');
+
+        setOut(
+          'const data = loadSample();\n' +
+          'typeof data → ' + typeof data + '\n' +
+          'data.name   → ' + missed + '     // undefined\n' +
+          '控制台显示   → Promise { <pending> }\n\n' +
+          'const data2 = await loadSample();\n' +
+          'data2.name  → ' + data2.name + '      // 真实数据',
+          'err'
+        );
+        setTrapChips([
+          { text: '忘记 await → 拿到 Promise', tone: 'err' },
+          { text: 'data.name = undefined', tone: 'err' },
+          { text: '加上 await → 拿到真实数据', tone: 'ok' }
+        ]);
+      } finally {
+        busyTrap(false);
+      }
+    }
+
+    /* 一个模拟任务：ms 毫秒后完成 */
+    function task(name, ms) {
+      return new Promise(function (resolve) {
+        setTimeout(function () { resolve(name); }, ms);
+      });
+    }
+
+    /* ③ forEach + await 陷阱 */
+    async function demoForEach() {
+      busyTrap(true);
+      try {
+        W4.resetLog(logTrap);
+        setTrapChips([]);
+        setOut('对照进行中…', 'idle');
+
+        const items = [
+          { n: 'A', ms: 300 },
+          { n: 'B', ms: 200 },
+          { n: 'C', ms: 100 }
+        ];
+
+        W4.log(logTrap, '── 先用 forEach + await（错误示范）──', 'warn', 'sync');
+        const t0 = performance.now();
+        items.forEach(async function (it) {
+          await task(it.n, it.ms);
+          W4.log(logTrap, 'forEach 内：' + it.n + ' 完成（模拟 ' + it.ms + 'ms）', 'warn', 'sync');
+        });
+        W4.log(logTrap, 'forEach 直接返回，没有等待任何一个回调', 'err', 'sync');
+
+        await task('wait', 340);
+        const ms1 = performance.now() - t0;
+        W4.log(logTrap, 'forEach 实际完成顺序：C → B → A（耗时 ' +
+          Math.round(ms1) + 'ms），与书写顺序无关', 'err', 'sync');
+
+        W4.log(logTrap, '── 再用 for...of + await（正确示范）──', 'info', 'sync');
+        const t1 = performance.now();
+        for (const it of items) {
+          await task(it.n, it.ms);
+          W4.log(logTrap, 'for...of 内：' + it.n + ' 完成（模拟 ' + it.ms + 'ms）', 'ok', 'sync');
+        }
+        const ms2 = performance.now() - t1;
+        W4.log(logTrap, 'for...of 实际完成顺序：A → B → C，严格按顺序等待', 'ok', 'sync');
+
+        setOut(
+          'forEach + await：\n' +
+          '  调用后立刻返回，回调各自赛跑，完成顺序 C → B → A\n\n' +
+          'for...of + await：\n' +
+          '  逐个等待，完成顺序 A → B → C，\n' +
+          '  总耗时约 ' + Math.round(ms2) + 'ms（300 + 200 + 100）',
+          'ok'
+        );
+        setTrapChips([
+          { text: 'forEach 不会等待', tone: 'err' },
+          { text: 'for...of 按顺序等', tone: 'ok' },
+          { text: '要并行请用 Promise.all', tone: 'teal' }
+        ]);
+      } finally {
+        busyTrap(false);
+      }
+    }
+
+    btnTry.addEventListener('click', demoTry);
+    btnNoAwait.addEventListener('click', demoNoAwait);
+    btnForEach.addEventListener('click', demoForEach);
+
+    /* 首屏提示 */
+    W4.log(logT, '演示台已就绪，点击上方按钮开始。', 'info', 'sync');
+    W4.log(logTrap, '演示台已就绪，点击上方按钮开始。', 'info', 'sync');
+  </script>
+</body>
+</html>

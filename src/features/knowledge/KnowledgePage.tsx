@@ -56,7 +56,7 @@ export function KnowledgePage() {
 
   if (!topic) {
     return (
-      <div className="flex min-h-0 w-full flex-1 overflow-y-auto bg-slate-50">
+      <div className="flex min-h-0 w-full flex-1 overflow-y-auto bg-[var(--paper-bg)]">
         <TopicCardGrid />
       </div>
     )
@@ -65,7 +65,7 @@ export function KnowledgePage() {
   return (
     <div className="flex h-full w-full">
       <KnowledgeSidebar topic={topic} />
-      <section className="flex min-h-0 flex-1 flex-col overflow-hidden bg-slate-50">
+      <section className="flex min-h-0 flex-1 flex-col overflow-hidden bg-[var(--paper-bg)]">
         <div className="min-h-0 flex-1 overflow-y-auto">
           <KnowledgeDetailPanel
             topic={topic}

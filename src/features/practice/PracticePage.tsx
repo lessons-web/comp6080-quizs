@@ -246,21 +246,21 @@ export function PracticePage() {
     return (
       <PageShell>
         <section className="flex w-full flex-col gap-6 pb-16">
-          <div className="rounded-[2rem] border border-slate-200 bg-white p-6 shadow-sm sm:p-8">
+          <div className="rounded-[2rem] border border-[var(--paper-border)] bg-[var(--paper-surface)] p-6 shadow-sm sm:p-8">
             <div className="flex flex-col gap-4">
               <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
                 <div className="max-w-3xl flex-1">
-                  <div className="h-4 w-24 animate-pulse rounded-full bg-slate-200" />
-                  <div className="mt-2 h-8 w-64 animate-pulse rounded-full bg-slate-200" />
-                  <div className="mt-3 h-4 w-96 max-w-full animate-pulse rounded-full bg-slate-100" />
+                  <div className="h-4 w-24 animate-pulse rounded-full bg-[var(--paper-chip-strong)]" />
+                  <div className="mt-2 h-8 w-64 animate-pulse rounded-full bg-[var(--paper-chip-strong)]" />
+                  <div className="mt-3 h-4 w-96 max-w-full animate-pulse rounded-full bg-[var(--paper-chip)]" />
                 </div>
-                <div className="h-9 w-28 animate-pulse rounded-full bg-slate-100" />
+                <div className="h-9 w-28 animate-pulse rounded-full bg-[var(--paper-chip)]" />
               </div>
               <div className="flex flex-wrap gap-3">
-                <div className="h-11 w-72 shrink-0 animate-pulse rounded-xl bg-slate-100" />
-                <div className="h-11 w-28 shrink-0 animate-pulse rounded-xl bg-slate-100" />
-                <div className="h-11 w-28 shrink-0 animate-pulse rounded-xl bg-slate-100" />
-                <div className="h-11 w-40 shrink-0 animate-pulse rounded-xl bg-slate-100" />
+                <div className="h-11 w-72 shrink-0 animate-pulse rounded-xl bg-[var(--paper-chip)]" />
+                <div className="h-11 w-28 shrink-0 animate-pulse rounded-xl bg-[var(--paper-chip)]" />
+                <div className="h-11 w-28 shrink-0 animate-pulse rounded-xl bg-[var(--paper-chip)]" />
+                <div className="h-11 w-40 shrink-0 animate-pulse rounded-xl bg-[var(--paper-chip)]" />
               </div>
             </div>
           </div>
@@ -277,15 +277,15 @@ export function PracticePage() {
   return (
     <PageShell>
       <section className="flex w-full flex-col gap-6 pb-16">
-        <div className="rounded-[2rem] border border-slate-200 bg-white p-6 shadow-sm sm:p-8">
+        <div className="rounded-[2rem] border border-[var(--paper-border)] bg-[var(--paper-surface)] p-6 shadow-sm sm:p-8">
           <div className="flex flex-col gap-5">
             <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
               <div className="max-w-3xl flex-1">
                 <div className="flex flex-wrap items-center gap-2">
-                  <p className="text-sm font-semibold uppercase tracking-[0.2em] text-blue-600">
+                  <p className="text-sm font-semibold uppercase tracking-[0.2em] text-[var(--brand-600)]">
                     Question Bank
                   </p>
-                  <span className="rounded-full border border-slate-200 bg-slate-50 px-2.5 py-0.5 text-[11px] font-semibold text-slate-600">
+                  <span className="rounded-full border border-[var(--paper-border)] bg-[var(--paper-chip)] px-2.5 py-0.5 text-[11px] font-semibold text-slate-600">
                     共 {allQuestions.length} 题
                   </span>
                   <GuestNoticeInline />
@@ -293,7 +293,7 @@ export function PracticePage() {
                 <h2 className="mt-2 text-3xl font-semibold tracking-tight text-slate-950">
                   题库中心
                 </h2>
-                <p className="mt-3 text-sm leading-6 text-slate-600">
+                <p className="mt-3 text-sm leading-6 text-[var(--paper-text-soft)]">
                   所有试题总览，支持按关键词、领域、难度与标签多维筛选；点击卡片或表格行可展开答案与解析进行独立复盘。
                 </p>
 
@@ -301,7 +301,7 @@ export function PracticePage() {
                   {(['easy', 'medium', 'hard'] as const).map((d) => (
                     <span
                       key={d}
-                      className="inline-flex items-center gap-1.5 rounded-full bg-slate-50 px-2.5 py-1 font-medium text-slate-600 ring-1 ring-slate-200"
+                      className="inline-flex items-center gap-1.5 rounded-full bg-[var(--paper-chip)] px-2.5 py-1 font-medium text-slate-600 ring-1 ring-[var(--paper-border)]"
                     >
                       <span className={`h-1.5 w-1.5 rounded-full ${DIFF_STAT_CLASS[d]}`} />
                       {d === 'easy' ? '简单' : d === 'medium' ? '中等' : '困难'}
@@ -314,7 +314,7 @@ export function PracticePage() {
               <div
                 role="group"
                 aria-label="题库布局切换"
-                className="inline-flex w-28 shrink-0 items-center justify-between rounded-full border border-slate-200 bg-slate-50 p-1 text-slate-500"
+                className="inline-flex w-28 shrink-0 items-center justify-between rounded-full border border-[var(--paper-border)] bg-[var(--paper-chip)] p-1 text-slate-500"
               >
                 {(['1', '2', 'table'] as const).map((mode) => {
                   const active = layoutPref === mode
@@ -328,8 +328,8 @@ export function PracticePage() {
                       className={[
                         'flex h-7 flex-1 items-center justify-center rounded-full transition',
                         active
-                          ? 'bg-blue-600 text-white shadow-sm'
-                          : 'text-slate-500 hover:text-blue-700',
+                          ? 'bg-[var(--brand-600)] text-white shadow-sm'
+                          : 'text-slate-500 hover:text-[var(--brand-700)]',
                       ].join(' ')}
                     >
                       {LAYOUT_ICON[mode]}
@@ -339,7 +339,7 @@ export function PracticePage() {
               </div>
             </div>
 
-            <div className="flex flex-wrap items-center gap-3 border-t border-slate-100 pt-5">
+            <div className="flex flex-wrap items-center gap-3 border-t border-[var(--paper-border)] pt-5">
               <div className="relative w-72 shrink-0">
                 <svg
                   viewBox="0 0 16 16"
@@ -354,14 +354,14 @@ export function PracticePage() {
                   value={searchRaw}
                   onChange={(e) => setSearchRaw(e.target.value)}
                   placeholder="搜索题目 / 知识点 / 标签…"
-                  className="w-full rounded-xl border border-slate-200 bg-slate-50 pl-9 pr-9 py-2.5 text-sm text-slate-900 placeholder:text-slate-400 shadow-sm transition focus:border-blue-500 focus:bg-white focus:outline-none focus:ring-2 focus:ring-blue-500/20"
+                  className="w-full rounded-xl border border-[var(--paper-border)] bg-[var(--paper-surface-soft)] pl-9 pr-9 py-2.5 text-sm text-slate-900 placeholder:text-slate-400 shadow-sm transition focus:border-[var(--brand-500)] focus:bg-[var(--paper-surface)] focus:outline-none focus:ring-2 focus:ring-[var(--brand-ring)]"
                 />
                 {searchRaw ? (
                   <button
                     type="button"
                     onClick={() => setSearchRaw('')}
                     aria-label="清除搜索"
-                    className="absolute right-2 top-1/2 flex h-6 w-6 -translate-y-1/2 items-center justify-center rounded-md text-slate-400 transition hover:bg-slate-200 hover:text-slate-700"
+                    className="absolute right-2 top-1/2 flex h-6 w-6 -translate-y-1/2 items-center justify-center rounded-md text-slate-400 transition hover:bg-[var(--paper-chip-strong)] hover:text-slate-700"
                   >
                     <svg viewBox="0 0 16 16" aria-hidden="true" className="h-3.5 w-3.5">
                       <path fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" d="M4 4l8 8M12 4l-8 8" />
@@ -406,7 +406,7 @@ export function PracticePage() {
                 筛选后 <span className="font-semibold text-slate-800">{guestOnPage ? displayList.length : filtered.length}</span> /{' '}
                 {allQuestions.length} 题
                 {guestOnPage && hiddenCount > 0 ? (
-                  <span className="ml-1 text-blue-600">（访客仅展示前 {displayList.length} 题）</span>
+                  <span className="ml-1 text-[var(--brand-600)]">（访客仅展示前 {displayList.length} 题）</span>
                 ) : null}
               </div>
             </div>
@@ -414,8 +414,8 @@ export function PracticePage() {
         </div>
 
         {filtered.length === 0 ? (
-          <div className="rounded-[2rem] border border-dashed border-slate-300 bg-white p-10 text-center text-sm text-slate-600 shadow-sm">
-            <div className="mx-auto mb-3 flex h-12 w-12 items-center justify-center rounded-2xl bg-slate-100 text-slate-400">
+          <div className="rounded-[2rem] border border-dashed border-[var(--paper-border-strong)] bg-[var(--paper-surface)] p-10 text-center text-sm text-slate-600 shadow-sm">
+            <div className="mx-auto mb-3 flex h-12 w-12 items-center justify-center rounded-2xl bg-[var(--paper-chip)] text-slate-400">
               <svg viewBox="0 0 16 16" aria-hidden="true" className="h-6 w-6">
                 <circle cx="7" cy="7" r="4.25" fill="none" stroke="currentColor" strokeWidth="1.5" />
                 <path fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" d="M10.25 10.25 13 13" />

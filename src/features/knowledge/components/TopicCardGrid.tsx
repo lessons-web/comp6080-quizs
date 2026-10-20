@@ -14,7 +14,7 @@ export function TopicCardGrid() {
           {Array.from({ length: 5 }).map((_, i) => (
             <div
               key={i}
-              className="h-[160px] animate-pulse rounded-xl bg-slate-100"
+              className="h-[160px] animate-pulse rounded-xl bg-[var(--paper-chip)]"
             />
           ))}
         </div>
@@ -41,7 +41,7 @@ export function TopicCardGrid() {
         <h1 className="text-2xl font-semibold tracking-tight text-slate-900">
           知识点解析
         </h1>
-        <p className="mt-1 text-sm text-slate-500">
+        <p className="mt-1 text-sm text-[var(--paper-text-soft)]">
           选择一个技术领域进入知识点讲解，按知识点颗粒度学习，结合题库中心巩固记忆。
         </p>
       </div>

@@ -67,7 +67,7 @@ export function KnowledgeListPanel({
             placeholder="搜索标题 / 类别 / 标签"
             value={query}
             onChange={(e) => setQuery(e.target.value)}
-            className="w-72 shrink-0 rounded-lg border border-slate-200 bg-white py-1.5 pl-8 pr-3 text-sm placeholder:text-slate-400 focus:border-blue-400 focus:outline-none focus:ring-2 focus:ring-blue-100"
+            className="w-72 shrink-0 rounded-lg border border-[var(--paper-border)] bg-[var(--paper-surface)] py-1.5 pl-8 pr-3 text-sm placeholder:text-slate-400 focus:border-[var(--brand-500)] focus:outline-none focus:ring-2 focus:ring-[var(--brand-ring)]"
           />
         </div>
       </div>

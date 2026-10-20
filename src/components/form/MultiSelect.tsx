@@ -182,9 +182,9 @@ export default function MultiSelect({
         onClick={() => !disabled && setOpen((prev) => !prev)}
         onKeyDown={onTriggerKeyDown}
         className={classNames(
-          'w-full min-h-11 shrink-0 rounded-xl border border-slate-200 bg-slate-50 px-2.5 py-2 text-sm text-left flex items-center justify-between gap-2 shadow-sm transition',
-          'outline-none focus:border-blue-500 focus:bg-white focus:ring-2 focus:ring-blue-500/20',
-          disabled ? 'bg-slate-100 text-slate-400 cursor-not-allowed' : 'hover:bg-white hover:border-slate-300',
+          'flex min-h-11 w-full shrink-0 items-center justify-between gap-2 rounded-xl border border-[var(--paper-border)] bg-[var(--paper-surface-soft)] px-2.5 py-2 text-left text-sm shadow-sm transition',
+          'outline-none focus:border-[var(--brand-500)] focus:bg-[var(--paper-surface)] focus:ring-2 focus:ring-[var(--brand-ring)]',
+          disabled ? 'cursor-not-allowed bg-[var(--paper-chip)] text-slate-400' : 'hover:border-[var(--paper-border-strong)] hover:bg-[var(--paper-surface)]',
           triggerClassName,
         )}
       >
@@ -196,7 +196,7 @@ export default function MultiSelect({
               {visibleTags.map((s) => (
                 <span
                   key={s.value}
-                  className="inline-flex items-center gap-1 rounded-md border border-blue-200 bg-blue-50 px-2 py-0.5 text-[11px] font-semibold text-blue-700 max-w-full"
+                  className="inline-flex max-w-full items-center gap-1 rounded-md border border-[var(--brand-200)] bg-[var(--brand-50)] px-2 py-0.5 text-[11px] font-semibold text-[var(--brand-700)]"
                   onClick={(e) => e.stopPropagation()}
                 >
                   <span className="truncate">{s.label}</span>
@@ -215,7 +215,7 @@ export default function MultiSelect({
                           toggleValue(s.value)
                         }
                       }}
-                      className="cursor-pointer rounded-sm text-blue-500 transition hover:bg-blue-100 hover:text-blue-800"
+                      className="cursor-pointer rounded-sm text-[var(--brand-500)] transition hover:bg-[var(--brand-100)] hover:text-[var(--brand-800)]"
                     >
                       <X className="h-3 w-3" />
                     </span>
@@ -223,7 +223,7 @@ export default function MultiSelect({
                 </span>
               ))}
               {restCount > 0 ? (
-                <span className="inline-flex items-center rounded-md border border-slate-200 bg-slate-100 px-2 py-0.5 text-[11px] font-semibold text-slate-600">
+                <span className="inline-flex items-center rounded-md border border-[var(--paper-border)] bg-[var(--paper-chip)] px-2 py-0.5 text-[11px] font-semibold text-slate-600">
                   +{restCount}
                 </span>
               ) : null}
@@ -250,7 +250,7 @@ export default function MultiSelect({
                   onClear?.()
                 }
               }}
-              className="flex h-5 w-5 items-center justify-center rounded text-slate-400 transition hover:bg-slate-200 hover:text-slate-700"
+              className="flex h-5 w-5 items-center justify-center rounded text-slate-400 transition hover:bg-[var(--paper-chip-strong)] hover:text-slate-700"
             >
               <X className="h-3 w-3" />
             </span>
@@ -258,7 +258,7 @@ export default function MultiSelect({
           <ChevronDown
             className={classNames(
               'h-4 w-4 shrink-0 text-slate-400 transition-transform duration-200',
-              open && 'rotate-180 text-blue-600',
+              open && 'rotate-180 text-[var(--brand-600)]',
             )}
           />
         </div>
@@ -270,7 +270,7 @@ export default function MultiSelect({
           aria-multiselectable="true"
           tabIndex={-1}
           onKeyDown={onListKeyDown}
-          className="absolute z-50 mt-2 min-w-full overflow-hidden rounded-xl border border-slate-200 bg-white shadow-[0_10px_25px_-8px_rgba(15,23,42,0.12),0_4px_10px_-4px_rgba(15,23,42,0.08)]"
+          className="absolute z-50 mt-2 min-w-full overflow-hidden rounded-xl border border-[var(--paper-border)] bg-[var(--paper-surface)] shadow-[0_10px_25px_-8px_rgba(15,23,42,0.12),0_4px_10px_-4px_rgba(15,23,42,0.08)]"
         >
           <div className="max-h-72 overflow-auto p-1">
             {enabledOptions.length === 0 ? (
@@ -292,13 +292,13 @@ export default function MultiSelect({
                   onClick={() => toggleValue(o.value)}
                   className={classNames(
                     'w-full flex items-center justify-between gap-3 px-3 py-2 rounded-lg text-sm text-left transition-colors',
-                    activeNow ? 'bg-blue-50 text-blue-700' : 'text-slate-700 hover:bg-slate-50',
+                    activeNow ? 'bg-[var(--brand-50)] text-[var(--brand-700)]' : 'text-slate-700 hover:bg-[var(--paper-chip)]',
                     checked && 'font-semibold',
                   )}
                 >
                   <span className="truncate">{o.label}</span>
                   {checked ? (
-                    <Check className="h-4 w-4 shrink-0 text-blue-600" />
+                    <Check className="h-4 w-4 shrink-0 text-[var(--brand-600)]" />
                   ) : (
                     <span className="h-4 w-4 shrink-0" />
                   )}
