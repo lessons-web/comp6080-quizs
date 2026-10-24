@@ -1,0 +1,193 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>01B · JSON + localStorage 持久化</title>
+  <meta
+    name="description"
+    content="COMP6080 Week 4：独立演示 JSON.stringify / JSON.parse 与 localStorage 的持久化闭环。"
+  />
+  <link rel="icon" href="data:," />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600&family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600&display=swap"
+    rel="stylesheet"
+  />
+  <link rel="stylesheet" href="assets/demo.css" />
+  <style>
+    .demo-page {
+      position: relative;
+      z-index: 1;
+      min-height: auto;
+      padding: 0;
+    }
+
+    .demo-wrap {
+      max-width: none;
+      margin: 0;
+    }
+
+    .demo-head h1 {
+      margin: 0;
+      font-family: var(--serif);
+      font-size: clamp(26px, 3.2vw, 38px);
+      line-height: 1.08;
+      letter-spacing: -0.02em;
+    }
+
+    .demo-lede {
+      margin: 10px 0 18px;
+      color: var(--ink-soft);
+      font-size: 15.5px;
+      line-height: 1.7;
+    }
+
+    .page-head {
+      display: none;
+    }
+  </style>
+</head>
+<body>
+  <main class="demo-page">
+    <div class="demo-wrap">
+      <section class="demo reveal">
+        <div class="demo-head">
+          <h3>演示 B · JSON + localStorage 持久化</h3>
+          <span class="pill">刷新后数据还在</span>
+        </div>
+        <div class="demo-body">
+          <p class="demo-sub">
+            这是一个最小学员名单。所有数据以<strong>字符串</strong>形式存在
+            <code class="inline">localStorage</code> 里，刷新页面后依然在。
+          </p>
+
+          <div class="row nowrap">
+            <input type="text" id="member-input" placeholder="输入姓名，例如：Alice" />
+            <button class="btn primary sm" id="btn-add" type="button">添加</button>
+          </div>
+
+          <div class="row">
+            <button class="btn ghost sm" id="btn-reload" type="button">从 localStorage 重新读取</button>
+            <button class="btn danger sm" id="btn-clear" type="button">清空</button>
+          </div>
+
+          <div class="list" id="member-list"></div>
+
+          <div class="field">
+            <label>localStorage 里真实存着的字符串</label>
+            <div class="out pre" id="raw-store">（空）</div>
+          </div>
+
+          <div class="log" id="log-ls"></div>
+        </div>
+      </section>
+    </div>
+  </main>
+
+  <script src="assets/demo.js"></script>
+  <script>
+    const $ = W4.$;
+
+    const STORE_KEY = 'w4:members';
+    const memberInput = $('#member-input');
+    const listEl = $('#member-list');
+    const rawEl = $('#raw-store');
+    const logLs = $('#log-ls');
+
+    function loadMembers() {
+      const raw = localStorage.getItem(STORE_KEY);
+      if (raw === null) return [];
+
+      try {
+        const parsed = JSON.parse(raw);
+        return Array.isArray(parsed) ? parsed : [];
+      } catch (err) {
+        console.warn('本地数据损坏，已重置', err);
+        localStorage.removeItem(STORE_KEY);
+        return [];
+      }
+    }
+
+    function saveMembers(list) {
+      localStorage.setItem(STORE_KEY, JSON.stringify(list));
+    }
+
+    function renderMembers(list, withLog) {
+      if (!list.length) {
+        listEl.innerHTML = '<div class="out idle">名单还是空的，在上面输入一个名字试试。</div>';
+      } else {
+        listEl.innerHTML = list
+          .map(function (m, i) {
+            return (
+              '<div class="list-item">' +
+              '<span class="idx">' + (i + 1) + '</span>' +
+              '<span><span class="name">' + W4.escapeHtml(m.name) + '</span>' +
+              '<div class="meta">id: ' + W4.escapeHtml(m.id) + ' · 存入时间 ' + W4.escapeHtml(m.savedAt) + '</div></span>' +
+              '</div>'
+            );
+          })
+          .join('');
+      }
+
+      rawEl.textContent = localStorage.getItem(STORE_KEY) ?? '（空）';
+
+      if (withLog) {
+        const raw = localStorage.getItem(STORE_KEY);
+        W4.log(
+          logLs,
+          'localStorage.getItem 返回的是字符串，长度 ' + (raw === null ? 0 : raw.length),
+          'info',
+          'sync',
+        );
+        W4.log(logLs, 'JSON.parse 之后得到 ' + list.length + ' 条记录', 'ok', 'sync');
+      }
+    }
+
+    $('#btn-add').addEventListener('click', function () {
+      W4.resetLog(logLs);
+      const name = memberInput.value.trim();
+      if (!name) {
+        W4.log(logLs, '名字为空，先输入内容再添加', 'warn', 'sync');
+        return;
+      }
+
+      const list = loadMembers();
+      W4.log(logLs, '从 localStorage 读取 -> JSON.parse -> 数组，当前 ' + list.length + ' 条', 'info', 'sync');
+
+      list.push({ id: W4.hash(name + Date.now()), name: name, savedAt: W4.clock() });
+      saveMembers(list);
+      const raw = localStorage.getItem(STORE_KEY) ?? '';
+      W4.log(logLs, '数组 -> JSON.stringify -> setItem，写入 ' + raw.length + ' 个字符', 'ok', 'sync');
+
+      memberInput.value = '';
+      renderMembers(list, false);
+      W4.log(logLs, '刷新页面数据依然在，因为它现在存在浏览器磁盘里', 'info', 'sync');
+    });
+
+    $('#btn-reload').addEventListener('click', function () {
+      W4.resetLog(logLs);
+      const list = loadMembers();
+      renderMembers(list, true);
+    });
+
+    $('#btn-clear').addEventListener('click', function () {
+      W4.resetLog(logLs);
+      localStorage.removeItem(STORE_KEY);
+      W4.log(logLs, 'removeItem("' + STORE_KEY + '")，本地数据已清空', 'warn', 'sync');
+      renderMembers([], false);
+    });
+
+    memberInput.addEventListener('keydown', function (event) {
+      if (event.key === 'Enter') $('#btn-add').click();
+    });
+
+    (function initMembers() {
+      const list = loadMembers();
+      renderMembers(list, false);
+      W4.log(logLs, '页面加载完成，从 localStorage 恢复了 ' + list.length + ' 条记录', 'info', 'sync');
+    })();
+  </script>
+</body>
+</html>

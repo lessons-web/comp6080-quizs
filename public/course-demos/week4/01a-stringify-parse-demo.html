@@ -1,0 +1,231 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>01A · stringify / parse 双向转换</title>
+  <meta
+    name="description"
+    content="COMP6080 Week 4：独立演示 JSON.stringify 与 JSON.parse 的双向转换。"
+  />
+  <link rel="icon" href="data:," />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600&family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600&display=swap"
+    rel="stylesheet"
+  />
+  <link rel="stylesheet" href="assets/demo.css" />
+  <style>
+    .demo-page {
+      position: relative;
+      z-index: 1;
+      min-height: auto;
+      padding: 0;
+    }
+
+    .demo-wrap {
+      max-width: none;
+      margin: 0;
+    }
+
+    .demo-head h1 {
+      margin: 0;
+      font-family: var(--serif);
+      font-size: clamp(26px, 3.2vw, 38px);
+      line-height: 1.08;
+      letter-spacing: -0.02em;
+    }
+
+    .demo-lede {
+      margin: 10px 0 18px;
+      color: var(--ink-soft);
+      font-size: 15.5px;
+      line-height: 1.7;
+    }
+
+    .page-head {
+      display: none;
+    }
+  </style>
+</head>
+<body>
+  <main class="demo-page">
+    <div class="demo-wrap">
+      <section class="demo reveal">
+        <div class="demo-head">
+          <h3>演示 A · stringify / parse 双向转换</h3>
+          <span class="pill">live</span>
+        </div>
+        <div class="demo-body">
+          <p class="demo-sub">
+            下面输入框里的内容<strong>本身就是一个字符串</strong>。点按钮看它怎么变成对象，又怎么变回字符串。
+          </p>
+
+          <div class="field">
+            <label for="json-input">JSON 文本</label>
+            <textarea id="json-input" rows="7">{
+  "name": "Bob",
+  "age": 23,
+  "skills": ["HTML", "CSS"],
+  "active": true
+}</textarea>
+          </div>
+
+          <div class="row">
+            <button class="btn primary sm" id="btn-parse" type="button">parse → 对象</button>
+            <button class="btn sm" id="btn-stringify" type="button">stringify → 字符串</button>
+            <button class="btn ghost sm" id="btn-gotcha" type="button">看 stringify 丢掉了什么</button>
+          </div>
+
+          <div class="status-line" id="json-meta"></div>
+          <div class="out pre tall idle" id="json-out">点击上面任意按钮开始。</div>
+
+          <div class="field">
+            <label>换一段有问题的 JSON 试试</label>
+            <div class="row">
+              <button class="btn ghost sm" data-bad="trailing" type="button">尾逗号</button>
+              <button class="btn ghost sm" data-bad="singlequote" type="button">单引号 key</button>
+              <button class="btn ghost sm" data-bad="comment" type="button">带注释</button>
+              <button class="btn ghost sm" data-bad="undef" type="button">undefined</button>
+            </div>
+          </div>
+
+          <div class="log" id="log-json"></div>
+        </div>
+      </section>
+    </div>
+  </main>
+
+  <script src="assets/demo.js"></script>
+  <script>
+    const $ = W4.$;
+
+    const inputEl = $('#json-input');
+    const outEl = $('#json-out');
+    const metaEl = $('#json-meta');
+    const logJson = $('#log-json');
+
+    const BAD_SAMPLES = {
+      trailing: '{\n  "name": "Bob",\n  "age": 23,\n}',
+      singlequote: "{\n  'name': 'Bob',\n  'age': 23\n}",
+      comment: '{\n  "name": "Bob"  // 这里不该有注释\n}',
+      undef: '{\n  "name": "Bob",\n  "nickname": undefined\n}',
+    };
+
+    function showMeta(chips) {
+      metaEl.innerHTML = chips
+        .map(function (c) {
+          return '<span class="chip ' + (c.tone || '') + '">' + W4.escapeHtml(c.text) + '</span>';
+        })
+        .join('');
+    }
+
+    function setOut(text, tone) {
+      outEl.className = 'out pre tall ' + (tone || 'idle');
+      outEl.textContent = text;
+    }
+
+    $('#btn-parse').addEventListener('click', function () {
+      W4.resetLog(logJson);
+      const text = inputEl.value;
+      W4.log(logJson, '调用 JSON.parse()，输入 ' + text.length + ' 个字符', 'info', 'sync');
+
+      try {
+        const data = JSON.parse(text);
+        W4.log(logJson, 'parse 成功，返回值的 typeof 是 "' + typeof data + '"', 'ok', 'sync');
+        W4.log(logJson, '判断是不是数组：Array.isArray(data) === ' + Array.isArray(data), 'info', 'sync');
+
+        const keys = Object.keys(data);
+        W4.log(logJson, '拿到 ' + keys.length + ' 个顶层 key：' + keys.join(', '), 'info', 'sync');
+
+        showMeta([
+          { text: 'typeof → ' + typeof data, tone: 'ok' },
+          { text: 'Array.isArray → ' + Array.isArray(data), tone: '' },
+          { text: '顶层 key：' + keys.length, tone: 'teal' },
+        ]);
+        setOut('// 现在它是一个真正的对象，可以直接取值或遍历\n\n' + W4.pretty(data), 'ok');
+      } catch (err) {
+        W4.log(logJson, 'parse 抛出了 ' + err.name + '：' + err.message, 'err', 'sync');
+        W4.log(logJson, '所以外部来的 JSON 一定要放在 try / catch 里', 'warn', 'sync');
+        showMeta([{ text: err.name, tone: 'err' }, { text: '字符串不是合法 JSON', tone: 'err' }]);
+        setOut(err.name + ': ' + err.message, 'err');
+      }
+    });
+
+    $('#btn-stringify').addEventListener('click', function () {
+      W4.resetLog(logJson);
+      const text = inputEl.value;
+      W4.log(logJson, '先把输入 parse 成对象', 'info', 'sync');
+
+      let data;
+      try {
+        data = JSON.parse(text);
+      } catch (err) {
+        W4.log(logJson, '输入不是合法 JSON，无法继续：' + err.message, 'err', 'sync');
+        showMeta([{ text: 'parse 失败', tone: 'err' }]);
+        setOut(err.name + ': ' + err.message, 'err');
+        return;
+      }
+
+      const compact = JSON.stringify(data);
+      const pretty = JSON.stringify(data, null, 2);
+      W4.log(logJson, 'JSON.stringify(data) 得到紧凑字符串，长度 ' + compact.length, 'ok', 'sync');
+      W4.log(logJson, 'JSON.stringify(data, null, 2) 得到美化字符串，长度 ' + pretty.length, 'info', 'sync');
+      W4.log(logJson, '美化只是给人看的，传输时反而多占 ' + (pretty.length - compact.length) + ' 个字符', 'warn', 'sync');
+
+      showMeta([
+        { text: '紧凑 ' + compact.length + ' 字符', tone: 'ok' },
+        { text: '美化 ' + pretty.length + ' 字符', tone: 'warn' },
+        { text: 'typeof → string', tone: 'teal' },
+      ]);
+      setOut(
+        '// JSON.stringify(data) —— 真正用来传输的形态\n' + compact +
+          '\n\n// JSON.stringify(data, null, 2) —— 只是给人看的\n' + pretty,
+        'ok',
+      );
+    });
+
+    $('#btn-gotcha').addEventListener('click', function () {
+      W4.resetLog(logJson);
+
+      const tricky = {
+        name: 'Bob',
+        nickname: undefined,
+        greet: function () { return 'hi'; },
+        score: NaN,
+        infinite: Infinity,
+        joined: new Date('2026-03-01T00:00:00Z'),
+      };
+
+      W4.log(logJson, '构造一个含 undefined / 函数 / NaN / Date 的对象', 'info', 'sync');
+      W4.log(logJson, '原始对象有 ' + Object.keys(tricky).length + ' 个 key', 'info', 'sync');
+
+      const text = JSON.stringify(tricky);
+      const kept = Object.keys(JSON.parse(text));
+      W4.log(logJson, 'stringify 后只剩 ' + kept.length + ' 个 key：' + kept.join(', '), 'warn', 'sync');
+      W4.log(logJson, 'nickname（undefined）与 greet（函数）被整个丢掉', 'err', 'sync');
+      W4.log(logJson, 'score（NaN）与 infinite 被强制转成 null', 'err', 'sync');
+      W4.log(logJson, 'joined（Date）被转成 ISO 字符串，不再是 Date 对象', 'warn', 'sync');
+
+      showMeta([
+        { text: '原始 6 个 key', tone: '' },
+        { text: '序列化后 ' + kept.length + ' 个', tone: 'err' },
+        { text: 'JSON 不支持 undefined / 函数', tone: 'err' },
+      ]);
+      setOut('// JSON.stringify 的结果\n' + text, 'err');
+    });
+
+    W4.$$('[data-bad]').forEach(function (btn) {
+      btn.addEventListener('click', function () {
+        inputEl.value = BAD_SAMPLES[btn.dataset.bad];
+        W4.resetLog(logJson);
+        W4.log(logJson, '已载入样例：「' + btn.textContent.trim() + '」', 'info', 'sync');
+        W4.log(logJson, '点上面的「parse → 对象」看看会发生什么', 'warn', 'sync');
+        setOut('样例已载入，请点击「parse → 对象」按钮。', 'idle');
+        showMeta([]);
+      });
+    });
+  </script>
+</body>
+</html>

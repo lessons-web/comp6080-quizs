@@ -532,24 +532,100 @@ export const COURSE_WEEKS: CourseWeek[] = [
             kind: 'cover',
             eyebrow: 'Week 4 · 异步与网络',
             title: '数据怎么从服务器来',
+            subtitle:
+              '这周不是背 API 名字，而是先理解数据回来之前，前端到底在经历什么。',
             points: [
-              '数据交换格式（JSON）',
-              'XMLHttpRequest',
-              'fetch',
-              'Promise',
-              'async / await',
+              '字符串 -> 发请求 -> 等结果 -> 处理异步 -> 写得更顺',
+              '先看主线地图，再逐节跑演示',
+              '每一节都对应一个能现场跑起来的知识点',
             ],
           },
           {
-            id: 'demo',
-            kind: 'demo',
+            id: 'roadmap',
+            kind: 'roadmap',
+            eyebrow: 'Week 4 · 主线地图',
+            title: '从字符串到 async / await',
+            subtitle:
+              'JSON、XHR、fetch、Promise、async / await 不是 5 个孤立知识点，而是一条连续的异步链路。',
+            roadmap: [
+              {
+                label: '01',
+                title: 'JSON',
+                description: '对象怎么先变成可传输的字符串',
+              },
+              {
+                label: '02',
+                title: 'XHR',
+                description: '浏览器最早怎么发异步请求',
+              },
+              {
+                label: '03',
+                title: 'fetch',
+                description: '现代请求 API 怎么拿到响应',
+              },
+              {
+                label: '04',
+                title: 'Promise',
+                description: '异步结果怎么被组织和编排',
+              },
+              {
+                label: '05',
+                title: 'async / await',
+                description: '怎么把异步流程写得更像同步代码',
+              },
+            ],
+          },
+          {
+            id: 'cards',
+            kind: 'cards',
             eyebrow: '本周目录',
-            title: '五个演示，一条主线',
-            subtitle: '字符串 → 请求 → Promise → 语法糖',
-            demo: {
-              src: `${WEEK4_DEMO}/index.html`,
-              note: '演示页带本地兜底数据，课堂断网也能讲成功与失败两条路径。',
-            },
+            title: '5 个知识点总览',
+            subtitle:
+              '这一页只做索引，不讲细节。后面的 5 节会把每个节点分别展开成可运行演示。',
+            cards: [
+              {
+                eyebrow: '知识点 01',
+                title: 'JSON',
+                description: '对象怎么变成字符串，以及为什么网络上传的往往不是对象本身。',
+                meta: '对应：数据交换格式与 JSON',
+              },
+              {
+                eyebrow: '知识点 02',
+                title: 'XMLHttpRequest',
+                description: '浏览器最早怎么不刷新页面去拿服务器数据，以及 status 和 error 各看什么。',
+                meta: '对应：远程获取数据：XMLHttpRequest',
+              },
+              {
+                eyebrow: '知识点 03',
+                title: 'fetch',
+                description: '现代请求 API 怎么拿响应，以及为什么 404 不会自动 reject。',
+                meta: '对应：fetch 与 Response',
+              },
+              {
+                eyebrow: '知识点 04',
+                title: 'Promise',
+                description: '异步结果如何从 pending 走向 fulfilled / rejected，并继续链式组织。',
+                meta: '对应：Promise 的状态与编排',
+              },
+              {
+                eyebrow: '知识点 05',
+                title: 'async / await',
+                description: '如何把 Promise 流程收束成更顺的写法，让错误处理回到 try / catch。',
+                meta: '对应：async / await',
+              },
+            ],
+          },
+          {
+            id: 'closing',
+            kind: 'closing',
+            eyebrow: '本周带走什么',
+            title: '先建立地图，再逐个击破',
+            subtitle: '先看总览 -> 再逐节跑演示 -> 最后回题库',
+            points: [
+              '这一周的核心不是 API 名字，而是理解数据回来之前前端一直在等。',
+              'fetch、Promise、async / await 是同一条链上的不同层次，不是互相割裂的知识点。',
+              '学完本周后，要能从“读字符串”一路走到“发请求并处理结果”。',
+            ],
           },
         ],
       },
@@ -561,25 +637,423 @@ export const COURSE_WEEKS: CourseWeek[] = [
           'JSON / YAML / XML 的取舍，以及 JSON.stringify、JSON.parse 与 localStorage 的配合。',
         tags: ['JSON', 'stringify', 'parse', 'localStorage'],
         status: 'ready',
-        slides: demoDeck({
-          eyebrow: 'Week 4 · 知识点 01',
-          coverTitle: '数据在传出去之前，先变成字符串',
-          points: ['为什么需要数据交换格式', 'JSON / YAML / XML 的取舍', 'JSON ≠ JS 对象字面量', '写前 stringify，读后 parse'],
-          demoTitle: 'stringify / parse 双向转换',
-          demoSrc: `${WEEK4_DEMO}/01-数据交换格式-JSON.html`,
-          demoNote: '右侧演示台可现场切换尾逗号、单引号 key 等非法样例。',
-          code: {
-            language: 'javascript',
-            filename: '01-json-basics.js',
-            source: `const DATA = { names: [{ first: 'Bob', last: 'Carr' }] }
-
-const text = JSON.stringify(DATA)     // 对象 → 字符串
-console.log(typeof text)              // "string"
-
-const back = JSON.parse(text)         // 字符串 → 对象
-console.log(back.names[0].first)      // "Bob"`,
+        slides: [
+          {
+            id: 'cover',
+            kind: 'cover',
+            eyebrow: 'Week 4 · 知识点 01',
+            title: '数据在传出去之前，先变成字符串',
+            subtitle:
+              '这一节先把“数据怎么交换”说清楚，再落到 JSON.stringify 与 JSON.parse。',
+            points: [
+              '为什么需要数据交换格式',
+              'JSON / YAML / XML 的取舍',
+              'JSON ≠ JS 对象字面量',
+              '写前 stringify，读后 parse',
+            ],
           },
-        }),
+          {
+            id: 'outline',
+            kind: 'outline',
+            title: '这一节回答这些问题',
+            points: [
+              '为什么需要数据交换格式',
+              'JSON / YAML / XML 的取舍',
+              'JSON ≠ JS 对象字面量',
+              '写前 stringify，读后 parse',
+            ],
+          },
+          {
+            id: 'why-format',
+            kind: 'content',
+            eyebrow: '知识点 01 · 1.1',
+            title: '为什么需要「数据交换格式」',
+            subtitle:
+              'C 有结构体，JS 有对象，Python 有字典 —— 三套内存模型互不认识，所以需要一个双方都认的中间格式。',
+            bullets: [
+              {
+                title: '物理世界：插座 / USB',
+                text: '插头形状被事先约定好，任何厂家都能互通。',
+              },
+              {
+                title: '数据世界：数据交换格式',
+                text: '一种极简的标记语言，内容只是数组、对象、数字、字符串、布尔值的组合。',
+              },
+              {
+                title: '关键动作：结构化 → 字符串',
+                text: '先序列化成纯文本才能传输，接收方再反序列化回自己的数据结构。',
+              },
+            ],
+            note: {
+              tone: 'rule',
+              label: '一句话',
+              text: '数据交换格式的本质，是把「结构化数据」变成「可以传输的字符串」——传输通道只能搬字节，搬不了内存里的对象。',
+            },
+          },
+          {
+            id: 'formats-compare',
+            kind: 'content',
+            eyebrow: '知识点 01 · 1.2',
+            title: 'JSON / YAML / XML 三者的取舍',
+            subtitle: '同一份数据，三种格式各有代价。选格式看场景，不是看新旧。',
+            table: {
+              headers: ['格式', '可读性', '体积', '解析成本', '典型用途'],
+              rows: [
+                ['JSON', '不错', '小', '低（原生支持）', '前后端 API 通信，事实标准'],
+                ['YAML', '最好（可写注释）', '小', '中（需第三方库）', '各种配置文件（CI、K8s）'],
+                ['XML', '差（开闭标签太吵）', '大', '高', '遗留系统、RSS、部分企业接口'],
+              ],
+            },
+            note: {
+              tone: 'tip',
+              label: '取舍',
+              text: 'XML 的现实问题：更啰嗦（开闭标签）、更费力（属性 / 命名空间 / DTD）、更多字节（占带宽）。所以前后端通信选 JSON；写配置选 YAML；遇到老旧系统才用 XML。',
+            },
+          },
+          {
+            id: 'formats-code',
+            kind: 'codes',
+            eyebrow: '知识点 01 · 1.2',
+            title: '同一份数据，三种写法',
+            subtitle:
+              '三个地点的 suburb 与 postcode，分别用 JSON / YAML / XML 写一遍。',
+            codes: [
+              {
+                language: 'json',
+                filename: 'locations.json',
+                source: `{
+  "locations": [
+    { "suburb": "Kensington", "postcode": 2033 },
+    { "suburb": "Mascot",     "postcode": 2020 },
+    { "suburb": "Sydney CBD", "postcode": 2000 }
+  ]
+}`,
+              },
+              {
+                language: 'yaml',
+                filename: 'locations.yaml',
+                source: `---
+locations:
+- suburb: Kensington
+  postcode: 2033
+- suburb: Mascot
+  postcode: 2020
+- suburb: Sydney CBD
+  postcode: 2000`,
+              },
+              {
+                language: 'xml',
+                filename: 'locations.xml',
+                source: `<?xml version="1.0" encoding="UTF-8"?>
+<root>
+  <locations>
+    <element>
+      <postcode>2033</postcode>
+      <suburb>Kensington</suburb>
+    </element>
+    <element>
+      <postcode>2020</postcode>
+      <suburb>Mascot</suburb>
+    </element>
+  </locations>
+</root>`,
+              },
+            ],
+          },
+          {
+            id: 'json-vs-js-literal',
+            kind: 'compare',
+            eyebrow: '知识点 01 · 1.3',
+            title: 'JSON 不等于 JS 对象字面量',
+            subtitle:
+              'JSON 的语法是 JavaScript 对象字面量的一个严格子集：JS 里能写的，JSON 里不一定能写。',
+            compare: {
+              leftTitle: '✗ 合法 JS，但不是合法 JSON',
+              rightTitle: '✓ 同一份数据的合法 JSON',
+              left: {
+                code: {
+                  language: 'js',
+                  filename: 'bad.js',
+                  source: `const bad = {
+  name: 'Bob',        // key 没加引号
+  age: 23,            // 尾逗号
+  // 这里有一行注释
+  nickname: undefined,
+  greet: () => 'hi',
+};`,
+                },
+              },
+              right: {
+                code: {
+                  language: 'json',
+                  filename: 'good.json',
+                  source: `{
+  "name": "Bob",
+  "age": 23
+}`,
+                },
+              },
+            },
+          },
+          {
+            id: 'json-limits',
+            kind: 'content',
+            eyebrow: '知识点 01 · 1.3',
+            title: '四条必须记住的语法限制',
+            bullets: [
+              {
+                title: 'key 必须是双引号字符串',
+                text: `"name" 可以，name 与 'name' 都不行。`,
+                code: {
+                  language: 'json',
+                  source: `{
+  "name": "Bob"
+}`,
+                },
+              },
+              {
+                title: '不能有尾逗号',
+                text: '最后一个成员后面不能多一个逗号。',
+                code: {
+                  language: 'json',
+                  source: `{
+  "name": "Bob",
+}`,
+                },
+              },
+              {
+                title: '不能写注释',
+                text: 'JSON 没有任何注释语法，这也是 YAML 在配置文件里更受欢迎的原因。',
+                code: {
+                  language: 'json',
+                  source: `{
+  "name": "Bob" // 这里不能写注释
+}`,
+                },
+              },
+              {
+                title: '不支持 undefined / 函数 / NaN',
+                text: '这些值在序列化时会被丢掉或被强制转换。',
+                code: {
+                  language: 'js',
+                  source: `JSON.stringify({
+  nickname: undefined,
+  greet: () => 'hi',
+  score: NaN,
+})`,
+                },
+              },
+            ],
+            note: {
+              tone: 'warn',
+              label: '观察',
+              text: '这一页先记“什么不能写”，下一页再看为什么 parse 失败时一定要 try / catch。',
+            },
+          },
+          {
+            id: 'json-parse-trap',
+            kind: 'compare',
+            eyebrow: '知识点 01 · 1.3',
+            title: 'JSON.parse 的陷阱：语法错误会直接抛异常',
+            subtitle:
+              '这不是返回 null，也不是 quietly fail，而是会直接打断当前执行流程。',
+            compare: {
+              leftTitle: '✗ 不兜底：一旦输入非法 JSON 就直接炸掉',
+              rightTitle: '✓ 正确做法：任何外部 JSON 都进 try / catch',
+              left: {
+                code: {
+                  language: 'js',
+                  source: `const raw = "{ name: 'Bob' }"
+const data = JSON.parse(raw)
+console.log(data.name)`,
+                },
+              },
+              right: {
+                code: {
+                  language: 'js',
+                  source: `const raw = '{ "name": "Bob" }'
+
+try {
+  const data = JSON.parse(raw)
+  console.log(data.name)
+} catch (err) {
+  console.error('JSON 不合法：', err)
+}`,
+                },
+              },
+            },
+          },
+          {
+            id: 'stringify-parse-compare',
+            kind: 'compare',
+            eyebrow: '知识点 01 · 1.4',
+            title: '前端最常用的两个方法',
+            subtitle:
+              'JSON.stringify 负责序列化（对象 → 字符串），JSON.parse 负责反序列化（字符串 → 对象）。',
+            compare: {
+              leftTitle: 'JSON.stringify：对象 -> 字符串',
+              rightTitle: 'JSON.parse：字符串 -> 对象',
+              left: {
+                items: [
+                  '把对象、数组等结构化数据序列化成纯文本',
+                  '常见于请求体、localStorage、cookie 等只能存文本的介质',
+                  'JSON.stringify(v, null, 2) 只是为了可读，不适合传输',
+                ],
+                code: {
+                  language: 'js',
+                  source: `const text = JSON.stringify({
+  name: 'Bob',
+  skills: ['HTML', 'CSS'],
+})
+
+console.log(typeof text) // "string"`,
+                },
+              },
+              right: {
+                items: [
+                  '把合法 JSON 字符串反序列化回对象或数组',
+                  '解析后的结果才能用 .key、遍历、Array.isArray 等对象操作',
+                  '面对外部输入时一定要用 try / catch 兜底',
+                ],
+                code: {
+                  language: 'js',
+                  source: `const raw = '{ "name": "Bob" }'
+const data = JSON.parse(raw)
+
+console.log(typeof data) // "object"
+console.log(data.name)   // "Bob"`,
+                },
+              },
+            },
+          },
+          {
+            id: 'stringify-parse-code',
+            kind: 'code',
+            eyebrow: '知识点 01 · 1.4',
+            title: '01-json-basics.js',
+            code: {
+              language: 'javascript',
+              filename: '01-json-basics.js',
+              source: `const DATA = {
+  names: [{ first: 'Bob', last: 'Carr' }],
+}
+
+// ① 对象 → 字符串（序列化）
+const text = JSON.stringify(DATA)
+console.log(typeof text)        // "string"
+
+// ② 加缩进只为好看，服务器收到的还是同一份数据
+const pretty = JSON.stringify(DATA, null, 2)
+
+// ③ 字符串 → 对象（反序列化）
+const back = JSON.parse(text)
+console.log(back.names[0].first) // "Bob"`,
+              highlightLines: [6, 7, 10, 13, 14],
+            },
+          },
+          {
+            id: 'stringify-parse-demo',
+            kind: 'demo',
+            eyebrow: '知识点 01 · 1.4',
+            title: 'live demo · stringify / parse 双向转换',
+            subtitle:
+                '这一页不再直接承载实验，而是给你一个明确的实验入口：去独立 demos 页面里观察 parse 成功与抛错，以及 stringify 会丢掉什么。',
+            demo: {
+                route: '/demos/week-4/json/stringify-parse',
+                ctaLabel: '打开实验',
+                objectives: [
+                  '观察 parse 成功与失败的区别',
+                  '比较紧凑字符串和格式化字符串',
+                  '验证 stringify 会丢掉哪些值',
+                ],
+                note: '建议先点击非法 JSON 样例按钮，再回到合法 JSON 观察 parse 与 stringify 的差异。',
+            },
+          },
+          {
+            id: 'localstorage',
+            kind: 'content',
+            eyebrow: '知识点 01 · 1.5',
+            title: '为什么 JSON 总和 localStorage 一起出现',
+            subtitle:
+              'localStorage 是浏览器给的键值存储，但它有一个硬限制：只能存字符串。',
+            bullets: [
+              {
+                title: '直接存对象会丢数据',
+                text: `setItem(key, { name: 'Bob' }) 会先调用 String(obj)，读回来是 '[object Object]'。`,
+              },
+              {
+                title: '写前 stringify',
+                text: 'localStorage.setItem(key, JSON.stringify(list))',
+              },
+              {
+                title: '读后 parse 回对象',
+                text: 'JSON.parse(raw)，并包一层 try / catch 兜底。',
+              },
+            ],
+            note: {
+              tone: 'tip',
+              label: '规律',
+              text: '凡是只能存文本的介质（localStorage、cookie、URL query、请求体），都遵循同一套动作：写之前 stringify，读之后 parse。',
+            },
+          },
+          {
+            id: 'localstorage-code',
+            kind: 'code',
+            eyebrow: '知识点 01 · 1.5',
+            title: '01-localstorage.js',
+            code: {
+              language: 'javascript',
+              filename: '01-localstorage.js',
+              source: `const KEY = 'w4:members'
+
+// ✗ 直接存对象：浏览器会先调用 String(obj)
+localStorage.setItem(KEY, { name: 'Bob' })
+localStorage.getItem(KEY)   // "[object Object]" —— 数据已经丢了
+
+// ✓ 正确做法：对象 → 字符串 → 存
+localStorage.setItem(KEY, JSON.stringify([{ name: 'Bob' }]))
+
+// ✓ 读出来必须 parse 回对象，并兜住 parse 失败
+function loadMembers() {
+  try {
+    return JSON.parse(localStorage.getItem(KEY)) ?? []
+  } catch (err) {
+    console.warn('本地数据损坏，已重置：', err)
+    localStorage.removeItem(KEY)
+    return []
+  }
+}`,
+            },
+          },
+          {
+            id: 'localstorage-demo',
+            kind: 'demo',
+            eyebrow: '知识点 01 · 1.5',
+            title: 'live demo · JSON + localStorage 持久化',
+            subtitle:
+                '这一页是 localStorage 实验入口。去独立 demos 页面里沿着 stringify -> setItem -> getItem -> parse 走完整个持久化闭环。',
+            demo: {
+                route: '/demos/week-4/json/localstorage',
+                ctaLabel: '打开实验',
+                objectives: [
+                  '观察 localStorage 里真实存着的字符串',
+                  '理解写前 stringify、读后 parse 的闭环',
+                  '验证刷新页面后数据仍然存在',
+                ],
+                note: '建议依次执行添加、重新读取、清空，观察日志与字符串存储内容如何变化。',
+            },
+          },
+          {
+            id: 'closing',
+            kind: 'closing',
+            title: '这一节要带走的三句话',
+            points: [
+              'JSON 是字符串，不是对象：看到双引号包住整个结构，它就是 string。',
+              'key 必须双引号、不能有尾逗号、不能写注释，而且 parse 遇到语法错误会直接抛异常。',
+              '写前 stringify，读后 parse：所有只能存文本的介质都遵循这一条，localStorage 只是最直观的一个例子。',
+            ],
+          },
+        ],
       },
       {
         id: 'xhr',

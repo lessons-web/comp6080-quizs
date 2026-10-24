@@ -14,9 +14,12 @@ import { SlideRenderer } from './slides/SlideRenderer'
 const KIND_LABEL: Record<CourseSlideKind, string> = {
   cover: '封面',
   outline: '导览',
+  roadmap: '主线',
+  cards: '总览',
   content: '讲解',
   demo: '演示',
   code: '代码',
+  codes: '代码对比',
   compare: '对比',
   closing: '小结',
 }

@@ -45,12 +45,18 @@ export type CourseSlideKind =
   | 'cover'
   /** 导览：这一节回答哪些问题 */
   | 'outline'
-  /** 讲解：文字 + 占位骨架 */
+  /** 路线图：把本节知识点串成一条主线 */
+  | 'roadmap'
+  /** 卡片总览：固定卡片阵列，适合章节地图 */
+  | 'cards'
+  /** 讲解：真实知识点内容（段落 / 要点 / 表格 / 提示条），无内容时退回占位骨架 */
   | 'content'
   /** 演示：内嵌可运行的原生 HTML 演示页 */
   | 'demo'
   /** 代码：静态代码片段 */
   | 'code'
+  /** 多段代码：并列对比同一份数据的多种写法（如 JSON / YAML / XML） */
+  | 'codes'
   /** 对比：好坏 / 对错两栏 */
   | 'compare'
   /** 小结：收尾要点 */
@@ -62,6 +68,12 @@ export interface CourseSlideDemo {
   src?: string
   /** 需要新窗口打开的完整外部地址 */
   url?: string
+  /** 独立 demos 模块中的实验路由 */
+  route?: string
+  /** 课程页实验入口按钮文案 */
+  ctaLabel?: string
+  /** 课程页实验入口页中的观察目标 */
+  objectives?: string[]
   /** 演示说明 */
   note?: string
 }
@@ -70,6 +82,54 @@ export interface CourseSlideCode {
   language: string
   filename?: string
   source: string
+  /** 需要强调的代码行（从 1 开始） */
+  highlightLines?: number[]
+}
+
+export interface CourseSlideRoadmapItem {
+  label: string
+  title: string
+  description: string
+}
+
+export interface CourseSlideCard {
+  eyebrow?: string
+  title: string
+  description: string
+  meta?: string
+}
+
+/** 知识点页的要点条目 */
+export interface CourseSlideBullet {
+  title: string
+  text: string
+  /** 该要点对应的最小代码例子 */
+  code?: CourseSlideCode
+}
+
+/** 提示条语气：规则 / 建议 / 注意 / 陷阱 */
+export type CourseSlideNoteTone = 'rule' | 'tip' | 'warn' | 'trap'
+
+/** 知识点页底部的提示条 */
+export interface CourseSlideNote {
+  tone: CourseSlideNoteTone
+  /** 提示条前缀，如「一句话」「陷阱」 */
+  label?: string
+  text: string
+}
+
+/** 知识点页的对比表 */
+export interface CourseSlideTable {
+  headers: string[]
+  rows: string[][]
+}
+
+/** 对比页的其中一栏 */
+export interface CourseSlideCompareSide {
+  /** 该栏展示的代码块 */
+  code?: CourseSlideCode
+  /** 该栏展示的要点 */
+  items?: string[]
 }
 
 export interface CourseSlide {
@@ -87,8 +147,25 @@ export interface CourseSlide {
   placeholderCount?: number
   demo?: CourseSlideDemo
   code?: CourseSlideCode
-  /** compare 页左右两栏的标题 */
-  compare?: { leftTitle: string; rightTitle: string }
+  /** codes 页并列展示的多段代码 */
+  codes?: CourseSlideCode[]
+  roadmap?: CourseSlideRoadmapItem[]
+  cards?: CourseSlideCard[]
+  /** content 页正文段落 */
+  paragraphs?: string[]
+  /** content 页要点列表 */
+  bullets?: CourseSlideBullet[]
+  /** content 页对比表 */
+  table?: CourseSlideTable
+  /** content 页底部提示条 */
+  note?: CourseSlideNote
+  /** compare 页左右两栏的标题与内容 */
+  compare?: {
+    leftTitle: string
+    rightTitle: string
+    left?: CourseSlideCompareSide
+    right?: CourseSlideCompareSide
+  }
 }
 
 /** ready = 已接入真实演示；placeholder = 仅占位骨架，待补充 */
