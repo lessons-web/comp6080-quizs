@@ -1,0 +1,260 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>04A · Promise 状态机与链式 · COMP6080 Week 4</title>
+  <meta
+    name="description"
+    content="COMP6080 Week 4：独立演示 Promise 的 pending/fulfilled/rejected、状态不可逆、then 链式与分支。"
+  />
+  <link rel="icon" href="data:," />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600&family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600&display=swap"
+    rel="stylesheet"
+  />
+  <link rel="stylesheet" href="assets/demo.css" />
+  <style>
+    .demo-page {
+      position: relative;
+      z-index: 1;
+      min-height: auto;
+      padding: 0;
+    }
+
+    .demo-wrap {
+      max-width: none;
+      margin: 0;
+    }
+
+    .page-head {
+      display: none;
+    }
+
+    .state-grid {
+      display: grid;
+      gap: 12px;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      margin-bottom: 16px;
+    }
+
+    .state-card {
+      border: 1px solid #ded7ca;
+      border-radius: 18px;
+      background: #fffdfa;
+      padding: 14px;
+      transition: 180ms ease;
+    }
+
+    .state-card strong {
+      display: block;
+      font-size: 16px;
+      margin-bottom: 4px;
+    }
+
+    .state-card p {
+      margin: 0;
+      font-size: 13px;
+      line-height: 1.6;
+      color: #626872;
+    }
+
+    .state-card.on {
+      border-color: #d06b28;
+      box-shadow: 0 0 0 3px rgba(208, 107, 40, 0.12);
+      background: #fff7f0;
+    }
+
+    @media (max-width: 820px) {
+      .state-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main class="demo-page">
+    <div class="demo-wrap">
+      <section class="demo reveal">
+        <div class="demo-head">
+          <h3>演示 A · Promise 状态机与链式</h3>
+          <span class="pill">state / then</span>
+        </div>
+        <div class="demo-body">
+          <p class="demo-sub">
+            先手动控制一个 Promise 从 <code class="inline">pending</code> 定型，再点下面的链式 / 分支按钮，
+            看清“每个 then 返回新 Promise”和“同一个 Promise 可以挂多个 then”。
+          </p>
+
+          <div class="state-grid">
+            <div class="state-card on" id="state-pending">
+              <strong>pending</strong>
+              <p>刚创建，结果未知。</p>
+            </div>
+            <div class="state-card" id="state-fulfilled">
+              <strong>fulfilled</strong>
+              <p>成功定型，拿到兑现值。</p>
+            </div>
+            <div class="state-card" id="state-rejected">
+              <strong>rejected</strong>
+              <p>失败定型，拿到拒绝原因。</p>
+            </div>
+          </div>
+
+          <div class="btn-row">
+            <button class="btn sm" id="btn-new" type="button">new Promise()</button>
+            <button class="btn primary sm" id="btn-resolve" type="button">resolve(value)</button>
+            <button class="btn danger sm" id="btn-reject" type="button">reject(error)</button>
+            <button class="btn ghost sm" id="btn-resolve-again" type="button">再点一次 resolve</button>
+          </div>
+
+          <div class="status-line" id="state-chips"></div>
+          <div class="out idle" id="state-note">当前 Promise 还没有定型。</div>
+
+          <div class="field">
+            <label>链式 vs 分支</label>
+            <div class="btn-row">
+              <button class="btn sm" id="btn-chain" type="button">演示链式 then -> then -> then</button>
+              <button class="btn ghost sm" id="btn-branch" type="button">演示分支：同一个 Promise 挂三个 then</button>
+            </div>
+          </div>
+
+          <div class="log" id="log-state"></div>
+        </div>
+      </section>
+    </div>
+  </main>
+
+  <script src="assets/demo.js"></script>
+  <script>
+    const $ = W4.$;
+
+    const cards = {
+      pending: $('#state-pending'),
+      fulfilled: $('#state-fulfilled'),
+      rejected: $('#state-rejected')
+    };
+
+    const stateChips = $('#state-chips');
+    const stateNote = $('#state-note');
+    const logState = $('#log-state');
+
+    let currentState = 'pending';
+    let resolveRef = null;
+    let rejectRef = null;
+
+    function renderChips(items) {
+      stateChips.innerHTML = items.map(function (item) {
+        return '<span class="chip ' + (item.tone || '') + '">' + W4.escapeHtml(item.text) + '</span>';
+      }).join('');
+    }
+
+    function setNote(text, tone) {
+      stateNote.className = 'out ' + (tone || 'idle');
+      stateNote.textContent = text;
+    }
+
+    function paintState() {
+      Object.keys(cards).forEach(function (key) {
+        cards[key].className = 'state-card' + (key === currentState ? ' on' : '');
+      });
+
+      renderChips([
+        { text: '当前状态：' + currentState, tone: currentState === 'pending' ? '' : currentState === 'fulfilled' ? 'ok' : 'err' },
+        { text: 'settled：' + (currentState === 'pending' ? '否' : '是'), tone: currentState === 'pending' ? '' : 'warn' }
+      ]);
+    }
+
+    function createPromise() {
+      currentState = 'pending';
+      let localResolve;
+      let localReject;
+
+      const promise = new Promise(function (resolve, reject) {
+        localResolve = resolve;
+        localReject = reject;
+        W4.log(logState, 'executor 会立刻同步执行，但状态仍然先是 pending', 'info', 'NEW');
+      });
+
+      resolveRef = localResolve;
+      rejectRef = localReject;
+
+      promise
+        .then(function (value) {
+          W4.log(logState, 'then 收到兑现值：' + W4.pretty(value), 'ok', 'THEN');
+        })
+        .catch(function (err) {
+          W4.log(logState, 'catch 收到拒绝原因：' + err.message, 'err', 'CATCH');
+        })
+        .finally(function () {
+          W4.log(logState, 'finally 总会执行，用来做收尾', 'warn', 'FINALLY');
+        });
+
+      paintState();
+      setNote('已创建一个新的 Promise，当前还是 pending。', 'idle');
+    }
+
+    function settle(kind) {
+      if (currentState !== 'pending') {
+        W4.log(logState, '这次 ' + kind + ' 被忽略，因为 Promise 已经定型成 ' + currentState, 'warn', 'IGNORE');
+        setNote('状态一旦定型就不可逆。后续 resolve / reject 都会被静默忽略。', 'warn');
+        return;
+      }
+
+      if (kind === 'resolve') {
+        currentState = 'fulfilled';
+        resolveRef({ message: '服务器成功返回数据', at: W4.clock() });
+        setNote('这次 Promise 已兑现成 fulfilled。再点 resolve / reject 都不会生效。', 'ok');
+      } else {
+        currentState = 'rejected';
+        rejectRef(new Error('网络请求失败'));
+        setNote('这次 Promise 已拒绝成 rejected。再点 resolve / reject 都不会生效。', 'err');
+      }
+
+      paintState();
+    }
+
+    function runChain() {
+      W4.log(logState, '--- 链式开始：后一个 then 会收到前一个 then 的返回值 ---', 'info', 'CHAIN');
+      Promise.resolve(1)
+        .then(function (value) {
+          W4.log(logState, '第 1 个 then 收到 ' + value, 'ok', 'CHAIN');
+          return value + 1;
+        })
+        .then(function (value) {
+          W4.log(logState, '第 2 个 then 收到 ' + value, 'ok', 'CHAIN');
+          return value * 10;
+        })
+        .then(function (value) {
+          W4.log(logState, '第 3 个 then 收到 ' + value + '，说明值沿链一路往下传', 'ok', 'CHAIN');
+        });
+    }
+
+    function runBranch() {
+      W4.log(logState, '--- 分支开始：同一个 Promise 挂多个 then，各自收到同一个值 ---', 'info', 'BRANCH');
+      const shared = Promise.resolve('同一个值');
+      shared.then(function (value) {
+        W4.log(logState, '分支 A 收到：' + value, 'ok', 'BRANCH');
+      });
+      shared.then(function (value) {
+        W4.log(logState, '分支 B 收到：' + value, 'ok', 'BRANCH');
+      });
+      shared.then(function (value) {
+        W4.log(logState, '分支 C 收到：' + value, 'ok', 'BRANCH');
+      });
+    }
+
+    $('#btn-new').addEventListener('click', createPromise);
+    $('#btn-resolve').addEventListener('click', function () { settle('resolve'); });
+    $('#btn-reject').addEventListener('click', function () { settle('reject'); });
+    $('#btn-resolve-again').addEventListener('click', function () { settle('resolve'); });
+    $('#btn-chain').addEventListener('click', runChain);
+    $('#btn-branch').addEventListener('click', runBranch);
+
+    W4.resetLog(logState);
+    createPromise();
+  </script>
+</body>
+</html>

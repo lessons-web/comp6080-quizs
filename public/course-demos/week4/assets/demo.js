@@ -48,6 +48,14 @@
       short: 'async / await',
       desc: '本质是 Promise 的语法糖：async 总返回 Promise，await 暂停并取值、失败就抛出，错误处理回归 try/catch。',
       tags: ['协程', 'await', 'try / catch', '串行 vs 并行']
+    },
+    {
+      id: '06',
+      file: '06-http-server-express.html',
+      title: 'HTTP Server 与 Express',
+      short: 'HTTP / Express',
+      desc: '从 HTTP 请求-响应，到 Express 最小服务器与 RESTful 路由，补齐“前端请求的另一头是谁在回应”。',
+      tags: ['HTTP', 'Express', 'RESTful', '状态码']
     }
   ];
 
@@ -270,7 +278,7 @@
     host.innerHTML = html;
 
     var badge = $('[data-topbar-badge]');
-    if (badge && cur.page) badge.textContent = cur.page.id + ' / 05';
+    if (badge && cur.page) badge.textContent = cur.page.id + ' / ' + pad2(PAGES.length);
   }
 
   function renderPager() {
@@ -298,7 +306,7 @@
         : '<a class="next" href="' + INDEX_FILE + '">' +
             '<span class="dir">回到目录 →</span>' +
             '<span class="ttl">Week 4 全部知识点</span>' +
-            '<span class="sub">看完 5 节后可以回到目录复习或跳转。</span>' +
+            '<span class="sub">看完整个 Week 4 后可以回到目录复习或跳转。</span>' +
           '</a>');
   }
 

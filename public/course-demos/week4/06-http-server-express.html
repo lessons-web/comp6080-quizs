@@ -1,0 +1,146 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>06 · HTTP Server 与 Express · COMP6080 Week 4</title>
+  <meta
+    name="description"
+    content="COMP6080 Week 4：HTTP 请求-响应、Express 最小服务器与 RESTful 路由的教学入口页。"
+  />
+  <link rel="icon" href="data:," />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600&family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600&display=swap"
+    rel="stylesheet"
+  />
+  <link rel="stylesheet" href="assets/demo.css" />
+</head>
+<body data-page="06">
+  <header class="topbar">
+    <nav class="crumb" data-topbar></nav>
+    <span class="topbar-spacer"></span>
+    <span class="topbar-badge" data-topbar-badge></span>
+  </header>
+
+  <main class="doc" style="grid-template-columns: minmax(0,1fr);">
+    <article class="doc-main" style="max-width: 90ch;">
+      <div class="page-head reveal">
+        <div class="kicker">知识点 06 · HTTP / Express</div>
+        <h1 class="page-title">前端请求的另一头：<span class="mark">HTTP Server 与 Express</span></h1>
+        <p class="lede">
+          前面 01–05 节都在讲“浏览器怎么发请求、怎么等结果”。这一节把镜头转到服务端：
+          请求到了之后，服务器是如何按 <code class="inline">method + path</code> 匹配路由，
+          又是如何把状态码、响应头和响应体回给前端的。
+        </p>
+        <div class="tag-row">
+          <span class="tag hot">闭环</span>
+          <span class="tag">HTTP request / response</span>
+          <span class="tag">Express</span>
+          <span class="tag">RESTful</span>
+        </div>
+      </div>
+
+      <section class="sec reveal" style="--d:80ms">
+        <div class="sec-head">
+          <span class="sec-num">6.1</span>
+          <h2>这一节先抓住两件事<span class="en">focus on two ideas</span></h2>
+        </div>
+
+        <div class="cards">
+          <div class="card">
+            <div class="card-t">A</div>
+            <h3>HTTP 是一次请求-响应对话</h3>
+            <p>浏览器发出 method、path、headers、body；服务器处理后回 status、headers、body。</p>
+          </div>
+          <div class="card cool">
+            <div class="card-t">B</div>
+            <h3>Express 用 method + path 匹配路由</h3>
+            <p>GET / POST / PUT / DELETE 不只是单词，它们和资源路径一起决定了请求落到哪段处理逻辑。</p>
+          </div>
+        </div>
+
+        <div class="note rule">
+          <span class="ico">一句话</span>
+          <div>
+            XHR、fetch、Promise、async / await 讲的是“客户端怎么发”；HTTP Server 与 Express 讲的是“服务端怎么接并怎么回”。
+          </div>
+        </div>
+      </section>
+
+      <section class="catalog reveal" style="padding-top: 4px;">
+        <a class="cat-card" href="06a-http-request-response-demo.html">
+          <span class="cat-num">06A</span>
+          <h3 class="cat-title">HTTP 请求-响应检视器</h3>
+          <p class="cat-desc">
+            对照 GET、POST、404 三种场景下，请求报文和响应报文里到底装了什么。
+          </p>
+          <span class="cat-tags">
+            <span class="tag">method</span>
+            <span class="tag">status</span>
+            <span class="tag">headers</span>
+            <span class="tag">body</span>
+          </span>
+          <span class="cat-go">打开演示 <span class="arw">→</span></span>
+        </a>
+
+        <a class="cat-card" href="06b-express-routing-demo.html">
+          <span class="cat-num">06B</span>
+          <h3 class="cat-title">Express 路由与 RESTful</h3>
+          <p class="cat-desc">
+            观察 method + path 如何命中 Express 路由，并把 CRUD 和记成有直觉的映射关系。
+          </p>
+          <span class="cat-tags">
+            <span class="tag">Express</span>
+            <span class="tag">RESTful</span>
+            <span class="tag">CRUD</span>
+            <span class="tag">params</span>
+          </span>
+          <span class="cat-go">打开演示 <span class="arw">→</span></span>
+        </a>
+      </section>
+
+      <section class="sec reveal" style="--d:160ms">
+        <div class="sec-head">
+          <span class="sec-num">6.2</span>
+          <h2>推荐的观看顺序<span class="en">recommended order</span></h2>
+        </div>
+
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th class="mono">顺序</th>
+                <th>先看什么</th>
+                <th>为什么</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td class="mono">01</td>
+                <td>06A · HTTP 请求-响应检视器</td>
+                <td>先把 request / response 这两个基本单位看清，知道前后端到底在交换什么。</td>
+              </tr>
+              <tr>
+                <td class="mono">02</td>
+                <td>06B · Express 路由与 RESTful</td>
+                <td>再去看服务端内部怎样按 method + path 把请求分发给不同处理函数。</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+    </article>
+  </main>
+
+  <nav class="pager" data-pager></nav>
+
+  <footer class="pagefoot">
+    <span>COMP6080 26T3 · Week 4 · 知识点 06</span>
+    <span class="sig">客户端发请求，服务端回响应</span>
+  </footer>
+
+  <script src="assets/demo.js"></script>
+</body>
+</html>

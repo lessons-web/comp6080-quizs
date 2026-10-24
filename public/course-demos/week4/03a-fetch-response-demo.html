@@ -1,0 +1,232 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>03A · fetch 与 Response · COMP6080 Week 4</title>
+  <meta
+    name="description"
+    content="COMP6080 Week 4：独立演示 fetch 返回 Promise<Response>、404 不 reject、必须自己判 res.ok。"
+  />
+  <link rel="icon" href="data:," />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600&family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600&display=swap"
+    rel="stylesheet"
+  />
+  <link rel="stylesheet" href="assets/demo.css" />
+  <style>
+    .demo-page {
+      position: relative;
+      z-index: 1;
+      min-height: auto;
+      padding: 0;
+    }
+
+    .demo-wrap {
+      max-width: none;
+      margin: 0;
+    }
+
+    .page-head {
+      display: none;
+    }
+  </style>
+</head>
+<body>
+  <main class="demo-page">
+    <div class="demo-wrap">
+      <section class="demo reveal">
+        <div class="demo-head">
+          <h3>演示 A · fetch 与 Response 检视器</h3>
+          <span class="pill">live</span>
+        </div>
+        <div class="demo-body">
+          <p class="demo-sub">
+            对照看三件事：<code class="inline">fetch(url)</code> 先返回 Promise、拿到的是
+            <code class="inline">Response</code> 而不是数据本身、以及
+            <code class="inline">404</code> 默认不会进 <code class="inline">catch</code>。
+          </p>
+
+          <div class="row">
+            <input type="checkbox" id="check-ok" />
+            <label for="check-ok">开启 res.ok 检查</label>
+          </div>
+
+          <div class="btn-row">
+            <button class="btn primary sm" id="btn-get-remote" type="button">请求远程 API</button>
+            <button class="btn sm" id="btn-get-fallback" type="button">请求本地兜底</button>
+            <button class="btn ghost sm" id="btn-get-404" type="button">请求不存在的路径（404）</button>
+          </div>
+
+          <div class="stats" id="fetch-stats"></div>
+          <div class="status-line" id="fetch-chips"></div>
+
+          <div class="out idle" id="fetch-result-note">
+            当前还没有显示任何请求结论。
+          </div>
+
+          <div class="out pre tall idle" id="fetch-out">点击上面任意按钮开始。</div>
+
+          <div class="log" id="log-fetch"></div>
+        </div>
+      </section>
+    </div>
+  </main>
+
+  <script src="assets/demo.js"></script>
+  <script>
+    const API = 'https://jsonplaceholder.typicode.com';
+    const URL_OK = API + '/users';
+    const URL_404 = API + '/nonexistent-path-404';
+    const FALLBACK = 'assets/fallback-users.json';
+
+    const $ = W4.$;
+
+    function renderStats(el, items) {
+      el.innerHTML = items.map(function (it) {
+        return '<div class="stat"><span class="k">' + W4.escapeHtml(it.k) + '</span>' +
+          '<span class="v">' + W4.escapeHtml(it.v) + '</span></div>';
+      }).join('');
+    }
+
+    function renderChips(el, chips) {
+      el.innerHTML = chips.map(function (c) {
+        return '<span class="chip ' + (c.tone || '') + '">' + W4.escapeHtml(c.text) + '</span>';
+      }).join('');
+    }
+
+    function truncate(text, limit) {
+      const max = limit || 600;
+      if (text.length <= max) return text;
+      return text.slice(0, max) + '\n…（已截断，完整长度 ' + text.length + ' 字符）';
+    }
+
+    const checkOkEl = $('#check-ok');
+    const fetchStats = $('#fetch-stats');
+    const fetchChips = $('#fetch-chips');
+    const fetchOut = $('#fetch-out');
+    const fetchResultNote = $('#fetch-result-note');
+    const logFetch = $('#log-fetch');
+
+    function setFetchOut(text, tone) {
+      fetchOut.className = 'out pre tall ' + (tone || 'idle');
+      fetchOut.textContent = text;
+    }
+
+    function setFetchResult(text, tone) {
+      fetchResultNote.className = 'out ' + (tone || 'idle');
+      fetchResultNote.textContent = text;
+    }
+
+    async function runGet(url, useFallback) {
+      W4.resetLog(logFetch);
+      renderStats(fetchStats, []);
+      renderChips(fetchChips, []);
+      setFetchOut('请求进行中…', 'idle');
+      setFetchResult('正在等待 fetch 返回 Promise 的最终结果…', 'idle');
+
+      const checkOk = checkOkEl.checked;
+      const t0 = performance.now();
+      W4.log(logFetch, '① 发起 fetch("' + url + '") —— 返回一个 Promise', 'info', 'p');
+      W4.log(logFetch, '② res.ok 检查已' + (checkOk ? '开启' : '关闭'), 'sync', 'p');
+
+      let res;
+      try {
+        res = await fetch(url);
+      } catch (netErr) {
+        W4.log(logFetch, '✗ 网络层失败，Promise 被 reject：' + netErr.message, 'err', 'x');
+        if (useFallback) {
+          W4.log(logFetch, '→ 自动切换到本地兜底资源 ' + FALLBACK, 'warn', 'x');
+          try {
+            res = await fetch(FALLBACK);
+            W4.log(logFetch, '✓ 兜底资源请求成功', 'ok', 'x');
+            setFetchResult('远程网络失败，所以改为读取本地兜底文件。现在展示的是本地 8 条中文用户。', 'warn');
+          } catch (e2) {
+            renderChips(fetchChips, [{ text: 'reject（网络不可用）', tone: 'err' }]);
+            setFetchOut('网络错误：' + e2.message, 'err');
+            setFetchResult('网络错误，且本地兜底也失败了。', 'err');
+            return;
+          }
+        } else {
+          renderChips(fetchChips, [{ text: 'reject（网络错误）', tone: 'err' }]);
+          setFetchOut('网络错误：' + netErr.message, 'err');
+          setFetchResult('这是 fetch 真正会 reject 的场景：网络层失败。', 'err');
+          W4.log(logFetch, '✗ 结论：Promise reject', 'err', 'x');
+          return;
+        }
+      }
+
+      const ms = Math.round(performance.now() - t0);
+      const ctype = (res.headers.get('content-type') || '(无)').split(';')[0];
+
+      W4.log(logFetch, '③ 拿到 Response：status=' + res.status + '，statusText="' + res.statusText + '"', 'info', 'r');
+      W4.log(logFetch, '   res.ok = ' + res.ok + '（等价于 status >= 200 且 status < 300）', res.ok ? 'ok' : 'warn', 'r');
+      W4.log(logFetch, '   此时还没有数据！响应体是一条流，要读一次才有内容', 'warn', 'r');
+
+      renderStats(fetchStats, [
+        { k: 'status', v: String(res.status) },
+        { k: 'ok', v: String(res.ok) },
+        { k: '耗时(ms)', v: String(ms) },
+        { k: 'content-type', v: ctype }
+      ]);
+
+      if (checkOk && !res.ok) {
+        W4.log(logFetch, '④ 开启了 res.ok 检查且 res.ok=false → 主动 throw new Error("HTTP ' + res.status + '")', 'err', 'c');
+        renderChips(fetchChips, [{ text: '被 catch 抓到：HTTP ' + res.status, tone: 'err' }]);
+        setFetchOut(
+          '✗ 抛出异常：HTTP ' + res.status + ' ' + res.statusText + '\n\n' +
+          '// 因为开启了 res.ok 检查，404 被当成错误处理。\n' +
+          '// 所以没有继续读取 body，而是显式进入 catch。',
+          'err'
+        );
+        setFetchResult('这次 404 没有被当成成功，因为你手动检查了 res.ok。', 'err');
+        return;
+      }
+
+      W4.log(logFetch, '④ 开始读 body：await res.json()（响应体只能读一次）', 'info', 'b');
+      let data;
+      try {
+        data = await res.json();
+      } catch (parseErr) {
+        W4.log(logFetch, '✗ res.json() 失败：' + parseErr.message, 'err', 'b');
+        renderChips(fetchChips, [{ text: 'body 读取 / 解析失败', tone: 'err' }]);
+        setFetchOut('读取响应体失败：' + parseErr.message, 'err');
+        setFetchResult('拿到了 Response，但读取 body 失败。', 'err');
+        return;
+      }
+
+      W4.log(logFetch, '✓ res.json() 完成，拿到了真正的数据', 'ok', 'b');
+
+      if (!res.ok) {
+        W4.log(logFetch, '⚠ 注意：status=' + res.status + ' 但 Promise 并没有 reject！', 'warn', 'c');
+        W4.log(logFetch, '   这就是 fetch 的坑：404 / 500 也会 resolve', 'warn', 'c');
+        renderChips(fetchChips, [{ text: '你以为成功了，其实状态码是 ' + res.status, tone: 'warn' }]);
+        setFetchOut(
+          '// 没有检查 res.ok，直接把响应体当成数据用了：\n' +
+          truncate(W4.pretty(data)) + '\n\n' +
+          '// 真实状态码是 ' + res.status + '，这只是 fetch 制造的「成功」假象。',
+          'ok'
+        );
+        setFetchResult('这次 Promise 依然 resolve 了，但其实是 HTTP ' + res.status + '。这就是“fetch 不认 404”。', 'warn');
+        return;
+      }
+
+      renderChips(fetchChips, [{ text: 'resolve · ' + res.status + ' OK', tone: 'ok' }]);
+      setFetchOut('// 数据预览（已截断）：\n' + truncate(W4.pretty(data)), 'ok');
+      setFetchResult(
+        url === FALLBACK
+          ? '当前显示的是直接请求本地文件得到的数据。'
+          : '当前显示的是远程 API 返回的数据。拿到的是 Response，读取 body 之后才得到真正 JSON。',
+        url === FALLBACK ? 'warn' : 'ok'
+      );
+      W4.log(logFetch, '⑤ 结论：Promise resolve，状态码正常，数据可用', 'ok', 'c');
+    }
+
+    $('#btn-get-remote').addEventListener('click', function () { runGet(URL_OK, true); });
+    $('#btn-get-fallback').addEventListener('click', function () { runGet(FALLBACK, false); });
+    $('#btn-get-404').addEventListener('click', function () { runGet(URL_404, false); });
+  </script>
+</body>
+</html>

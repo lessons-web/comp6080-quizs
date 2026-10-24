@@ -1,0 +1,244 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>06B · Express 路由与 RESTful · COMP6080 Week 4</title>
+  <meta
+    name="description"
+    content="COMP6080 Week 4：独立演示 Express 的最小服务器、路由匹配，以及 RESTful 中 GET/POST/PUT/DELETE 的职责。"
+  />
+  <link rel="icon" href="data:," />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600&family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600&display=swap"
+    rel="stylesheet"
+  />
+  <link rel="stylesheet" href="assets/demo.css" />
+  <style>
+    .demo-page {
+      position: relative;
+      z-index: 1;
+      min-height: auto;
+      padding: 0;
+    }
+
+    .demo-wrap {
+      max-width: none;
+      margin: 0;
+    }
+
+    .page-head {
+      display: none;
+    }
+
+    .route-list {
+      display: grid;
+      gap: 10px;
+    }
+
+    .route-item {
+      border: 1px solid #e3ded4;
+      border-radius: 18px;
+      background: #fffdfa;
+      padding: 12px 14px;
+      font-size: 13px;
+      color: #4c5159;
+    }
+
+    .route-item strong {
+      font-family: "IBM Plex Mono", monospace;
+      color: #16181d;
+    }
+  </style>
+</head>
+<body>
+  <main class="demo-page">
+    <div class="demo-wrap">
+      <section class="demo reveal">
+        <div class="demo-head">
+          <h3>演示 B · Express 路由与 RESTful</h3>
+          <span class="pill">express / crud</span>
+        </div>
+        <div class="demo-body">
+          <p class="demo-sub">
+            这页看的是 Node.js 服务器里最常见的一段逻辑：请求进来后，Express 按
+            <code class="inline">method + path</code> 找到对应路由，再交给处理函数生成响应。
+          </p>
+
+          <div class="btn-row">
+            <button class="btn primary sm" id="btn-list" type="button">GET /api/users</button>
+            <button class="btn sm" id="btn-create" type="button">POST /api/users</button>
+            <button class="btn sm" id="btn-update" type="button">PUT /api/users/42</button>
+            <button class="btn ghost sm" id="btn-delete" type="button">DELETE /api/users/42</button>
+            <button class="btn ghost sm" id="btn-miss" type="button">GET /api/posts</button>
+          </div>
+
+          <div class="stats" id="express-stats"></div>
+          <div class="status-line" id="express-chips"></div>
+          <div class="out idle" id="express-note">当前还没有做任何一次路由匹配。</div>
+          <div class="out pre tall idle" id="express-out">点击上面任意按钮开始。</div>
+
+          <div class="field">
+            <label>这台 Express 服务器里有哪些路由</label>
+            <div class="route-list">
+              <div class="route-item"><strong>GET /api/users</strong> -> 返回用户列表</div>
+              <div class="route-item"><strong>POST /api/users</strong> -> 创建新用户</div>
+              <div class="route-item"><strong>PUT /api/users/:id</strong> -> 更新某个用户</div>
+              <div class="route-item"><strong>DELETE /api/users/:id</strong> -> 删除某个用户</div>
+            </div>
+          </div>
+
+          <div class="log" id="express-log"></div>
+        </div>
+      </section>
+    </div>
+  </main>
+
+  <script src="assets/demo.js"></script>
+  <script>
+    const $ = W4.$;
+
+    const expressStats = $('#express-stats');
+    const expressChips = $('#express-chips');
+    const expressNote = $('#express-note');
+    const expressOut = $('#express-out');
+    const expressLog = $('#express-log');
+
+    function renderStats(items) {
+      expressStats.innerHTML = items.map(function (item) {
+        return '<div class="stat"><span class="k">' + W4.escapeHtml(item.k) + '</span>' +
+          '<span class="v">' + W4.escapeHtml(item.v) + '</span></div>';
+      }).join('');
+    }
+
+    function renderChips(items) {
+      expressChips.innerHTML = items.map(function (item) {
+        return '<span class="chip ' + (item.tone || '') + '">' + W4.escapeHtml(item.text) + '</span>';
+      }).join('');
+    }
+
+    function setNote(text, tone) {
+      expressNote.className = 'out ' + (tone || 'idle');
+      expressNote.textContent = text;
+    }
+
+    function setOut(text, tone) {
+      expressOut.className = 'out pre tall ' + (tone || 'idle');
+      expressOut.textContent = text;
+    }
+
+    function dispatch(config) {
+      W4.resetLog(expressLog);
+      renderStats([
+        { k: 'Method', v: config.method },
+        { k: 'Path', v: config.path },
+        { k: 'Status', v: String(config.status) },
+      ]);
+      renderChips([
+        { text: config.method, tone: config.status >= 400 ? 'warn' : 'ok' },
+        { text: config.matched ? 'route matched' : 'no route', tone: config.matched ? 'ok' : 'err' },
+        { text: config.status + ' ' + config.statusText, tone: config.status >= 400 ? 'err' : 'ok' },
+      ]);
+
+      W4.log(expressLog, '① Node.js 收到 HTTP 请求：' + config.method + ' ' + config.path, 'info', 'REQ');
+      W4.log(expressLog, '② Express 按 method + path 做路由匹配', 'info', 'ROUTE');
+
+      if (config.matched) {
+        W4.log(expressLog, '③ 命中处理函数：' + config.handler, 'ok', 'HIT');
+        W4.log(expressLog, '④ 处理函数从 req.params / req.body 取数据，最后调用 res.status(...).json(...)', 'ok', 'RES');
+      } else {
+        W4.log(expressLog, '③ 没有匹配到任何路由，进入 404 处理', 'err', 'MISS');
+      }
+
+      setOut(config.codePreview, config.status >= 400 ? 'err' : 'ok');
+      setNote(config.note, config.status >= 400 ? 'warn' : 'ok');
+    }
+
+    $('#btn-list').addEventListener('click', function () {
+      dispatch({
+        method: 'GET',
+        path: '/api/users',
+        status: 200,
+        statusText: 'OK',
+        matched: true,
+        handler: 'app.get("/api/users", listUsers)',
+        codePreview:
+          'app.get("/api/users", (req, res) => {\n' +
+          '  res.status(200).json([{ id: 1, name: "Amy" }]);\n' +
+          '});',
+        note: 'RESTful 里 GET 一般表示“读取资源”。这里返回的是一整个用户列表。',
+      });
+    });
+
+    $('#btn-create').addEventListener('click', function () {
+      dispatch({
+        method: 'POST',
+        path: '/api/users',
+        status: 201,
+        statusText: 'Created',
+        matched: true,
+        handler: 'app.post("/api/users", createUser)',
+        codePreview:
+          'app.post("/api/users", (req, res) => {\n' +
+          '  const user = { id: 42, ...req.body };\n' +
+          '  res.status(201).json(user);\n' +
+          '});',
+        note: 'POST 一般表示“创建资源”。这时服务器会从 req.body 里读取前端提交的新数据。',
+      });
+    });
+
+    $('#btn-update').addEventListener('click', function () {
+      dispatch({
+        method: 'PUT',
+        path: '/api/users/42',
+        status: 200,
+        statusText: 'OK',
+        matched: true,
+        handler: 'app.put("/api/users/:id", updateUser)',
+        codePreview:
+          'app.put("/api/users/:id", (req, res) => {\n' +
+          '  const id = req.params.id;\n' +
+          '  res.status(200).json({ id, ...req.body });\n' +
+          '});',
+        note: 'PUT 一般表示“整体更新资源”。路径里的 42 会进入 req.params.id。',
+      });
+    });
+
+    $('#btn-delete').addEventListener('click', function () {
+      dispatch({
+        method: 'DELETE',
+        path: '/api/users/42',
+        status: 204,
+        statusText: 'No Content',
+        matched: true,
+        handler: 'app.delete("/api/users/:id", deleteUser)',
+        codePreview:
+          'app.delete("/api/users/:id", (req, res) => {\n' +
+          '  const id = req.params.id;\n' +
+          '  res.status(204).end();\n' +
+          '});',
+        note: 'DELETE 一般表示“删除资源”。很多接口会返回 204，意思是“删除成功，但没有响应体”。',
+      });
+    });
+
+    $('#btn-miss').addEventListener('click', function () {
+      dispatch({
+        method: 'GET',
+        path: '/api/posts',
+        status: 404,
+        statusText: 'Not Found',
+        matched: false,
+        handler: '(none)',
+        codePreview:
+          '// 没有 app.get("/api/posts") 这条路由\n' +
+          'app.use((req, res) => {\n' +
+          '  res.status(404).json({ error: "Route not found" });\n' +
+          '});',
+        note: '404 在这里不是“服务器挂了”，而是“服务器活着，但没有任何路由处理这条请求”。',
+      });
+    });
+  </script>
+</body>
+</html>

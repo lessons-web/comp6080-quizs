@@ -1,0 +1,206 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>03B · fetch POST 与 body 读取 · COMP6080 Week 4</title>
+  <meta
+    name="description"
+    content="COMP6080 Week 4：独立演示 fetch 的第二个参数、POST 请求体，以及响应体只能读一次。"
+  />
+  <link rel="icon" href="data:," />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600&family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600&display=swap"
+    rel="stylesheet"
+  />
+  <link rel="stylesheet" href="assets/demo.css" />
+  <style>
+    .demo-page {
+      position: relative;
+      z-index: 1;
+      min-height: auto;
+      padding: 0;
+    }
+
+    .demo-wrap {
+      max-width: none;
+      margin: 0;
+    }
+
+    .page-head {
+      display: none;
+    }
+  </style>
+</head>
+<body>
+  <main class="demo-page">
+    <div class="demo-wrap">
+      <section class="demo reveal">
+        <div class="demo-head">
+          <h3>演示 B · POST 与 body 读取规则</h3>
+          <span class="pill">method / body</span>
+        </div>
+        <div class="demo-body">
+          <p class="demo-sub">
+            这页专门看两件事：<code class="inline">fetch(url, options)</code> 的第二个参数怎么发
+            <code class="inline">POST</code>，以及为什么 <code class="inline">res.json()</code> 之后不能再读第二次。
+          </p>
+
+          <div class="grid-2">
+            <div class="field">
+              <label for="post-title">title</label>
+              <input type="text" id="post-title" value="COMP6080 第 4 周" />
+            </div>
+            <div class="field">
+              <label for="post-user">userId</label>
+              <input type="number" id="post-user" value="1" min="1" />
+            </div>
+          </div>
+
+          <div class="btn-row">
+            <button class="btn primary sm" id="btn-post" type="button">发送 POST 请求（提交表单）</button>
+            <button class="btn ghost sm" id="btn-body-twice" type="button">演示「body 只能读一次」</button>
+          </div>
+
+          <div class="stats" id="post-stats"></div>
+          <div class="status-line" id="post-chips"></div>
+          <div class="out idle" id="post-result-note">当前还没有显示任何提交结论。</div>
+          <div class="out pre tall idle" id="post-out">点击按钮开始。</div>
+          <div class="log" id="log-post"></div>
+        </div>
+      </section>
+    </div>
+  </main>
+
+  <script src="assets/demo.js"></script>
+  <script>
+    const API = 'https://jsonplaceholder.typicode.com';
+    const URL_OK = API + '/users';
+    const URL_POST = API + '/posts';
+
+    const $ = W4.$;
+
+    function renderStats(el, items) {
+      el.innerHTML = items.map(function (it) {
+        return '<div class="stat"><span class="k">' + W4.escapeHtml(it.k) + '</span>' +
+          '<span class="v">' + W4.escapeHtml(it.v) + '</span></div>';
+      }).join('');
+    }
+
+    function renderChips(el, chips) {
+      el.innerHTML = chips.map(function (c) {
+        return '<span class="chip ' + (c.tone || '') + '">' + W4.escapeHtml(c.text) + '</span>';
+      }).join('');
+    }
+
+    const postTitle = $('#post-title');
+    const postUser = $('#post-user');
+    const postStats = $('#post-stats');
+    const postChips = $('#post-chips');
+    const postResultNote = $('#post-result-note');
+    const postOut = $('#post-out');
+    const logPost = $('#log-post');
+
+    function setPostOut(text, tone) {
+      postOut.className = 'out pre tall ' + (tone || 'idle');
+      postOut.textContent = text;
+    }
+
+    function setPostResult(text, tone) {
+      postResultNote.className = 'out ' + (tone || 'idle');
+      postResultNote.textContent = text;
+    }
+
+    async function runPost() {
+      W4.resetLog(logPost);
+      const title = postTitle.value.trim() || 'COMP6080 第 4 周';
+      const userId = Number(postUser.value) || 1;
+      const payload = { title: title, body: '演示 fetch POST 的请求体', userId: userId };
+
+      renderStats(postStats, []);
+      renderChips(postChips, []);
+      setPostOut('发送中…', 'idle');
+      setPostResult('正在把对象先 stringify 成字符串，再交给 fetch 发送…', 'idle');
+
+      W4.log(logPost, '① 构造要发送的数据对象：' + JSON.stringify(payload), 'info', 'p');
+      W4.log(logPost, '② body 只能是字符串，所以先 JSON.stringify(payload)', 'warn', 'p');
+
+      const t0 = performance.now();
+      try {
+        const res = await fetch(URL_POST, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload)
+        });
+        const ms = Math.round(performance.now() - t0);
+        W4.log(logPost, '③ 服务器返回 status=' + res.status + '（创建成功通常是 201）', 'info', 'r');
+
+        if (!res.ok) throw new Error('HTTP ' + res.status);
+        const data = await res.json();
+        W4.log(logPost, '④ await res.json() 读回服务器生成的对象，新 id=' + data.id, 'ok', 'b');
+
+        renderStats(postStats, [
+          { k: 'status', v: String(res.status) },
+          { k: 'ok', v: String(res.ok) },
+          { k: '耗时(ms)', v: String(ms) }
+        ]);
+        renderChips(postChips, [
+          { text: 'POST', tone: 'ok' },
+          { text: 'body 已 stringify', tone: 'warn' },
+          { text: 'status ' + res.status, tone: 'ok' }
+        ]);
+        setPostResult('这次是标准的 POST 提交流程：对象 -> JSON.stringify -> fetch(options) -> await res.json()。', 'ok');
+        setPostOut('// 服务器回显的对象（注意新生成的 id）\n' + W4.pretty(data), 'ok');
+      } catch (err) {
+        W4.log(logPost, '✗ 请求失败：' + err.message, 'err', 'x');
+        renderChips(postChips, [{ text: 'POST 失败', tone: 'err' }]);
+        setPostResult('POST 提交失败。', 'err');
+        setPostOut('请求失败：' + err.message, 'err');
+      }
+    }
+
+    async function runBodyTwice() {
+      W4.resetLog(logPost);
+      renderStats(postStats, []);
+      renderChips(postChips, []);
+      setPostOut('请求中…', 'idle');
+      setPostResult('准备复现「同一个 Response 的 body 被读第二次」这个错误。', 'idle');
+
+      try {
+        const res = await fetch(URL_OK);
+        W4.log(logPost, '① 请求成功，拿到 Response（status=' + res.status + '）', 'info', 'r');
+
+        const first = await res.json();
+        W4.log(logPost, '② 第一次 await res.json() 成功，读到 ' + first.length + ' 条数据', 'ok', 'b');
+
+        W4.log(logPost, '③ 现在对同一个 res 再读一次 body…', 'warn', 'b');
+        await res.json();
+        W4.log(logPost, '不会执行到这里', 'err', 'b');
+      } catch (err) {
+        W4.log(logPost, '✗ 抛出 ' + err.name + '：' + err.message, 'err', 'b');
+        W4.log(logPost, '④ 需要读两次时先克隆：const copy = res.clone();', 'ok', 'tip');
+
+        renderChips(postChips, [
+          { text: err.name, tone: 'err' },
+          { text: 'body 只能读一次', tone: 'warn' }
+        ]);
+        setPostResult('这里报错不是网络问题，而是你对同一个 Response 的 body 连续读取了两次。', 'err');
+        setPostOut(
+          '✗ ' + err.name + ': ' + err.message + '\n\n' +
+          '// 响应体是一条流，只能被消费一次。\n' +
+          '// 想读两次必须先克隆出一份：\n\n' +
+          'const copy = res.clone();\n' +
+          'const a = await res.json();\n' +
+          'const b = await copy.json();',
+          'err'
+        );
+      }
+    }
+
+    $('#btn-post').addEventListener('click', runPost);
+    $('#btn-body-twice').addEventListener('click', runBodyTwice);
+  </script>
+</body>
+</html>

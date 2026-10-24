@@ -117,11 +117,11 @@ export function MockExamsPage() {
     return (
       <PageShell>
         <section className="flex w-full flex-col gap-6 pb-16">
-          <div className="rounded-[2rem] border border-slate-200 bg-white p-6 shadow-sm sm:p-8">
+          <div className="rounded-[2rem] border border-[#e3ded4] bg-[#fffdfa] p-6 shadow-[0_2px_4px_rgba(22,24,29,.04),0_28px_60px_-36px_rgba(22,24,29,.18)] sm:p-8">
             <div className="flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">
               <div className="max-w-3xl flex-1">
-                <div className="h-4 w-24 animate-pulse rounded-full bg-slate-200" />
-                <div className="mt-2 h-8 w-64 animate-pulse rounded-full bg-slate-200" />
+                <div className="h-4 w-24 animate-pulse rounded-full bg-[#e3ded4]" />
+                <div className="mt-2 h-8 w-64 animate-pulse rounded-full bg-[#e3ded4]" />
               </div>
             </div>
           </div>
@@ -142,22 +142,22 @@ export function MockExamsPage() {
   return (
     <PageShell>
       <section className="flex w-full flex-col gap-6 pb-16">
-        <div className="rounded-[2rem] border border-slate-200 bg-white p-6 shadow-sm sm:p-8">
+        <div className="rounded-[2rem] border border-[#e3ded4] bg-[#fffdfa] p-6 shadow-[0_2px_4px_rgba(22,24,29,.04),0_28px_60px_-36px_rgba(22,24,29,.18)] sm:p-8">
           <div className="flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">
             <div className="max-w-3xl">
               <div className="flex flex-wrap items-center gap-2">
-                <p className="text-sm font-semibold uppercase tracking-[0.2em] text-blue-600">
+                <p className="text-sm font-semibold uppercase tracking-[0.2em] text-[#2f6b5f]">
                   Mock Exams
                 </p>
                 <GuestNoticeInline />
               </div>
-              <h2 className="mt-2 text-3xl font-semibold tracking-tight text-slate-950">
+              <h2 className="mt-2 text-3xl font-semibold tracking-tight text-[#16181d]">
                 模拟真题列表
               </h2>
-              <p className="mt-3 text-sm leading-6 text-slate-600">
+              <p className="mt-3 text-sm leading-6 text-[#4c5159]">
                 先完成整卷题目，再对照下方答案进行复盘，训练考试节奏与表达完整度。
                 {isGuest ? (
-                  <span className="ml-1 font-medium text-blue-700">
+                  <span className="ml-1 font-medium text-[#9f5d24]">
                     （访客仅开放 {GUEST_OPENED_EXAM_IDS.length} 套试卷预览，每套前 10 题）
                   </span>
                 ) : null}
@@ -166,20 +166,22 @@ export function MockExamsPage() {
             
             <div className="flex items-center gap-3 shrink-0">
               <div className="relative w-72 shrink-0">
-                <SearchIcon className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400" />
+                <SearchIcon className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-[#8b9099]" />
                 <input
                   type="text"
                   placeholder="搜索真题..."
                   value={searchQuery}
                   onChange={e => setSearchQuery(e.target.value)}
-                  className="w-full rounded-xl border border-slate-200 py-2 pl-9 pr-4 text-sm outline-none transition-colors placeholder:text-slate-400 focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
+                  className="w-full rounded-xl border border-[#d8d1c5] bg-white py-2 pl-9 pr-4 text-sm text-[#16181d] outline-none transition-colors placeholder:text-[#8b9099] focus:border-[#2f6b5f] focus:ring-2 focus:ring-[#dff2ea]"
                 />
               </div>
-              <div className="flex items-center rounded-xl border border-slate-200 bg-slate-50 p-1 shrink-0 w-28">
+              <div className="flex w-28 shrink-0 items-center rounded-xl border border-[#d8d1c5] bg-[#f4f1ea] p-1">
                 <button
                   onClick={() => updateLayoutMode('card')}
                   className={`flex-1 rounded-lg py-1.5 flex justify-center items-center transition-colors ${
-                    layoutMode === 'card' ? 'bg-white text-blue-600 shadow-sm' : 'text-slate-500 hover:text-slate-700'
+                    layoutMode === 'card'
+                      ? 'bg-white text-[#2f6b5f] shadow-sm'
+                      : 'text-[#6b7078] hover:text-[#4c5159]'
                   }`}
                   title="卡片视图"
                 >
@@ -188,7 +190,9 @@ export function MockExamsPage() {
                 <button
                   onClick={() => updateLayoutMode('table')}
                   className={`flex-1 rounded-lg py-1.5 flex justify-center items-center transition-colors ${
-                    layoutMode === 'table' ? 'bg-white text-blue-600 shadow-sm' : 'text-slate-500 hover:text-slate-700'
+                    layoutMode === 'table'
+                      ? 'bg-white text-[#2f6b5f] shadow-sm'
+                      : 'text-[#6b7078] hover:text-[#4c5159]'
                   }`}
                   title="列表视图"
                 >
@@ -200,7 +204,7 @@ export function MockExamsPage() {
         </div>
 
         {filteredAndSortedExams.length === 0 ? (
-          <div className="rounded-[2rem] border border-dashed border-slate-300 bg-white p-8 text-center text-sm text-slate-600 shadow-sm">
+          <div className="rounded-[2rem] border border-dashed border-[#d8d1c5] bg-[#fffdfa] p-8 text-center text-sm text-[#6b7078] shadow-sm">
             {searchQuery ? '没有找到匹配的真题' : '当前还没有录入模拟真题，后续会补充。'}
           </div>
         ) : layoutMode === 'card' ? (
@@ -212,15 +216,15 @@ export function MockExamsPage() {
                   <div
                     key={exam.id}
                     aria-disabled
-                    className="group relative flex flex-col justify-between overflow-hidden rounded-3xl border border-slate-200 bg-slate-50 p-6 shadow-sm opacity-95"
+                    className="group relative flex flex-col justify-between overflow-hidden rounded-3xl border border-[#ddd5c8] bg-[#f7f4ed] p-6 shadow-[0_1px_2px_rgba(22,24,29,.05)] opacity-95"
                   >
-                    <div aria-hidden className="absolute inset-0 pointer-events-none bg-slate-50/60 backdrop-blur-[1px]" />
+                    <div aria-hidden className="pointer-events-none absolute inset-0 bg-[#faf8f4]/80 backdrop-blur-[1px]" />
                     <div className="relative">
                       <div className="flex items-start justify-between gap-4">
-                        <h3 className="text-xl font-semibold text-slate-700">
+                        <h3 className="text-xl font-semibold text-[#4c5159]">
                           {exam.title}
                         </h3>
-                        <span className="inline-flex items-center gap-1 rounded-full bg-slate-200 px-2.5 py-0.5 text-[11px] font-semibold text-slate-600 ring-1 ring-slate-300 shrink-0">
+                        <span className="inline-flex shrink-0 items-center gap-1 rounded-full bg-[#ebe5da] px-2.5 py-0.5 text-[11px] font-semibold text-[#6a6257] ring-1 ring-[#d8d1c5]">
                           <svg viewBox="0 0 12 12" aria-hidden="true" className="h-3 w-3">
                             <path fill="currentColor" d="M8.5 4.5V4a2.5 2.5 0 0 0-5 0v.5H2.5A1.5 1.5 0 0 0 1 6v3.5A1.5 1.5 0 0 0 2.5 11h7A1.5 1.5 0 0 0 10.5 9.5V6A1.5 1.5 0 0 0 9 4.5h-.5Zm-4 0V4a1.5 1.5 0 0 1 3 0v.5h-3ZM6 9A1 1 0 1 1 6 7a1 1 0 0 1 0 2Z" />
                           </svg>
@@ -228,24 +232,24 @@ export function MockExamsPage() {
                         </span>
                       </div>
                       {exam.description && (
-                        <p className="mt-3 text-sm text-slate-500 line-clamp-2">
+                        <p className="mt-3 line-clamp-2 text-sm text-[#6b7078]">
                           {exam.description}
                         </p>
                       )}
                       {exam.time && (
-                        <p className="mt-2 text-xs text-slate-400">
+                        <p className="mt-2 text-xs text-[#8b9099]">
                           发布于：{new Date(exam.time).toLocaleDateString('zh-CN', { year: 'numeric', month: '2-digit', day: '2-digit' })}
                         </p>
                       )}
-                      <div className="mt-4 rounded-xl border border-dashed border-slate-300 bg-white/60 p-3 text-[12px] leading-5 text-slate-500">
+                      <div className="mt-4 rounded-xl border border-dashed border-[#e6d7b8] bg-[#fff7e8] p-3 text-[12px] leading-5 text-[#6a6257]">
                         访客仅开放「模拟试卷 1」和「2026 Term 3 Quiz 1」两套试卷。登录或扫码咨询老师解锁全部。
                       </div>
                     </div>
-                    <div className="relative mt-6 flex items-center justify-between text-sm text-slate-400">
+                    <div className="relative mt-6 flex items-center justify-between text-sm text-[#8b9099]">
                       <span>总分: {exam.totalMarks}</span>
                       <Link
                         href={loginHref}
-                        className="font-medium text-blue-600 hover:text-blue-700"
+                        className="font-medium text-[#2f6b5f] hover:text-[#245348]"
                       >
                         登录解锁 →
                       </Link>
@@ -257,15 +261,15 @@ export function MockExamsPage() {
                 <Link
                   key={exam.id}
                   href={`/exams/${exam.id}`}
-                  className="group relative flex flex-col justify-between overflow-hidden rounded-3xl border border-slate-200 bg-white p-6 shadow-sm transition-all hover:border-blue-500 hover:shadow-md hover:-translate-y-1"
+                  className="group relative flex flex-col justify-between overflow-hidden rounded-3xl border border-[#e3ded4] bg-[#fffdfa] p-6 shadow-[0_1px_2px_rgba(22,24,29,.05)] transition-all hover:-translate-y-1 hover:border-[#bdd5c7] hover:shadow-[0_2px_4px_rgba(22,24,29,.05),0_18px_36px_-24px_rgba(22,24,29,.2)]"
                 >
                   <div>
                     <div className="flex items-start justify-between gap-4">
-                      <h3 className="text-xl font-semibold text-slate-900 group-hover:text-blue-600">
+                      <h3 className="text-xl font-semibold text-[#16181d] group-hover:text-[#2f6b5f]">
                         {exam.title}
                       </h3>
                       <div className="flex flex-wrap gap-2 shrink-0">
-                        <span className="inline-flex items-center gap-1 rounded-full bg-emerald-50 px-2.5 py-0.5 text-xs font-medium text-emerald-700 ring-1 ring-inset ring-emerald-600/10">
+                        <span className="inline-flex items-center gap-1 rounded-full bg-[#edf7f1] px-2.5 py-0.5 text-xs font-medium text-[#24745c] ring-1 ring-inset ring-[#cfe7db]">
                           访客可预览
                         </span>
                         {exam.tags && exam.tags.length > 0 && (
@@ -273,8 +277,8 @@ export function MockExamsPage() {
                             {exam.tags.map(tag => (
                               <span key={tag} className={`inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium ring-1 ring-inset ${
                                 tag === '真题' 
-                                  ? 'bg-red-50 text-red-700 ring-red-600/10'
-                                  : 'bg-blue-50 text-blue-700 ring-blue-700/10'
+                                  ? 'bg-[#fbf0dc] text-[#8b5e34] ring-[#eed9ab]'
+                                  : 'bg-[#eef6f2] text-[#2f6b5f] ring-[#cfe7db]'
                               }`}>
                                 {tag}
                               </span>
@@ -284,19 +288,19 @@ export function MockExamsPage() {
                       </div>
                     </div>
                     {exam.description && (
-                      <p className="mt-3 text-sm text-slate-600 line-clamp-2">
+                      <p className="mt-3 line-clamp-2 text-sm text-[#4c5159]">
                         {exam.description}
                       </p>
                     )}
                     {exam.time && (
-                      <p className="mt-2 text-xs text-slate-400">
+                      <p className="mt-2 text-xs text-[#8b9099]">
                         发布于：{new Date(exam.time).toLocaleDateString('zh-CN', { year: 'numeric', month: '2-digit', day: '2-digit' })}
                       </p>
                     )}
                   </div>
-                  <div className="mt-6 flex items-center justify-between text-sm text-slate-500">
+                  <div className="mt-6 flex items-center justify-between text-sm text-[#6a6257]">
                     <span>总分: {exam.totalMarks}</span>
-                    <span className="font-medium text-blue-600 opacity-0 transition-opacity group-hover:opacity-100">
+                    <span className="font-medium text-[#2f6b5f] opacity-0 transition-opacity group-hover:opacity-100">
                       开始测试 →
                     </span>
                   </div>
@@ -305,9 +309,9 @@ export function MockExamsPage() {
             })}
           </div>
         ) : (
-          <div className="overflow-hidden rounded-3xl border border-slate-200 bg-white shadow-sm">
+          <div className="overflow-hidden rounded-3xl border border-[#e3ded4] bg-[#fffdfa] shadow-[0_1px_2px_rgba(22,24,29,.05)]">
             <table className="w-full text-left text-sm">
-              <thead className="bg-slate-50 text-slate-500">
+              <thead className="bg-[#f4f1ea] text-[#6b7078]">
                 <tr>
                   <th className="px-6 py-4 font-medium">试卷名称</th>
                   <th className="px-6 py-4 font-medium">标签</th>
@@ -316,37 +320,37 @@ export function MockExamsPage() {
                   <th className="px-6 py-4 font-medium text-right">操作</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-slate-100">
+              <tbody className="divide-y divide-[#ece7dd]">
                 {filteredAndSortedExams.map(exam => {
                   const locked = isGuest && !isExamAllowedForGuest(exam.id)
                   return (
                     <tr key={exam.id} className={[
                       'group transition-colors',
-                      locked ? 'bg-slate-50/60' : 'hover:bg-slate-50/50',
+                      locked ? 'bg-[#f7f4ed]' : 'hover:bg-[#fbfaf6]',
                     ].join(' ')}>
                       <td className="px-6 py-4">
                         <div className="flex items-center gap-2">
                           <div className={[
                             'font-medium',
-                            locked ? 'text-slate-500' : 'text-slate-900 group-hover:text-blue-600',
+                            locked ? 'text-[#6b7078]' : 'text-[#16181d] group-hover:text-[#2f6b5f]',
                           ].join(' ')}>
                             {exam.title}
                           </div>
                           {locked ? (
-                            <span className="inline-flex items-center gap-1 rounded-full bg-slate-200 px-2 py-0.5 text-[10px] font-semibold text-slate-600 ring-1 ring-slate-300">
+                            <span className="inline-flex items-center gap-1 rounded-full bg-[#ebe5da] px-2 py-0.5 text-[10px] font-semibold text-[#6a6257] ring-1 ring-[#d8d1c5]">
                               <svg viewBox="0 0 12 12" aria-hidden="true" className="h-2.5 w-2.5">
                                 <path fill="currentColor" d="M8.5 4.5V4a2.5 2.5 0 0 0-5 0v.5H2.5A1.5 1.5 0 0 0 1 6v3.5A1.5 1.5 0 0 0 2.5 11h7A1.5 1.5 0 0 0 10.5 9.5V6A1.5 1.5 0 0 0 9 4.5h-.5Zm-4 0V4a1.5 1.5 0 0 1 3 0v.5h-3ZM6 9A1 1 0 1 1 6 7a1 1 0 0 1 0 2Z" />
                               </svg>
                               锁定
                             </span>
                           ) : (
-                            <span className="inline-flex items-center gap-1 rounded-full bg-emerald-50 px-2 py-0.5 text-[10px] font-medium text-emerald-700 ring-1 ring-inset ring-emerald-600/10">
+                            <span className="inline-flex items-center gap-1 rounded-full bg-[#edf7f1] px-2 py-0.5 text-[10px] font-medium text-[#24745c] ring-1 ring-inset ring-[#cfe7db]">
                               可预览
                             </span>
                           )}
                         </div>
                         {exam.description && (
-                          <div className="mt-1 text-slate-500 line-clamp-1">{exam.description}</div>
+                          <div className="mt-1 line-clamp-1 text-[#6b7078]">{exam.description}</div>
                         )}
                       </td>
                       <td className="px-6 py-4">
@@ -355,8 +359,8 @@ export function MockExamsPage() {
                             {exam.tags.map(tag => (
                               <span key={tag} className={`inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium ring-1 ring-inset ${
                                 tag === '真题' 
-                                  ? 'bg-red-50 text-red-700 ring-red-600/10'
-                                  : 'bg-blue-50 text-blue-700 ring-blue-700/10'
+                                  ? 'bg-[#fbf0dc] text-[#8b5e34] ring-[#eed9ab]'
+                                  : 'bg-[#eef6f2] text-[#2f6b5f] ring-[#cfe7db]'
                               }`}>
                                 {tag}
                               </span>
@@ -364,24 +368,24 @@ export function MockExamsPage() {
                           </div>
                         )}
                       </td>
-                      <td className="px-6 py-4 text-slate-500 whitespace-nowrap">
+                      <td className="whitespace-nowrap px-6 py-4 text-[#6b7078]">
                         {exam.time ? new Date(exam.time).toLocaleDateString('zh-CN', { year: 'numeric', month: '2-digit', day: '2-digit' }) : '-'}
                       </td>
-                      <td className="px-6 py-4 text-slate-500 whitespace-nowrap">
+                      <td className="whitespace-nowrap px-6 py-4 text-[#6a6257]">
                         {exam.totalMarks} 分
                       </td>
                       <td className="px-6 py-4 text-right">
                         {locked ? (
                           <Link
                             href={loginHref}
-                            className="inline-flex items-center justify-center rounded-lg bg-slate-100 px-3 py-1.5 text-xs font-medium text-slate-600 transition-colors hover:bg-slate-200 hover:text-slate-800"
+                            className="inline-flex items-center justify-center rounded-lg bg-[#f4f1ea] px-3 py-1.5 text-xs font-medium text-[#6a6257] transition-colors hover:bg-[#ebe5da] hover:text-[#4c5159]"
                           >
                             登录解锁
                           </Link>
                         ) : (
                           <Link
                             href={`/exams/${exam.id}`}
-                            className="inline-flex items-center justify-center rounded-lg bg-blue-50 px-3 py-1.5 text-xs font-medium text-blue-600 transition-colors hover:bg-blue-100"
+                            className="inline-flex items-center justify-center rounded-lg bg-[#edf7f1] px-3 py-1.5 text-xs font-medium text-[#2f6b5f] transition-colors hover:bg-[#dff2ea]"
                           >
                             开始测试
                           </Link>

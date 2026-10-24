@@ -99,6 +99,13 @@ export interface CourseSlideCard {
   meta?: string
 }
 
+export interface CourseSlideFlowStep {
+  label?: string
+  title: string
+  description: string
+  meta?: string
+}
+
 /** 知识点页的要点条目 */
 export interface CourseSlideBullet {
   title: string
@@ -155,6 +162,8 @@ export interface CourseSlide {
   paragraphs?: string[]
   /** content 页要点列表 */
   bullets?: CourseSlideBullet[]
+  /** content 页流程图步骤 */
+  flow?: CourseSlideFlowStep[]
   /** content 页对比表 */
   table?: CourseSlideTable
   /** content 页底部提示条 */

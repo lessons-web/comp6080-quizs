@@ -1,0 +1,241 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>06A · HTTP 请求-响应检视器 · COMP6080 Week 4</title>
+  <meta
+    name="description"
+    content="COMP6080 Week 4：独立演示 HTTP 请求行、请求头、响应状态码与响应体，帮助理解浏览器和服务器之间到底交换了什么。"
+  />
+  <link rel="icon" href="data:," />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600&family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600&display=swap"
+    rel="stylesheet"
+  />
+  <link rel="stylesheet" href="assets/demo.css" />
+  <style>
+    .demo-page {
+      position: relative;
+      z-index: 1;
+      min-height: auto;
+      padding: 0;
+    }
+
+    .demo-wrap {
+      max-width: none;
+      margin: 0;
+    }
+
+    .page-head {
+      display: none;
+    }
+
+    .packet-grid {
+      display: grid;
+      gap: 16px;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .packet {
+      border: 1px solid #e3ded4;
+      border-radius: 20px;
+      background: #fffdfa;
+      overflow: hidden;
+    }
+
+    .packet-head {
+      border-bottom: 1px solid #ece7dd;
+      padding: 12px 14px;
+      font-weight: 600;
+      color: #16181d;
+      background: #fbf8f2;
+    }
+
+    .packet-body {
+      padding: 14px;
+    }
+
+    .packet-body pre {
+      margin: 0;
+      white-space: pre-wrap;
+      word-break: break-word;
+      font: 13px/1.75 "IBM Plex Mono", monospace;
+      color: #39404a;
+    }
+
+    @media (max-width: 860px) {
+      .packet-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main class="demo-page">
+    <div class="demo-wrap">
+      <section class="demo reveal">
+        <div class="demo-head">
+          <h3>演示 A · HTTP 请求-响应检视器</h3>
+          <span class="pill">request / response</span>
+        </div>
+        <div class="demo-body">
+          <p class="demo-sub">
+            这页不是在讲 JavaScript API，而是在讲“浏览器到底发了什么，服务器到底回了什么”。点不同按钮，看
+            <code class="inline">method</code>、<code class="inline">path</code>、状态码和响应体怎样一起变化。
+          </p>
+
+          <div class="btn-row">
+            <button class="btn primary sm" id="btn-get-users" type="button">GET /api/users</button>
+            <button class="btn sm" id="btn-post-user" type="button">POST /api/users</button>
+            <button class="btn ghost sm" id="btn-404" type="button">GET /api/unknown</button>
+          </div>
+
+          <div class="stats" id="http-stats"></div>
+          <div class="status-line" id="http-chips"></div>
+          <div class="out idle" id="http-note">当前还没有发送任何 HTTP 请求。</div>
+
+          <div class="packet-grid">
+            <section class="packet">
+              <div class="packet-head">客户端发出的请求</div>
+              <div class="packet-body">
+                <pre id="request-packet">点击按钮后，这里会显示请求行、请求头和请求体。</pre>
+              </div>
+            </section>
+
+            <section class="packet">
+              <div class="packet-head">服务器返回的响应</div>
+              <div class="packet-body">
+                <pre id="response-packet">点击按钮后，这里会显示状态行、响应头和响应体。</pre>
+              </div>
+            </section>
+          </div>
+
+          <div class="log" id="http-log"></div>
+        </div>
+      </section>
+    </div>
+  </main>
+
+  <script src="assets/demo.js"></script>
+  <script>
+    const $ = W4.$;
+
+    const httpStats = $('#http-stats');
+    const httpChips = $('#http-chips');
+    const httpNote = $('#http-note');
+    const requestPacket = $('#request-packet');
+    const responsePacket = $('#response-packet');
+    const httpLog = $('#http-log');
+
+    function renderStats(items) {
+      httpStats.innerHTML = items.map(function (item) {
+        return '<div class="stat"><span class="k">' + W4.escapeHtml(item.k) + '</span>' +
+          '<span class="v">' + W4.escapeHtml(item.v) + '</span></div>';
+      }).join('');
+    }
+
+    function renderChips(items) {
+      httpChips.innerHTML = items.map(function (item) {
+        return '<span class="chip ' + (item.tone || '') + '">' + W4.escapeHtml(item.text) + '</span>';
+      }).join('');
+    }
+
+    function setNote(text, tone) {
+      httpNote.className = 'out ' + (tone || 'idle');
+      httpNote.textContent = text;
+    }
+
+    function showScenario(config) {
+      W4.resetLog(httpLog);
+      renderStats([
+        { k: 'Method', v: config.method },
+        { k: 'Path', v: config.path },
+        { k: 'Status', v: String(config.status) },
+      ]);
+      renderChips([
+        { text: config.method, tone: config.status >= 400 ? 'warn' : 'ok' },
+        { text: config.status + ' ' + config.statusText, tone: config.status >= 400 ? 'err' : 'ok' },
+        { text: config.handler, tone: '' },
+      ]);
+
+      requestPacket.textContent =
+        config.method + ' ' + config.path + ' HTTP/1.1\n' +
+        'Host: api.quizhub.local\n' +
+        'Accept: application/json\n' +
+        (config.method === 'POST' ? 'Content-Type: application/json\n' : '') +
+        '\n' +
+        (config.requestBody ? W4.pretty(config.requestBody) : '(无请求体)');
+
+      responsePacket.textContent =
+        'HTTP/1.1 ' + config.status + ' ' + config.statusText + '\n' +
+        'Content-Type: application/json; charset=utf-8\n' +
+        'Cache-Control: no-store\n' +
+        '\n' +
+        W4.pretty(config.responseBody);
+
+      W4.log(httpLog, '① 浏览器先发出一条 HTTP 请求报文', 'info', 'HTTP');
+      W4.log(httpLog, '② 服务器按 method + path 找到处理函数：' + config.handler, 'ok', 'ROUTE');
+      W4.log(httpLog, '③ 处理函数执行业务逻辑后，返回 status=' + config.status, config.status >= 400 ? 'warn' : 'ok', 'STATUS');
+      W4.log(httpLog, '④ 浏览器拿到响应头和响应体，再决定页面下一步怎么渲染', 'info', 'RESP');
+
+      setNote(config.note, config.status >= 400 ? 'warn' : 'ok');
+    }
+
+    $('#btn-get-users').addEventListener('click', function () {
+      showScenario({
+        method: 'GET',
+        path: '/api/users',
+        status: 200,
+        statusText: 'OK',
+        handler: 'listUsers(req, res)',
+        requestBody: null,
+        responseBody: {
+          users: [
+            { id: 1, name: 'Amy' },
+            { id: 2, name: 'Ben' },
+          ],
+        },
+        note: 'GET 通常用来“读取资源”。这次请求没有请求体，重点是 path 和响应体里的列表数据。',
+      });
+    });
+
+    $('#btn-post-user').addEventListener('click', function () {
+      showScenario({
+        method: 'POST',
+        path: '/api/users',
+        status: 201,
+        statusText: 'Created',
+        handler: 'createUser(req, res)',
+        requestBody: {
+          name: 'Chloe',
+          role: 'student',
+        },
+        responseBody: {
+          id: 3,
+          name: 'Chloe',
+          role: 'student',
+        },
+        note: 'POST 通常用来“创建资源”。这次请求多了 JSON 请求体，所以服务器才能从 req.body 里拿到新用户数据。',
+      });
+    });
+
+    $('#btn-404').addEventListener('click', function () {
+      showScenario({
+        method: 'GET',
+        path: '/api/unknown',
+        status: 404,
+        statusText: 'Not Found',
+        handler: '(no matching route)',
+        requestBody: null,
+        responseBody: {
+          error: 'Route not found',
+        },
+        note: '这次请求不是“网络断了”，而是服务器收到了请求，但没有找到匹配的路由，所以返回 404。',
+      });
+    });
+  </script>
+</body>
+</html>

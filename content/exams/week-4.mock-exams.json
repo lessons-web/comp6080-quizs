@@ -1,4 +1,242 @@
 {
-  "topic": "nodejs",
-  "exams": []
+  "topic": "javascript",
+  "exams": [
+    {
+      "id": "WEEK4-SIM",
+      "title": "Week 4 模拟试卷",
+      "description": "Week 4 知识点模拟试卷：覆盖 JSON、XHR、fetch、Promise、async/await 与 HTTP/Express 六条主线。",
+      "tags": [
+        "模拟题",
+        "Week4"
+      ],
+      "totalMarks": 44,
+      "questions": [
+        {
+          "id": "Q1",
+          "title": "JSON 与 localStorage",
+          "marks": 8,
+          "contentMdx": "```javascript\nconst KEY = 'week4-users';\n\nfunction saveUsers(users) {\n  localStorage.setItem(KEY, JSON.stringify(users));\n}\n\nfunction loadUsers() {\n  const raw = localStorage.getItem(KEY);\n  return raw ? JSON.parse(raw) : [];\n}\n```",
+          "subQuestions": [
+            {
+              "id": "Q1-a",
+              "label": "(a)",
+              "marks": 2,
+              "questionMdx": "在前后端通信中，为什么现代 Web 开发通常使用 JSON 而不是 XML？",
+              "answerMdx": "因为 JSON 更轻量、结构更清晰，而且能天然映射到 JavaScript 的对象与数组。前端拿到响应后可以很方便地通过 `JSON.parse(...)` 或 `response.json()` 还原成可直接使用的数据结构，相比 XML 不需要额外做复杂的 DOM 解析。",
+              "markingMdx": "1 mark for identifying JSON as lightweight or readable.\n1 mark for explaining its native compatibility with JavaScript compared to XML."
+            },
+            {
+              "id": "Q1-b",
+              "label": "(b)",
+              "marks": 2,
+              "questionMdx": "为什么 `saveUsers(users)` 里必须先调用 `JSON.stringify(users)`，而不能把数组对象直接传给 `localStorage.setItem`？",
+              "answerMdx": "因为 localStorage 只能存字符串，不能直接存 JavaScript 对象或数组。`JSON.stringify(users)` 会先把数组序列化成 JSON 字符串，后面再通过 `JSON.parse(...)` 还原回原来的数据结构。",
+              "markingMdx": "1 mark for stating that localStorage stores strings only.\n1 mark for explaining that stringify serialises arrays or objects for later parsing."
+            },
+            {
+              "id": "Q1-c",
+              "label": "(c)",
+              "marks": 2,
+              "questionMdx": "执行 `const users = JSON.parse(raw)` 后，`users` 得到的是字符串、对象，还是数组？请结合上面的例子说明原因。",
+              "answerMdx": "得到的是数组（或对象），不是 JSON 字符串。因为 `JSON.parse(...)` 的作用就是把 JSON 文本反序列化成 JavaScript 数据结构；在这个例子里原始写入的是 users 数组，所以读出后也会回到数组。",
+              "markingMdx": "1 mark for identifying that parse returns a JavaScript data structure, not a raw string.\n1 mark for correctly connecting the result to the original array input."
+            },
+            {
+              "id": "Q1-d",
+              "label": "(d)",
+              "marks": 2,
+              "questionMdx": "如果 localStorage 中被手动写入了非法 JSON，`loadUsers()` 现在会发生什么？请说明更稳妥的修正方式。",
+              "answerMdx": "`JSON.parse(raw)` 会直接抛出异常，导致 `loadUsers()` 失败。更稳妥的做法是用 `try/catch` 包住解析过程，一旦遇到非法 JSON 就返回空数组或默认值，同时记录错误信息。",
+              "markingMdx": "1 mark for stating that JSON.parse throws on invalid JSON.\n1 mark for suggesting try/catch with a safe fallback value."
+            }
+          ]
+        },
+        {
+          "id": "Q2",
+          "title": "XMLHttpRequest 与 AJAX",
+          "marks": 8,
+          "contentMdx": "```javascript\nconst xhr = new XMLHttpRequest();\nxhr.open('GET', '/api/cats');\n\nxhr.onload = () => {\n  if (xhr.status === 200) {\n    const cats = JSON.parse(xhr.responseText);\n    console.log(cats.length);\n  }\n};\n\nxhr.onerror = () => {\n  console.error('network error');\n};\n\nxhr.send();\n```",
+          "subQuestions": [
+            {
+              "id": "Q2-a",
+              "label": "(a)",
+              "marks": 2,
+              "questionMdx": "AJAX 这种技术的出现，解决了早期 Web 时代最大的什么痛点？",
+              "answerMdx": "AJAX 解决了“每次请求新数据都必须整页刷新”的痛点。它允许页面在后台异步向服务器请求数据，然后只局部更新页面内容，用户不需要每一步操作都重新加载整个页面。",
+              "markingMdx": "1 mark for mentioning the old full page reload problem.\n1 mark for mentioning partial asynchronous page updates."
+            },
+            {
+              "id": "Q2-b",
+              "label": "(b)",
+              "marks": 2,
+              "questionMdx": "如果服务器返回的是 `404 Not Found`，这次请求会进入 `onload` 还是 `onerror`？为什么？",
+              "answerMdx": "会进入 `onload`，不会进入 `onerror`。因为 404 代表服务器已经完成了 HTTP 响应，只是业务结果失败；`onerror` 只处理网络层失败，例如断网、DNS 解析失败或连接被中断。",
+              "markingMdx": "1 mark for identifying onload.\n1 mark for explaining that 404 is still a completed HTTP response, not a network failure."
+            },
+            {
+              "id": "Q2-c",
+              "label": "(c)",
+              "marks": 2,
+              "questionMdx": "既然 404 仍会进入 `onload`，为什么示例代码里还要在 `onload` 内检查 `xhr.status === 200`？",
+              "answerMdx": "因为 `onload` 只表示“请求流程完成了”，并不等于“业务成功”。只有继续检查 `xhr.status`，我们才能区分 200 成功响应和 404、500 这类失败响应，避免把错误页面当成正常数据继续处理。",
+              "markingMdx": "1 mark for stating that onload does not guarantee business success.\n1 mark for explaining that status checking separates success from HTTP failure responses."
+            },
+            {
+              "id": "Q2-d",
+              "label": "(d)",
+              "marks": 2,
+              "questionMdx": "为什么这里要手动写 `JSON.parse(xhr.responseText)`？`xhr.responseText` 本身是什么类型？",
+              "answerMdx": "`xhr.responseText` 本身是字符串。服务器即使返回 JSON，XHR 默认拿到的也只是文本，所以需要手动 `JSON.parse(...)` 才能把它还原成可访问属性的 JavaScript 数据结构。",
+              "markingMdx": "1 mark for stating that responseText is a string.\n1 mark for explaining why JSON.parse is required."
+            }
+          ]
+        },
+        {
+          "id": "Q3",
+          "title": "fetch 与 Response",
+          "marks": 6,
+          "contentMdx": "```javascript\nfunction loadWeather() {\n  let weather = 'Loading...';\n\n  fetch('https://api.weather.com/today')\n    .then((response) => response.json())\n    .then((data) => {\n      weather = data.condition;\n      console.log('A', weather);\n    });\n\n  console.log('B', weather);\n}\n```",
+          "subQuestions": [
+            {
+              "id": "Q3-a",
+              "label": "(a)",
+              "marks": 2,
+              "questionMdx": "运行上面的代码时，控制台会先打印 A 还是先打印 B？各自打印出的 `weather` 值是什么？",
+              "answerMdx": "先打印 B，后打印 A。B 打印的是初始值 `Loading...`，因为同步代码会先继续执行；A 打印的是网络响应回来之后的真实天气值，例如 `Sunny`。",
+              "markingMdx": "1 mark for correct order (B then A).\n1 mark for correct values (initial placeholder then actual data)."
+            },
+            {
+              "id": "Q3-b",
+              "label": "(b)",
+              "marks": 2,
+              "questionMdx": "`await fetch('/api/users')` 或 `fetch('/api/users').then(...)` 拿到的第一层结果到底是什么？为什么不能说它已经是“最终 JSON 数据”？",
+              "answerMdx": "第一层结果是 `Response` 对象，而不是最终 JSON 数据。`fetch(...)` 只负责把网络响应包装成 Response；真正的 body 还需要继续调用 `res.json()`、`res.text()` 等方法去读取。",
+              "markingMdx": "1 mark for identifying Response.\n1 mark for explaining that reading the body is a second explicit step."
+            },
+            {
+              "id": "Q3-c",
+              "label": "(c)",
+              "marks": 2,
+              "questionMdx": "为什么实际项目里常常要在 `await res.json()` 之前先检查 `res.ok` 或 `res.status`？",
+              "answerMdx": "因为 `fetch` 不会因为 404、500 之类的 HTTP 状态码自动 reject。若不先检查 `res.ok` 或 `res.status`，代码可能会把错误响应当成正常响应继续解析，甚至在返回 HTML 错误页时让 `res.json()` 再次抛错，导致错误来源被混淆。",
+              "markingMdx": "1 mark for stating that fetch does not reject on HTTP error status codes.\n1 mark for explaining why status should be checked before parsing the body."
+            }
+          ]
+        },
+        {
+          "id": "Q4",
+          "title": "Promise 状态与编排",
+          "marks": 6,
+          "contentMdx": "```javascript\n// 早期基于回调的异步风格\ngetUser(1, function(user) {\n  getPosts(user.id, function(posts) {\n    getComments(posts[0].id, function(comments) {\n      console.log(comments);\n    });\n  });\n});\n\nconst p = Promise.resolve(1)\n  .then((n) => n + 1)\n  .then((n) => n * 2);\n```",
+          "subQuestions": [
+            {
+              "id": "Q4-a",
+              "label": "(a)",
+              "marks": 2,
+              "questionMdx": "Promise 的核心状态有哪些？`settled` 这个词在讲 Promise 时通常是什么意思？",
+              "answerMdx": "Promise 的核心状态是 `pending`、`fulfilled`、`rejected`。`settled` 是一个统称，表示 Promise 已经定型，不再处于 pending；也就是说它要么 fulfilled，要么 rejected。",
+              "markingMdx": "1 mark for naming pending, fulfilled and rejected.\n1 mark for explaining settled as a promise that has already resolved or rejected."
+            },
+            {
+              "id": "Q4-b",
+              "label": "(b)",
+              "marks": 2,
+              "questionMdx": "上述回调嵌套为什么会被称为“回调地狱”？请用假想的 `getUserAsync`、`getPostsAsync`、`getCommentsAsync` 把它改写成 `.then()` 链式调用。",
+              "answerMdx": "它会形成深层嵌套的“金字塔”结构，可读性差，也很难统一处理错误。\n\n```javascript\ngetUserAsync(1)\n  .then((user) => getPostsAsync(user.id))\n  .then((posts) => getCommentsAsync(posts[0].id))\n  .then((comments) => console.log(comments))\n  .catch((err) => console.error(err));\n```",
+              "markingMdx": "1 mark for explaining the readability or error-handling problem of callback hell.\n1 mark for providing a correct Promise chain."
+            },
+            {
+              "id": "Q4-c",
+              "label": "(c)",
+              "marks": 2,
+              "questionMdx": "如果现在有三个互不依赖的异步任务，要等它们都结束再统一看结果，`Promise.all(...)` 和 `Promise.allSettled(...)` 应该如何取舍？",
+              "answerMdx": "`Promise.all(...)` 适合“一个都不能少”的场景，只要有一个 rejected 就整体 rejected；`Promise.allSettled(...)` 适合“无论成功失败都要收集全部结果”的场景，它会在所有任务结束后返回每一项的状态和值或错误原因。",
+              "markingMdx": "1 mark for describing Promise.all as fail-fast when any promise rejects.\n1 mark for describing Promise.allSettled as collecting every result regardless of success or failure."
+            }
+          ]
+        },
+        {
+          "id": "Q5",
+          "title": "async / await 与并行控制",
+          "marks": 8,
+          "contentMdx": "```javascript\nasync function loadDashboard() {\n  const user = await fetch('/api/user').then((res) => res.json());\n  const posts = await fetch('/api/posts').then((res) => res.json());\n  const alerts = await fetch('/api/alerts').then((res) => res.json());\n  return { user, posts, alerts };\n}\n```",
+          "subQuestions": [
+            {
+              "id": "Q5-a",
+              "label": "(a)",
+              "marks": 2,
+              "questionMdx": "为什么说 `async function` 无论 return 什么，最终都会返回一个 Promise？",
+              "answerMdx": "因为 `async` 函数会把返回值自动包装成 fulfilled Promise；如果函数内部抛出了错误，则会得到 rejected Promise。也就是说，`async` 只是让我们用更像同步代码的写法去操作 Promise，本质并没有脱离 Promise 模型。",
+              "markingMdx": "1 mark for stating that async wraps a returned value into a Promise.\n1 mark for stating that thrown errors become rejected Promises."
+            },
+            {
+              "id": "Q5-b",
+              "label": "(b)",
+              "marks": 2,
+              "questionMdx": "为什么 `await someRejectedPromise` 能像同步代码那样被 `try/catch` 接住？",
+              "answerMdx": "因为当 Promise 被拒绝时，`await` 在这一行会表现成“抛出异常”。也就是说，`await` 成功时给你值，失败时把 Promise rejection 重新转成同步控制流里的异常，所以外层 `try/catch` 就能把它接住。",
+              "markingMdx": "1 mark for stating that a rejected promise becomes a thrown error at the await line.\n1 mark for explaining why try/catch can therefore catch it."
+            },
+            {
+              "id": "Q5-c",
+              "label": "(c)",
+              "marks": 2,
+              "questionMdx": "上面连续三次 `await` 的问题是什么？如果三个请求互不依赖，这种写法为什么会拖慢整体耗时？",
+              "answerMdx": "问题是它会强制串行等待。只有前一个请求完全结束，后一个请求才会发出，因此总耗时会接近三个请求耗时的总和，而不是接近最慢的那个请求。",
+              "markingMdx": "1 mark for identifying that repeated await makes independent tasks run serially.\n1 mark for explaining the total time cost of serial execution."
+            },
+            {
+              "id": "Q5-d",
+              "label": "(d)",
+              "marks": 2,
+              "questionMdx": "请把上面的 `loadDashboard` 改写成更高效的并行版本。",
+              "answerMdx": "```javascript\nasync function loadDashboard() {\n  const [user, posts, alerts] = await Promise.all([\n    fetch('/api/user').then((res) => res.json()),\n    fetch('/api/posts').then((res) => res.json()),\n    fetch('/api/alerts').then((res) => res.json()),\n  ]);\n\n  return { user, posts, alerts };\n}\n```",
+              "markingMdx": "1 mark for dispatching the three requests together with Promise.all.\n1 mark for returning the collected result in the expected object shape."
+            }
+          ]
+        },
+        {
+          "id": "Q6",
+          "title": "HTTP / Express 请求与响应",
+          "marks": 8,
+          "contentMdx": "```javascript\napp.use(express.json());\n\napp.get('/apple', (req, res) => {\n  const name = req.query.name;\n  res.json({ msg: `Hi ${name}, thanks for sending apple!` });\n});\n\napp.post('/orange', (req, res) => {\n  const name = req.body.name;\n  res.json({ msg: `Hi ${name}, thanks for sending orange!` });\n});\n```",
+          "subQuestions": [
+            {
+              "id": "Q6-a",
+              "label": "(a)",
+              "marks": 2,
+              "questionMdx": "HTTP 在 Web 应用里扮演什么角色？当服务器内部崩溃时，最可能返回哪一类状态码范围？",
+              "answerMdx": "HTTP 是浏览器和服务器之间约定请求与响应格式的通信协议。若服务器内部崩溃，最可能返回 5xx 状态码，例如 500 Internal Server Error。",
+              "markingMdx": "1 mark for identifying HTTP as the request-response communication protocol.\n1 mark for identifying 5xx as the server error status range."
+            },
+            {
+              "id": "Q6-b",
+              "label": "(b)",
+              "marks": 2,
+              "questionMdx": "为什么 `GET /apple` 从 `req.query` 取参，而 `POST /orange` 从 `req.body` 取参？",
+              "answerMdx": "因为 GET 通常把参数放在 URL 查询字符串中，所以通过 `req.query` 读取；POST 通常把结构化数据放在请求体中，所以通过 `req.body` 读取。前者适合简单筛选条件或标识，后者更适合提交对象、表单或复杂数据。",
+              "markingMdx": "1 mark for distinguishing req.query from req.body.\n1 mark for explaining the different data-placement conventions for GET and POST."
+            },
+            {
+              "id": "Q6-c",
+              "label": "(c)",
+              "marks": 2,
+              "questionMdx": "为什么很多 Express 项目会统一使用 `express.json()` 和 `res.json(...)`，而不是自己手写 `JSON.parse(...)` 与 `JSON.stringify(...)`？",
+              "answerMdx": "`express.json()` 可以自动把 JSON 请求体解析成对象，`res.json(...)` 可以自动把响应序列化成 JSON 并设置正确的响应头。这样前后端契约更稳定，样板代码更少，也更不容易漏掉解析、序列化或 content-type 之类的细节。",
+              "markingMdx": "1 mark for stating that express.json parses request JSON automatically.\n1 mark for stating that res.json serialises the response and standardises headers."
+            },
+            {
+              "id": "Q6-d",
+              "label": "(d)",
+              "marks": 2,
+              "questionMdx": "在这个前后端场景里，为什么通常会约定服务端返回 JSON，而不是直接返回一段 HTML 让前端自己拆？",
+              "answerMdx": "因为 JSON 更适合做结构化数据交换，前端拿到后可以直接渲染成页面、列表或组件状态。若直接返回整段 HTML，数据与展示就会重新耦合在一起，不利于组件化渲染、状态管理和接口复用。",
+              "markingMdx": "1 mark for explaining JSON as structured data for APIs.\n1 mark for explaining why returning HTML would couple data and presentation."
+            }
+          ]
+        }
+      ],
+      "time": "2026-10-24 23:30"
+    }
+  ]
 }

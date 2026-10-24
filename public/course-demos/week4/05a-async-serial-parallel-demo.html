@@ -1,0 +1,256 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>05A · 串行 await vs Promise.all · COMP6080 Week 4</title>
+  <meta
+    name="description"
+    content="COMP6080 Week 4：独立演示 async/await 的串行等待、Promise.all 并行，以及同步/微任务/宏任务的执行顺序。"
+  />
+  <link rel="icon" href="data:," />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600&family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600&display=swap"
+    rel="stylesheet"
+  />
+  <link rel="stylesheet" href="assets/demo.css" />
+  <style>
+    .demo-page {
+      position: relative;
+      z-index: 1;
+      min-height: auto;
+      padding: 0;
+    }
+
+    .demo-wrap {
+      max-width: none;
+      margin: 0;
+    }
+
+    .page-head {
+      display: none;
+    }
+
+    .timeline {
+      display: grid;
+      gap: 10px;
+    }
+
+    .timeline-item {
+      border: 1px dashed #d8d1c5;
+      border-radius: 16px;
+      background: #fffdfa;
+      padding: 10px 12px;
+      font-size: 13px;
+      color: #4c5159;
+    }
+
+    .timeline-item strong {
+      display: inline-block;
+      min-width: 72px;
+      color: #16181d;
+    }
+  </style>
+</head>
+<body>
+  <main class="demo-page">
+    <div class="demo-wrap">
+      <section class="demo reveal">
+        <div class="demo-head">
+          <h3>演示 A · 串行 await 与 Promise.all</h3>
+          <span class="pill">serial / parallel</span>
+        </div>
+        <div class="demo-body">
+          <p class="demo-sub">
+            这页只讲一件事：三个互不依赖的异步任务，用连续 <code class="inline">await</code> 会把耗时相加；
+            用 <code class="inline">Promise.all</code> 会同时发出，只等最慢的那一个。
+          </p>
+
+          <div class="btn-row">
+            <button class="btn primary sm" id="btn-serial" type="button">串行：三个 await 依次等</button>
+            <button class="btn teal sm" id="btn-parallel" type="button">并行：Promise.all</button>
+            <button class="btn ghost sm" id="btn-order" type="button">执行顺序演示</button>
+          </div>
+
+          <div class="stats" id="serial-stats"></div>
+          <div class="status-line" id="serial-chips"></div>
+          <div class="out idle" id="serial-note">当前还没有运行任何实验。</div>
+          <div class="out pre tall idle" id="serial-out">点击上面按钮开始。</div>
+
+          <div class="field">
+            <label>同步 / 微任务 / 宏任务时间轴</label>
+            <div class="timeline" id="timeline">
+              <div class="timeline-item">等待运行顺序演示…</div>
+            </div>
+          </div>
+
+          <div class="log" id="log-serial"></div>
+        </div>
+      </section>
+    </div>
+  </main>
+
+  <script src="assets/demo.js"></script>
+  <script>
+    const $ = W4.$;
+
+    const serialStats = $('#serial-stats');
+    const serialChips = $('#serial-chips');
+    const serialNote = $('#serial-note');
+    const serialOut = $('#serial-out');
+    const timeline = $('#timeline');
+    const logSerial = $('#log-serial');
+
+    function renderStats(items) {
+      serialStats.innerHTML = items.map(function (item) {
+        return '<div class="stat"><span class="k">' + W4.escapeHtml(item.k) + '</span>' +
+          '<span class="v">' + W4.escapeHtml(item.v) + '</span></div>';
+      }).join('');
+    }
+
+    function renderChips(items) {
+      serialChips.innerHTML = items.map(function (item) {
+        return '<span class="chip ' + (item.tone || '') + '">' + W4.escapeHtml(item.text) + '</span>';
+      }).join('');
+    }
+
+    function setOut(text, tone) {
+      serialOut.className = 'out pre tall ' + (tone || 'idle');
+      serialOut.textContent = text;
+    }
+
+    function setNote(text, tone) {
+      serialNote.className = 'out ' + (tone || 'idle');
+      serialNote.textContent = text;
+    }
+
+    function setTimeline(items) {
+      timeline.innerHTML = items.map(function (item) {
+        return '<div class="timeline-item"><strong>' + W4.escapeHtml(item.type) + '</strong>' +
+          W4.escapeHtml(item.text) + '</div>';
+      }).join('');
+    }
+
+    function fakeFetchUser(id, delay) {
+      return new Promise(function (resolve) {
+        setTimeout(function () {
+          resolve({
+            id: id,
+            name: 'User ' + id,
+            delay: delay,
+          });
+        }, delay);
+      });
+    }
+
+    async function runSerial() {
+      W4.resetLog(logSerial);
+      renderStats([]);
+      renderChips([]);
+      setOut('运行中…', 'idle');
+      setNote('串行模式：后一个 await 必须等前一个彻底完成。', 'idle');
+
+      const started = performance.now();
+      W4.log(logSerial, '开始串行执行：1 -> 2 -> 3', 'info', 'SERIAL');
+
+      const a = await fakeFetchUser(1, 320);
+      W4.log(logSerial, '拿到 user 1，用时 320ms', 'ok', 'SERIAL');
+      const b = await fakeFetchUser(2, 460);
+      W4.log(logSerial, '拿到 user 2，用时 460ms', 'ok', 'SERIAL');
+      const c = await fakeFetchUser(3, 280);
+      W4.log(logSerial, '拿到 user 3，用时 280ms', 'ok', 'SERIAL');
+
+      const total = Math.round(performance.now() - started);
+      renderStats([
+        { k: '模式', v: '串行 await' },
+        { k: '总耗时(ms)', v: String(total) },
+        { k: '数据条数', v: '3' },
+      ]);
+      renderChips([
+        { text: '总耗时约等于 320 + 460 + 280', tone: 'warn' },
+        { text: '严格按顺序执行', tone: 'ok' },
+      ]);
+      setNote('三个请求互不依赖时，这种写法最直观，但总耗时会被直接累加。', 'warn');
+      setOut(W4.pretty([a, b, c]), 'ok');
+    }
+
+    async function runParallel() {
+      W4.resetLog(logSerial);
+      renderStats([]);
+      renderChips([]);
+      setOut('运行中…', 'idle');
+      setNote('并行模式：三个 Promise 同时开始，只等最慢的那个。', 'idle');
+
+      const started = performance.now();
+      W4.log(logSerial, '开始并行执行：三个 Promise 同时启动', 'info', 'PAR');
+
+      const result = await Promise.all([
+        fakeFetchUser(1, 320),
+        fakeFetchUser(2, 460),
+        fakeFetchUser(3, 280),
+      ]);
+
+      const total = Math.round(performance.now() - started);
+      W4.log(logSerial, 'Promise.all 全部完成，总耗时约等于最慢的 460ms', 'ok', 'PAR');
+
+      renderStats([
+        { k: '模式', v: 'Promise.all' },
+        { k: '总耗时(ms)', v: String(total) },
+        { k: '数据条数', v: '3' },
+      ]);
+      renderChips([
+        { text: '总耗时约等于最慢的 460ms', tone: 'ok' },
+        { text: '任务同时发出', tone: 'ok' },
+      ]);
+      setNote('互不依赖的任务优先并行。Promise.all 的关键不是更酷，而是少等没必要的时间。', 'ok');
+      setOut(W4.pretty(result), 'ok');
+    }
+
+    function runOrder() {
+      W4.resetLog(logSerial);
+      renderStats([]);
+      renderChips([
+        { text: '同步先跑', tone: 'warn' },
+        { text: '微任务后跑', tone: 'ok' },
+        { text: '宏任务最后', tone: '' },
+      ]);
+      setNote('这不是性能实验，而是执行顺序实验：同步 -> 微任务 -> 宏任务。', 'warn');
+      setOut(
+        [
+          '1. 先执行普通同步代码',
+          '2. Promise.then / await 恢复属于微任务',
+          '3. setTimeout 属于宏任务，所以最后才运行',
+        ].join('\n'),
+        'ok'
+      );
+
+      const items = [];
+      function push(type, text) {
+        items.push({ type: type, text: text });
+        setTimeline(items);
+      }
+
+      push('sync', '函数开始执行');
+      Promise.resolve().then(function () {
+        push('microtask', 'Promise.then 被执行');
+      });
+      (async function () {
+        await 0;
+        push('microtask', 'await 后半段恢复执行');
+      })();
+      setTimeout(function () {
+        push('macrotask', 'setTimeout 回调执行');
+      }, 0);
+      push('sync', '同步代码执行完毕');
+
+      W4.log(logSerial, '已安排一个 Promise.then、一个 await 恢复、一个 setTimeout', 'info', 'ORDER');
+    }
+
+    $('#btn-serial').addEventListener('click', runSerial);
+    $('#btn-parallel').addEventListener('click', runParallel);
+    $('#btn-order').addEventListener('click', runOrder);
+  </script>
+</body>
+</html>

@@ -37,10 +37,6 @@ const examLoaders: Record<string, () => Promise<MockExamCollection>> = {
     import('@/content/exams/week3-sim.json').then(
       (m) => m.default as unknown as MockExamCollection,
     ),
-  'week4-sim': () =>
-    import('@/content/exams/week4-sim.json').then(
-      (m) => m.default as unknown as MockExamCollection,
-    ),
 }
 
 export async function getAllMockExams(): Promise<ExamPaper[]> {

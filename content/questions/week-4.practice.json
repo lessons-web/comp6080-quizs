@@ -278,6 +278,150 @@
       ],
       "images": [],
       "createdAt": "2026-10-18"
+    },
+    {
+      "id": "JS-Q11",
+      "topic": "javascript",
+      "weeks": [
+        "week-4"
+      ],
+      "difficulty": "medium",
+      "tags": [
+        "JSON",
+        "localStorage",
+        "持久化"
+      ],
+      "question": "为什么把数组或对象存进 localStorage 时，通常要先 `JSON.stringify(...)`，读出来后再 `JSON.parse(...)`？如果读到的是非法 JSON，又该怎样兜底？",
+      "knowledgePoint": "JSON.stringify / JSON.parse 与 localStorage",
+      "answerExplanation": "因为 localStorage 只能存字符串，不能直接保存 JavaScript 的对象或数组，所以写入前要先用 `JSON.stringify(...)` 序列化。读取时再用 `JSON.parse(...)` 反序列化，才能恢复成原来的数据结构。若读到的是非法 JSON，`JSON.parse` 会抛异常，因此应使用 `try/catch` 兜底，并在失败时返回空数组、空对象或其他默认值。",
+      "codeBlocks": [
+        {
+          "language": "js",
+          "code": "function loadUsers() {\n  try {\n    const raw = localStorage.getItem('users');\n    return raw ? JSON.parse(raw) : [];\n  } catch {\n    return [];\n  }\n}"
+        }
+      ],
+      "images": [],
+      "createdAt": "2026-10-24"
+    },
+    {
+      "id": "JS-Q12",
+      "topic": "javascript",
+      "weeks": [
+        "week-4"
+      ],
+      "difficulty": "medium",
+      "tags": [
+        "XHR",
+        "状态码",
+        "responseText"
+      ],
+      "question": "在使用 XHR 时，为什么 `404` 这类 HTTP 错误通常不会进入 `onerror`，而是要在 `onload` 里通过 `status` 判断？另外，为什么很多示例里还要手动 `JSON.parse(xhr.responseText)`？",
+      "knowledgePoint": "XHR onload / onerror / status / responseText",
+      "answerExplanation": "`onerror` 只处理网络层失败，例如断网、连接被中断或 DNS 解析失败；只要服务器回了 HTTP 响应，即使状态码是 404 或 500，也会进入 `onload`，然后由开发者通过 `xhr.status` 判断业务是否成功。`xhr.responseText` 默认拿到的是字符串，因此如果服务器返回的是 JSON 文本，就需要手动 `JSON.parse(...)` 才能变成可用的 JavaScript 数据。",
+      "codeBlocks": [
+        {
+          "language": "js",
+          "code": "xhr.onload = () => {\n  if (xhr.status === 200) {\n    const data = JSON.parse(xhr.responseText);\n    console.log(data);\n  }\n};\n\nxhr.onerror = () => {\n  console.error('network error');\n};"
+        }
+      ],
+      "images": [],
+      "createdAt": "2026-10-24"
+    },
+    {
+      "id": "JS-Q13",
+      "topic": "javascript",
+      "weeks": [
+        "week-4"
+      ],
+      "difficulty": "medium",
+      "tags": [
+        "fetch",
+        "Response",
+        "res.ok"
+      ],
+      "question": "`fetch(url)` resolve 后拿到的为什么是 `Response` 而不是最终数据？为什么真实项目里常要先检查 `res.ok`，再决定要不要调用 `res.json()`？",
+      "knowledgePoint": "fetch / Response / res.ok / res.json",
+      "answerExplanation": "`fetch(url)` 解决的是“拿到网络响应”这一步，因此 resolve 后得到的是 `Response` 对象，而不是最终 JSON 数据。真正的响应体还要继续用 `res.json()`、`res.text()` 等方法读取。项目里常先检查 `res.ok`，是因为 404、500 这类 HTTP 错误不会让 fetch 自动 reject；如果不先判断状态，就可能把错误响应当成正常数据继续解析，甚至让 `res.json()` 在读取 HTML 错误页时再次抛错。",
+      "codeBlocks": [
+        {
+          "language": "js",
+          "code": "const res = await fetch('/api/users');\nif (!res.ok) {\n  throw new Error('HTTP ' + res.status);\n}\nconst users = await res.json();"
+        }
+      ],
+      "images": [],
+      "createdAt": "2026-10-24"
+    },
+    {
+      "id": "JS-Q14",
+      "topic": "javascript",
+      "weeks": [
+        "week-4"
+      ],
+      "difficulty": "medium",
+      "tags": [
+        "Promise",
+        "then",
+        "allSettled"
+      ],
+      "question": "Promise 有哪些核心状态？为什么说每个 `.then(...)` 都会返回一个新的 Promise？另外，`Promise.all(...)` 与 `Promise.allSettled(...)` 的语义差别是什么？",
+      "knowledgePoint": "Promise 状态、链式与组合器",
+      "answerExplanation": "Promise 的核心状态是 `pending`、`fulfilled`、`rejected`，而 `settled` 用来统称已经定型的 Promise。每个 `.then(...)` 都会返回一个新的 Promise，把回调的返回值或抛出的错误继续交给下一环处理，所以链式调用才能成立。`Promise.all(...)` 适合“一个都不能少”的场景，只要有一个 rejected 就整体 rejected；`Promise.allSettled(...)` 则会等待全部任务结束，再统一返回每一项的状态和结果。",
+      "codeBlocks": [
+        {
+          "language": "js",
+          "code": "Promise.resolve(1)\n  .then((n) => n + 1)\n  .then((n) => n * 2)\n  .catch(console.error);"
+        }
+      ],
+      "images": [],
+      "createdAt": "2026-10-24"
+    },
+    {
+      "id": "JS-Q15",
+      "topic": "javascript",
+      "weeks": [
+        "week-4"
+      ],
+      "difficulty": "medium",
+      "tags": [
+        "async",
+        "await",
+        "Promise.all"
+      ],
+      "question": "为什么说 `async` 函数总返回 Promise？连续写多个 `await` 有什么性能问题？当多个请求互不依赖时，为什么常改写成 `await Promise.all(...)`？",
+      "knowledgePoint": "async / await 与 Promise.all 并行控制",
+      "answerExplanation": "`async` 函数无论 return 什么，最终都会包装成 Promise；若在函数内部抛错，则会得到 rejected Promise。连续写多个 `await` 会把互不依赖的异步任务强制串行执行，使总耗时变成各任务耗时之和。若任务之间没有依赖关系，应先同时发起，再用 `await Promise.all(...)` 一起等待结果，这样总耗时接近最慢的那个任务，而不是全部相加。",
+      "codeBlocks": [
+        {
+          "language": "js",
+          "code": "const [user, posts, alerts] = await Promise.all([\n  fetch('/api/user').then((res) => res.json()),\n  fetch('/api/posts').then((res) => res.json()),\n  fetch('/api/alerts').then((res) => res.json()),\n]);"
+        }
+      ],
+      "images": [],
+      "createdAt": "2026-10-24"
+    },
+    {
+      "id": "NODE-Q5",
+      "topic": "nodejs",
+      "weeks": [
+        "week-4"
+      ],
+      "difficulty": "medium",
+      "tags": [
+        "Express",
+        "req.query",
+        "req.body"
+      ],
+      "question": "在 HTTP / Express 的请求-响应循环里，为什么 `GET` 常通过 `req.query` 取参，而 `POST` 常通过 `req.body` 取参？又为什么很多项目会统一用 `express.json()` 和 `res.json(...)` 来处理输入输出？",
+      "knowledgePoint": "HTTP / Express 请求与响应",
+      "answerExplanation": "GET 常把简单参数放进 URL 查询字符串，因此在 Express 中用 `req.query` 读取；POST 常把结构化数据放进请求体，因此用 `req.body` 读取。`express.json()` 可以帮你自动把 JSON 请求体解析成对象，`res.json(...)` 可以帮你自动把响应序列化成 JSON 并设置正确的响应头。这样前后端契约更稳定，少写样板代码，也能减少漏掉 `JSON.parse`、`JSON.stringify` 或 content-type 的风险。",
+      "codeBlocks": [
+        {
+          "language": "js",
+          "code": "app.use(express.json());\n\napp.get('/apple', (req, res) => {\n  const name = req.query.name;\n  res.json({ msg: `Hi ${name}` });\n});\n\napp.post('/orange', (req, res) => {\n  const name = req.body.name;\n  res.json({ msg: `Hi ${name}` });\n});"
+        }
+      ],
+      "images": [],
+      "createdAt": "2026-10-24"
     }
   ]
 }

@@ -47,4 +47,18 @@ describe('ExamSubQuestionList', () => {
     // Answer should be hidden again
     expect(screen.queryByText('HyperText Markup Language')).not.toBeInTheDocument()
   })
+
+  it('uses themed accents for the answer toggle and expanded panel', () => {
+    render(<ExamSubQuestionList subQuestions={mockSubQuestions} />)
+
+    const button = screen.getByText(/查看答案与解析/)
+    expect(button).toHaveClass('text-[#2f6b5f]')
+
+    fireEvent.click(button)
+
+    const modelAnswer = screen.getByText('Model Answer')
+    const panel = modelAnswer.parentElement?.parentElement
+
+    expect(panel).toHaveClass('bg-[#fff7e8]', 'border-l-[#d6a64e]')
+  })
 })

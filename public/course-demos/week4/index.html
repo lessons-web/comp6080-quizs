@@ -4,7 +4,7 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>COMP6080 Week 4 · 知识点演示 · 目录</title>
-  <meta name="description" content="COMP6080 Week 4 异步与网络：数据交换格式、XMLHttpRequest、fetch、Promise、async/await 的可运行演示。" />
+  <meta name="description" content="COMP6080 Week 4 异步与网络：数据交换格式、XMLHttpRequest、fetch、Promise、async/await、HTTP Server 与 Express 的可运行演示。" />
   <link rel="icon" href="data:," />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -21,7 +21,7 @@
 
   <section class="hero">
     <div class="kicker">COMP6080 · Week 4</div>
-    <h1>数据怎么从服务器来：<br /><span class="mark">5 个可以当场跑起来</span>的知识点演示</h1>
+    <h1>数据怎么从服务器来：<br /><span class="mark">6 个串起来的</span>知识点演示</h1>
     <p class="lede">
       每个知识点一个 HTML 文件，左边讲透概念、右边是可交互的演示台。所有网络请求都带
       <strong>本地兜底数据</strong>，课堂断网也能演示成功与失败两条路径。
@@ -29,7 +29,7 @@
     <div class="hero-meta">
       <div>
         <div class="k">主线</div>
-        <div class="v">字符串 → 请求 → Promise → 语法糖</div>
+        <div class="v">字符串 → 请求 → Promise → 语法糖 → 服务端响应</div>
       </div>
       <div>
         <div class="k">技术栈</div>
@@ -41,7 +41,7 @@
       </div>
       <div>
         <div class="k">对应大纲</div>
-        <div class="v">Part 1 · Week 4 异步与网络（8 节压缩为 5 个演示）</div>
+        <div class="v">Part 1 · Week 4 异步与网络（按 6 个知识节点重组）</div>
       </div>
     </div>
   </section>
@@ -60,6 +60,8 @@
       <span class="arrow">→</span>
       <span class="node hi">async / await</span>
       <span class="arrow">→</span>
+      <span class="node hi">HTTP / Express</span>
+      <span class="arrow">→</span>
       <span class="node">数据变成界面</span>
     </div>
   </section>
@@ -75,7 +77,7 @@
         </div>
 
         <p>
-          第 01 节双击打开就能用；但 <strong>02–05 节涉及网络请求和本地兜底文件</strong>，
+          第 01 节双击打开就能用；但 <strong>02–06 节建议都通过本地服务器打开</strong>，
           浏览器在 <code class="inline">file://</code> 协议下会拦截这类读取，所以请用本地服务器打开整个
           <code class="inline">week4</code> 目录。
         </p>
@@ -96,6 +98,7 @@ npx serve .</code></pre>
           <span class="ico">提示</span>
           <div>
             <strong>课堂断网的预案：</strong>02–05 节的演示台都带「本地兜底」开关。
+            其中 02–05 节直接演示客户端异步请求，06 节则在本地模拟服务端响应结构和路由命中逻辑。
             远程接口失败时，代码会转去读 <code class="inline">assets/fallback-users.json</code>，
             返回结构与远程接口<strong>同构</strong>，页面渲染逻辑完全不用改 —— 这本身就是一次真实的错误处理示范。
           </div>
@@ -114,7 +117,7 @@ npx serve .</code></pre>
       <div class="sec">
         <div class="sec-head">
           <span class="sec-num">索引</span>
-          <h2>这 5 节各回答什么问题<span class="en">what each page answers</span></h2>
+          <h2>这 6 节各回答什么问题<span class="en">what each page answers</span></h2>
         </div>
 
         <div class="table-wrap">
@@ -158,6 +161,12 @@ npx serve .</code></pre>
                 <td class="mono">async / await</td>
                 <td>async 总是返回 Promise；await 失败即抛出，所以能 try/catch</td>
               </tr>
+              <tr>
+                <td class="mono">06</td>
+                <td>前端发出去的请求，服务端到底怎么接住并回应？</td>
+                <td class="mono">HTTP / Express</td>
+                <td>404 是服务器已收到请求但没匹配到路由；RESTful 把 CRUD 映射到 Method + Path</td>
+              </tr>
             </tbody>
           </table>
         </div>
@@ -166,7 +175,7 @@ npx serve .</code></pre>
           <span class="ico">口诀</span>
           <div>
             一句话串起来：<strong>先把数据变成字符串（01）→ 用 XHR 送出去（02）→ 换成 fetch 更好用（03）
-            → 背后是 Promise（04）→ 最后用 async/await 写得像同步（05）。</strong>
+            → 背后是 Promise（04）→ 最后用 async/await 写得像同步（05）→ 再理解服务端怎么接住请求并回应（06）。</strong>
           </div>
         </div>
       </div>
@@ -175,7 +184,7 @@ npx serve .</code></pre>
 
   <footer class="pagefoot">
     <span>COMP6080 26T3 · Week 4 知识点演示</span>
-    <span class="sig">字符串 → 请求 → Promise → 语法糖</span>
+    <span class="sig">字符串 → 请求 → Promise → 语法糖 → 服务端响应</span>
   </footer>
 
   <script src="assets/demo.js"></script>

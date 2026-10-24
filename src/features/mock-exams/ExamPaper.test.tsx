@@ -43,6 +43,16 @@ describe('ExamPaper', () => {
     expect(screen.getByText('30 marks')).toBeInTheDocument()
   })
 
+  it('uses the brand exam paper header theme', () => {
+    render(<ExamPaper exam={fixture} isGuest />)
+
+    const totalMarks = screen.getByText('30 marks')
+    const guestPreview = screen.getByText('访客预览模式 · 已展示前 2 题')
+
+    expect(totalMarks).toHaveClass('text-[#d6a64e]')
+    expect(guestPreview).toHaveClass('text-[#f0c675]')
+  })
+
   it('renders question cards for all questions', () => {
     render(<ExamPaper exam={fixture} />)
     

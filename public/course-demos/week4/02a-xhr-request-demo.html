@@ -1,0 +1,283 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>02A · 最小 XHR GET · COMP6080 Week 4</title>
+  <meta
+    name="description"
+    content="COMP6080 Week 4：独立演示原生 XMLHttpRequest 的最小 GET 请求、readyState 变化与本地兜底。"
+  />
+  <link rel="icon" href="data:," />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600&family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600&display=swap"
+    rel="stylesheet"
+  />
+  <link rel="stylesheet" href="assets/demo.css" />
+  <style>
+    .demo-page {
+      position: relative;
+      z-index: 1;
+      min-height: auto;
+      padding: 0;
+    }
+
+    .demo-wrap {
+      max-width: none;
+      margin: 0;
+    }
+
+    .demo-head h1 {
+      margin: 0;
+      font-family: var(--serif);
+      font-size: clamp(26px, 3.2vw, 38px);
+      line-height: 1.08;
+      letter-spacing: -0.02em;
+    }
+
+    .demo-lede {
+      margin: 10px 0 18px;
+      color: var(--ink-soft);
+      font-size: 15.5px;
+      line-height: 1.7;
+    }
+
+    .page-head {
+      display: none;
+    }
+  </style>
+</head>
+<body>
+  <main class="demo-page">
+    <div class="demo-wrap">
+      <section class="demo reveal">
+        <div class="demo-head">
+          <h3>演示 A · 最小 XHR GET</h3>
+          <span class="pill">live</span>
+        </div>
+        <div class="demo-body">
+          <p class="demo-sub">
+            点按钮真的发一次 <code class="inline">XMLHttpRequest</code>，把返回的用户数组渲染成列表。
+            盯住日志里 <code class="inline">readyState</code> 的变化，以及
+            <code class="inline">onload</code> / <code class="inline">onerror</code> 的取舍。
+          </p>
+
+          <div class="btn-row">
+            <button class="btn primary sm" id="btn-xhr-remote" type="button">发送请求（远程 API）</button>
+            <button class="btn sm" id="btn-xhr-local" type="button">发送请求（本地兜底）</button>
+            <button class="btn ghost sm" id="btn-xhr-404" type="button">请求不存在的路径（404）</button>
+          </div>
+
+          <div class="status-line" id="xhr-meta"></div>
+
+          <div class="out idle" id="xhr-result-note">
+            当前还没有显示任何数据来源说明。
+          </div>
+
+          <div class="list" id="user-list">
+            <div class="out idle">还没有请求，点上面任意按钮开始。</div>
+          </div>
+
+          <div class="log" id="log-xhr"></div>
+        </div>
+      </section>
+    </div>
+  </main>
+
+  <script src="assets/demo.js"></script>
+  <script>
+    /* ====================================================================
+       本页教学代码：原生 XMLHttpRequest，无任何外部库
+       ==================================================================== */
+    const $ = W4.$;
+
+    /* --------------------------------------------------- 网络地址常量 */
+    const API = 'https://jsonplaceholder.typicode.com';
+    const URL_OK = API + '/users';                        // 200，返回 10 个用户
+    const URL_404 = API + '/nonexistent-path-404';        // 404
+    const FALLBACK = 'assets/fallback-users.json';        // 本地兜底（结构同远程一致）
+
+    const READY_TEXT = {
+      0: 'UNSENT 尚未 open',
+      1: 'OPENED 已 open',
+      2: 'HEADERS_RECEIVED 已收到响应头',
+      3: 'LOADING 正在下载响应体',
+      4: 'DONE 完成'
+    };
+
+    /* -------------------------------------------------------- 渲染工具 */
+    function setChips(metaEl, chips) {
+      if (!metaEl) return;
+      metaEl.innerHTML = chips.map(function (c) {
+        return '<span class="chip ' + (c.tone || '') + '">' + W4.escapeHtml(c.text) + '</span>';
+      }).join('');
+    }
+
+    function renderSkeletons(container, n) {
+      let html = '';
+      for (let i = 0; i < n; i++) html += '<div class="skeleton"></div>';
+      container.innerHTML = html;
+    }
+
+    function renderUsers(container, users) {
+      const list = Array.isArray(users) ? users : [];
+      container.innerHTML = list.map(function (u, i) {
+        const name = u.name || u.username || '未命名';
+        const email = u.email || '（无邮箱）';
+        const city = (u.address && u.address.city) || '（未知城市）';
+        const company = (u.company && u.company.name) || '（无公司）';
+        return '<div class="list-item">' +
+          '<span class="idx">' + (i + 1) + '</span>' +
+          '<span><span class="name">' + W4.escapeHtml(name) + '</span>' +
+          '<div class="meta">' + W4.escapeHtml(email) + ' · ' +
+          W4.escapeHtml(city) + ' · ' + W4.escapeHtml(company) + '</div></span>' +
+          '</div>';
+      }).join('');
+    }
+
+    /* ================================================== 最小 XHR GET */
+    const logXhr = $('#log-xhr');
+    const userList = $('#user-list');
+    const xhrMeta = $('#xhr-meta');
+    const xhrResultNote = $('#xhr-result-note');
+
+    function setResultNote(text, tone) {
+      xhrResultNote.className = 'out ' + (tone || 'idle');
+      xhrResultNote.textContent = text;
+    }
+
+    function requestUsers(url, label, allowFallback, reason) {
+      const started = performance.now();
+      const xhr = new XMLHttpRequest();
+
+      W4.log(logXhr, '准备请求「' + label + '」：' + url, 'info', 'XHR');
+      W4.log(logXhr, 'new XMLHttpRequest() 创建句柄，readyState = ' + xhr.readyState, 'sync', 'STATE');
+
+      renderSkeletons(userList, 3);
+      setChips(xhrMeta, [{ text: '请求中…', tone: 'warn' }, { text: label, tone: '' }]);
+      setResultNote('请求已发出，正在等待「' + label + '」返回…', 'idle');
+
+      // ① readyState 每次变化都会触发，用来看请求走到哪一步
+      xhr.addEventListener('readystatechange', function () {
+        W4.log(logXhr, 'readyState → ' + xhr.readyState + '（' + READY_TEXT[xhr.readyState] + '）', 'sync', 'STATE');
+      });
+
+      // ② onload：只要服务器回了 HTTP 响应就会触发（哪怕 404 / 500）
+      xhr.addEventListener('load', function () {
+        const ms = Math.round(performance.now() - started);
+        W4.log(logXhr, 'onload 触发：收到响应，status = ' + xhr.status + '，耗时 ' + ms + 'ms', 'info', 'LOAD');
+
+        if (xhr.status >= 200 && xhr.status < 300) {
+          let users;
+          try {
+            users = JSON.parse(xhr.responseText);
+          } catch (err) {
+            W4.log(logXhr, '响应体不是合法 JSON：' + err.message, 'err', 'ERROR');
+            setChips(xhrMeta, [{ text: 'status ' + xhr.status, tone: 'err' }, { text: 'JSON 解析失败', tone: 'err' }]);
+            userList.innerHTML = '<div class="out err">响应内容无法解析为 JSON。</div>';
+            return;
+          }
+          const n = Array.isArray(users) ? users.length : 0;
+          W4.log(logXhr, 'status 是 2xx → 业务成功，解析出 ' + n + ' 条记录', 'ok', 'STATUS');
+          W4.log(logXhr, '把 ' + n + ' 条数据渲染进 DOM', 'ok', 'RENDER');
+          renderUsers(userList, users);
+
+          if (label === '远程 API') {
+            setChips(xhrMeta, [
+              { text: 'status ' + xhr.status, tone: 'ok' },
+              { text: '远程 API', tone: 'ok' },
+              { text: '耗时 ' + ms + 'ms', tone: 'teal' },
+              { text: 'readyState ' + xhr.readyState, tone: '' },
+              { text: n + ' 条', tone: 'accent' }
+            ]);
+            setResultNote('当前显示的是远程 API 返回的数据。你看到的是线上接口结果，不是本地兜底。', 'ok');
+          } else {
+            setChips(xhrMeta, [
+              { text: 'status ' + xhr.status, tone: 'ok' },
+              { text: '本地文件', tone: 'warn' },
+              { text: '耗时 ' + ms + 'ms', tone: 'teal' },
+              { text: 'readyState ' + xhr.readyState, tone: '' },
+              { text: n + ' 条', tone: 'accent' }
+            ]);
+            setResultNote(
+              reason
+                ? '当前显示的是本地兜底数据。触发原因：' + reason + '。所以这次不是远程成功，而是失败后切到了浏览器本地文件。'
+                : '当前显示的是直接加载的本地兜底数据（assets/fallback-users.json），不会经过远程 API。',
+              'warn'
+            );
+          }
+
+          W4.log(logXhr, '✔ 完成：' + label, 'ok', 'XHR');
+          return;
+        }
+
+        // 非 2xx：onerror 不会触发，必须自己看 status
+        W4.log(logXhr, '⚠ onload 触发了，但 status = ' + xhr.status + '，所以业务失败', 'warn', 'STATUS');
+        W4.log(logXhr, '4xx / 5xx 属于「预期内错误」，不会进入 onerror', 'err', 'STATUS');
+        setChips(xhrMeta, [
+          { text: 'status ' + xhr.status, tone: 'err' },
+          { text: '走了 onload', tone: 'warn' },
+          { text: 'onerror 未触发', tone: 'err' },
+          { text: '即将切到本地兜底', tone: 'warn' }
+        ]);
+        setResultNote('远程接口已经回话，但这是一个 HTTP ' + xhr.status + '。接下来会自动切到本地兜底，所以最终你会看到本地那 8 条中文用户。', 'err');
+
+        if (allowFallback) {
+          userList.innerHTML = '<div class="out err">远程返回 HTTP ' + xhr.status + '，正在切换本地兜底数据…</div>';
+          W4.log(logXhr, '远程失败 → 已切换到本地兜底数据：' + FALLBACK, 'warn', 'FALLBACK');
+          requestUsers(FALLBACK, '本地兜底', false, '远程返回 HTTP ' + xhr.status + '，onload 已触发');
+        } else {
+          userList.innerHTML = '<div class="out err">请求失败：HTTP ' + xhr.status + '，没有可渲染的数据。</div>';
+          setResultNote('请求失败：HTTP ' + xhr.status + '。这次没有可显示的数据。', 'err');
+          W4.log(logXhr, '✘ 结束：' + label + '（HTTP ' + xhr.status + '）', 'err', 'XHR');
+        }
+      });
+
+      // ③ onerror：只有网络层失败（连不上 / 中断 / 超时）才会触发
+      xhr.addEventListener('error', function () {
+        const ms = Math.round(performance.now() - started);
+        W4.log(logXhr, 'onerror 触发！根本没拿到响应，xhr.status = ' + xhr.status, 'err', 'ERROR');
+        W4.log(logXhr, '这属于「预期外错误」：域名解析失败 / 连接中断 / 超时', 'err', 'ERROR');
+        setChips(xhrMeta, [
+          { text: 'status ' + xhr.status, tone: 'err' },
+          { text: '走了 onerror', tone: 'err' },
+          { text: '耗时 ' + ms + 'ms', tone: 'teal' },
+          { text: '即将切到本地兜底', tone: 'warn' }
+        ]);
+        setResultNote('发生了网络层失败，说明这次根本没拿到响应。接下来会自动切到本地兜底。', 'err');
+
+        if (allowFallback) {
+          userList.innerHTML = '<div class="out err">网络错误，正在切换本地兜底数据…</div>';
+          W4.log(logXhr, '网络失败 → 已切换到本地兜底数据：' + FALLBACK, 'warn', 'FALLBACK');
+          requestUsers(FALLBACK, '本地兜底', false, '发生网络错误，onerror 已触发');
+        } else {
+          userList.innerHTML = '<div class="out err">网络错误，没有任何响应可用。</div>';
+          setResultNote('网络错误，没有任何响应可用。', 'err');
+          W4.log(logXhr, '✘ 结束：' + label + '（网络失败）', 'err', 'XHR');
+        }
+      });
+
+      // ④ 真正发出请求
+      xhr.open('GET', url);
+      W4.log(logXhr, 'xhr.open("GET", url) 已调用', 'sync', 'XHR');
+      xhr.send();
+      W4.log(logXhr, 'xhr.send() 已发出，请求进入飞行状态，主线程不被阻塞', 'info', 'XHR');
+    }
+
+    $('#btn-xhr-remote').addEventListener('click', function () {
+      W4.resetLog(logXhr);
+      requestUsers(URL_OK, '远程 API', true);
+    });
+    $('#btn-xhr-local').addEventListener('click', function () {
+      W4.resetLog(logXhr);
+      requestUsers(FALLBACK, '本地兜底', false);
+    });
+    $('#btn-xhr-404').addEventListener('click', function () {
+      W4.resetLog(logXhr);
+      requestUsers(URL_404, '远程 404', true);
+    });
+  </script>
+</body>
+</html>

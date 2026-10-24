@@ -1,31 +1,18 @@
 'use client'
 
 import Link from 'next/link'
-import { useState } from 'react'
-import hljs from 'highlight.js/lib/core'
-import javascript from 'highlight.js/lib/languages/javascript'
-import json from 'highlight.js/lib/languages/json'
-import xml from 'highlight.js/lib/languages/xml'
-import yaml from 'highlight.js/lib/languages/yaml'
-import 'highlight.js/styles/github-dark.css'
 
 import type {
   CourseSlide,
-  CourseSlideCode,
   CourseSlideCompareSide,
+  CourseSlideFlowStep,
   CourseSlideNote,
   CourseSlideNoteTone,
   CourseSlideTable,
 } from '../../../../types/course'
+import { CodePanel } from '../../../../components/code/CodePanel'
 import { PlaceholderBlock, type PlaceholderWidth } from './Placeholder'
 import { SlideFrame } from './SlideFrame'
-
-hljs.registerLanguage('javascript', javascript)
-hljs.registerLanguage('js', javascript)
-hljs.registerLanguage('json', json)
-hljs.registerLanguage('html', xml)
-hljs.registerLanguage('xml', xml)
-hljs.registerLanguage('yaml', yaml)
 
 export interface AccentTokens {
   gradient: string
@@ -35,30 +22,6 @@ export interface AccentTokens {
 interface SlideProps {
   slide: CourseSlide
   accent: AccentTokens
-}
-
-function escapeHtml(text: string) {
-  return text
-    .replaceAll('&', '&amp;')
-    .replaceAll('<', '&lt;')
-    .replaceAll('>', '&gt;')
-}
-
-function highlightLine(source: string, language: string) {
-  if (!source.trim()) {
-    return '&nbsp;'
-  }
-
-  try {
-    const normalized = language.toLowerCase()
-    if (hljs.getLanguage(normalized)) {
-      return hljs.highlight(source, { language: normalized }).value
-    }
-  } catch {
-    /* 回退到纯文本 */
-  }
-
-  return escapeHtml(source)
 }
 
 /* ------------------------------------------------------------------ 封面 */
@@ -166,7 +129,7 @@ function RoadmapSlide({ slide, accent }: SlideProps) {
 
       <div className="mt-5 rounded-2xl border border-[#dce7df] bg-[#f8fbf8] px-4 py-3">
         <p className="text-[14px] leading-6 text-[#3f5a4b]">
-          这 5 个知识点不是并列记忆点，而是一条连续链路：
+          这些知识点不是并列记忆点，而是一条连续链路：
           先知道数据如何表示，再知道怎么请求，接着理解异步结果如何组织，最后把写法收束成更顺的流程。
         </p>
       </div>
@@ -305,6 +268,81 @@ function ContentTable({ table }: { table: CourseSlideTable }) {
   )
 }
 
+function FlowArrow({ vertical = false }: { vertical?: boolean }) {
+  return (
+    <svg
+      viewBox="0 0 24 24"
+      className={`h-5 w-5 text-[#9bb7aa] ${vertical ? 'rotate-90' : ''}`}
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      aria-hidden="true"
+    >
+      <path d="M5 12h14" />
+      <path d="m13 6 6 6-6 6" />
+    </svg>
+  )
+}
+
+function FlowDiagram({
+  steps,
+  accent,
+}: {
+  steps: CourseSlideFlowStep[]
+  accent: AccentTokens
+}) {
+  return (
+    <div data-testid="slide-flow" className="mt-4">
+      <div className="flex flex-col gap-3 lg:flex-row lg:items-stretch">
+        {steps.map((step, index) => (
+          <div
+            key={`${step.title}-${index}`}
+            className="flex flex-col items-stretch gap-3 lg:min-w-0 lg:flex-1 lg:flex-row lg:items-center"
+          >
+            <article
+              data-testid="slide-flow-step"
+              className="min-w-0 flex-1 rounded-2xl border border-[#d7e5dd] bg-[linear-gradient(180deg,#ffffff_0%,#f6fbf8_100%)] p-4 shadow-[0_10px_22px_-18px_rgba(31,122,77,.35)]"
+            >
+              <div className="flex items-center gap-2">
+                {step.label ? (
+                  <span
+                    className={`course-mono rounded-full bg-[#edf7f1] px-2.5 py-1 text-[11px] tracking-[0.12em] ${accent.text}`}
+                  >
+                    {step.label}
+                  </span>
+                ) : null}
+                {step.meta ? (
+                  <span className="course-mono rounded-full bg-[#f4f1ea] px-2.5 py-1 text-[11px] tracking-[0.08em] text-[#8b9099]">
+                    {step.meta}
+                  </span>
+                ) : null}
+              </div>
+              <h3 className="mt-3 text-[20px] font-semibold tracking-[-0.02em] text-[#16181d]">
+                {step.title}
+              </h3>
+              <p className="mt-2 text-[13.5px] leading-6 text-[#4c5159]">
+                {step.description}
+              </p>
+            </article>
+            {index < steps.length - 1 ? (
+              <>
+                <div className="flex justify-center lg:hidden">
+                  <FlowArrow vertical />
+                </div>
+                <div className="hidden shrink-0 justify-center lg:flex">
+                  <FlowArrow />
+                </div>
+              </>
+            ) : null}
+          </div>
+        ))}
+      </div>
+    </div>
+  )
+}
+
 /* ------------------------------------------------------------------ 讲解 */
 function PlaceholderContentSlide({ slide, accent }: SlideProps) {
   const count = slide.placeholderCount ?? 4
@@ -346,11 +384,12 @@ function PlaceholderContentSlide({ slide, accent }: SlideProps) {
 }
 
 function ContentSlide({ slide, accent }: SlideProps) {
+  const flow = slide.flow ?? []
   const paragraphs = slide.paragraphs ?? []
   const bullets = slide.bullets ?? []
   const table = slide.table
   const hasRealContent =
-    paragraphs.length > 0 || bullets.length > 0 || Boolean(table)
+    flow.length > 0 || paragraphs.length > 0 || bullets.length > 0 || Boolean(table)
 
   if (!hasRealContent) {
     return <PlaceholderContentSlide slide={slide} accent={accent} />
@@ -364,6 +403,8 @@ function ContentSlide({ slide, accent }: SlideProps) {
       accentText={accent.text}
       accentGradient={accent.gradient}
     >
+      {flow.length ? <FlowDiagram steps={flow} accent={accent} /> : null}
+
       {paragraphs.length ? (
         <div className="mt-1 space-y-3">
           {paragraphs.map((paragraph) => (
@@ -497,86 +538,6 @@ function DemoSlide({ slide, accent }: SlideProps) {
         </div>
       )}
     </SlideFrame>
-  )
-}
-
-/* ------------------------------------------------------------------ 代码 */
-function CodePanel({
-  code,
-  compact = false,
-}: {
-  code: CourseSlideCode
-  compact?: boolean
-}) {
-  const [copied, setCopied] = useState(false)
-  const highlighted = new Set(code.highlightLines ?? [])
-  const lines = code.source.split('\n')
-
-  const handleCopy = async () => {
-    try {
-      await navigator.clipboard.writeText(code.source)
-      setCopied(true)
-      setTimeout(() => setCopied(false), 1400)
-    } catch {
-      /* 剪贴板不可用时静默失败 */
-    }
-  }
-
-  return (
-    <div className="overflow-hidden rounded-xl border border-[#23272f] bg-[#171a21] shadow-[0_2px_4px_rgba(22,24,29,.05),0_10px_24px_-12px_rgba(22,24,29,.18)]">
-      <div
-        className={`flex items-center gap-3 border-b border-[#2a2f38] bg-[#1d2129] ${compact ? 'px-3 py-1.5' : 'px-3.5 py-2'}`}
-      >
-        <span className="course-mono text-[11.5px] uppercase tracking-[0.12em] text-[#9aa3b0]">
-          {code.language}
-        </span>
-        {code.filename ? (
-          <span className="course-mono ml-auto text-[11.5px] text-[#6d7683]">
-            {code.filename}
-          </span>
-        ) : null}
-        {!compact ? (
-          <button
-            type="button"
-            onClick={handleCopy}
-            className={`course-mono rounded-full border px-2.5 py-0.5 text-[11px] tracking-[0.06em] transition ${
-              copied
-                ? 'border-[#2f6a49] bg-[#1f3a2c] text-[#8fe3b0]'
-                : 'border-[#333a45] bg-[#262b34] text-[#b9c1cc] hover:border-[#46505e] hover:bg-[#333a45] hover:text-white'
-            }`}
-          >
-            {copied ? '已复制' : '复制'}
-          </button>
-        ) : null}
-      </div>
-      <pre
-        className={`hljs overflow-x-auto !bg-transparent ${compact ? 'p-3 text-[12px] leading-[1.6]' : 'p-5 text-[13px] leading-[1.7]'} text-[#e9e6df]`}
-      >
-        <code className="block">
-          {lines.map((line, index) => {
-            const lineNumber = index + 1
-            const isHighlighted = highlighted.has(lineNumber)
-
-            return (
-              <span
-                key={`${lineNumber}-${line}`}
-                data-highlighted={isHighlighted ? 'true' : 'false'}
-                className={`grid grid-cols-[2.5rem_minmax(0,1fr)] gap-3 ${compact ? 'px-0 py-0.5' : 'px-0 py-0.5'} ${isHighlighted ? 'bg-[#233042]' : ''}`}
-              >
-                <span className="select-none text-right text-[11px] text-[#637086]">
-                  {lineNumber}
-                </span>
-                <span
-                  dangerouslySetInnerHTML={{
-                    __html: highlightLine(line, code.language),
-                  }}
-                />
-              </span>
-            )
-          })}
-        </code>
-      </pre>
-    </div>
   )
 }
 

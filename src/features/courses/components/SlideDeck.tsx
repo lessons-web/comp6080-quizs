@@ -44,6 +44,7 @@ export function SlideDeck({ week, lesson }: SlideDeckProps) {
   const [outlineOpen, setOutlineOpen] = useState(false)
 
   const lessonIndex = week.lessons.findIndex((l) => l.id === lesson.id)
+  const lessonOrder = lessonIndex >= 0 ? lessonIndex + 1 : null
   const prevLesson = lessonIndex > 0 ? week.lessons[lessonIndex - 1] : null
   const nextLesson =
     lessonIndex >= 0 && lessonIndex < week.lessons.length - 1
@@ -90,6 +91,7 @@ export function SlideDeck({ week, lesson }: SlideDeckProps) {
             {lesson.title}
           </h1>
           <p className="course-mono truncate text-[11px] tracking-[0.06em] text-[#8b9099]">
+            {lessonOrder ? `第 ${lessonOrder} 节 / 共 ${week.lessons.length} 节` : '课程内容'} ·{' '}
             {lesson.status === 'ready' ? '已接入演示' : '内容占位'} · 共 {slides.length} 页
           </p>
         </div>

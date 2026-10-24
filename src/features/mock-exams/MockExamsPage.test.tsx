@@ -43,4 +43,16 @@ describe('MockExamsPage', () => {
     expect(screen.getByText('总分: 20')).toBeInTheDocument()
     expect(screen.getByText('真题')).toBeInTheDocument()
   })
+
+  it('uses the warm paper theme on key exam list accents', async () => {
+    render(<MockExamsPage />)
+
+    const eyebrow = await screen.findByText('Mock Exams')
+    const examTag = screen.getByText('真题')
+    const startCta = screen.getByText('开始测试 →')
+
+    expect(eyebrow).toHaveClass('text-[#2f6b5f]')
+    expect(examTag).toHaveClass('bg-[#fbf0dc]', 'text-[#8b5e34]')
+    expect(startCta).toHaveClass('text-[#2f6b5f]')
+  })
 })

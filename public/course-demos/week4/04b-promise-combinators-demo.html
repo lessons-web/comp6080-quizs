@@ -1,0 +1,223 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>04B · Promise 编排与错误兜底 · COMP6080 Week 4</title>
+  <meta
+    name="description"
+    content="COMP6080 Week 4：独立演示 Promise.all / allSettled / race / any 的差异，以及 catch 传播与 unhandledrejection。"
+  />
+  <link rel="icon" href="data:," />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600&family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600&display=swap"
+    rel="stylesheet"
+  />
+  <link rel="stylesheet" href="assets/demo.css" />
+  <style>
+    .demo-page {
+      position: relative;
+      z-index: 1;
+      min-height: auto;
+      padding: 0;
+    }
+
+    .demo-wrap {
+      max-width: none;
+      margin: 0;
+    }
+
+    .page-head {
+      display: none;
+    }
+  </style>
+</head>
+<body>
+  <main class="demo-page">
+    <div class="demo-wrap">
+      <section class="demo reveal">
+        <div class="demo-head">
+          <h3>演示 B · Promise 编排与错误兜底</h3>
+          <span class="pill">all / race / catch</span>
+        </div>
+        <div class="demo-body">
+          <p class="demo-sub">
+            这页把 Promise 的“多任务汇总”和“错误处理”放在一起看：上半区比较
+            <code class="inline">all / allSettled / race / any</code>，下半区演示
+            <code class="inline">catch</code> 传播和 <code class="inline">unhandledrejection</code>。
+          </p>
+
+          <div class="btn-row">
+            <button class="btn primary sm" id="btn-all" type="button">Promise.all</button>
+            <button class="btn sm" id="btn-allsettled" type="button">Promise.allSettled</button>
+            <button class="btn sm" id="btn-race" type="button">Promise.race</button>
+            <button class="btn sm" id="btn-any" type="button">Promise.any</button>
+          </div>
+
+          <div class="stats" id="combo-stats"></div>
+          <div class="status-line" id="combo-chips"></div>
+          <div class="out pre tall idle" id="combo-out">点上面任意按钮开始比较。</div>
+
+          <div class="field">
+            <label>错误传播</label>
+            <div class="btn-row">
+              <button class="btn sm" id="btn-catch-chain" type="button">catch 接住并继续往下走</button>
+              <button class="btn ghost sm" id="btn-unhandled" type="button">触发未处理 rejection</button>
+            </div>
+          </div>
+
+          <div class="out idle" id="combo-note">当前还没有错误处理结果。</div>
+          <div class="log" id="log-combo"></div>
+        </div>
+      </section>
+    </div>
+  </main>
+
+  <script src="assets/demo.js"></script>
+  <script>
+    const $ = W4.$;
+
+    const comboStats = $('#combo-stats');
+    const comboChips = $('#combo-chips');
+    const comboOut = $('#combo-out');
+    const comboNote = $('#combo-note');
+    const logCombo = $('#log-combo');
+
+    function renderStats(items) {
+      comboStats.innerHTML = items.map(function (item) {
+        return '<div class="stat"><span class="k">' + W4.escapeHtml(item.k) + '</span>' +
+          '<span class="v">' + W4.escapeHtml(item.v) + '</span></div>';
+      }).join('');
+    }
+
+    function renderChips(items) {
+      comboChips.innerHTML = items.map(function (item) {
+        return '<span class="chip ' + (item.tone || '') + '">' + W4.escapeHtml(item.text) + '</span>';
+      }).join('');
+    }
+
+    function setOut(text, tone) {
+      comboOut.className = 'out pre tall ' + (tone || 'idle');
+      comboOut.textContent = text;
+    }
+
+    function setNote(text, tone) {
+      comboNote.className = 'out ' + (tone || 'idle');
+      comboNote.textContent = text;
+    }
+
+    function fakeRequest(name, delay, shouldReject) {
+      return new Promise(function (resolve, reject) {
+        setTimeout(function () {
+          if (shouldReject) {
+            reject(new Error(name + ' 在 ' + delay + 'ms 失败'));
+            return;
+          }
+          resolve(name + ' 在 ' + delay + 'ms 成功');
+        }, delay);
+      });
+    }
+
+    async function runCombinator(kind) {
+      W4.resetLog(logCombo);
+      renderStats([]);
+      renderChips([]);
+      setOut('执行中…', 'idle');
+      setNote('A=400ms 成功，B=700ms 失败，C=1000ms 成功。观察谁决定整体结果。', 'idle');
+
+      const started = performance.now();
+      const list = [
+        fakeRequest('A', 400, false),
+        fakeRequest('B', 700, true),
+        fakeRequest('C', 1000, false),
+      ];
+
+      W4.log(logCombo, kind + ' 开始执行，三个 Promise 同时启动', 'info', 'RUN');
+
+      let runner;
+      if (kind === 'Promise.all') runner = Promise.all(list);
+      else if (kind === 'Promise.allSettled') runner = Promise.allSettled(list);
+      else if (kind === 'Promise.race') runner = Promise.race(list);
+      else runner = Promise.any(list);
+
+      try {
+        const result = await runner;
+        const ms = Math.round(performance.now() - started);
+        W4.log(logCombo, kind + ' 最终成功，用时 ' + ms + 'ms', 'ok', 'DONE');
+        renderStats([
+          { k: '方法', v: kind },
+          { k: '耗时(ms)', v: String(ms) },
+          { k: '整体结论', v: 'fulfilled' },
+        ]);
+        renderChips([
+          { text: kind, tone: 'ok' },
+          { text: 'fulfilled', tone: 'ok' },
+        ]);
+        setOut(W4.pretty(result), 'ok');
+
+        if (kind === 'Promise.allSettled') {
+          setNote('allSettled 不在乎单项成功失败，它只在乎“全部都结束了”。', 'ok');
+        } else if (kind === 'Promise.race') {
+          setNote('race 看谁最先定型；这里 A 最快成功，所以整体立即 fulfilled。', 'ok');
+        } else if (kind === 'Promise.any') {
+          setNote('any 看谁最先成功；只要有一个成功，就不会因为 B 失败而整体失败。', 'ok');
+        } else {
+          setNote('all 只有在全部成功时才 fulfilled。', 'ok');
+        }
+      } catch (err) {
+        const ms = Math.round(performance.now() - started);
+        W4.log(logCombo, kind + ' 最终失败：' + err, 'err', 'DONE');
+        renderStats([
+          { k: '方法', v: kind },
+          { k: '耗时(ms)', v: String(ms) },
+          { k: '整体结论', v: 'rejected' },
+        ]);
+        renderChips([
+          { text: kind, tone: 'err' },
+          { text: 'rejected', tone: 'err' },
+        ]);
+        setOut(String(err && err.stack ? err.stack : err), 'err');
+
+        if (kind === 'Promise.all') {
+          setNote('all 的规则是“一个都不能少”。B 失败后，整体立刻 rejected。', 'err');
+        } else {
+          setNote('这里只有“全部都失败”时 any 才会 rejected。', 'err');
+        }
+      }
+    }
+
+    function runCatchChain() {
+      W4.log(logCombo, '--- catch 传播演示开始 ---', 'info', 'CATCH');
+      Promise.reject(new Error('第一次失败'))
+        .catch(function (err) {
+          W4.log(logCombo, '第 1 个 catch 接住：' + err.message, 'err', 'CATCH');
+          return '默认数据';
+        })
+        .then(function (value) {
+          W4.log(logCombo, 'then 继续收到：' + value, 'ok', 'THEN');
+          setNote('catch 不只是“终点站”，它也可以恢复流程，把值继续交给后面的 then。', 'ok');
+        });
+    }
+
+    window.addEventListener('unhandledrejection', function (event) {
+      W4.log(logCombo, '全局 unhandledrejection 捕获到：' + event.reason, 'err', 'GLOBAL');
+      setNote('这个 rejection 没有被任何 catch 处理，所以只能落到全局兜底。', 'err');
+      event.preventDefault();
+    });
+
+    function runUnhandled() {
+      W4.log(logCombo, '--- 故意制造一个没人处理的 rejection ---', 'warn', 'GLOBAL');
+      Promise.reject(new Error('我是漏网的 Promise rejection'));
+    }
+
+    $('#btn-all').addEventListener('click', function () { runCombinator('Promise.all'); });
+    $('#btn-allsettled').addEventListener('click', function () { runCombinator('Promise.allSettled'); });
+    $('#btn-race').addEventListener('click', function () { runCombinator('Promise.race'); });
+    $('#btn-any').addEventListener('click', function () { runCombinator('Promise.any'); });
+    $('#btn-catch-chain').addEventListener('click', runCatchChain);
+    $('#btn-unhandled').addEventListener('click', runUnhandled);
+  </script>
+</body>
+</html>

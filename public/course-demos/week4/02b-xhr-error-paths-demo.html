@@ -1,0 +1,162 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>02B · 两条错误路径对照 · COMP6080 Week 4</title>
+  <meta
+    name="description"
+    content="COMP6080 Week 4：独立演示 XMLHttpRequest 的两条错误路径，对照 onload 与 onerror 的触发条件。"
+  />
+  <link rel="icon" href="data:," />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600&family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600&display=swap"
+    rel="stylesheet"
+  />
+  <link rel="stylesheet" href="assets/demo.css" />
+  <style>
+    .demo-page {
+      position: relative;
+      z-index: 1;
+      min-height: auto;
+      padding: 0;
+    }
+
+    .demo-wrap {
+      max-width: none;
+      margin: 0;
+    }
+
+    .demo-head h1 {
+      margin: 0;
+      font-family: var(--serif);
+      font-size: clamp(26px, 3.2vw, 38px);
+      line-height: 1.08;
+      letter-spacing: -0.02em;
+    }
+
+    .demo-lede {
+      margin: 10px 0 18px;
+      color: var(--ink-soft);
+      font-size: 15.5px;
+      line-height: 1.7;
+    }
+
+    .page-head {
+      display: none;
+    }
+  </style>
+</head>
+<body>
+  <main class="demo-page">
+    <div class="demo-wrap">
+      <section class="demo reveal">
+        <div class="demo-head">
+          <h3>演示 B · 两条错误路径对照</h3>
+          <span class="pill">对比</span>
+        </div>
+        <div class="demo-body">
+          <p class="demo-sub">
+            同样是「失败」，但一个走 <code class="inline">onload</code>、一个走
+            <code class="inline">onerror</code>。点两个按钮，对照日志看到底走了哪个回调、status 是多少。
+          </p>
+
+          <div class="btn-row">
+            <button class="btn sm" id="btn-err-404" type="button">① 触发 4xx（资源不存在）</button>
+            <button class="btn danger sm" id="btn-err-net" type="button">② 触发网络错误（域名不存在）</button>
+          </div>
+
+          <div class="status-line" id="err-meta"></div>
+
+          <div class="out pre idle" id="err-out">还没有请求，点上面任意按钮开始。</div>
+
+          <div class="log" id="log-err"></div>
+        </div>
+      </section>
+    </div>
+  </main>
+
+  <script src="assets/demo.js"></script>
+  <script>
+    /* ====================================================================
+       本页教学代码：原生 XMLHttpRequest 的两条错误路径
+       ==================================================================== */
+    const $ = W4.$;
+
+    const API = 'https://jsonplaceholder.typicode.com';
+    const URL_404 = API + '/nonexistent-path-404';        // 404
+    const URL_NETFAIL = 'https://this-host-should-not-exist.invalid/users'; // 网络错误
+
+    function setChips(metaEl, chips) {
+      if (!metaEl) return;
+      metaEl.innerHTML = chips.map(function (c) {
+        return '<span class="chip ' + (c.tone || '') + '">' + W4.escapeHtml(c.text) + '</span>';
+      }).join('');
+    }
+
+    /* ============================================ 两条错误路径 */
+    const logErr = $('#log-err');
+    const errOut = $('#err-out');
+    const errMeta = $('#err-meta');
+
+    function runErrorPath(kind) {
+      W4.resetLog(logErr);
+      errOut.className = 'out pre idle';
+      errOut.textContent = '请求已发出，等待回调…';
+      setChips(errMeta, [{ text: '等待中…', tone: 'warn' }]);
+
+      const isNet = kind === 'net';
+      const url = isNet ? URL_NETFAIL : URL_404;
+      const started = performance.now();
+      const xhr = new XMLHttpRequest();
+
+      W4.log(logErr, '发起请求：' + (isNet ? '② 网络错误（域名不存在）' : '① 4xx（资源不存在）'), 'info', 'XHR');
+      W4.log(logErr, 'URL = ' + url, 'info', 'XHR');
+
+      xhr.onload = function () {
+        const ms = Math.round(performance.now() - started);
+        W4.log(logErr, 'onload 被触发，status = ' + xhr.status, 'warn', 'LOAD');
+        W4.log(logErr, '结论：onload 被触发 → status = ' + xhr.status +
+          ' → 属于「预期内错误」，必须自己判断 status，onerror 不会执行', 'err', 'STATUS');
+        W4.log(logErr, '耗时 ' + ms + 'ms', 'sync', 'XHR');
+        setChips(errMeta, [
+          { text: '走了 onload', tone: 'warn' },
+          { text: 'status = ' + xhr.status, tone: 'err' },
+          { text: 'onerror 未触发', tone: 'err' }
+        ]);
+        errOut.className = 'out pre err';
+        errOut.textContent =
+          '情况①：onload 被触发 → status = ' + xhr.status + '\n' +
+          '属于「预期内错误」：服务器已经正常回话，只是这次业务失败\n' +
+          '→ 必须自己判断 status，onerror 不会执行';
+      };
+
+      xhr.onerror = function () {
+        const ms = Math.round(performance.now() - started);
+        W4.log(logErr, 'onerror 被触发，xhr.status = ' + xhr.status, 'err', 'ERROR');
+        W4.log(logErr, '结论：onerror 被触发 → status = 0 → 属于「预期外错误」，说明根本没拿到响应', 'err', 'ERROR');
+        W4.log(logErr, '耗时 ' + ms + 'ms', 'sync', 'XHR');
+        setChips(errMeta, [
+          { text: '走了 onerror', tone: 'err' },
+          { text: 'status = ' + xhr.status, tone: 'err' },
+          { text: 'onerror 已触发', tone: 'err' }
+        ]);
+        errOut.className = 'out pre err';
+        errOut.textContent =
+          '情况②：onerror 被触发 → status = ' + xhr.status + '\n' +
+          '属于「预期外错误」：网络不通 / 连接中断 / 超时\n' +
+          '→ 说明根本没拿到响应，服务器从未回话';
+      };
+
+      xhr.open('GET', url);
+      xhr.send();
+      W4.log(logErr, 'xhr.open + xhr.send 完成，等待回调…', 'sync', 'XHR');
+    }
+
+    $('#btn-err-404').addEventListener('click', function () { runErrorPath('404'); });
+    $('#btn-err-net').addEventListener('click', function () { runErrorPath('net'); });
+  </script>
+</body>
+</html>

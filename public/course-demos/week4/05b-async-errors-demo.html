@@ -1,0 +1,222 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>05B · try/catch/finally 与 async 坑点 · COMP6080 Week 4</title>
+  <meta
+    name="description"
+    content="COMP6080 Week 4：独立演示 async/await 的 try/catch/finally，以及忘记 await、forEach + await 等常见错误。"
+  />
+  <link rel="icon" href="data:," />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600&family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600&display=swap"
+    rel="stylesheet"
+  />
+  <link rel="stylesheet" href="assets/demo.css" />
+  <style>
+    .demo-page {
+      position: relative;
+      z-index: 1;
+      min-height: auto;
+      padding: 0;
+    }
+
+    .demo-wrap {
+      max-width: none;
+      margin: 0;
+    }
+
+    .page-head {
+      display: none;
+    }
+  </style>
+</head>
+<body>
+  <main class="demo-page">
+    <div class="demo-wrap">
+      <section class="demo reveal">
+        <div class="demo-head">
+          <h3>演示 B · try / catch / finally 与 async 坑点</h3>
+          <span class="pill">errors / pitfalls</span>
+        </div>
+        <div class="demo-body">
+          <p class="demo-sub">
+            这页专门做“踩坑对照”：一个按钮讲 <code class="inline">try / catch / finally</code>，
+            一个按钮讲“忘记 await”，一个按钮讲 <code class="inline">forEach + await</code> 为什么不按顺序等。
+          </p>
+
+          <div class="btn-row">
+            <button class="btn primary sm" id="btn-try" type="button">try / catch / finally</button>
+            <button class="btn sm" id="btn-missing-await" type="button">忘记 await 会怎样</button>
+            <button class="btn ghost sm" id="btn-foreach" type="button">forEach + await 陷阱</button>
+          </div>
+
+          <div class="status-line" id="error-chips"></div>
+          <div class="out idle" id="error-note">当前还没有运行任何错误实验。</div>
+          <div class="out pre tall idle" id="error-out">点击上面按钮开始。</div>
+          <div class="log" id="log-error"></div>
+        </div>
+      </section>
+    </div>
+  </main>
+
+  <script src="assets/demo.js"></script>
+  <script>
+    const $ = W4.$;
+
+    const errorChips = $('#error-chips');
+    const errorNote = $('#error-note');
+    const errorOut = $('#error-out');
+    const logError = $('#log-error');
+
+    function renderChips(items) {
+      errorChips.innerHTML = items.map(function (item) {
+        return '<span class="chip ' + (item.tone || '') + '">' + W4.escapeHtml(item.text) + '</span>';
+      }).join('');
+    }
+
+    function setNote(text, tone) {
+      errorNote.className = 'out ' + (tone || 'idle');
+      errorNote.textContent = text;
+    }
+
+    function setOut(text, tone) {
+      errorOut.className = 'out pre tall ' + (tone || 'idle');
+      errorOut.textContent = text;
+    }
+
+    function fakeFetch(status) {
+      return new Promise(function (resolve, reject) {
+        setTimeout(function () {
+          if (status === 'netfail') {
+            reject(new Error('Network request failed'));
+            return;
+          }
+          resolve({
+            ok: status === 200,
+            status: status,
+            statusText: status === 200 ? 'OK' : 'Not Found',
+            async json() {
+              if (status !== 200) {
+                return { error: 'missing' };
+              }
+              return { id: 1, name: 'COMP6080' };
+            }
+          });
+        }, 120);
+      });
+    }
+
+    async function runTryCatch() {
+      W4.resetLog(logError);
+      renderChips([]);
+      setNote('准备演示：await 一旦遇到 reject 或你主动 throw，就会直接跳进 catch。', 'idle');
+      setOut('运行中…', 'idle');
+
+      async function load() {
+        W4.log(logError, '进入 async 函数，先打开 loading', 'info', 'TRY');
+        try {
+          const res = await fakeFetch(404);
+          W4.log(logError, '拿到 Response：status=' + res.status, 'warn', 'TRY');
+          if (!res.ok) {
+            throw new Error('HTTP ' + res.status + ' ' + res.statusText);
+          }
+          const data = await res.json();
+          return data;
+        } catch (err) {
+          W4.log(logError, 'catch 接住：' + err.message, 'err', 'CATCH');
+          return { fallback: true, reason: err.message };
+        } finally {
+          W4.log(logError, 'finally 执行：无论成功失败都要关 loading', 'ok', 'FINALLY');
+        }
+      }
+
+      const result = await load();
+      renderChips([
+        { text: '404 被转成异常', tone: 'err' },
+        { text: 'catch 已接住', tone: 'ok' },
+        { text: 'finally 已执行', tone: 'warn' },
+      ]);
+      setNote('这就是 async/await 最大的好处：错误处理重新回到 try/catch/finally 这一套同步心智。', 'ok');
+      setOut(W4.pretty(result), 'ok');
+    }
+
+    async function runMissingAwait() {
+      W4.resetLog(logError);
+      renderChips([
+        { text: '拿到的是 Promise', tone: 'warn' },
+        { text: '不是最终数据', tone: 'err' },
+      ]);
+      setNote('忘记 await 的本质不是“有点慢”，而是变量类型直接错了。', 'warn');
+
+      async function wrong() {
+        const data = fakeFetch(200);
+        W4.log(logError, 'const data = fakeFetch(200) 之后，data 其实是 Promise', 'warn', 'MISS');
+        W4.log(logError, '此时 data.name === ' + String(data.name), 'err', 'MISS');
+        return data;
+      }
+
+      const promise = await wrong();
+      const realResponse = await promise;
+      const realData = await realResponse.json();
+
+      setOut(
+        [
+          '第一层变量：Promise',
+          '第二层 await 后：Response-like 对象',
+          '第三层 await res.json() 后：真正数据',
+          '',
+          W4.pretty(realData),
+        ].join('\n'),
+        'err'
+      );
+    }
+
+    async function runForEachTrap() {
+      W4.resetLog(logError);
+      renderChips([
+        { text: 'forEach 不会等待', tone: 'err' },
+        { text: 'for...of 才会逐个 await', tone: 'ok' },
+      ]);
+      setNote('forEach 的回调就算写成 async，它也不会替你等完。', 'warn');
+      setOut('运行中…', 'idle');
+
+      const ids = [1, 2, 3];
+      const output = [];
+
+      ids.forEach(async function (id) {
+        await new Promise(function (resolve) { setTimeout(resolve, 80 * id); });
+        output.push('forEach 完成 ' + id);
+        W4.log(logError, 'forEach 回调完成 ' + id, 'warn', 'FOREACH');
+      });
+      W4.log(logError, 'forEach 调用本身已经结束，但回调还在后台继续', 'err', 'FOREACH');
+
+      await new Promise(function (resolve) { setTimeout(resolve, 320); });
+
+      const ordered = [];
+      for (const id of ids) {
+        await new Promise(function (resolve) { setTimeout(resolve, 50); });
+        ordered.push('for...of 完成 ' + id);
+      }
+
+      setOut(
+        [
+          'forEach 结果：',
+          output.join('\n'),
+          '',
+          'for...of 结果：',
+          ordered.join('\n'),
+        ].join('\n'),
+        'ok'
+      );
+    }
+
+    $('#btn-try').addEventListener('click', runTryCatch);
+    $('#btn-missing-await').addEventListener('click', runMissingAwait);
+    $('#btn-foreach').addEventListener('click', runForEachTrap);
+  </script>
+</body>
+</html>

@@ -1,5 +1,9 @@
+'use client'
+
+import { useState } from 'react'
 import Link from 'next/link'
 
+import { CodePanel } from '../../components/code/CodePanel'
 import type { DemoDefinition } from '../../types/demo'
 import { DemoFrame } from './components/DemoFrame'
 
@@ -69,6 +73,8 @@ export function DemoIndexPage({ demos }: { demos: DemoDefinition[] }) {
 }
 
 export function DemoDetailPage({ demo }: { demo: DemoDefinition }) {
+  const [view, setView] = useState<'live' | 'code'>('live')
+
   return (
     <div
       data-testid="demo-detail-root"
@@ -127,7 +133,69 @@ export function DemoDetailPage({ demo }: { demo: DemoDefinition }) {
           data-testid="demo-detail-stage"
           className="min-w-0 p-4 md:p-0 md:p-4 lg:p-6"
         >
-          <DemoFrame demo={demo} />
+          <section
+            data-testid="demo-detail-workbench"
+            className="rounded-3xl border border-[#e3ded4] bg-[#fffdfa] p-5 shadow-[0_24px_48px_-24px_rgba(22,24,29,.12)]"
+          >
+            <div className="flex flex-wrap items-start justify-between gap-4 border-b border-[#ece7dd] pb-4">
+              <div className="min-w-0">
+                <div className="course-serif text-[22px] font-semibold tracking-[-0.02em] text-[#16181d]">
+                  {demo.title}
+                </div>
+                <p className="mt-2 text-[14px] leading-7 text-[#4c5159]">
+                  在同一个位置切换运行效果和关键代码，避免来回找上下两块内容。
+                </p>
+              </div>
+
+              <div
+                role="group"
+                aria-label="切换实验视图"
+                className="inline-flex shrink-0 items-center rounded-full border border-[#d8d1c5] bg-[#f4f1ea] p-1"
+              >
+                <button
+                  type="button"
+                  aria-pressed={view === 'live'}
+                  onClick={() => setView('live')}
+                  className={`rounded-full px-3 py-1.5 text-[12px] font-medium transition ${
+                    view === 'live'
+                      ? 'bg-[#dff2ea] text-[#24745c] shadow-sm'
+                      : 'text-[#6b7078] hover:text-[#4c5159]'
+                  }`}
+                >
+                  Live
+                </button>
+                <button
+                  type="button"
+                  aria-pressed={view === 'code'}
+                  onClick={() => setView('code')}
+                  className={`rounded-full px-3 py-1.5 text-[12px] font-medium transition ${
+                    view === 'code'
+                      ? 'bg-[#1d2129] text-white shadow-sm'
+                      : 'text-[#6b7078] hover:text-[#4c5159]'
+                  }`}
+                >
+                  Code
+                </button>
+              </div>
+            </div>
+
+            <div className="mt-4">
+              {view === 'live' ? (
+                <div data-testid="demo-detail-live-panel">
+                  <DemoFrame demo={demo} />
+                </div>
+              ) : (
+                <div data-testid="demo-detail-code-panel" className="space-y-4">
+                  {demo.codes.map((code, index) => (
+                    <CodePanel
+                      key={`${code.filename ?? code.language}-${index}`}
+                      code={code}
+                    />
+                  ))}
+                </div>
+              )}
+            </div>
+          </section>
         </div>
       </section>
     </div>

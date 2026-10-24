@@ -1,4 +1,4 @@
-import type { CourseWeekId } from './course'
+import type { CourseSlideCode, CourseWeekId } from './course'
 
 export interface DemoDefinition {
   route: string
@@ -10,6 +10,7 @@ export interface DemoDefinition {
   lessonTitle: string
   objectives: string[]
   sourceHtmlPath: string
+  codes: CourseSlideCode[]
   backToCourseHref: string
   topicLabel: string
 }

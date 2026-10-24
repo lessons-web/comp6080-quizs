@@ -520,10 +520,10 @@ export const COURSE_WEEKS: CourseWeek[] = [
     lessons: [
       {
         id: 'overview',
-        title: '本周导览：5 个可以当场跑起来的知识点',
+        title: '本周导览：6 个串起来的知识点',
         short: '本周导览',
         summary:
-          '把“数据怎么从服务器来”这条主线压缩成 5 个演示，先看全局地图再逐个击破。',
+          '把“数据怎么从服务器来”这条主线压缩成 6 个知识节点，先看全局地图再逐个击破。',
         tags: ['导览', '异步', '网络'],
         status: 'ready',
         slides: [
@@ -535,7 +535,7 @@ export const COURSE_WEEKS: CourseWeek[] = [
             subtitle:
               '这周不是背 API 名字，而是先理解数据回来之前，前端到底在经历什么。',
             points: [
-              '字符串 -> 发请求 -> 等结果 -> 处理异步 -> 写得更顺',
+              '字符串 -> 发请求 -> 等结果 -> 处理异步 -> 写得更顺 -> 服务端接住请求',
               '先看主线地图，再逐节跑演示',
               '每一节都对应一个能现场跑起来的知识点',
             ],
@@ -544,9 +544,9 @@ export const COURSE_WEEKS: CourseWeek[] = [
             id: 'roadmap',
             kind: 'roadmap',
             eyebrow: 'Week 4 · 主线地图',
-            title: '从字符串到 async / await',
+            title: '从 JSON 一路走到 Express',
             subtitle:
-              'JSON、XHR、fetch、Promise、async / await 不是 5 个孤立知识点，而是一条连续的异步链路。',
+              'JSON、XHR、fetch、Promise、async / await，再到 HTTP / Express，不是 6 个孤立知识点，而是一条连续的异步链路。',
             roadmap: [
               {
                 label: '01',
@@ -573,15 +573,20 @@ export const COURSE_WEEKS: CourseWeek[] = [
                 title: 'async / await',
                 description: '怎么把异步流程写得更像同步代码',
               },
+              {
+                label: '06',
+                title: 'HTTP / Express',
+                description: '服务端怎么接住请求并回响应',
+              },
             ],
           },
           {
             id: 'cards',
             kind: 'cards',
             eyebrow: '本周目录',
-            title: '5 个知识点总览',
+            title: '6 个知识点总览',
             subtitle:
-              '这一页只做索引，不讲细节。后面的 5 节会把每个节点分别展开成可运行演示。',
+              '这一页只做索引，不讲细节。后面的 6 节会把每个节点分别展开成可运行演示。',
             cards: [
               {
                 eyebrow: '知识点 01',
@@ -613,6 +618,12 @@ export const COURSE_WEEKS: CourseWeek[] = [
                 description: '如何把 Promise 流程收束成更顺的写法，让错误处理回到 try / catch。',
                 meta: '对应：async / await',
               },
+              {
+                eyebrow: '知识点 06',
+                title: 'HTTP / Express',
+                description: '请求到服务端后怎样被解析、路由匹配，并按 RESTful 习惯返回响应。',
+                meta: '对应：HTTP Server 与 Express',
+              },
             ],
           },
           {
@@ -623,8 +634,8 @@ export const COURSE_WEEKS: CourseWeek[] = [
             subtitle: '先看总览 -> 再逐节跑演示 -> 最后回题库',
             points: [
               '这一周的核心不是 API 名字，而是理解数据回来之前前端一直在等。',
-              'fetch、Promise、async / await 是同一条链上的不同层次，不是互相割裂的知识点。',
-              '学完本周后，要能从“读字符串”一路走到“发请求并处理结果”。',
+              'fetch、Promise、async / await 是同一条链上的不同层次，最后还要接到服务端的 HTTP / Express。',
+              '学完本周后，要能从“读字符串”一路走到“发请求并处理结果，再理解服务端如何回应”。',
             ],
           },
         ],
@@ -1063,14 +1074,337 @@ function loadMembers() {
           '用 XHR 拉远程接口并动态插入页面，看清 readyState、onload / onerror 与状态码的分工。',
         tags: ['XHR', 'readyState', '状态码'],
         status: 'ready',
-        slides: demoDeck({
-          eyebrow: 'Week 4 · 知识点 02',
-          coverTitle: '不刷新页面，把服务器数据插进 DOM',
-          points: ['XHR 的基本用法', 'onload / onerror 的分工', '4xx / 5xx 不算 error', '状态码的含义'],
-          demoTitle: 'XMLHttpRequest 请求演示',
-          demoSrc: `${WEEK4_DEMO}/02-远程获取数据-XHR.html`,
-          demoNote: '只有网络层失败才进 onerror；4xx/5xx 必须自己判 status。',
-        }),
+        slides: [
+          {
+            id: 'cover',
+            kind: 'cover',
+            eyebrow: 'Week 4 · 知识点 02',
+            title: '不刷新页面，把服务器数据插进 DOM',
+            subtitle:
+              '上一节解决「数据长什么样」，这一节解决「怎么把它拿回来」。',
+            points: [
+              '一次请求-响应循环',
+              'XHR 是什么',
+              'readyState 与 status 的分工',
+              '4xx / 5xx 不算 error',
+              '回调地狱与规避',
+            ],
+          },
+          {
+            id: 'outline',
+            kind: 'outline',
+            title: '这一节回答这些问题',
+            points: [
+              '浏览器是怎么把远程数据拿回来的',
+              'readyState 和 status 到底各看什么',
+              '什么时候走 onerror，什么时候只是 status 不对',
+              '为什么 XHR 已经被 fetch 取代',
+            ],
+          },
+          {
+            id: 'request-response',
+            kind: 'content',
+            eyebrow: '知识点 02 · 2.1',
+            title: '一次「请求-响应循环」',
+            subtitle:
+              '客户端发请求、服务器处理并回响应，这个过程页面不需要整页刷新。',
+            flow: [
+              {
+                label: '01',
+                title: '浏览器发起请求',
+                description: '前端把 URL、方法、参数打包好，交给浏览器发出去。',
+                meta: 'request',
+              },
+              {
+                label: '02',
+                title: '服务器接收并处理',
+                description: '校验参数、执行业务逻辑、查询数据库，准备本次结果。',
+                meta: 'validate + query',
+              },
+              {
+                label: '03',
+                title: '服务器返回响应',
+                description: '把状态码、响应头、响应体一起送回浏览器。',
+                meta: 'response',
+              },
+              {
+                label: '04',
+                title: '前端更新界面',
+                description: '拿到数据后渲染 DOM，所以页面可以局部更新而不是整页刷新。',
+                meta: 'render',
+              },
+            ],
+            paragraphs: [
+              '先把这条链记死：浏览器没有权威数据，真正的数据在服务器上；前端只能发请求、收响应、再把结果画出来。',
+            ],
+            bullets: [
+              {
+                title: '客户端更关心延迟 latency',
+                text: '一次请求从发出到看到结果花了多久，决定你体感上的“快不快”。',
+              },
+              {
+                title: '服务器更关心吞吐 throughput',
+                text: '单位时间能扛多少请求，决定它一秒钟能处理多少人同时访问。',
+              },
+            ],
+            note: {
+              tone: 'rule',
+              label: '定义',
+              text: 'AJAX 不是一项具体技术，而是一组「不整页刷新即可局部更新」的技术集合：Asynchronous（不阻塞页面）+ JavaScript（发起语言）+ XML（早期数据格式，今天基本已被 JSON 取代）。',
+            },
+          },
+          {
+            id: 'xhr-what',
+            kind: 'content',
+            eyebrow: '知识点 02 · 2.2',
+            title: 'XMLHttpRequest 是什么',
+            subtitle:
+              '浏览器内置、不装库就能用的请求句柄；今天已不那么流行，但心智模型在 fetch 时代依然成立。',
+            flow: [
+              {
+                label: '01',
+                title: '创建请求句柄',
+                description: '先 new XMLHttpRequest()，拿到一个代表“这次请求”的对象。',
+                meta: 'new',
+              },
+              {
+                label: '02',
+                title: '配置请求',
+                description: '用 open(method, url) 说明要去哪里、用什么方法发。',
+                meta: 'open()',
+              },
+              {
+                label: '03',
+                title: '挂回调',
+                description: '提前定义 onload / onerror，约定“回来以后怎么处理”。',
+                meta: 'callbacks',
+              },
+              {
+                label: '04',
+                title: 'send 发出去',
+                description: '请求离开主线程开始飞行；默认异步，所以页面不会被卡住。',
+                meta: 'send()',
+              },
+              {
+                label: '05',
+                title: '响应回来再通知你',
+                description: '服务器回话后再进入回调，因此你看到的是“先发出、后处理”的异步节奏。',
+                meta: 'notify',
+              },
+            ],
+            paragraphs: [
+              '大量遗留代码、老教程、老面试题里到处是它，所以必须看得懂，而不是推荐用它写新代码。',
+            ],
+            bullets: [
+              {
+                title: '默认异步',
+                text: 'xhr.open() 不传第三个参数就是异步：请求发出后主线程不等待，继续往下跑。',
+              },
+              {
+                title: '靠回调定制行为',
+                text: '主要是 xhr.onload（拿到响应）与 xhr.onerror（网络失败）两个回调。',
+              },
+              {
+                title: '靠状态码报错',
+                text: 'HTTP 层面的失败（404、500）会落在 xhr.status 上，得你自己判断。',
+              },
+            ],
+          },
+          {
+            id: 'readystate',
+            kind: 'content',
+            eyebrow: '知识点 02 · 2.3',
+            title: 'readyState：一次请求的生命周期',
+            subtitle: '它描述「请求走到哪一步了」，每次变化都会触发 readystatechange。',
+            table: {
+              headers: ['值', '常量名', '含义'],
+              rows: [
+                ['0', 'UNSENT', '尚未调用 open()'],
+                ['1', 'OPENED', '已调用 open()，请求已建立'],
+                ['2', 'HEADERS_RECEIVED', '已收到响应头（还没拿到响应体）'],
+                ['3', 'LOADING', '正在下载响应体'],
+                ['4', 'DONE', '完成，响应体已经收全'],
+              ],
+            },
+            note: {
+              tone: 'tip',
+              label: '要点',
+              text: '只有 readyState === 4 的时候，responseText 才是完整的、可以读的；但 4 只代表「通信结束」，不代表「成功」。',
+            },
+          },
+          {
+            id: 'status',
+            kind: 'content',
+            eyebrow: '知识点 02 · 2.3',
+            title: 'status：服务器是怎么回答的',
+            subtitle: '它描述「本次业务成没成」，和 readyState 是两个完全不同的数字。',
+            table: {
+              headers: ['状态码', '归类', '含义'],
+              rows: [
+                ['200', '成功', '请求正常完成，响应体就是你要的数据'],
+                ['4xx', '客户端错误', '你把 API 用错了：404 资源不存在、400 参数不对、401 没登录'],
+                ['5xx', '服务端错误', '服务器自己内部出错：500、502、503'],
+              ],
+            },
+            note: {
+              tone: 'warn',
+              label: '区分',
+              text: 'readyState === 4 说的是「通信结束了」；status === 200 说的才是「业务成功了」。两个数字都要各自检查一次，缺一个都会写出 bug。',
+            },
+          },
+          {
+            id: 'request-demo',
+            kind: 'demo',
+            eyebrow: '知识点 02 · 2.3',
+            title: 'live demo · 最小 XHR GET 请求',
+            subtitle:
+              '这一页是实验入口。去独立 demos 页面里真的发一次请求，沿 readyState 观察请求走到哪一步、status 怎么决定成败。',
+            demo: {
+              route: '/demos/week-4/xhr/request',
+              ctaLabel: '打开实验',
+              objectives: [
+                '盯住 readyState 从 0 到 4 的变化',
+                '对照 status 判断业务成败',
+                '看远程失败时如何切到本地兜底',
+              ],
+              note: '建议先点「远程 API」看成功路径，再点「请求不存在的路径（404）」看 onload 里 status 不为 2xx 时怎么处理。',
+            },
+          },
+          {
+            id: 'error-classes',
+            kind: 'content',
+            eyebrow: '知识点 02 · 2.4',
+            title: '★ 错误处理的分工',
+            subtitle: '这是最容易考倒的一点：要把错误分成两类，分别处理。',
+            paragraphs: [
+              '处理「预期外错误」（网络抖动、超时）的常见策略是重试 + 指数退避：失败后等一个越来越长的时间再重试（0.5s → 1s → 2s → 4s），既能扛过短暂抖动，又不会一窝蜂重试把服务器打垮。',
+            ],
+            table: {
+              headers: ['类别', '例子', '如何发现', '走哪个回调'],
+              rows: [
+                [
+                  '预期内的错误 Expected',
+                  '认证失败、参数错误、资源不存在',
+                  '服务器已回话，自己检查 xhr.status',
+                  'onload',
+                ],
+                [
+                  '预期外的错误 Unexpected',
+                  '网络不通、连接中断、超时',
+                  '根本没拿到响应，xhr.status 为 0',
+                  'onerror',
+                ],
+              ],
+            },
+            note: {
+              tone: 'trap',
+              label: '最容易错',
+              text: '4xx / 5xx 不会触发 onerror，fetch 也一样。onerror 只负责网络层的失败；只要服务器回了 HTTP 响应（哪怕是 404、500），对 XHR 来说这也是一次「成功通信」，一定会走 onload。',
+            },
+          },
+          {
+            id: 'error-paths-demo',
+            kind: 'demo',
+            eyebrow: '知识点 02 · 2.4',
+            title: 'live demo · 两条错误路径对照',
+            subtitle:
+              '这一页是错误处理实验入口。去独立 demos 页面里对照发一次 4xx 与一次网络错误，看它们分别走了哪个回调。',
+            demo: {
+              route: '/demos/week-4/xhr/error-paths',
+              ctaLabel: '打开实验',
+              objectives: [
+                '确认 4xx 走 onload 而不是 onerror',
+                '确认网络错误走 onerror 且 status 为 0',
+                '记住只有连不上才叫 error',
+              ],
+              note: '建议两个按钮各点一次，对照日志里「走了 onload 还是 onerror」以及 status 的取值。',
+            },
+          },
+          {
+            id: 'xhr-complete-code',
+            kind: 'code',
+            eyebrow: '知识点 02 · 2.5',
+            title: '02-xhr-basic.js',
+            code: {
+              language: 'javascript',
+              filename: '02-xhr-basic.js',
+              source: `// ① 创建一个请求句柄
+const xhr = new XMLHttpRequest();
+
+// ② 配置请求：GET，默认异步（第三个参数省略即为 true）
+xhr.open('GET', 'https://jsonplaceholder.typicode.com/users');
+
+// ③ 定制回调：load = 收到响应；error = 网络层失败
+xhr.onload = function () {
+  // 关键：onload 只代表「通信结束」，不代表「业务成功」
+  if (xhr.status >= 200 && xhr.status < 300) {
+    const users = JSON.parse(xhr.responseText);   // 响应体是字符串
+    render(users);                                // 把数据渲染进页面
+  } else {
+    // 4xx / 5xx：属于「预期内错误」，onerror 根本不会来
+    console.warn('业务失败，HTTP ' + xhr.status);
+    loadFallback();                               // 改用本地兜底数据
+  }
+};
+
+xhr.onerror = function () {
+  // 网络层失败：连不上 / 中断 / 超时，此时 status 是 0
+  console.error('网络失败，status = ' + xhr.status);  // 0
+  loadFallback();
+};
+
+// ④ 真正把请求发出去
+xhr.send();`,
+              highlightLines: [10, 13, 20],
+            },
+          },
+          {
+            id: 'callback-hell',
+            kind: 'compare',
+            eyebrow: '知识点 02 · 2.6',
+            title: '回调地狱与规避',
+            subtitle:
+              '异步操作按顺序串起来时，每一层都往回调里再塞一个回调，代码就向右「长成一棵圣诞树」。',
+            compare: {
+              leftTitle: '✗ 嵌套写法：越写越深',
+              rightTitle: '✓ 扁平化写法：具名函数，一层一个职责',
+              left: {
+                code: {
+                  language: 'js',
+                  source: `getUser(1, function (user) {
+  getOrders(user.id, function (orders) {
+    getDetail(orders[0].id, function (detail) {
+      render(detail, function () {
+        // 出错时根本不知道该在哪一层处理
+      });
+    });
+  });
+});`,
+                },
+              },
+              right: {
+                code: {
+                  language: 'js',
+                  source: `function onDetail(detail) { render(detail); }
+function onOrders(orders) { getDetail(orders[0].id, onDetail); }
+function onUser(user)    { getOrders(user.id, onOrders); }
+
+getUser(1, onUser);   // 读起来是从上往下的直线`,
+                },
+              },
+            },
+          },
+          {
+            id: 'closing',
+            kind: 'closing',
+            title: '这一节要带走的三句话',
+            points: [
+              '客户端不持有权威数据：数据在服务器上，前端只负责发起请求、渲染响应。',
+              'readyState 到 4 之后 responseText 才完整可读，但 4 只代表通信结束，不代表成功。',
+              '4xx / 5xx 走 status、不走 onerror：只有连不上才叫 error，这条规则 fetch 也一样。',
+            ],
+          },
+        ],
       },
       {
         id: 'fetch',
@@ -1080,14 +1414,264 @@ function loadMembers() {
           'fetch 返回 Promise、只认网络错误，404 不 reject —— 必须自己判 res.ok。',
         tags: ['fetch', 'Response', 'res.ok', 'CORS'],
         status: 'ready',
-        slides: demoDeck({
-          eyebrow: 'Week 4 · 知识点 03',
-          coverTitle: '有没有更好用的请求方式',
-          points: ['fetch 返回 Promise', '只在网络失败时 reject', '404 要自己判 res.ok', '读取 JSON 要两步'],
-          demoTitle: 'fetch 请求演示',
-          demoSrc: `${WEEK4_DEMO}/03-fetch-网络请求.html`,
-          demoNote: '现场访问一个不存在的地址，看它不报错、只返回 res.ok === false。',
-        }),
+        slides: [
+          {
+            id: 'cover',
+            kind: 'cover',
+            eyebrow: 'Week 4 · 知识点 03',
+            title: '有没有更好用的请求方式',
+            subtitle:
+              'fetch 把“发请求”这一步 Promise 化了，但它也带来一个非常容易误判的坑：404 默认不会报错。',
+            points: [
+              'fetch(url) 返回 Promise',
+              'resolve 出来的是 Response',
+              '404 / 500 默认不会 reject',
+              '必须自己检查 res.ok',
+              '响应体只能读一次',
+            ],
+          },
+          {
+            id: 'outline',
+            kind: 'outline',
+            title: '这一节回答这些问题',
+            points: [
+              'fetch 相比 XHR 到底简化了什么',
+              '为什么拿到的不是数据，而是 Response',
+              '为什么 404 看起来像“成功”',
+              'POST 与 body 应该怎么写才对',
+            ],
+          },
+          {
+            id: 'why-fetch',
+            kind: 'compare',
+            eyebrow: '知识点 03 · 3.1',
+            title: '为什么会有 fetch',
+            subtitle:
+              '它不是换了个名字而已，而是把“发请求”这件事直接建模成一个 Promise，让异步流程更容易往下串。',
+            compare: {
+              leftTitle: '✗ XHR：命令式，一堆手动步骤',
+              rightTitle: '✓ fetch：Promise 化，一条链读完',
+              left: {
+                code: {
+                  language: 'js',
+                  source: `const xhr = new XMLHttpRequest();
+xhr.open('GET', '/api/users');
+xhr.onload = function () {
+  if (xhr.status >= 200 && xhr.status < 300) {
+    render(JSON.parse(xhr.responseText));
+  } else {
+    showError(xhr.status);
+  }
+};
+xhr.onerror = function () {
+  showError('网络错误');
+};
+xhr.send();`,
+                },
+              },
+              right: {
+                code: {
+                  language: 'js',
+                  source: `fetch('/api/users')
+  .then((res) => res.json())
+  .then((data) => render(data))
+  .catch((err) => showError(err));
+
+// 注意：状态码仍然要自己判，见下一页`,
+                },
+              },
+            },
+          },
+          {
+            id: 'response-flow',
+            kind: 'content',
+            eyebrow: '知识点 03 · 3.2',
+            title: 'fetch 的两段式读取流程',
+            subtitle:
+              '第一段等到的是 Response，第二段才是把 body 读成真正的数据对象。这个“两段式”一定要在脑子里分开。',
+            flow: [
+              {
+                label: '01',
+                title: 'fetch(url)',
+                description: '先发起请求，立刻拿到一个 Promise。',
+                meta: 'Promise',
+              },
+              {
+                label: '02',
+                title: 'await fetch(url)',
+                description: 'Promise resolve 后，拿到的是 Response，不是 JSON 数据本身。',
+                meta: 'Response',
+              },
+              {
+                label: '03',
+                title: '检查 res.ok / res.status',
+                description: '先判断 HTTP 是否真的成功，再决定要不要继续读 body。',
+                meta: 'guard',
+              },
+              {
+                label: '04',
+                title: 'await res.json()',
+                description: '这一步才真正把响应体读成对象；它本身也是异步的。',
+                meta: 'read body',
+              },
+            ],
+            note: {
+              tone: 'tip',
+              label: '一句话',
+              text: 'fetch 解决的是“怎么拿到 Response”；而不是“自动帮你拿到最终 JSON 数据”。Response 和 data 是两层不同的东西。',
+            },
+          },
+          {
+            id: 'reject-rules',
+            kind: 'content',
+            eyebrow: '知识点 03 · 3.3',
+            title: '最关键的一条：只在网络失败时 reject',
+            subtitle:
+              '这条规则和很多人的直觉完全相反，所以必须单独拎出来背：404 / 500 不会进 catch。',
+            table: {
+              headers: ['场景', 'Promise 结果', '你该怎么处理'],
+              rows: [
+                ['200 / 201', 'resolve', '正常检查后读取 body'],
+                ['404 / 500', '仍然 resolve', '自己检查 res.ok，然后主动 throw'],
+                ['断网 / CORS / 域名失败', 'reject', '直接进入 catch'],
+              ],
+            },
+            note: {
+              tone: 'trap',
+              label: '口诀',
+              text: 'fetch 不认 404，自己判 res.ok。拿到 Response 后、读 body 前，先写 if (!res.ok) throw new Error(...)。',
+            },
+          },
+          {
+            id: 'response-demo',
+            kind: 'demo',
+            eyebrow: '知识点 03 · 3.3',
+            title: 'live demo · fetch 与 Response 检视器',
+            subtitle:
+              '去独立 demos 页面里对照点远程 API、本地兜底和 404，再切换是否开启 res.ok 检查，看 fetch 对 404 的态度到底有多“反直觉”。',
+            demo: {
+              route: '/demos/week-4/fetch/response-inspector',
+              ctaLabel: '打开实验',
+              objectives: [
+                '确认 fetch 先拿到的是 Response 而不是数据',
+                '确认 404 默认不会进入 catch',
+                '学会用 res.ok 把 HTTP 错误显式转成异常',
+              ],
+              note: '建议先不勾 res.ok 检查点 404，再勾上同一个按钮重试一次，两次的结果会完全不同。',
+            },
+          },
+          {
+            id: 'response-object',
+            kind: 'content',
+            eyebrow: '知识点 03 · 3.4',
+            title: 'Response 上最常用的几个东西',
+            subtitle:
+              '排查 fetch 问题时，基本都绕不开这些属性和方法。熟悉它们，比死记语法更重要。',
+            table: {
+              headers: ['属性 / 方法', '含义'],
+              rows: [
+                ['res.status', '数字状态码（200 / 404 / 500 …）'],
+                ['res.statusText', '状态码对应的文本，如 OK / Not Found'],
+                ['res.ok', 'status 在 200~299 时为 true'],
+                ["res.headers.get('content-type')", '读响应头，判断返回的是 JSON 还是 HTML'],
+                ['res.url', '实际请求到的最终地址'],
+                ['res.redirected', '是否发生过重定向'],
+                ['res.json()', '把 body 读成 JSON（返回 Promise）'],
+                ['res.text()', '把 body 读成文本（返回 Promise）'],
+                ['res.clone()', '克隆一份 Response，用于确实需要读两次的场景'],
+              ],
+            },
+            note: {
+              tone: 'warn',
+              label: '注意',
+              text: '调用过 res.json() 之后，再调 res.text() 会报 body stream already read。响应体是一条流，不是一个可无限重复读取的字符串变量。',
+            },
+          },
+          {
+            id: 'post-body-demo',
+            kind: 'demo',
+            eyebrow: '知识点 03 · 3.5',
+            title: 'live demo · POST 请求与 body 读取规则',
+            subtitle:
+              '这页实验同时演示两件事：fetch(url, options) 如何发 POST，以及为什么同一个 Response 的 body 不能连续读取两次。',
+            demo: {
+              route: '/demos/week-4/fetch/post-and-body',
+              ctaLabel: '打开实验',
+              objectives: [
+                '理解 body 里的对象要先 JSON.stringify',
+                '看清 fetch(url, options) 如何发 POST',
+                '记住同一个 Response 的 body 不能连续读两次',
+              ],
+              note: '建议先点 POST，再点“body 只能读一次”，一个看请求体怎么发，一个看 Response body 的使用约束。',
+            },
+          },
+          {
+            id: 'robust-wrapper',
+            kind: 'code',
+            eyebrow: '知识点 03 · 3.6',
+            title: '03-fetch-json.js',
+            code: {
+              language: 'javascript',
+              filename: '03-fetch-json.js',
+              source: `async function fetchJSON(url, options = {}) {
+  const { timeout = 5000 } = options;
+  const controller = new AbortController();
+  const timer = setTimeout(() => controller.abort(), timeout);
+
+  try {
+    const res = await fetch(url, { signal: controller.signal });
+
+    if (!res.ok) {
+      throw new Error('HTTP ' + res.status + ' ' + res.statusText);
+    }
+
+    return await res.json();
+  } catch (err) {
+    if (err.name === 'AbortError') {
+      throw new Error('请求超时（>' + timeout + 'ms），已中断');
+    }
+    throw err;
+  } finally {
+    clearTimeout(timer);
+  }
+}`,
+              highlightLines: [6, 8, 9, 12, 14],
+            },
+          },
+          {
+            id: 'xhr-vs-fetch',
+            kind: 'content',
+            eyebrow: '知识点 03 · 3.7',
+            title: 'XHR 与 fetch 怎么取舍',
+            subtitle:
+              '不是“谁彻底淘汰谁”，而是看你当前处在什么代码环境、要解决什么问题。',
+            table: {
+              headers: ['维度', 'XHR', 'fetch'],
+              rows: [
+                ['语法组织', 'open / send + 回调', 'Promise / async-await，更顺'],
+                ['老浏览器支持', '更好', '现代环境更友好，老环境需 polyfill'],
+                ['上传下载进度', '原生直接支持', '通常要配 Streams，心智更重'],
+                ['取消请求', 'xhr.abort()', 'AbortController + signal'],
+                ['新项目默认选择', '读老代码必须会看', '大多数新代码优先选它'],
+              ],
+            },
+            note: {
+              tone: 'rule',
+              label: '结论',
+              text: '新项目一般用 fetch + async/await；但读遗留系统、处理进度条或某些底层交互时，你还是会遇到 XHR。',
+            },
+          },
+          {
+            id: 'closing',
+            kind: 'closing',
+            title: '这一节要带走的三句话',
+            points: [
+              'fetch(url) 先拿到的是 Promise<Response>；真正的数据要再 await res.json() 一次。',
+              '404 / 500 默认不会让 fetch reject，所以必须自己检查 res.ok。',
+              'Response body 是流，只能读一次；需要读两遍时先 clone。',
+            ],
+          },
+        ],
       },
       {
         id: 'promise',
@@ -1097,14 +1681,295 @@ function loadMembers() {
           'pending / fulfilled / rejected / settled，then / catch / finally，以及 all / race / allSettled 的差别。',
         tags: ['状态机', '链式调用', 'Promise.all'],
         status: 'ready',
-        slides: demoDeck({
-          eyebrow: 'Week 4 · 知识点 04',
-          coverTitle: '“未来才会有的值”怎么被组织和编排',
-          points: ['四种状态与不可逆性', 'then / catch / finally 的分工', 'all / race / allSettled', 'unhandledrejection'],
-          demoTitle: 'Promise 状态机演示',
-          demoSrc: `${WEEK4_DEMO}/04-Promise.html`,
-          demoNote: '演示台可看到 pending → fulfilled / rejected 的状态流转。',
-        }),
+        slides: [
+          {
+            id: 'cover',
+            kind: 'cover',
+            eyebrow: 'Week 4 · 知识点 04',
+            title: '“未来才会有的值”怎么被组织和编排',
+            subtitle:
+              'Promise 把“未来值”变成一个可以传递、可以组合、可以统一处理错误的对象。先搞懂状态机，再看链式和多任务编排。',
+            points: [
+              'pending / fulfilled / rejected / settled',
+              '状态一旦定型就不可逆',
+              'then / catch / finally 的分工',
+              'all / allSettled / race / any 的差别',
+              'unhandledrejection 是最后一道兜底',
+            ],
+          },
+          {
+            id: 'outline',
+            kind: 'outline',
+            title: '这一节回答这些问题',
+            points: [
+              'Promise 相比 callback 到底解决了什么',
+              '为什么说 Promise 是一个状态机',
+              'then 链式和多个分支有什么区别',
+              '多个 Promise 一起跑时到底谁决定整体结果',
+            ],
+          },
+          {
+            id: 'why-promise',
+            kind: 'compare',
+            eyebrow: '知识点 04 · 4.1',
+            title: '为什么要从 callback 走向 Promise',
+            subtitle:
+              '本质不是语法喜好，而是 Promise 给“未来值”起了名字，让它可以被继续传递、统一收口错误。',
+            compare: {
+              leftTitle: '✗ 回调嵌套：值被困在括号里',
+              rightTitle: '✓ Promise 链：未来值可以继续往下传',
+              left: {
+                code: {
+                  language: 'js',
+                  source: `getUser(1, function (err, user) {
+  if (err) return handle(err);
+  getOrders(user.id, function (err, orders) {
+    if (err) return handle(err);
+    getDetail(orders[0].id, function (err, detail) {
+      if (err) return handle(err);
+      render(detail);
+    });
+  });
+});`,
+                },
+              },
+              right: {
+                code: {
+                  language: 'js',
+                  source: `getUser(1)
+  .then((user) => getOrders(user.id))
+  .then((orders) => getDetail(orders[0].id))
+  .then((detail) => render(detail))
+  .catch((err) => handle(err));`,
+                },
+              },
+            },
+          },
+          {
+            id: 'state-machine',
+            kind: 'content',
+            eyebrow: '知识点 04 · 4.2',
+            title: 'Promise 是一个单向定型的状态机',
+            subtitle:
+              '状态图一定要像流程图一样背下来：从 pending 出发，只能走向 fulfilled 或 rejected；一旦定型，就归入 settled，后面不会再变。',
+            flow: [
+              {
+                label: '01',
+                title: 'pending',
+                description: '刚创建，结果未知。这是 Promise 唯一的起点。',
+                meta: 'start',
+              },
+              {
+                label: '02',
+                title: 'resolve(value)',
+                description: '第一次成功定型，进入 fulfilled，并带上兑现值。',
+                meta: 'success',
+              },
+              {
+                label: '03',
+                title: 'reject(error)',
+                description: '第一次失败定型，进入 rejected，并带上拒绝原因。',
+                meta: 'failure',
+              },
+              {
+                label: '04',
+                title: 'settled',
+                description: 'fulfilled 与 rejected 的统称。只要定型了，就不能再跳回 pending 或切换到另一边。',
+                meta: 'final',
+              },
+            ],
+            note: {
+              tone: 'trap',
+              label: '必须记住',
+              text: '状态只能单向定型一次。后续重复调用 resolve / reject 不会报错，但会被静默忽略。这是 Promise 链能够稳定成立的前提。',
+            },
+          },
+          {
+            id: 'methods',
+            kind: 'content',
+            eyebrow: '知识点 04 · 4.3',
+            title: 'then / catch / finally 各自负责什么',
+            subtitle:
+              '这三个方法不是并列记忆点，而是一条完整流程：成功走 then，失败走 catch，最后无论如何都会进 finally。',
+            bullets: [
+              {
+                title: '.then(onFulfilled)',
+                text: '处理成功结果，并且返回一个新的 Promise，所以能继续链下去。',
+                code: {
+                  language: 'js',
+                  source: `Promise.resolve(1)
+  .then((v) => v + 1)`,
+                },
+              },
+              {
+                title: '.catch(onRejected)',
+                text: '接住最近一次 rejection，也可以返回兜底值，把流程恢复给后续 then。',
+                code: {
+                  language: 'js',
+                  source: `fetchData()
+  .catch(() => '默认数据')`,
+                },
+              },
+              {
+                title: '.finally(onFinally)',
+                text: '不关心成功值或失败原因，只负责关 loading、断开连接、做善后。',
+                code: {
+                  language: 'js',
+                  source: `load()
+  .finally(() => hideLoading())`,
+                },
+              },
+            ],
+            note: {
+              tone: 'rule',
+              label: '顺序',
+              text: '成功路径通常是 then -> finally，失败路径通常是 catch -> finally。finally 放的是“无论成败都必须做”的收尾逻辑。',
+            },
+          },
+          {
+            id: 'state-demo',
+            kind: 'demo',
+            eyebrow: '知识点 04 · 4.3',
+            title: 'live demo · Promise 状态机与链式',
+            subtitle:
+              '去独立实验里手动点击 resolve / reject，看状态怎样从 pending 定型；再跑链式与分支，亲眼看到“每个 then 返回新 Promise”和“同一个 Promise 可以挂多个 then”。',
+            demo: {
+              route: '/demos/week-4/promise/state-and-chain',
+              ctaLabel: '打开实验',
+              objectives: [
+                '确认 Promise 只能从 pending 单向定型',
+                '理解状态一旦定型就不可逆',
+                '区分 then 链式与同一个 Promise 的多个分支',
+              ],
+              note: '建议先点 resolve，再点一次 resolve 或 reject，确认状态不会再变化；然后再跑链式和分支。',
+            },
+          },
+          {
+            id: 'chain-branch',
+            kind: 'compare',
+            eyebrow: '知识点 04 · 4.4',
+            title: '链式和分支不是一回事',
+            subtitle:
+              '链式是“前一个 then 的返回值交给后一个 then”；分支是“同一个 Promise 定型后，多个 then 都收到同一份值”。',
+            compare: {
+              leftTitle: '链式：值一路往下传',
+              rightTitle: '分支：同一份值发给多个监听者',
+              left: {
+                code: {
+                  language: 'js',
+                  source: `Promise.resolve(1)
+  .then((v) => v + 1)
+  .then((v) => v * 10)
+  .then(console.log);`,
+                },
+              },
+              right: {
+                code: {
+                  language: 'js',
+                  source: `const shared = Promise.resolve('同一个值');
+shared.then((v) => console.log('A', v));
+shared.then((v) => console.log('B', v));
+shared.then((v) => console.log('C', v));`,
+                },
+              },
+            },
+          },
+          {
+            id: 'error-rules',
+            kind: 'content',
+            eyebrow: '知识点 04 · 4.5',
+            title: '错误会怎么传播',
+            subtitle:
+              'Promise 最大的好处之一，是错误能沿着链自动往下冒泡，不需要每一层都手写 if (err) return。',
+            table: {
+              headers: ['场景', '结果', '你该怎么记'],
+              rows: [
+                ['executor 里同步 throw', '自动变成 rejection', '会被最近的 catch 接住'],
+                ['catch 返回普通值', '后面的 then 继续收到这个值', '这叫“恢复流程”'],
+                ['异步回调里稍后 throw', '当前 Promise 的 catch 接不住', '因为抛错时 Promise 执行上下文早结束了'],
+                ['没人处理的 rejection', '落到 unhandledrejection', '这是最后一道全局兜底'],
+              ],
+            },
+            note: {
+              tone: 'trap',
+              label: '最容易丢分',
+              text: 'catch 只能接住当前 Promise 链里的 rejection。异步回调里更晚发生的 throw，不会自动回到前面的 catch，需要你自己 reject 或交给全局兜底。',
+            },
+          },
+          {
+            id: 'combinators-demo',
+            kind: 'demo',
+            eyebrow: '知识点 04 · 4.6',
+            title: 'live demo · Promise 编排与错误兜底',
+            subtitle:
+              '这页实验同时看两件事：多任务编排时谁决定整体成败，以及没人接住的 rejection 什么时候会落到全局 unhandledrejection。',
+            demo: {
+              route: '/demos/week-4/promise/combinators-and-errors',
+              ctaLabel: '打开实验',
+              objectives: [
+                '区分 all、allSettled、race、any 的整体判定规则',
+                '理解 catch 可以把流程恢复给后续 then',
+                '记住没人接住的 rejection 会落到全局兜底',
+              ],
+              note: '建议先各点一次 all / allSettled / race / any，再点“catch 接住并继续往下走”和“触发未处理 rejection”。',
+            },
+          },
+          {
+            id: 'combinators-table',
+            kind: 'content',
+            eyebrow: '知识点 04 · 4.6',
+            title: '四个最常考的编排工具',
+            subtitle:
+              '考试里最容易混的是“最先定型”和“最先成功”的区别。把这张表记清，做题就会很稳。',
+            table: {
+              headers: ['方法', '整体何时成功 / 失败', '一句话记忆'],
+              rows: [
+                ['Promise.all(list)', '全部成功才成功；一个失败就整体失败', '一个都不能少'],
+                ['Promise.allSettled(list)', '等全部结束后统一返回，不管成功失败', '有几个算几个'],
+                ['Promise.race(list)', '最先定型的那个决定整体结果', '比“谁先结束”'],
+                ['Promise.any(list)', '最先成功的那个决定整体结果；全部失败才失败', '比“谁先成功”'],
+              ],
+            },
+            note: {
+              tone: 'tip',
+              label: '口诀',
+              text: 'all 看“全员成功”，allSettled 看“全员结束”，race 看“谁先定型”，any 看“谁先成功”。',
+            },
+          },
+          {
+            id: 'wrapper-code',
+            kind: 'code',
+            eyebrow: '知识点 04 · 4.7',
+            title: '04-promise-timeout.js',
+            code: {
+              language: 'javascript',
+              filename: '04-promise-timeout.js',
+              source: `function withTimeout(promise, ms) {
+  const timer = new Promise((_, reject) => {
+    setTimeout(() => reject(new Error('Timeout after ' + ms + 'ms')), ms);
+  });
+
+  return Promise.race([promise, timer]);
+}
+
+withTimeout(fetchJSON('/api/users'), 3000)
+  .then((data) => render(data))
+  .catch((err) => showError(err.message))
+  .finally(() => hideLoading());`,
+              highlightLines: [2, 3, 6, 9, 10, 11],
+            },
+          },
+          {
+            id: 'closing',
+            kind: 'closing',
+            title: '这一节要带走的三句话',
+            points: [
+              'Promise 只能从 pending 单向定型到 fulfilled 或 rejected，且一旦定型就不可逆。',
+              '每个 then 都返回新的 Promise，所以链式能成立；同一个 Promise 挂多个 then 则是分支。',
+              'all 是“一个都不能少”，allSettled 是“有几个算几个”，race 比谁先定型，any 比谁先成功。',
+            ],
+          },
+        ],
       },
       {
         id: 'async-await',
@@ -1114,23 +1979,560 @@ function loadMembers() {
           '本质是 Promise 的语法糖：async 总返回 Promise，await 暂停并取值，错误处理回归 try/catch。',
         tags: ['协程', 'await', 'try / catch'],
         status: 'ready',
-        slides: demoDeck({
-          eyebrow: 'Week 4 · 知识点 05',
-          coverTitle: '能不能写得像同步代码一样',
-          points: ['async 总是返回 Promise', 'await 暂停并取值', '被拒绝就在该行抛出', '错误处理回归 try/catch'],
-          demoTitle: 'async / await 演示',
-          demoSrc: `${WEEK4_DEMO}/05-async-await.html`,
-          demoNote: '同一段请求逻辑，先写 Promise 链、再写 async/await 对照。',
-        }),
+        slides: [
+          {
+            id: 'cover',
+            kind: 'cover',
+            eyebrow: 'Week 4 · 知识点 05',
+            title: '能不能写得像同步代码一样',
+            subtitle:
+              'async / await 没有把异步变成同步，它只是把 Promise 的使用方式换成了更顺眼的“从上往下读”。',
+            points: [
+              'async 总返回 Promise',
+              'await 会暂停当前 async 函数',
+              'await 失败时会在该行抛出异常',
+              '错误处理重新回到 try / catch / finally',
+              '互不依赖的任务别连续 await',
+            ],
+          },
+          {
+            id: 'outline',
+            kind: 'outline',
+            title: '这一节回答这些问题',
+            points: [
+              'async / await 和 Promise 链到底是什么关系',
+              '为什么说 async 总返回 Promise',
+              'await 到底暂停了什么，又在哪里恢复',
+              '什么时候该串行，什么时候该 Promise.all 并行',
+            ],
+          },
+          {
+            id: 'three-styles',
+            kind: 'compare',
+            eyebrow: '知识点 05 · 5.1',
+            title: '同一段逻辑的三种写法',
+            subtitle:
+              'callback、Promise、async / await 解决的是同一类异步问题。进化方向是可读性，不是能力增强。',
+            compare: {
+              leftTitle: 'Promise 链：异步流程显式挂在 .then 上',
+              rightTitle: 'async / await：顺序写法，更像同步',
+              left: {
+                code: {
+                  language: 'js',
+                  source: `getData(url)
+  .then((data) => render(data))
+  .catch((err) => console.error(err));`,
+                },
+              },
+              right: {
+                code: {
+                  language: 'js',
+                  source: `async function main() {
+  try {
+    const data = await getData(url);
+    render(data);
+  } catch (err) {
+    console.error(err);
+  }
+}`,
+                },
+              },
+            },
+          },
+          {
+            id: 'async-rules',
+            kind: 'content',
+            eyebrow: '知识点 05 · 5.2',
+            title: '先背两条核心规则',
+            subtitle:
+              '理解 async / await，不需要背一堆零散语法。只要把这两条规则牢牢记住，其他结论都能顺着推出来。',
+            flow: [
+              {
+                label: '01',
+                title: 'async function',
+                description: '调用 async 函数时，永远先得到一个 Promise；return 普通值会自动包装成 fulfilled Promise。',
+                meta: 'always promise',
+              },
+              {
+                label: '02',
+                title: 'throw inside async',
+                description: '在 async 函数里抛出的错误，会自动变成 rejected Promise。',
+                meta: 'reject',
+              },
+              {
+                label: '03',
+                title: 'await promise',
+                description: 'await 会暂停当前 async 函数，等 Promise 定型后再从这一行后面继续执行。',
+                meta: 'pause',
+              },
+              {
+                label: '04',
+                title: 'await rejected promise',
+                description: '如果 Promise 被拒绝，就会在 await 这一行抛出异常，因此能被外层 try/catch 接住。',
+                meta: 'throw here',
+              },
+            ],
+            note: {
+              tone: 'rule',
+              label: '口诀',
+              text: 'async 总返回 Promise；await 成功就取值，失败就抛出。所以 async / await 的错误处理可以回归 try / catch。',
+            },
+          },
+          {
+            id: 'await-model',
+            kind: 'content',
+            eyebrow: '知识点 05 · 5.3',
+            title: 'await 的暂停与恢复到底发生在哪里',
+            subtitle:
+              '暂停的不是整个 JavaScript 世界，而只是“当前这个 async 函数”。外面的同步代码会继续跑，Promise 定型后再把后半段排进微任务队列恢复。',
+            table: {
+              headers: ['写法', '真实发生的事'],
+              rows: [
+                ['async function f() { return 1 }', '返回 fulfilled Promise，兑现值是 1'],
+                ['async function f() { throw err }', '返回 rejected Promise，拒绝原因是 err'],
+                ['await 123', '非 Promise 值会被当成已兑现 Promise，立刻取出 123'],
+                ['await fetch(url)', '暂停当前 async 函数，等 fetch Promise 定型后再恢复'],
+                ['await Promise.reject(err)', '在 await 这一行抛出异常，交给 try/catch'],
+              ],
+            },
+            note: {
+              tone: 'tip',
+              label: '术语',
+              text: '这就是“协程”的直觉：函数可以在 await 处挂起，等条件满足后从同一位置继续，而不是从头重跑。',
+            },
+          },
+          {
+            id: 'serial-parallel-demo',
+            kind: 'demo',
+            eyebrow: '知识点 05 · 5.4',
+            title: 'live demo · 串行 await 与 Promise.all',
+            subtitle:
+              '去独立实验里直接比较三次连续 await 和 Promise.all 的总耗时，再顺手看同步 / 微任务 / 宏任务的执行顺序。',
+            demo: {
+              route: '/demos/week-4/async-await/serial-vs-parallel',
+              ctaLabel: '打开实验',
+              objectives: [
+                '比较串行 await 与 Promise.all 的总耗时差别',
+                '理解互不依赖的任务为什么应该并行',
+                '看清同步、微任务、宏任务的执行先后',
+              ],
+              note: '建议先跑串行，再跑并行，最后点执行顺序演示，把“等待时间”和“执行队列”两件事分开理解。',
+            },
+          },
+          {
+            id: 'pitfalls',
+            kind: 'content',
+            eyebrow: '知识点 05 · 5.5',
+            title: '四个最常见的 async / await 坑',
+            subtitle:
+              '这四类错法都很常见，而且都不是“语法细节”，而是会直接导致逻辑跑偏或性能变差。',
+            bullets: [
+              {
+                title: 'await 只能写在 async 函数里',
+                text: '普通函数里直接写 await 会 SyntaxError；想用 await，先把函数声明成 async。',
+                code: {
+                  language: 'js',
+                  source: `async function good() {
+  const res = await fetch(url);
+}`,
+                },
+              },
+              {
+                title: '忘记 await，拿到的是 Promise',
+                text: '变量类型会立刻错掉。你以为自己拿到的是 data，其实只是一个还没展开的 Promise。',
+                code: {
+                  language: 'js',
+                  source: `const data = fetch(url);
+console.log(data.name); // undefined`,
+                },
+              },
+              {
+                title: 'forEach + await 不会顺序等待',
+                text: 'forEach 不会等待 async 回调结束；需要顺序时用 for...of，需要并行时用 Promise.all。',
+                code: {
+                  language: 'js',
+                  source: `for (const id of ids) {
+  await fetchUser(id);
+}`,
+                },
+              },
+              {
+                title: '互不依赖的请求别连续 await',
+                text: '连续 await 会把耗时相加；互不依赖时应该同时发出，再用 Promise.all 汇总。',
+                code: {
+                  language: 'js',
+                  source: `const [a, b, c] = await Promise.all([
+  fetchUser(1),
+  fetchUser(2),
+  fetchUser(3),
+]);`,
+                },
+              },
+            ],
+            note: {
+              tone: 'trap',
+              label: '判断题',
+              text: '问自己一句：后一个任务需不需要前一个结果？需要就串行；不需要就并行。很多“async 写慢了”的根因，其实只是错误地连续 await。',
+            },
+          },
+          {
+            id: 'errors-demo',
+            kind: 'demo',
+            eyebrow: '知识点 05 · 5.5',
+            title: 'live demo · try / catch / finally 与 async 坑点',
+            subtitle:
+              '这页实验把 try/catch/finally、忘记 await、forEach + await 放在一起做对照，专门强化“错误会在哪里出现、为什么会出现”。',
+            demo: {
+              route: '/demos/week-4/async-await/errors-and-pitfalls',
+              ctaLabel: '打开实验',
+              objectives: [
+                '理解 await 被拒绝时为什么会直接跳进 catch',
+                '确认忘记 await 拿到的是 Promise 而不是数据',
+                '记住 forEach 不会等待 async 回调',
+              ],
+              note: '建议按按钮从左到右看：先看 try/catch/finally，再看忘记 await，最后看 forEach + await。',
+            },
+          },
+          {
+            id: 'promise-vs-async',
+            kind: 'content',
+            eyebrow: '知识点 05 · 5.6',
+            title: 'Promise 还是 async / await',
+            subtitle:
+              '它们不是替代关系，而是不同层级的表达方式。日常业务更常写 async / await，但底层模型仍然是 Promise。',
+            table: {
+              headers: ['维度', 'Promise 链', 'async / await'],
+              rows: [
+                ['可读性', 'then / catch 链式，长了会拐弯', '从上往下读，更接近同步代码'],
+                ['错误处理', '集中在 catch', 'try / catch / finally 更自然'],
+                ['并发表达', 'Promise.all / race 等直接写在链外', '通常 await Promise.all(...)'],
+                ['复用未来值', 'Promise 对象可以随意传递、挂多个处理器', 'await 后拿到的是普通值，复用层次更靠后'],
+                ['本质', '底层模型', 'Promise 的语法糖'],
+              ],
+            },
+            note: {
+              tone: 'tip',
+              label: '结论',
+              text: '业务代码通常优先 async / await；当你在设计底层 API、处理并发工具或需要传递“未来值对象”本身时，仍然要直接思考 Promise。',
+            },
+          },
+          {
+            id: 'wrapper-code',
+            kind: 'code',
+            eyebrow: '知识点 05 · 5.7',
+            title: '05-fetch-json-async.js',
+            code: {
+              language: 'javascript',
+              filename: '05-fetch-json-async.js',
+              source: `async function fetchJSON(url, options) {
+  let res;
+  try {
+    res = await fetch(url, options);
+  } catch (err) {
+    throw new Error('网络错误：' + err.message);
+  }
+
+  if (!res.ok) {
+    throw new Error('HTTP ' + res.status + ' ' + res.statusText);
+  }
+
+  const type = res.headers.get('content-type') || '';
+  if (!type.includes('application/json')) {
+    throw new Error('响应不是 JSON：' + type);
+  }
+
+  return await res.json();
+}`,
+              highlightLines: [4, 5, 8, 9, 12, 13, 16],
+            },
+          },
+          {
+            id: 'closing',
+            kind: 'closing',
+            title: '这一节要带走的三句话',
+            points: [
+              'async 总返回 Promise；await 成功就取值，失败就在该行抛出异常。',
+              'async / await 的最大收益不是“更高级”，而是错误处理重新回到 try / catch / finally。',
+              '互不依赖的任务别连续 await；该并行时就用 Promise.all，把等待时间压到最短。',
+            ],
+          },
+        ],
       },
-      placeholderLesson(
-        'http-server',
-        'HTTP Server 与 Express',
-        'HTTP Server',
-        'Network / Internet / WWW 的层级、HTTP 协议，以及 Express 最小服务与 RESTful。',
-        ['Web ≠ Internet：三层概念澄清', 'HTTP 是什么协议', 'Express 最小服务器', 'RESTful 与 CRUD 的映射'],
-        ['Node.js', 'Express', 'RESTful'],
-      ),
+      {
+        id: 'http-server',
+        title: 'HTTP Server 与 Express',
+        short: 'HTTP Server',
+        summary:
+          '从 Web / Internet / WWW 的层级，到 HTTP 请求-响应，再到 Express 最小服务器与 RESTful 路由。',
+        tags: ['Node.js', 'Express', 'RESTful'],
+        status: 'ready',
+        slides: [
+          {
+            id: 'cover',
+            kind: 'cover',
+            eyebrow: 'Week 4 · 知识点 06',
+            title: '前端拿数据的另一头，到底是谁在回话',
+            subtitle:
+              '前面几章讲的是浏览器如何发请求；这一章把镜头转到服务器端，看 HTTP 请求怎么被接住、路由怎么被匹配、响应怎么被组装出来。',
+            points: [
+              'Web / Internet / WWW 不是一个概念',
+              'HTTP 的基本单位是 request / response',
+              '服务器按 method + path 处理请求',
+              'Express 帮我们更轻松地写路由',
+              'RESTful 把 CRUD 映射成统一的 URL + Method 约定',
+            ],
+          },
+          {
+            id: 'outline',
+            kind: 'outline',
+            title: '这一节回答这些问题',
+            points: [
+              'Internet、Web、WWW 到底分别指什么',
+              'HTTP 请求和响应里到底装了哪些信息',
+              'Express 最小服务器长什么样',
+              'RESTful 为什么总在讲 GET / POST / PUT / DELETE',
+            ],
+          },
+          {
+            id: 'layers',
+            kind: 'content',
+            eyebrow: '知识点 06 · 6.1',
+            title: '先把三个词分清：Internet、Web、WWW',
+            subtitle:
+              '这三个词经常被混说，但它们不是一层东西。考试里很喜欢用这个来做概念辨析。',
+            table: {
+              headers: ['名词', '它是什么', '例子'],
+              rows: [
+                ['Internet', '底层网络基础设施，负责把机器连起来', '光纤、路由器、IP、TCP'],
+                ['Web', '基于 Internet 构建的一套信息访问系统', '浏览器访问网站、点击链接、提交表单'],
+                ['WWW', 'World Wide Web，Web 上由网页和链接组成的内容网络', 'HTML 页面、超链接、站点之间跳转'],
+              ],
+            },
+            note: {
+              tone: 'rule',
+              label: '一句话',
+              text: 'Internet 是基础设施，Web 是使用方式，WWW 是 Web 上那张由网页组成的内容网络。',
+            },
+          },
+          {
+            id: 'request-response-flow',
+            kind: 'content',
+            eyebrow: '知识点 06 · 6.2',
+            title: 'HTTP 是一次请求-响应循环',
+            subtitle:
+              '浏览器和服务器的对话不是“实时心灵感应”，而是一问一答：请求发过去，服务器处理完，再回一个响应。',
+            flow: [
+              {
+                label: '01',
+                title: '浏览器组装请求',
+                description: '把 method、path、headers、body 拼成一条 HTTP 请求报文。',
+                meta: 'request',
+              },
+              {
+                label: '02',
+                title: '服务器接收请求',
+                description: 'HTTP Server 读到请求行后，决定交给哪个处理逻辑。',
+                meta: 'server',
+              },
+              {
+                label: '03',
+                title: '执行业务逻辑',
+                description: '查询数据库、校验参数、调用服务、生成返回数据。',
+                meta: 'logic',
+              },
+              {
+                label: '04',
+                title: '返回响应',
+                description: '服务器回状态码、响应头和响应体，浏览器再据此渲染界面。',
+                meta: 'response',
+              },
+            ],
+            note: {
+              tone: 'tip',
+              label: '连接前文',
+              text: 'XHR、fetch、async / await 讲的是“客户端如何发起这次对话”；HTTP Server 与 Express 讲的是“服务端如何接住并回应这次对话”。',
+            },
+          },
+          {
+            id: 'http-shape',
+            kind: 'content',
+            eyebrow: '知识点 06 · 6.3',
+            title: '一条 HTTP 消息里最常见的部分',
+            subtitle:
+              '不用背报文格式的每个字符，但一定要知道 method、path、status、headers、body 分别是什么。',
+            table: {
+              headers: ['部分', '请求里是什么', '响应里是什么'],
+              rows: [
+                ['起始行', 'GET /api/users HTTP/1.1', 'HTTP/1.1 200 OK'],
+                ['Headers', 'Host / Accept / Content-Type', 'Content-Type / Cache-Control / Set-Cookie'],
+                ['Body', 'POST / PUT 常见，装提交数据', '装返回给前端的数据，如 JSON / HTML'],
+                ['Status', '请求里没有状态码', '200 / 201 / 404 / 500 等状态码'],
+              ],
+            },
+            note: {
+              tone: 'warn',
+              label: '别混',
+              text: '404 这种状态码只会出现在响应里，不会出现在请求里。它表示“服务器已经收到请求，但没找到对应资源或路由”。',
+            },
+          },
+          {
+            id: 'http-demo',
+            kind: 'demo',
+            eyebrow: '知识点 06 · 6.3',
+            title: 'live demo · HTTP 请求-响应检视器',
+            subtitle:
+              '去实验里直接看 GET、POST、404 三种场景下，请求报文和响应报文到底长什么样，把抽象名词变成可以对照的文本。',
+            demo: {
+              route: '/demos/week-4/http-server/request-response',
+              ctaLabel: '打开实验',
+              objectives: [
+                '看清请求行、请求头、请求体分别是什么',
+                '理解响应状态码与响应体如何一起构成结果',
+                '区分“404 路由不存在”和“网络错误”不是一回事',
+              ],
+              note: '建议按 GET -> POST -> 404 的顺序点一遍，先看正常读取，再看带请求体的创建，最后看服务端返回 404。',
+            },
+          },
+          {
+            id: 'node-vs-express',
+            kind: 'compare',
+            eyebrow: '知识点 06 · 6.4',
+            title: '为什么大家常说 Node.js + Express',
+            subtitle:
+              'Node.js 提供运行 JavaScript 服务器的环境；Express 则在这个环境上，帮你把路由、请求体、响应封装得更顺手。',
+            compare: {
+              leftTitle: 'Node 原生 http：能做，但更底层',
+              rightTitle: 'Express：常见 Web 任务更省力',
+              left: {
+                code: {
+                  language: 'js',
+                  source: `import http from 'node:http';
+
+http.createServer((req, res) => {
+  res.statusCode = 200;
+  res.setHeader('Content-Type', 'application/json');
+  res.end(JSON.stringify({ ok: true }));
+}).listen(3000);`,
+                },
+              },
+              right: {
+                code: {
+                  language: 'js',
+                  source: `import express from 'express';
+
+const app = express();
+app.get('/api/ping', (req, res) => {
+  res.status(200).json({ ok: true });
+});
+app.listen(3000);`,
+                },
+              },
+            },
+          },
+          {
+            id: 'express-minimal',
+            kind: 'code',
+            eyebrow: '知识点 06 · 6.5',
+            title: '06-express-minimal.js',
+            code: {
+              language: 'javascript',
+              filename: '06-express-minimal.js',
+              source: `import express from 'express';
+
+const app = express();
+app.use(express.json());
+
+app.get('/api/users', (req, res) => {
+  res.status(200).json([{ id: 1, name: 'Amy' }]);
+});
+
+app.post('/api/users', (req, res) => {
+  const user = { id: Date.now(), ...req.body };
+  res.status(201).json(user);
+});
+
+app.listen(3000, () => {
+  console.log('Server listening on http://localhost:3000');
+});`,
+              highlightLines: [3, 4, 6, 7, 10, 11, 14],
+            },
+          },
+          {
+            id: 'express-demo',
+            kind: 'demo',
+            eyebrow: '知识点 06 · 6.6',
+            title: 'live demo · Express 路由与 RESTful',
+            subtitle:
+              '这页实验把 method + path 的组合拉出来单独看，帮助你建立“路由匹配”和“CRUD 映射”的直觉。',
+            demo: {
+              route: '/demos/week-4/http-server/express-routing',
+              ctaLabel: '打开实验',
+              objectives: [
+                '理解 Express 如何按 method + path 匹配路由',
+                '理解 req.params、req.body、res.status().json() 的基本位置',
+                '把 RESTful 的 CRUD 映射记成可运行的直觉',
+              ],
+              note: '建议先点 GET / POST / PUT / DELETE 四种正常路径，再点一次没有注册过的 GET /api/posts 看 404。',
+            },
+          },
+          {
+            id: 'restful-crud',
+            kind: 'content',
+            eyebrow: '知识点 06 · 6.6',
+            title: 'RESTful 最常见的 CRUD 映射',
+            subtitle:
+              '它不是强制法条，而是一套广泛采用的命名约定。越熟悉这套约定，看接口文档就越快。',
+            table: {
+              headers: ['操作意图', 'Method + Path', '常见含义'],
+              rows: [
+                ['读取列表', 'GET /api/users', '返回全部或一批用户'],
+                ['读取单个', 'GET /api/users/:id', '返回某个 id 对应的用户'],
+                ['创建', 'POST /api/users', '根据 req.body 创建新用户'],
+                ['更新', 'PUT /api/users/:id', '整体更新某个已有用户'],
+                ['删除', 'DELETE /api/users/:id', '删除某个已有用户'],
+              ],
+            },
+            note: {
+              tone: 'tip',
+              label: '记法',
+              text: '别把“动作”写进 path 里，比如 /getUsers、/deleteUser。RESTful 更倾向于把“动作”放在 method，把“资源”放在 path。',
+            },
+          },
+          {
+            id: 'status-summary',
+            kind: 'content',
+            eyebrow: '知识点 06 · 6.7',
+            title: '这章最常见的几个状态码',
+            subtitle:
+              '前端看到状态码时，脑子里应该能立刻对应到服务器大概发生了什么。',
+            table: {
+              headers: ['状态码', '含义', '常见场景'],
+              rows: [
+                ['200 OK', '请求成功', 'GET 成功返回数据'],
+                ['201 Created', '创建成功', 'POST 成功创建资源'],
+                ['204 No Content', '成功但无响应体', 'DELETE 删除成功'],
+                ['404 Not Found', '没找到资源或路由', '请求路径不存在'],
+                ['500 Internal Server Error', '服务器内部异常', '后端代码报错或依赖故障'],
+              ],
+            },
+            note: {
+              tone: 'trap',
+              label: '别误会',
+              text: '404 表示服务器收到了请求，但没有匹配内容；真正“连服务器都没联系上”的情况，通常连 HTTP 状态码都拿不到。',
+            },
+          },
+          {
+            id: 'closing',
+            kind: 'closing',
+            title: '这一节要带走的三句话',
+            points: [
+              'HTTP 的基本单位是一条 request 和一条 response；method、path、status、body 是最常见的关键信息。',
+              'Node.js 是运行环境，Express 是更顺手的 Web 服务器框架，负责帮你组织路由与响应。',
+              'RESTful 的核心不是背单词，而是把 CRUD 映射成稳定的 Method + Path 习惯。',
+            ],
+          },
+        ],
+      },
     ],
   },
   {

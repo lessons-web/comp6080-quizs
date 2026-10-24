@@ -61,4 +61,44 @@ describe('content files', () => {
     })
     expect(week2Practice.questions).toBeInstanceOf(Array)
   })
+
+  it('stores week 4 exam and practice coverage for all six core sections', () => {
+    const week4Exam = readJson('content/exams/week-4.mock-exams.json')
+    const week4Practice = readJson('content/questions/week-4.practice.json')
+
+    const examText = JSON.stringify(week4Exam)
+    const practiceText = JSON.stringify(week4Practice)
+
+    expect(week4Exam.exams).toBeInstanceOf(Array)
+    expect((week4Exam.exams as unknown[]).length).toBeGreaterThan(0)
+
+    for (const keyword of ['JSON', 'XHR', 'fetch', 'Promise', 'async', 'Express']) {
+      expect(examText).toContain(keyword)
+      expect(practiceText).toContain(keyword)
+    }
+  })
+
+  it('stores week 4 exam as a six-section polished paper', () => {
+    const week4Exam = readJson('content/exams/week-4.mock-exams.json')
+    const exam = (
+      week4Exam.exams as Array<{
+        totalMarks: number
+        questions: Array<{ title: string; marks: number }>
+      }>
+    )[0]
+
+    expect(exam.totalMarks).toBe(44)
+    expect(exam.questions).toHaveLength(6)
+    expect(exam.questions.map((question) => question.title)).toEqual([
+      'JSON 与 localStorage',
+      'XMLHttpRequest 与 AJAX',
+      'fetch 与 Response',
+      'Promise 状态与编排',
+      'async / await 与并行控制',
+      'HTTP / Express 请求与响应',
+    ])
+    expect(
+      exam.questions.reduce((sum, question) => sum + question.marks, 0),
+    ).toBe(44)
+  })
 })

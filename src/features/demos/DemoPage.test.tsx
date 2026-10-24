@@ -1,4 +1,4 @@
-import { render, screen } from '@testing-library/react'
+import { fireEvent, render, screen } from '@testing-library/react'
 import { describe, expect, it } from 'vitest'
 
 import type { DemoDefinition } from '../../types/demo'
@@ -18,6 +18,17 @@ const demo: DemoDefinition = {
     '验证 stringify 会丢掉哪些值',
   ],
   sourceHtmlPath: '/course-demos/week4/01a-stringify-parse-demo.html',
+  codes: [
+    {
+      language: 'javascript',
+      filename: '01a-stringify-parse-demo.js',
+      source: [
+        'const data = JSON.parse(text)',
+        'const compact = JSON.stringify(data)',
+      ].join('\n'),
+      highlightLines: [1],
+    },
+  ],
   backToCourseHref: '/courses/week-4/data-interchange',
   topicLabel: 'Week 4 · JSON',
 }
@@ -55,19 +66,30 @@ describe('DemoDetailPage', () => {
     expect(root.className).toContain('overflow-y-auto')
 
     const stage = screen.getByTestId('demo-detail-stage')
-    expect(stage.className).toContain('px-4')
+    expect(stage.className).not.toContain('overflow-y-auto')
     expect(stage.className).not.toContain('rounded-3xl')
   })
 
-  it('页面本身就是独立实验页，不再额外提供二次打开按钮', () => {
+  it('详情页直接内嵌实验，只保留「返回课件」入口', () => {
     render(<DemoDetailPage demo={demo} />)
 
-    expect(
-      screen.getByText(/这个页面本身就是独立实验页/),
-    ).toBeInTheDocument()
-    expect(
-      screen.queryByRole('link', { name: /新窗口打开实验/ }),
-    ).not.toBeInTheDocument()
+    expect(screen.getByTestId('demo-detail-live-panel')).toBeInTheDocument()
+    expect(document.querySelector('iframe')).toHaveAttribute(
+      'src',
+      demo.sourceHtmlPath,
+    )
+    expect(screen.getByRole('button', { name: 'Live' })).toHaveAttribute(
+      'aria-pressed',
+      'true',
+    )
+    expect(screen.getByRole('button', { name: 'Code' })).toHaveAttribute(
+      'aria-pressed',
+      'false',
+    )
+
+    const links = screen.getAllByRole('link')
+    expect(links).toHaveLength(1)
+    expect(links[0]).toHaveAccessibleName('返回课件')
   })
 
   it('保留返回课件的入口', () => {
@@ -85,7 +107,36 @@ describe('DemoDetailPage', () => {
       'src',
       demo.sourceHtmlPath,
     )
-    expect((iframe as HTMLIFrameElement | null)?.style.minHeight).toBe('720px')
+    expect((iframe as HTMLIFrameElement | null)?.style.height).toBe('auto')
     expect(screen.getByText('观察 parse 成功与失败的区别')).toBeInTheDocument()
+  })
+
+  it('通过右上角开关切换到代码视图', () => {
+    render(<DemoDetailPage demo={demo} />)
+
+    fireEvent.click(screen.getByRole('button', { name: 'Code' }))
+
+    expect(screen.getByRole('button', { name: 'Live' })).toHaveAttribute(
+      'aria-pressed',
+      'false',
+    )
+    expect(screen.getByRole('button', { name: 'Code' })).toHaveAttribute(
+      'aria-pressed',
+      'true',
+    )
+    expect(screen.getByTestId('demo-detail-code-panel')).toBeInTheDocument()
+    expect(screen.queryByTestId('demo-detail-live-panel')).not.toBeInTheDocument()
+    expect(
+      screen.getAllByText('01a-stringify-parse-demo.js').length,
+    ).toBeGreaterThan(0)
+    expect(
+      screen.getByText((_, element) =>
+        element?.tagName === 'CODE' &&
+        element.textContent?.includes('JSON.parse') &&
+        element.textContent?.includes('JSON.stringify')
+          ? true
+          : false,
+      ),
+    ).toBeInTheDocument()
   })
 })

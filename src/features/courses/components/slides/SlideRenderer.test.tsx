@@ -15,7 +15,7 @@ describe('SlideRenderer', () => {
       id: 'roadmap',
       kind: 'roadmap',
       eyebrow: 'Week 4 · 主线地图',
-      title: '从字符串到 async / await',
+      title: '从 JSON 一路走到 Express',
       roadmap: [
         {
           label: '01',
@@ -32,7 +32,7 @@ describe('SlideRenderer', () => {
 
     render(<SlideRenderer slide={slide} accent={accent} />)
 
-    expect(screen.getByText('从字符串到 async / await')).toBeInTheDocument()
+    expect(screen.getByText('从 JSON 一路走到 Express')).toBeInTheDocument()
     expect(screen.getByText('JSON')).toBeInTheDocument()
     expect(screen.getByText('浏览器最早怎么发异步请求')).toBeInTheDocument()
     expect(document.querySelector('iframe')).toBeNull()
@@ -43,7 +43,7 @@ describe('SlideRenderer', () => {
       id: 'cards',
       kind: 'cards',
       eyebrow: '本周目录',
-      title: '5 个知识点总览',
+      title: '6 个知识点总览',
       cards: [
         {
           eyebrow: '知识点 01',
@@ -62,7 +62,7 @@ describe('SlideRenderer', () => {
 
     render(<SlideRenderer slide={slide} accent={accent} />)
 
-    expect(screen.getByText('5 个知识点总览')).toBeInTheDocument()
+    expect(screen.getByText('6 个知识点总览')).toBeInTheDocument()
       expect(screen.getByText('对应：数据交换格式与 JSON')).toBeInTheDocument()
       expect(screen.getByText('现代请求 API 怎么拿响应')).toBeInTheDocument()
       expect(document.querySelector('iframe')).toBeNull()
@@ -95,6 +95,41 @@ describe('SlideRenderer', () => {
       ).toBeInTheDocument()
       expect(screen.queryByText(/内容占位/)).not.toBeInTheDocument()
     })
+
+  it('renders flow-style content slides with arrows and no iframe', () => {
+    const slide: CourseSlide = {
+      id: 'flow',
+      kind: 'content',
+      eyebrow: '知识点 02 · 2.1',
+      title: '一次请求-响应循环',
+      flow: [
+        {
+          label: '01',
+          title: '浏览器发起请求',
+          description: '把 URL 与参数发出去。',
+          meta: 'request',
+        },
+        {
+          label: '02',
+          title: '服务器处理',
+          description: '执行业务逻辑并准备响应。',
+          meta: 'response',
+        },
+      ],
+      note: {
+        tone: 'rule',
+        label: '一句话',
+        text: '前端负责发请求，服务器负责回响应。',
+      },
+    }
+
+    render(<SlideRenderer slide={slide} accent={accent} />)
+
+    expect(screen.getByTestId('slide-flow')).toBeInTheDocument()
+    expect(screen.getAllByTestId('slide-flow-step')).toHaveLength(2)
+    expect(screen.getByText('浏览器发起请求')).toBeInTheDocument()
+    expect(document.querySelector('iframe')).toBeNull()
+  })
 
     it('renders codes slides with every code block and no iframe', () => {
       const slide: CourseSlide = {
