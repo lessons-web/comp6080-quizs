@@ -1,4 +1,234 @@
 {
-  "topic": "javascript",
-  "exams": []
+  "topic": "css",
+  "exams": [
+    {
+      "id": "WEEK2-SIM",
+      "title": "Week 2 模拟试卷",
+      "description": "Week 2 知识点模拟试卷：覆盖选择器与层叠、盒模型、Flexbox、Grid 与框架、定位层叠、响应式与开发者工具六条主线。",
+      "tags": [
+        "模拟题",
+        "Week2"
+      ],
+      "totalMarks": 42,
+      "questions": [
+        {
+          "id": "Q1",
+          "title": "选择器与层叠优先级",
+          "marks": 8,
+          "contentMdx": "```html\n<button class=\"important\" id=\"confirm\">Delete Account</button>\n```\n\n```css\nbutton            { color: blue; }    /* A */\n.important        { color: red; }     /* B */\n#confirm          { color: green; }   /* C */\nbutton.important  { color: orange; }  /* D */\n```",
+          "subQuestions": [
+            {
+              "id": "Q1-a",
+              "label": "(a)",
+              "marks": 2,
+              "questionMdx": "按钮文字最终是什么颜色？解释浏览器是如何在四条规则之间做出选择的。",
+              "answerMdx": "是绿色。浏览器按选择器的特异性（specificity）比较权重：id 选择器（C）的权重高于类选择器（B、D）和标签选择器（A），因此 `#confirm` 胜出。在这个例子里四者权重不同，所以书写顺序不影响结果。",
+              "markingMdx": "1 mark for identifying the colour as green.\n1 mark for explaining that the id selector wins on specificity."
+            },
+            {
+              "id": "Q1-b",
+              "label": "(b)",
+              "marks": 2,
+              "questionMdx": "什么情况下“书写顺序（source order）”才会决定哪条规则生效？",
+              "answerMdx": "只有当两条规则的特异性完全相同时，后写的那条才会胜出。例如 `.important`（B）和另一个同样权重的类规则冲突时，靠后的覆盖靠前的。不同权重之间比较的是特异性，而不是顺序。",
+              "markingMdx": "1 mark for stating source order only matters when specificity ties.\n1 mark for giving or describing a tie scenario."
+            },
+            {
+              "id": "Q1-c",
+              "label": "(c)",
+              "marks": 2,
+              "questionMdx": "学生无法修改 `#confirm` 这条规则，于是给 A 加上 `!important`。现在文字是什么颜色？为什么滥用 `!important` 会带来问题？",
+              "answerMdx": "会变成蓝色，因为 `!important` 会跳过普通特异性比较。滥用的问题在于：一旦某条声明被标为 important，覆盖它就只能靠另一个 `!important` 或内联样式，迫使下一个人不断升级，最后整份样式表堆满 `!important`，层叠关系再也无法推理。",
+              "markingMdx": "1 mark for identifying the colour as blue.\n1 mark for explaining the escalation problem caused by !important."
+            },
+            {
+              "id": "Q1-d",
+              "label": "(d)",
+              "marks": 2,
+              "questionMdx": "如果某条规则“看起来没生效”，正确的排查流程是什么？",
+              "answerMdx": "应先用浏览器开发者工具选中元素，在 Styles 面板查看哪条规则真正胜出（被划掉的是被覆盖的），或查看 Computed 面板确认最终值；然后回到源码去修选择器、特异性或书写顺序，而不是直接加 `!important` 掩盖问题。",
+              "markingMdx": "1 mark for inspecting in DevTools Styles/Computed panel.\n1 mark for fixing the selector or specificity in source instead of adding !important."
+            }
+          ]
+        },
+        {
+          "id": "Q2",
+          "title": "盒模型与单位",
+          "marks": 8,
+          "contentMdx": "```css\n.box {\n  width: 200px;\n  padding: 20px;\n  border: 5px solid black;\n  margin: 10px;\n}\n```\n\n（未显式设置 `box-sizing`）",
+          "subQuestions": [
+            {
+              "id": "Q2-a",
+              "label": "(a)",
+              "marks": 2,
+              "questionMdx": "默认盒模型下，这个元素在页面上实际占据的可见总宽度（含边框）是多少像素？请写出计算过程。",
+              "answerMdx": "是 250px。因为默认 `box-sizing: content-box`，`width: 200px` 只设置内容区宽度，padding 和 border 都要额外加上：200 + 20×2 + 5×2 = 250px。（margin 不计入元素自身可见宽度，它决定的是元素之间的距离。）",
+              "markingMdx": "1 mark for the correct total 250px.\n1 mark for showing the calculation of content + padding + border."
+            },
+            {
+              "id": "Q2-b",
+              "label": "(b)",
+              "marks": 2,
+              "questionMdx": "如果添加 `box-sizing: border-box;`，元素的总宽度变成多少？此时内容区宽度又是多少？",
+              "answerMdx": "总宽度变成 200px。此时 200px 包含 padding 和 border，内容区宽度 = 200 − 20×2 − 5×2 = 150px。",
+              "markingMdx": "1 mark for total width 200px.\n1 mark for content width 150px."
+            },
+            {
+              "id": "Q2-c",
+              "label": "(c)",
+              "marks": 2,
+              "questionMdx": "想让这个块级元素在父容器中水平居中，最简单的写法是什么？",
+              "answerMdx": "设置 `margin: 0 auto;`（等价于左右 margin 为 auto）。块级元素在左右 margin 都为 auto 且自身宽度确定时，浏览器会把剩余空间平均分配到两侧，从而实现水平居中。",
+              "markingMdx": "1 mark for margin auto on the left and right.\n1 mark for explaining that auto margins absorb the leftover space."
+            },
+            {
+              "id": "Q2-d",
+              "label": "(d)",
+              "marks": 2,
+              "questionMdx": "在字号相关的尺寸上，`px` 和 `rem` 有什么区别？为什么无障碍场景更推荐 `rem`？",
+              "answerMdx": "`px` 是固定像素，不随用户设置变化；`rem` 相对根元素（`<html>`）的字号，会随用户调整浏览器默认字号而变化。用户放大字号时，`rem` 尺寸会一起变大，页面不会因此挤压或截断文字，所以对可访问性更友好。",
+              "markingMdx": "1 mark for px as fixed and rem relative to the root font size.\n1 mark for explaining that rem respects user font-size preferences."
+            }
+          ]
+        },
+        {
+          "id": "Q3",
+          "title": "Flexbox 布局",
+          "marks": 6,
+          "contentMdx": "```html\n<div class=\"container\">\n  <div class=\"item\">1</div>\n  <div class=\"item\">2</div>\n  <div class=\"item\">3</div>\n</div>\n```\n\n```css\n.container {\n  display: flex;\n  height: 200px;\n  border: 1px solid gray;\n}\n.item { width: 50px; background: lightblue; }\n```",
+          "subQuestions": [
+            {
+              "id": "Q3-a",
+              "label": "(a)",
+              "marks": 2,
+              "questionMdx": "默认情况下这三个条目是横向排列还是纵向排列？为什么？",
+              "answerMdx": "横向排列。因为 `display: flex` 默认 `flex-direction: row`，主轴是水平方向，子项沿主轴从左到右排列。",
+              "markingMdx": "1 mark for horizontal/row layout.\n1 mark for citing the default flex-direction: row."
+            },
+            {
+              "id": "Q3-b",
+              "label": "(b)",
+              "marks": 2,
+              "questionMdx": "想让这三个条目在容器里水平居中和垂直居中（条目彼此紧挨），需要在 `.container` 上加哪两行？",
+              "answerMdx": "```css\njustify-content: center; /* 主轴（水平）居中 */\nalign-items: center;     /* 交叉轴（垂直）居中 */\n```",
+              "markingMdx": "1 mark for justify-content: center.\n1 mark for align-items: center."
+            },
+            {
+              "id": "Q3-c",
+              "label": "(c)",
+              "marks": 2,
+              "questionMdx": "如果改成 `flex-direction: column;`，控制垂直方向分布的是 `justify-content` 还是 `align-items`？",
+              "answerMdx": "是 `justify-content`。因为主轴随 `flex-direction` 变成垂直方向，而 `justify-content` 永远作用于主轴，`align-items` 永远作用于交叉轴。",
+              "markingMdx": "1 mark for identifying justify-content.\n1 mark for explaining that the main axis is now vertical."
+            }
+          ]
+        },
+        {
+          "id": "Q4",
+          "title": "CSS Grid、框架与样式复用",
+          "marks": 6,
+          "contentMdx": "```css\n.grid {\n  display: grid;\n  grid-template-columns: repeat(3, 1fr);\n  gap: 16px;\n}\n```",
+          "subQuestions": [
+            {
+              "id": "Q4-a",
+              "label": "(a)",
+              "marks": 2,
+              "questionMdx": "`repeat(3, 1fr)` 表达的是什么布局？`1fr` 这个单位如何分配空间？",
+              "answerMdx": "它创建 3 条等宽的列轨道。`1fr` 表示可用空间的一个等份，三条 `1fr` 会把容器的剩余空间平均分成三份，因此三列等宽且随容器宽度自适应。",
+              "markingMdx": "1 mark for creating three equal columns.\n1 mark for explaining fr as a fraction of the free space."
+            },
+            {
+              "id": "Q4-b",
+              "label": "(b)",
+              "marks": 2,
+              "questionMdx": "`gap: 16px` 的作用是什么？它相比给每个子项加 `margin` 有什么优势？",
+              "answerMdx": "`gap` 设置网格行与列之间的间距，只在轨道之间生效，不会在容器外边缘产生多余间距。相比逐个加 `margin`，它不需要处理“最后一个元素的 margin 怎么去掉”，也不用担心外边距折叠，代码更简洁且不易出错。",
+              "markingMdx": "1 mark for explaining gap sets spacing between tracks only.\n1 mark for noting margin requires edge cases or avoids margin collapse."
+            },
+            {
+              "id": "Q4-c",
+              "label": "(c)",
+              "marks": 2,
+              "questionMdx": "很多项目会引入 UI 框架或用工具类做样式复用。这样做换来了什么，又付出了什么代价？",
+              "answerMdx": "收益是：复用现成的组件与样式，减少重复劳动，团队视觉更统一，开发速度更快。代价是：增加依赖体积与升级负担，样式可能被框架约定绑死、自定义时要覆盖框架默认值，还会引入学习成本与“黑盒”调试困难。取舍取决于项目规模与团队熟悉度。",
+              "markingMdx": "1 mark for a concrete benefit such as reuse, consistency or speed.\n1 mark for a concrete cost such as bundle size, lock-in or override difficulty."
+            }
+          ]
+        },
+        {
+          "id": "Q5",
+          "title": "定位、z-index 与视觉层级",
+          "marks": 6,
+          "contentMdx": "```html\n<div class=\"hero\">\n  <img class=\"photo\" src=\"beach.jpg\" alt=\"Beach\">\n  <div class=\"badge\">NEW</div>\n</div>\n```\n\n```css\n.hero { position: relative; height: 300px; }\n.badge { position: absolute; top: 20px; right: 20px; }\n```",
+          "subQuestions": [
+            {
+              "id": "Q5-a",
+              "label": "(a)",
+              "marks": 2,
+              "questionMdx": "`.badge` 的 `top` 和 `right` 是相对于谁定位的？为什么？",
+              "answerMdx": "相对于 `.hero` 定位。因为绝对定位元素会寻找最近的、`position` 不为 `static` 的祖先元素作为包含块；`.hero` 设置了 `position: relative`，所以成为 `.badge` 的参照物。",
+              "markingMdx": "1 mark for identifying .hero as the containing block.\n1 mark for explaining the nearest positioned ancestor rule."
+            },
+            {
+              "id": "Q5-b",
+              "label": "(b)",
+              "marks": 2,
+              "questionMdx": "如果把 `.hero` 的 `position: relative` 删掉，徽章会跑到哪里？",
+              "answerMdx": "徽章会跑到页面（初始包含块，通常是视口/文档）的右上角，距离顶部 20px、右侧 20px，而不再贴着 `.hero` 的右上角。因为此时 `.hero` 不再是定位祖先，绝对定位会向上找到初始包含块。",
+              "markingMdx": "1 mark for stating it moves to the top-right of the page/viewport.\n1 mark for explaining the fallback to the initial containing block."
+            },
+            {
+              "id": "Q5-c",
+              "label": "(c)",
+              "marks": 2,
+              "questionMdx": "`z-index` 在什么前提下才会生效？如果两个元素都设置了 `z-index` 却都无效，最可能的原因是什么？",
+              "answerMdx": "`z-index` 只对定位元素（`position` 为 relative / absolute / fixed / sticky）生效，静态定位元素上的 `z-index` 会被忽略。如果两个元素都设了 z-index 但无效，最可能的原因是它们没有设置 `position`（仍是 static），或者它们处于不同的层叠上下文中，无法直接比较大小。",
+              "markingMdx": "1 mark for stating z-index requires a positioned element.\n1 mark for mentioning stacking contexts as a reason comparisons fail."
+            }
+          ]
+        },
+        {
+          "id": "Q6",
+          "title": "响应式、媒体查询与开发者工具",
+          "marks": 8,
+          "contentMdx": "```html\n<head>\n  <meta name=\"viewport\" content=\"width=device-width, initial-scale=1\">\n</head>\n<body>\n  <h1 class=\"title\">My Blog</h1>\n  <nav class=\"menu\">Home | Posts | About</nav>\n</body>\n```\n\n```css\n.title { font-size: 32px; }\n.menu  { display: block; }\n\n@media (max-width: 600px) {\n  .title { font-size: 20px; }\n  .menu  { display: none; }\n}\n```",
+          "subQuestions": [
+            {
+              "id": "Q6-a",
+              "label": "(a)",
+              "marks": 2,
+              "questionMdx": "在 1000px 宽的笔记本上，标题字号是多少？菜单是否显示？为什么？",
+              "answerMdx": "字号 32px，菜单显示。因为屏幕宽度大于 600px，媒体查询里的规则不满足条件，不会生效，页面使用基础样式。",
+              "markingMdx": "1 mark for 32px and the menu shown.\n1 mark for explaining the media query does not apply above 600px."
+            },
+            {
+              "id": "Q6-b",
+              "label": "(b)",
+              "marks": 2,
+              "questionMdx": "在 400px 宽的手机上，标题字号和菜单分别是什么状态？为什么？",
+              "answerMdx": "字号 20px，菜单隐藏。因为屏幕宽度 ≤ 600px，媒体查询内的规则生效并覆盖前面的基础样式。",
+              "markingMdx": "1 mark for 20px and the menu hidden.\n1 mark for explaining the query applies at 600px or below."
+            },
+            {
+              "id": "Q6-c",
+              "label": "(c)",
+              "marks": 2,
+              "questionMdx": "`<meta name=\"viewport\">` 的作用是什么？如果去掉它，手机上的表现会怎样？",
+              "answerMdx": "它告诉手机使用设备的真实屏幕宽度来布局，而不是假装成一块很宽的桌面屏幕再整体缩小。去掉后，手机可能按默认的虚拟视口（例如 980px）渲染，导致 `max-width: 600px` 不再命中，移动端样式失效、页面被整体缩小。",
+              "markingMdx": "1 mark for explaining it uses the device's real width.\n1 mark for explaining mobile styles may break without it."
+            },
+            {
+              "id": "Q6-d",
+              "label": "(d)",
+              "marks": 2,
+              "questionMdx": "“移动优先（mobile-first）”通常怎么写媒体查询？它与上面的 `max-width` 写法有什么思路差异？",
+              "answerMdx": "移动优先先写窄屏的基础样式，再用 `min-width` 在更宽的断点上逐步增强。而 `max-width` 是桌面优先，先写宽屏样式再往下覆盖。移动优先的优势是最小样式即为默认，渐进增强、覆盖更少，且天然贴合资源有限的移动设备。",
+              "markingMdx": "1 mark for using min-width and progressive enhancement.\n1 mark for contrasting it with max-width desktop-first overrides."
+            }
+          ]
+        }
+      ],
+      "time": "2026-10-25 10:00"
+    }
+  ]
 }

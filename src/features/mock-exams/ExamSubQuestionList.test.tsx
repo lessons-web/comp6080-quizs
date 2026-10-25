@@ -32,14 +32,14 @@ describe('ExamSubQuestionList', () => {
   })
 
   it('toggles answer visibility on click', () => {
-    render(<ExamSubQuestionList subQuestions={mockSubQuestions} />)
+    render(<ExamSubQuestionList subQuestions={mockSubQuestions} locale="zh" />)
     
     const button = screen.getByText(/查看答案与解析/)
     fireEvent.click(button)
     
     // Answer and marking criteria should now be visible
     expect(screen.getByText('HyperText Markup Language')).toBeInTheDocument()
-    expect(screen.getByText('Marking Criteria')).toBeInTheDocument()
+    expect(screen.getByText('给分点')).toBeInTheDocument()
     
     const hideButton = screen.getByText(/收起答案与解析/)
     fireEvent.click(hideButton)
@@ -51,7 +51,7 @@ describe('ExamSubQuestionList', () => {
   it('uses themed accents for the answer toggle and expanded panel', () => {
     render(<ExamSubQuestionList subQuestions={mockSubQuestions} />)
 
-    const button = screen.getByText(/查看答案与解析/)
+    const button = screen.getByText(/View Answer and Notes/)
     expect(button).toHaveClass('text-[#2f6b5f]')
 
     fireEvent.click(button)

@@ -1,0 +1,38 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>02B · 盒模型实验室</title>
+  <meta name="description" content="COMP6080 Week 2：观察盒模型与 box-sizing。" />
+  <link rel="icon" href="data:," />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="../week4/assets/demo.css" />
+  <style>
+    .page-head { display: none; }
+    .demo-page { min-height: auto; padding: 0; }
+    .demo-wrap { max-width: none; margin: 0; }
+  </style>
+</head>
+<body>
+  <main class="demo-page"><div class="demo-wrap"><section class="demo reveal"><div class="demo-head"><h3>演示 B · 盒模型实验室</h3><span class="pill">live</span></div><div class="demo-body"><p class="demo-sub">保持宽度不变，只切换 padding、border 和 box-sizing，观察最终占位。</p><div class="row"><button class="btn primary sm" data-mode="content-box" type="button">content-box</button><button class="btn sm" data-mode="border-box" type="button">border-box</button><button class="btn sm" data-mode="wide-padding" type="button">大 padding</button></div><div class="status-line" id="meta"></div><div class="out pre tall idle" id="out">点击按钮开始。</div></div></section></div></main>
+  <script src="../week4/assets/demo.js"></script>
+  <script>
+    const samples = {
+      'content-box': { tone: 'warn', label: 'content-box', text: 'width: 320px;\npadding: 24px;\nborder: 2px solid;\nbox-sizing: content-box;\n\n最终占位会超过 320px。' },
+      'border-box': { tone: 'ok', label: 'border-box', text: 'width: 320px;\npadding: 24px;\nborder: 2px solid;\nbox-sizing: border-box;\n\npadding 和 border 被算进总宽度里。' },
+      'wide-padding': { tone: 'err', label: '更大 padding', text: 'padding: 48px;\n\n就算 width 不变，内容区也会被进一步压缩。' }
+    };
+    const out = document.querySelector('#out');
+    const meta = document.querySelector('#meta');
+    document.querySelectorAll('[data-mode]').forEach((btn) => btn.addEventListener('click', () => {
+      const sample = samples[btn.dataset.mode];
+      meta.innerHTML = '<span class="chip ' + sample.tone + '">' + sample.label + '</span>';
+      out.className = 'out pre tall ' + sample.tone;
+      out.textContent = sample.text;
+    }));
+  </script>
+</body>
+</html>

@@ -57,16 +57,46 @@ describe('SlideRenderer', () => {
           description: '现代请求 API 怎么拿响应',
           meta: '对应：fetch 与 Response',
         },
+        {
+          eyebrow: '知识点 03',
+          title: 'Promise',
+          description: '异步结果如何串起来',
+          meta: '对应：Promise 链式处理',
+        },
+        {
+          eyebrow: '知识点 04',
+          title: 'async / await',
+          description: '把异步流程写得更像同步代码',
+          meta: '对应：语法糖与错误处理',
+        },
+        {
+          eyebrow: '知识点 05',
+          title: 'HTTP',
+          description: '请求与响应为什么会有状态码',
+          meta: '对应：request / response',
+        },
+        {
+          eyebrow: '知识点 06',
+          title: 'Express',
+          description: '服务端如何定义接口',
+          meta: '对应：route / handler',
+        },
       ],
     }
 
-    render(<SlideRenderer slide={slide} accent={accent} />)
+    const { container } = render(<SlideRenderer slide={slide} accent={accent} />)
 
     expect(screen.getByText('6 个知识点总览')).toBeInTheDocument()
-      expect(screen.getByText('对应：数据交换格式与 JSON')).toBeInTheDocument()
-      expect(screen.getByText('现代请求 API 怎么拿响应')).toBeInTheDocument()
-      expect(document.querySelector('iframe')).toBeNull()
+    expect(screen.getByText('对应：数据交换格式与 JSON')).toBeInTheDocument()
+    expect(screen.getByText('现代请求 API 怎么拿响应')).toBeInTheDocument()
+    expect(document.querySelector('iframe')).toBeNull()
+
+    const cards = Array.from(container.querySelectorAll('article'))
+    expect(cards).toHaveLength(6)
+    cards.forEach((card) => {
+      expect(card).toHaveClass('lg:col-span-2')
     })
+  })
 
     it('renders real knowledge content instead of a placeholder skeleton', () => {
       const slide: CourseSlide = {

@@ -1,0 +1,34 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>03A · 闭包快照实验</title>
+  <meta name="description" content="COMP6080 Week 3：观察闭包如何记住外层变量。" />
+  <link rel="icon" href="data:," />
+  <link rel="stylesheet" href="../week4/assets/demo.css" />
+  <style>.page-head{display:none}.demo-page{min-height:auto;padding:0}.demo-wrap{max-width:none;margin:0}</style>
+</head>
+<body>
+  <main class="demo-page"><div class="demo-wrap"><section class="demo reveal"><div class="demo-head"><h3>演示 A · 闭包快照实验</h3><span class="pill">live</span></div><div class="demo-body"><p class="demo-sub">连续调用同一个函数，观察它如何持续记住外层 count。</p><div class="row"><button class="btn primary sm" id="call" type="button">继续调用</button><button class="btn sm" id="reset" type="button">重置计数器</button></div><div class="status-line" id="meta"></div><div class="out pre tall idle" id="out">点击按钮开始。</div></div></section></div></main>
+  <script src="../week4/assets/demo.js"></script>
+  <script>
+    const meta = document.querySelector('#meta');
+    const out = document.querySelector('#out');
+    function createCounter() { let count = 0; return function () { count += 1; return count; }; }
+    let counter = createCounter();
+    document.querySelector('#call').addEventListener('click', () => {
+      const value = counter();
+      meta.innerHTML = '<span class="chip ok">count = ' + value + '</span>';
+      out.className = 'out pre tall ok';
+      out.textContent = '同一个内部函数继续访问了之前的 count，所以现在变成 ' + value + '。';
+    });
+    document.querySelector('#reset').addEventListener('click', () => {
+      counter = createCounter();
+      meta.innerHTML = '<span class="chip warn">新的闭包环境</span>';
+      out.className = 'out pre tall warn';
+      out.textContent = '重新创建函数后，外层环境也被重建，count 从 0 重新开始。';
+    });
+  </script>
+</body>
+</html>

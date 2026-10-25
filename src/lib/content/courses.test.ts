@@ -2,6 +2,113 @@ import { describe, expect, it } from 'vitest'
 
 import { getCourseLesson } from './courses'
 
+describe('course week 1 rollout', () => {
+  it('uses a structured overview and a flow-first git lesson', () => {
+    const overview = getCourseLesson('week-1', 'overview')
+    const git = getCourseLesson('week-1', 'course-overview-git')
+
+    expect(overview).not.toBeNull()
+    expect(overview?.lesson.status).toBe('ready')
+    expect(overview?.lesson.slides.map((slide) => slide.kind)).toEqual([
+      'cover',
+      'roadmap',
+      'cards',
+      'closing',
+    ])
+
+    expect(git).not.toBeNull()
+    expect(git?.lesson.status).toBe('ready')
+    expect(git?.lesson.slides.some((slide) => slide.flow?.length)).toBe(true)
+    expect(git?.lesson.slides.some((slide) => slide.kind === 'demo')).toBe(false)
+  })
+
+  it('uses code -> demo rhythm for html structure and links lessons', () => {
+    const structure = getCourseLesson('week-1', 'structure')
+    const links = getCourseLesson('week-1', 'links-images')
+
+    const structureDemo = structure?.lesson.slides.find((slide) => slide.kind === 'demo')
+    const linksDemo = links?.lesson.slides.find((slide) => slide.kind === 'demo')
+
+    expect(structure?.lesson.status).toBe('ready')
+    expect(structureDemo?.demo?.route).toBe('/demos/week-1/html/document-skeleton')
+    expect(structureDemo?.demo?.ctaLabel).toContain('打开实验')
+
+    expect(links?.lesson.status).toBe('ready')
+    expect(linksDemo?.demo?.route).toBe('/demos/week-1/html/paths-and-images')
+    expect(linksDemo?.demo?.objectives?.length).toBeGreaterThanOrEqual(2)
+  })
+})
+
+describe('course week 2 rollout', () => {
+  it('uses a structured overview and keeps grid/frameworks as slide-first content', () => {
+    const overview = getCourseLesson('week-2', 'overview')
+    const grid = getCourseLesson('week-2', 'grid-frameworks')
+
+    expect(overview).not.toBeNull()
+    expect(overview?.lesson.status).toBe('ready')
+    expect(overview?.lesson.slides.map((slide) => slide.kind)).toEqual([
+      'cover',
+      'roadmap',
+      'cards',
+      'closing',
+    ])
+
+    expect(grid?.lesson.status).toBe('ready')
+    expect(grid?.lesson.slides.some((slide) => slide.kind === 'demo')).toBe(false)
+    expect(grid?.lesson.slides.some((slide) => slide.kind === 'compare')).toBe(true)
+  })
+
+  it('uses demo entries for cascade, box model, flex, positioning and responsive lessons', () => {
+    const flex = getCourseLesson('week-2', 'flexbox')
+    const responsive = getCourseLesson('week-2', 'responsive-viewport')
+
+    const flexDemo = flex?.lesson.slides.find((slide) => slide.kind === 'demo')
+    const responsiveDemo = responsive?.lesson.slides.find((slide) => slide.kind === 'demo')
+
+    expect(flex?.lesson.status).toBe('ready')
+    expect(flexDemo?.demo?.route).toBe('/demos/week-2/css/flex-alignment')
+
+    expect(responsive?.lesson.status).toBe('ready')
+    expect(responsiveDemo?.demo?.route).toBe('/demos/week-2/css/responsive-breakpoints')
+    expect(responsiveDemo?.demo?.objectives?.length).toBeGreaterThanOrEqual(2)
+  })
+})
+
+describe('course week 3 rollout', () => {
+  it('uses a structured overview and keeps ecosystem/npm as slide-first content', () => {
+    const overview = getCourseLesson('week-3', 'overview')
+    const ecosystem = getCourseLesson('week-3', 'ecosystem-npm')
+
+    expect(overview).not.toBeNull()
+    expect(overview?.lesson.status).toBe('ready')
+    expect(overview?.lesson.slides.map((slide) => slide.kind)).toEqual([
+      'cover',
+      'roadmap',
+      'cards',
+      'closing',
+    ])
+
+    expect(ecosystem?.lesson.status).toBe('ready')
+    expect(ecosystem?.lesson.slides.some((slide) => slide.kind === 'demo')).toBe(false)
+    expect(ecosystem?.lesson.slides.some((slide) => slide.flow?.length)).toBe(true)
+  })
+
+  it('uses demo entries for closures, dom, events, forms and storage lessons', () => {
+    const closures = getCourseLesson('week-3', 'functions-closures')
+    const storage = getCourseLesson('week-3', 'storage')
+
+    const closureDemo = closures?.lesson.slides.find((slide) => slide.kind === 'demo')
+    const storageDemo = storage?.lesson.slides.find((slide) => slide.kind === 'demo')
+
+    expect(closures?.lesson.status).toBe('ready')
+    expect(closureDemo?.demo?.route).toBe('/demos/week-3/javascript/closure-snapshot')
+
+    expect(storage?.lesson.status).toBe('ready')
+    expect(storageDemo?.demo?.route).toBe('/demos/week-3/javascript/localstorage-notes')
+    expect(storageDemo?.demo?.objectives?.length).toBeGreaterThanOrEqual(2)
+  })
+})
+
 describe('course week 4 overview', () => {
   it('uses four pure slides without a demo iframe slide', () => {
     const result = getCourseLesson('week-4', 'overview')

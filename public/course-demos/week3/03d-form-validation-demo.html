@@ -1,0 +1,31 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>03D · 表单校验工作台</title>
+  <meta name="description" content="COMP6080 Week 3：观察表单校验与 preventDefault。" />
+  <link rel="icon" href="data:," />
+  <link rel="stylesheet" href="../week4/assets/demo.css" />
+  <style>.page-head{display:none}.demo-page{min-height:auto;padding:0}.demo-wrap{max-width:none;margin:0}</style>
+</head>
+<body>
+  <main class="demo-page"><div class="demo-wrap"><section class="demo reveal"><div class="demo-head"><h3>演示 D · 表单校验工作台</h3><span class="pill">live</span></div><div class="demo-body"><p class="demo-sub">切换不同输入场景，观察默认提交怎样被拦截，反馈怎样变化。</p><div class="row"><button class="btn primary sm" data-mode="empty" type="button">空值</button><button class="btn sm" data-mode="invalid" type="button">格式错误</button><button class="btn sm" data-mode="valid" type="button">校验通过</button></div><div class="status-line" id="meta"></div><div class="out pre tall idle" id="out">点击按钮开始。</div></div></section></div></main>
+  <script src="../week4/assets/demo.js"></script>
+  <script>
+    const samples = {
+      empty: { tone: 'err', label: '空值', text: 'event.preventDefault()\n\n输入为空时，先拦住提交，再提示“必填”。' },
+      invalid: { tone: 'warn', label: '格式错误', text: "const email = emailInput.value.trim()\nif (!email.includes('@')) {\n  errorEl.textContent = '请输入合法邮箱'\n}\n\n格式错了也不要继续提交。" },
+      valid: { tone: 'ok', label: '通过校验', text: 'preventDefault 之后，你可以自己决定是提交、展示成功提示，还是继续走异步请求。' }
+    };
+    const out = document.querySelector('#out');
+    const meta = document.querySelector('#meta');
+    document.querySelectorAll('[data-mode]').forEach((btn) => btn.addEventListener('click', () => {
+      const sample = samples[btn.dataset.mode];
+      meta.innerHTML = '<span class="chip ' + sample.tone + '">' + sample.label + '</span>';
+      out.className = 'out pre tall ' + sample.tone;
+      out.textContent = sample.text;
+    }));
+  </script>
+</body>
+</html>

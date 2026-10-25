@@ -1,0 +1,85 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>01D · 列表、表格与代码标签实验</title>
+  <meta name="description" content="COMP6080 Week 1：观察列表、表格与代码片段的结构边界。" />
+  <link rel="icon" href="data:," />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600&family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600&display=swap"
+    rel="stylesheet"
+  />
+  <link rel="stylesheet" href="../week4/assets/demo.css" />
+  <style>
+    .page-head { display: none; }
+    .demo-page { min-height: auto; padding: 0; }
+    .demo-wrap { max-width: none; margin: 0; }
+  </style>
+</head>
+<body>
+  <main class="demo-page">
+    <div class="demo-wrap">
+      <section class="demo reveal">
+        <div class="demo-head">
+          <h3>演示 D · 列表、表格与代码标签实验</h3>
+          <span class="pill">live</span>
+        </div>
+        <div class="demo-body">
+          <p class="demo-sub">依次切换三种内容场景，看看它们最合适的 HTML 结构是什么。</p>
+          <div class="row">
+            <button class="btn primary sm" data-mode="list" type="button">流程清单</button>
+            <button class="btn sm" data-mode="table" type="button">二维数据</button>
+            <button class="btn sm" data-mode="code" type="button">代码片段</button>
+          </div>
+          <div class="status-line" id="meta"></div>
+          <div class="out pre tall idle" id="out">点击按钮后查看结构说明。</div>
+        </div>
+      </section>
+    </div>
+  </main>
+
+  <script src="../week4/assets/demo.js"></script>
+  <script>
+    const $ = W4.$;
+    const out = $('#out');
+    const meta = $('#meta');
+
+    const samples = {
+      list: {
+        tone: 'ok',
+        label: '流程清单',
+        text: '有先后顺序的步骤最适合 ol / li，结构和阅读顺序一致。',
+        code: '<ol>\n  <li>git clone</li>\n  <li>edit files</li>\n  <li>git commit</li>\n</ol>'
+      },
+      table: {
+        tone: 'warn',
+        label: '二维数据',
+        text: '只有当内容本质上是行列关系时，table 才是正确标签；关键在于 th 和数据格的关系。',
+        code: '<table>\n  <thead><tr><th>Week</th><th>Topic</th></tr></thead>\n  <tbody><tr><td>1</td><td>HTML</td></tr></tbody>\n</table>'
+      },
+      code: {
+        tone: 'teal',
+        label: '代码片段',
+        text: '代码文本要保留格式和缩进，所以通常用 pre + code 搭配。',
+        code: '<pre><code>&lt;h1&gt;Hello&lt;/h1&gt;\n&lt;p&gt;Week 1&lt;/p&gt;</code></pre>'
+      }
+    };
+
+    function render(mode) {
+      const sample = samples[mode];
+      meta.innerHTML = '<span class="chip ' + sample.tone + '">' + sample.label + '</span>';
+      out.className = 'out pre tall ' + sample.tone;
+      out.textContent = sample.text + '\n\n' + sample.code;
+    }
+
+    W4.$$('[data-mode]').forEach(function (btn) {
+      btn.addEventListener('click', function () {
+        render(btn.dataset.mode);
+      });
+    });
+  </script>
+</body>
+</html>

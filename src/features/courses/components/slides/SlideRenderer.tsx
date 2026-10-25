@@ -140,6 +140,7 @@ function RoadmapSlide({ slide, accent }: SlideProps) {
 /* ------------------------------------------------------------------ 卡片总览 */
 function CardsSlide({ slide, accent }: SlideProps) {
   const cards = slide.cards ?? []
+  const useThreeColumnLayout = cards.length >= 6 && cards.length % 3 === 0
 
   return (
     <SlideFrame
@@ -151,8 +152,11 @@ function CardsSlide({ slide, accent }: SlideProps) {
     >
       <div className="mt-2 grid gap-4 lg:grid-cols-6">
         {cards.map((card, index) => {
-          const spanClass =
-            index < 2 ? 'lg:col-span-3' : 'lg:col-span-2'
+          const spanClass = useThreeColumnLayout
+            ? 'lg:col-span-2'
+            : index < 2
+              ? 'lg:col-span-3'
+              : 'lg:col-span-2'
 
           return (
             <article

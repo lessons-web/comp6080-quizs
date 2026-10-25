@@ -1,0 +1,277 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>01A · HTML 文档骨架观察器</title>
+  <meta name="description" content="COMP6080 Week 1：观察 HTML 文档骨架的最小组成。" />
+  <link rel="icon" href="data:," />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600&family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600&display=swap"
+    rel="stylesheet"
+  />
+  <link rel="stylesheet" href="../week4/assets/demo.css" />
+  <style>
+    .page-head { display: none; }
+    .demo-page { min-height: auto; padding: 0; }
+    .demo-wrap { max-width: none; margin: 0; }
+    .workspace {
+      display: grid;
+      gap: 16px;
+    }
+    .control-grid {
+      display: grid;
+      gap: 10px;
+      grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+    }
+    iframe.preview {
+      width: 100%;
+      min-height: 280px;
+      border: 1px solid rgba(46, 94, 80, 0.18);
+      border-radius: 18px;
+      background: #fffdf6;
+    }
+    .inspector {
+      display: grid;
+      gap: 14px;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+    .mini-card {
+      border: 1px solid rgba(46, 94, 80, 0.14);
+      border-radius: 16px;
+      background: #fffdfa;
+      padding: 14px 16px;
+    }
+    .mini-card h4 {
+      margin: 0 0 10px;
+      font-size: 13px;
+      color: #b3470f;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+    }
+    .mini-card ul {
+      margin: 0;
+      padding-left: 18px;
+      color: #4c5159;
+    }
+    .mini-card li + li { margin-top: 6px; }
+    .chips {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+    .chip.soft {
+      background: #f4f1ea;
+      border: 1px solid #e3ded4;
+      color: #4c5159;
+    }
+    .chip.warn {
+      background: #fdf8ee;
+      border: 1px solid #f0e0c0;
+      color: #9a6b00;
+    }
+    .chip.err {
+      background: #fdf3f1;
+      border: 1px solid #f0cdc8;
+      color: #b3261e;
+    }
+    .code-shell {
+      white-space: pre-wrap;
+      word-break: break-word;
+    }
+    @media (max-width: 760px) {
+      .inspector { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+  <main class="demo-page">
+    <div class="demo-wrap">
+      <section class="demo reveal">
+        <div class="demo-head">
+          <h3>演示 A · HTML 文档骨架观察器</h3>
+          <span class="pill">live</span>
+        </div>
+        <div class="demo-body">
+          <p class="demo-sub">把一份 HTML 文档按从上到下的顺序拆开看。每次切换一个版本，观察是 head 少了信息，还是 body 少了结构。</p>
+          <div class="workspace">
+            <div class="control-grid">
+              <button class="btn primary sm" data-mode="full" type="button">完整骨架</button>
+              <button class="btn sm" data-mode="no-title" type="button">移除 title</button>
+              <button class="btn sm" data-mode="no-viewport" type="button">移除 viewport</button>
+              <button class="btn sm" data-mode="no-link" type="button">移除 link</button>
+              <button class="btn sm" data-mode="no-semantic" type="button">去掉语义骨架</button>
+              <button class="btn sm" data-mode="body-only" type="button">只保留 body</button>
+            </div>
+            <div class="status-line" id="meta"></div>
+            <div class="inspector">
+              <section class="mini-card">
+                <h4>Head 里现在有什么</h4>
+                <div class="chips" id="head-items"></div>
+              </section>
+              <section class="mini-card">
+                <h4>Body 里现在有什么</h4>
+                <div class="chips" id="body-items"></div>
+              </section>
+            </div>
+            <iframe class="preview" id="frame" title="HTML skeleton preview"></iframe>
+            <div class="inspector">
+              <section class="mini-card">
+                <h4>这次你该观察什么</h4>
+                <ul id="takeaways"></ul>
+              </section>
+              <section class="mini-card">
+                <h4>缺失提醒</h4>
+                <div class="chips" id="missing-items"></div>
+              </section>
+            </div>
+            <div class="out pre tall idle code-shell" id="out">点击上面的按钮开始观察。</div>
+          </div>
+        </div>
+      </section>
+    </div>
+  </main>
+
+  <script src="../week4/assets/demo.js"></script>
+  <script>
+    const $ = W4.$;
+    const frame = $('#frame');
+    const out = $('#out');
+    const meta = $('#meta');
+    const headItems = $('#head-items');
+    const bodyItems = $('#body-items');
+    const takeaways = $('#takeaways');
+    const missingItems = $('#missing-items');
+
+    const samples = {
+      full: {
+        label: '完整骨架',
+        tone: 'ok',
+        text: '这是一份比较完整的教学型 HTML 文档：文档类型、根节点、head 配置和 body 语义骨架都在。',
+        head: ['meta charset', 'meta viewport', 'title', 'link stylesheet'],
+        body: ['header', 'nav', 'main', 'section', 'article'],
+        missing: [],
+        takeaways: [
+          'title 决定标签页名称，link 负责把外部样式接进来。',
+          'body 不只是放文字，还应该先组织出页面区域。',
+          '这类结构最容易和后面的 CSS、JS 课程衔接。'
+        ],
+        html: '<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>COMP6080 Week 1</title><link rel="stylesheet" href="./styles.css"></head><body><header><h1>HTML Structure Notes</h1><nav><a href="./index.html">Home</a> <a href="./week1.html">Week 1</a></nav></header><main><section><h2>Document overview</h2><p>This page has a valid HTML document structure.</p></section><article><h2>Key takeaway</h2><p>Head configures the page, body presents the page.</p></article></main></body></html>'
+      },
+      'no-title': {
+        label: '移除 title',
+        tone: 'warn',
+        text: '页面主体还能显示，但浏览器标签页、历史记录和收藏里会缺少清晰标题。',
+        head: ['meta charset', 'meta viewport', 'link stylesheet'],
+        body: ['header', 'main', 'section'],
+        missing: ['title'],
+        takeaways: [
+          'title 不在页面正文里显示，但它是浏览器理解这页的重要名字。',
+          '学生最容易误会“看不见就不重要”，这正是 head 里标签的难点。'
+        ],
+        html: '<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><link rel="stylesheet" href="./styles.css"></head><body><header><h1>HTML Structure Notes</h1></header><main><section><p>The content still renders, but the page has no title.</p></section></main></body></html>'
+      },
+      'no-viewport': {
+        label: '移除 viewport',
+        tone: 'warn',
+        text: '桌面上看起来可能没什么异常，但移动端会少掉“按设备宽度渲染”这层重要提示。',
+        head: ['meta charset', 'title', 'link stylesheet'],
+        body: ['header', 'main', 'section'],
+        missing: ['meta viewport'],
+        takeaways: [
+          'viewport 的价值主要在移动端，所以它很容易被初学者忽略。',
+          '这类标签不是“显示内容”，而是“告诉浏览器怎么显示内容”。'
+        ],
+        html: '<!doctype html><html lang="en"><head><meta charset="utf-8"><title>COMP6080 Week 1</title><link rel="stylesheet" href="./styles.css"></head><body><header><h1>Viewport Missing</h1></header><main><section><p>Desktop preview may look normal, but mobile rendering loses key guidance.</p></section></main></body></html>'
+      },
+      'no-link': {
+        label: '移除 link',
+        tone: 'warn',
+        text: 'HTML 结构还在，但外部 CSS 不会被接进来。页面的“角色结构”与“视觉样子”从这里开始分家。',
+        head: ['meta charset', 'meta viewport', 'title'],
+        body: ['header', 'nav', 'main', 'section'],
+        missing: ['link stylesheet'],
+        takeaways: [
+          'link 常常是学生第一次看到“head 里接资源”的例子。',
+          '即使不连样式，HTML 结构依然成立；这能帮助理解结构与样式分层。'
+        ],
+        html: '<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>No External CSS</title></head><body><header><h1>Structure first</h1><nav><a href="./index.html">Home</a></nav></header><main><section><p>The page still works, but external styles are no longer connected.</p></section></main></body></html>'
+      },
+      'body-only': {
+        label: '只保留 body',
+        tone: 'err',
+        text: '浏览器仍会努力渲染内容，但你把文档类型、根节点和 head 里的配置几乎全部丢掉了。',
+        head: [],
+        body: ['h1', 'p'],
+        missing: ['doctype', 'html', 'head', 'meta charset', 'title', 'link stylesheet'],
+        takeaways: [
+          '“浏览器能显示”不等于“文档写对了”。',
+          '这类写法最容易让学生误以为 HTML 只要把内容塞进 body 就够了。'
+        ],
+        html: '<body><h1>Hello COMP6080</h1><p>This page only keeps body.</p></body>'
+      },
+      'no-semantic': {
+        label: '去掉语义骨架',
+        tone: 'warn',
+        text: 'head 还在，但 body 内只剩通用容器。页面能显示，可是结构角色开始变得模糊。',
+        head: ['meta charset', 'meta viewport', 'title', 'link stylesheet'],
+        body: ['div', 'div', 'div'],
+        missing: ['header / nav / main / section'],
+        takeaways: [
+          '这能帮助学生看到：文档骨架完整，不代表 body 里的结构表达也已经足够好。',
+          '这正好和 Lesson 3 的“结构表达与语义化”衔接上。'
+        ],
+        html: '<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Div Only Layout</title><link rel="stylesheet" href="./styles.css"></head><body><div class="page"><div class="top">HTML Structure Notes</div><div class="menu">Home · Week 1</div><div class="content">The content renders, but its structure is vague.</div></div></body></html>'
+      }
+    };
+
+    function renderChips(target, items, tone) {
+      if (!items.length) {
+        target.innerHTML = '<span class="chip soft">无</span>';
+        return;
+      }
+      target.innerHTML = items.map(function (item) {
+        return '<span class="chip ' + tone + '">' + item + '</span>';
+      }).join('');
+    }
+
+    function renderList(target, items) {
+      target.innerHTML = items.map(function (item) {
+        return '<li>' + item + '</li>';
+      }).join('');
+    }
+
+    function render(mode) {
+      const sample = samples[mode];
+      frame.srcdoc = sample.html;
+      meta.innerHTML = '<span class="chip ' + sample.tone + '">' + sample.label + '</span>' +
+        '<span class="chip soft">head: ' + sample.head.length + ' 项</span>' +
+        '<span class="chip soft">body: ' + sample.body.length + ' 项</span>';
+      renderChips(headItems, sample.head, 'ok');
+      renderChips(bodyItems, sample.body, 'soft');
+      renderChips(missingItems, sample.missing, sample.missing.length ? 'warn' : 'ok');
+      renderList(takeaways, sample.takeaways);
+      out.className = 'out pre tall ' + sample.tone + ' code-shell';
+      out.textContent = sample.text + '\n\n' + sample.html;
+
+      W4.$$('[data-mode]').forEach(function (btn) {
+        if (btn.dataset.mode === mode) {
+          btn.classList.add('primary');
+        } else {
+          btn.classList.remove('primary');
+        }
+      });
+    }
+
+    W4.$$('[data-mode]').forEach(function (btn) {
+      btn.addEventListener('click', function () {
+        render(btn.dataset.mode);
+      });
+    });
+
+    render('full');
+  </script>
+</body>
+</html>

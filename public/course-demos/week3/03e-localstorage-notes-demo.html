@@ -1,0 +1,30 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>03E · localStorage 笔记实验</title>
+  <meta name="description" content="COMP6080 Week 3：观察 localStorage 持久化闭环。" />
+  <link rel="icon" href="data:," />
+  <link rel="stylesheet" href="../week4/assets/demo.css" />
+  <style>.page-head{display:none}.demo-page{min-height:auto;padding:0}.demo-wrap{max-width:none;margin:0}</style>
+</head>
+<body>
+  <main class="demo-page"><div class="demo-wrap"><section class="demo reveal"><div class="demo-head"><h3>演示 E · localStorage 笔记实验</h3><span class="pill">live</span></div><div class="demo-body"><p class="demo-sub">完整看一遍 stringify -> setItem -> getItem -> parse。</p><div class="row"><button class="btn primary sm" data-mode="write" type="button">写入</button><button class="btn sm" data-mode="read" type="button">读取</button></div><div class="status-line" id="meta"></div><div class="out pre tall idle" id="out">点击按钮开始。</div></div></section></div></main>
+  <script src="../week4/assets/demo.js"></script>
+  <script>
+    const samples = {
+      write: { tone: 'ok', label: '写入阶段', text: "localStorage.setItem('week3:notes', JSON.stringify(notes))\n\n对象不能直接存进去，得先变成字符串。" },
+      read: { tone: 'teal', label: '读取阶段', text: "const raw = localStorage.getItem('week3:notes')\nconst parsed = raw ? JSON.parse(raw) : []\n\n读出来先是字符串，再 parse 回数组。" }
+    };
+    const out = document.querySelector('#out');
+    const meta = document.querySelector('#meta');
+    document.querySelectorAll('[data-mode]').forEach((btn) => btn.addEventListener('click', () => {
+      const sample = samples[btn.dataset.mode];
+      meta.innerHTML = '<span class="chip ' + sample.tone + '">' + sample.label + '</span>';
+      out.className = 'out pre tall ' + sample.tone;
+      out.textContent = sample.text;
+    }));
+  </script>
+</body>
+</html>

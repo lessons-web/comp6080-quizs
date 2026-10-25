@@ -1,0 +1,38 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>02A · 选择器与层叠检视器</title>
+  <meta name="description" content="COMP6080 Week 2：观察 CSS 层叠优先级。" />
+  <link rel="icon" href="data:," />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="../week4/assets/demo.css" />
+  <style>
+    .page-head { display: none; }
+    .demo-page { min-height: auto; padding: 0; }
+    .demo-wrap { max-width: none; margin: 0; }
+  </style>
+</head>
+<body>
+  <main class="demo-page"><div class="demo-wrap"><section class="demo reveal"><div class="demo-head"><h3>演示 A · 选择器与层叠检视器</h3><span class="pill">live</span></div><div class="demo-body"><p class="demo-sub">切换规则强度，观察同一个按钮最后会采用哪一条颜色规则。</p><div class="row"><button class="btn primary sm" data-mode="order" type="button">只改顺序</button><button class="btn sm" data-mode="class" type="button">更具体 class</button><button class="btn sm" data-mode="important" type="button">加 !important</button></div><div class="status-line" id="meta"></div><div class="out pre tall idle" id="out">点击按钮开始。</div></div></section></div></main>
+  <script src="../week4/assets/demo.js"></script>
+  <script>
+    const samples = {
+      order: { tone: 'ok', label: '后写覆盖', text: '.btn { color: #0f172a; }\n.btn { color: #0369a1; }\n\n优先级一样时，后写的规则胜出。' },
+      class: { tone: 'warn', label: '更具体 class', text: '.btn { color: #0f172a; }\n.hero .btn { color: #0369a1; }\n\n更具体的选择器会覆盖普通 class。' },
+      important: { tone: 'err', label: '!important', text: '.hero .btn { color: #0369a1; }\n#signup-cta { color: #be123c !important; }\n\n!important 会强行赢下这一轮，但后续维护成本更高。' }
+    };
+    const out = document.querySelector('#out');
+    const meta = document.querySelector('#meta');
+    document.querySelectorAll('[data-mode]').forEach((btn) => btn.addEventListener('click', () => {
+      const sample = samples[btn.dataset.mode];
+      meta.innerHTML = '<span class="chip ' + sample.tone + '">' + sample.label + '</span>';
+      out.className = 'out pre tall ' + sample.tone;
+      out.textContent = sample.text;
+    }));
+  </script>
+</body>
+</html>

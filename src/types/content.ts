@@ -96,20 +96,48 @@ export interface ExamSubQuestion {
   questionMdx: string
   answerMdx: string
   markingMdx?: string
+  questionMdxZh?: string
+  answerMdxZh?: string
+  markingMdxZh?: string
+}
+
+export interface ExamQuestionMockupFile {
+  name: string
+  active?: boolean
+  code?: string
+  codeZh?: string
+}
+
+export interface ExamQuestionMockup {
+  files: ExamQuestionMockupFile[]
+  html: string
+  htmlZh?: string
+  viewport?: 'desktop' | 'mobile'
+  caption?: string
+  captionZh?: string
 }
 
 export interface ExamQuestion {
   id: string
   title: string
+  titleZh?: string
   marks: number
   contentMdx: string
+  contentMdxZh?: string
+  displayNumber?: string
+  categoryLabel?: string
+  categoryLabelZh?: string
+  displayStyle?: 'default' | 'quiz-sample'
+  mockup?: ExamQuestionMockup
   subQuestions: ExamSubQuestion[]
 }
 
 export interface ExamPaper {
   id: string
   title: string
+  titleZh?: string
   description?: string
+  descriptionZh?: string
   tags?: string[]
   totalMarks: number
   time?: string

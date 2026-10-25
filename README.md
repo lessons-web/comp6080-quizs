@@ -1,555 +1,355 @@
-# COMP6080 题库系统设计说明
+# COMP6080 Quiz Hub 项目概览与内容维护说明
 
-## 1. 项目目标
+## 0. 当前协作规则
 
-设计并实现一套面向 `COMP6080` 课程的 Web 题库系统，第一版聚焦 `Week 1–4`，以 `Week 1` 作为内容样板做深，整体支持后续扩展到整门课程。
+> 本节用于给人类协作者和 AI 协作者一个统一入口。  
+> 当前项目级约束以 [AGENTS.md](file:///Users/luffyzh/luffyzh/github/irbtree/comp6080-quizs/AGENTS.md) 为准；若 README 中较早的设计描述与其冲突，以 `AGENTS.md` 的最新规则为准。
 
-系统的核心目标不是单纯展示题目，而是围绕课程改版后的 quiz 化方向，形成一套适合：
+### 0.1 题库维护的两条硬规则
 
-- 讲师备课与课堂讲评
-- 学生按知识点复习
-- 学生按题库练习
-- 学生做整套模拟题和历年题
+- **新增到 Quiz / Mock Exam 的题目，必须同步进入对应的 Practice Bank。**
+  - 通常需要同时更新：
+    - `content/exams/*.json`
+    - `content/questions/week-*.practice.json`
+- **老师样本里那种“Supporting files + 右侧页面截图”的题面，默认使用 HTML Mockup 还原，不新增重图片资源。**
+  - 优先用结构化 DOM + CSS 还原题面证据
+  - 不默认引入 `png / jpg / webp` 等重资源
 
-的统一内容平台。
+### 0.2 HTML Mockup 使用原则
 
-## 2. 设计结论
+- HTML Mockup 的职责是还原**判题所需的视觉证据**，而不是做真实交互 demo。
+- 优先保留这些信息：
+  - 左侧 `Supporting files`
+  - 右侧页面预览
+  - 顶部深色 top bar
+  - 表单、卡片、列表、空状态、按钮层级
+  - 题目推理真正依赖的局部文案和布局关系
+- 不要为“像截图”而过度堆砌细节。
+- 不实现真实业务逻辑，静态结构优先。
+- 能复用统一 mockup 样式时，不要为单题写私有碎片实现。
 
-本系统采用以下设计结论：
+### 0.3 出题同步要求
 
-- 技术栈：`React + TailwindCSS`
-- 主题风格：`Light 模式`
-- 主题色：`科技蓝`
-- 页面布局：`Header + Main + Footer`
-- 导航方式：`按模块导航`
-- 模块结构：
-  - `知识点解析`
-  - `模拟题库`
-  - `模拟真题`
-- 覆盖范围：系统骨架覆盖 `Week 1–4`
-- 内容策略：`Week 1` 先做完整样板
-- 内容架构：采用 `方案 B`
-  - `知识点解析` 使用 `Markdown/MDX`
-  - `模拟题库 / 模拟真题` 使用结构化数据
+- 一次完整的试卷更新，通常要同步以下三个层面：
+  1. `content/exams/*.json`
+  2. `content/questions/week-*.practice.json`
+  3. `quizs/*.md`
+- 三者至少要保持以下内容一致：
+  - 题目标题
+  - 核心考点
+  - 范围边界
+  - 总分 / 题量（如有展示）
 
-## 3. 系统范围
+### 0.4 Quiz 2 当前专项规则
 
-### 3.1 第一版包含内容
+- 生成当前项目中的 `Quiz 2` 模拟题时：
+  - 覆盖 `Weeks 1-5 lectures and tutorials + assignment 3`
+  - **明确排除 `Week 5 React lectures`**
+- `Week 5 UI/UX` 的非 React 内容仍然在范围内，可以正常出题。
 
-- 首页与全局布局
-- 三大模块页面
-- `Week 1–4` 周切换骨架
-- `Week 1` 的完整内容样板
-  - 知识点解析
-  - 分类题库
-  - 两套模拟真题
-- 可扩展的数据结构与目录结构
+### 0.5 推荐工作顺序
 
-### 3.2 第一版不包含内容
+1. 先更新或新增 `content/exams/*.json`
+2. 再同步 `content/questions/week-*.practice.json`
+3. 若题面需要截图感，优先补 `mockup`
+4. 再同步 `quizs/*.md`
+5. 最后更新测试并运行验证
 
-- 用户登录
-- 做题进度持久化
-- 收藏 / 错题本
-- 自动判分
-- 后台管理系统
-- 暗黑模式
+### 0.6 常见禁止事项
 
-这些能力未来都可以扩展，但不进入第一版。
+- 不要只更新整卷，不更新 practice bank
+- 不要只补 markdown 阅读版，不更新站内数据
+- 不要批量引入大体积截图资源
+- 不要把交互 demo 塞进题面 mockup
+- 不要把 `Week 5 React lectures` 混进当前 Quiz 2 模拟卷
 
-## 4. 信息架构
+### 0.7 快速开始
 
-### 4.1 顶层导航
+本地开发常用命令：
 
-Header 固定展示三个主模块：
+```bash
+npm install
+npm run dev
+```
 
-- `知识点解析`
-- `模拟题库`
-- `模拟真题`
+其他常用命令：
 
-用户先选择模块，再在模块内部切换 `Week 1–4`。
+```bash
+npm run test
+npm run build
+npm run lint
+```
 
-### 4.2 路由结构
+默认开发服务器由 Next.js 提供；启动后可在本地访问课程、题库和模拟真题页面。
 
-建议采用如下路由：
+## 1. 项目定位
 
-- `/`
-- `/knowledge/week-1`
-- `/knowledge/week-2`
-- `/knowledge/week-3`
-- `/knowledge/week-4`
-- `/practice/week-1`
-- `/practice/week-2`
-- `/practice/week-3`
-- `/practice/week-4`
-- `/mock-exams/week-1`
-- `/mock-exams/week-2`
-- `/mock-exams/week-3`
-- `/mock-exams/week-4`
+这是一个面向 `COMP6080 Web Foundations` 的教学内容平台，不只是题目展示页。
 
-如果后续扩展整门课，只需要继续增加周次，而不需要重构路由形态。
+当前项目同时服务于三类场景：
 
-## 5. 页面布局设计
+- 课程学习：按课程主线浏览 slides、代码证据与 demo 入口
+- 题库练习：按周次与主题筛选单题，查看答案与解析
+- 模拟真题：按整套试卷进行阅读、讲评与复盘
 
-### 5.1 整体布局
+项目已经从早期的“Week 1–4 原型”演进为一套可持续扩展的内容系统，当前内容已覆盖更完整的知识主题与多周练习 / 试卷数据。
 
-页面固定采用三段结构：
+## 2. 当前技术栈
 
-- `Header`
-- `Main`
-- `Footer`
+- 框架：`Next.js 15`
+- 视图层：`React 19`
+- 语言：`TypeScript`
+- 样式：`Tailwind CSS` + 项目级 CSS tokens
+- 内容渲染：`MDX`、`react-markdown`、`remark-gfm`
+- 代码高亮：`highlight.js`
+- 测试：`Vitest` + `Testing Library`
 
-### 5.2 Header
+当前项目已经不是单纯的 `React + Tailwind` 静态原型，而是基于 Next.js App Router 的内容平台。
 
-Header 包含：
+## 3. 当前模块结构
 
-- 系统名称，例如：`COMP6080 Quiz Hub`
-- 三个主导航入口
-- 当前模块的高亮态
+顶层面向用户的主入口有三块：
 
-Header 建议固定在顶部，保证用户切换模块时稳定可见。
+- `课程`：`/courses`
+- `题库中心`：`/practice`
+- `模拟真题`：`/exams`
 
-### 5.3 Main
+此外还存在一些辅助或内部入口：
 
-Main 是内容主区域，包含：
+- `知识点详情`：`/knowledge/...`
+- `Demos`：`/demos/...`
+- `登录`：`/login`
+- `管理后台`：`/admin`
 
-- 模块标题区
-- Week 切换栏
-- 当前周内容主体
+根路由 `/` 当前会直接重定向到 `/courses`。
 
-Main 保持较舒适的阅读宽度，不做过宽排版，兼顾讲师阅读与学生刷题。
+## 4. 路由与页面现实
 
-### 5.4 Footer
+当前项目采用 Next.js App Router，实际页面入口以 `src/app` 为准，而不是 README 早期版本里那种纯静态周次路由表。
 
-Footer 保持简洁，仅放版权和用途说明，例如：
+当前核心路由包括：
 
-- `© 2026 COMP6080 Training Notes`
-- `Built for teaching and quiz practice`
+- `/` → 重定向到 `/courses`
+- `/courses/[[...slug]]`
+- `/practice`
+- `/exams`
+- `/knowledge/[[...slug]]`
+- `/demos/[[...slug]]`
+- `/login`
+- `/admin`
 
-## 6. 视觉风格
+其中：
 
-### 6.1 视觉原则
+- `courses` 是课程主入口
+- `practice` 和 `exams` 面向题库与整卷练习
+- `knowledge` 更偏主题化知识点详情
+- `demos` 用于承载独立实验与示例
 
-整体采用：
+## 5. 当前布局与交互骨架
 
-- 明亮的 Light 风格
-- 干净、现代、教学产品导向
-- 科技蓝为主强调色
+项目整体采用“上中下”结构：
 
-不使用暗黑模式，不使用花哨动画，不做海报式视觉夸张。
+- 顶部 `Header`
+- 中间 `Main`
+- 底部 `Footer`
 
-### 6.2 视觉元素
+布局重点不是传统文档页，而是：
 
-- 页面背景：浅白或浅灰蓝
-- 卡片背景：白色
-- 强调色：科技蓝
-- 边框：浅灰蓝细边框
-- 阴影：轻量阴影
-- 圆角：中等圆角
+- Header 固定在顶部，承担模块导航与用户入口
+- Main 独立滚动，承载课程 / 题库 / 试卷等主体内容
+- Footer 固定在底部，维持整体结构稳定
 
-### 6.3 视觉用途分配
+题库与试卷页强调卡片化阅读；课程页强调连续学习与局部切换；知识点与 demo 页则承担更细粒度的讲解与实验角色。
 
-- 蓝色用于：
-  - 当前导航高亮
-  - 按钮
-  - 标签
-  - 链接
-  - 展开状态强调
-- 正文保持深灰和黑色系，避免整页过度高饱和。
+## 6. 当前视觉风格
 
-## 7. 三大模块设计
+README 早期版本提到的“科技蓝主题”已经不是当前项目真实风格。
 
-## 7.1 知识点解析
+当前视觉基调是：
 
-### 页面目标
+- 暖纸张背景
+- 深青绿作为主品牌色
+- 暖琥珀作为辅助强调色
+- 白色 / 浅米色卡片层次
+- 教学内容区和后台式证据图区并存
 
-知识点解析模块用于讲授与复习，不是单纯文档阅读页，而是“讲解 + 易错点 + 例子 + 关联题”的混合型结构。
+也就是说，现在的项目不是冷蓝科技风，而是更偏“纸张学习感 + 管理后台感”的混合体系。
 
-### 页面结构
+### 6.1 视觉分层
 
-每个 `Week` 页面由多个知识点 section 组成，每个 section 包含：
+- 页面外层：暖纸色内容平台
+- 内容卡片：浅色纸面、低对比边框、适度阴影
+- 题面 mockup：轻后台风格，用于还原页面证据
+- 强调信息：深青绿 / 暖琥珀标签与状态点缀
 
-- 标题
-- 核心讲解
-- 易错点
-- 小例子
-- 关联题入口
+### 6.2 设计取向
 
-### 交互方式
+- 优先可读性与层次，而不是装饰性
+- 支持高密度信息，但尽量保持清晰分区
+- UI 证据区应真实、简洁、便于分析
+- 不为了“像海报”而牺牲教学清晰度
 
-- 顶部切换周次
-- 页面内支持知识点锚点导航
-- 点击关联题可跳转到对应题库题目
+## 7. 当前内容组织方式
 
-### 内容格式
+项目现在采用“内容与代码分离”的结构：
 
-知识点解析使用 `MDX`，因为它适合：
+- `content/knowledge/`：知识点 MDX，按主题目录组织
+- `content/questions/`：练习题库 JSON
+- `content/exams/`：试卷 / 模拟卷 JSON
+- `quizs/`：人类可读的阅读版试卷文档
+
+这和 README 早期版本里“按 week 写一整篇 knowledge 文档”的思路不同。当前知识内容更偏主题化组织，例如：
+
+- `html/`
+- `css/`
+- `javascript/`
+- `nodejs/`
+- `react/`
+- `ui-ux/`
+
+这更贴近长期扩展，也更利于按知识点复用。
+
+## 8. 当前内容建模约定
+
+### 8.1 知识点内容
+
+知识点使用 `MDX`，适合承载：
 
 - 长文本讲解
 - 代码块
-- 教学注释
-- 后续混合 React 组件
+- 小型教学结构
+- 与组件结合的内容呈现
 
-## 7.2 模拟题库
+### 8.2 练习题库
 
-### 页面目标
+练习题以“单题记录”为单位存在于 `week-*.practice.json` 中，适合：
 
-题库模块用于按知识点练习，不按套卷组织。
+- 题库筛选
+- 单题展开
+- 按周同步维护
+- 与试卷题目互相映射
 
-### 页面结构
+### 8.3 模拟真题
 
-每道题以独立卡片展示，默认只展示：
+试卷以“整卷”为单位存在于 `content/exams/*.json` 中，当前已经支持：
 
-- 题号
-- 题目
-- 必要的代码块或图片
+- 常规模拟卷
+- 周次模拟卷
+- Quiz 模拟卷 / 真题改编卷
+- 结构化题目列表
+- 每题独立的 subQuestions
+- 可选 `mockup` 题面
 
-用户点击后再展开：
+### 8.4 HTML Mockup 题面
 
-- 知识点
-- 答案解析
+对于老师样本里常见的“Supporting files + 页面截图”类题目，当前推荐使用轻量 HTML Mockup，而不是新增重图片资源。
 
-### 交互方式
+其特点是：
 
-- 按周切换
-- 按分类切换，例如：
-  - `HTML`
-  - `CSS`
-  - 后续可扩展 `JavaScript`、`React`
-- 题目卡片单独展开 / 收起
+- 使用统一的渲染能力与通用样式
+- 保留真实考试观感
+- 只还原判题需要的视觉证据
+- 更容易批量生成、修改与维护
 
-### 设计原则
-
-- 一道题就是一个独立对象
-- 页面始终围绕“一题一题”的节奏组织
-- 适合学生自主练习，也适合讲师逐题讲评
-
-## 7.3 模拟真题
-
-### 页面目标
-
-真题模块用于展示整套题，不和题库混用。
-
-### 页面结构
-
-每个 Week 下可包含：
-
-- 历年真题
-- 模拟试卷
-
-每套卷子包含：
-
-- 套卷标题
-- 题目列表
-- 答案区
-
-第一版建议沿用你已确认的排版方式：
-
-- 上方展示整套题目
-- 下方统一展示答案
-
-### 设计原则
-
-- 真题的组织单位是“套卷”
-- 题库的组织单位是“单题”
-- 两者数据结构相关，但展示逻辑不同
-
-## 8. 内容建模方案
-
-采用 `方案 B`：
-
-- `知识点解析`：`Markdown/MDX`
-- `模拟题库 / 模拟真题`：结构化数据
-
-这样做的原因是：
-
-- 讲解内容更适合自然写作
-- 题目内容更适合“一题一对象”的标准化管理
-- 有利于后续筛选、跳转、扩展字段
-
-## 9. 文件与目录结构建议
+## 9. 当前目录概览
 
 ```text
 src/
   app/
+    (app)/
+      courses/
+      practice/
+      exams/
+      knowledge/
+      demos/
+      admin/
+    login/
   components/
   features/
+    courses/
     knowledge/
     practice/
     mock-exams/
+    demos/
   lib/
   types/
 
 content/
   knowledge/
-    week-1.mdx
-    week-2.mdx
-    week-3.mdx
-    week-4.mdx
+    html/
+    css/
+    javascript/
+    nodejs/
+    react/
+    ui-ux/
   questions/
     week-1.practice.json
     week-2.practice.json
     week-3.practice.json
     week-4.practice.json
+    week-5.practice.json
   exams/
     week-1.mock-exams.json
     week-2.mock-exams.json
     week-3.mock-exams.json
     week-4.mock-exams.json
+    quiz-2.mock-exams.json
+    ...
+
+quizs/
+  2026T3-QUIZ1.md
+  2026T3-QUIZ2.md
+  ...
 ```
 
-## 10. 数据模型设计
-
-## 10.1 知识点解析（MDX）
-
-建议路径：
-
-- `content/knowledge/week-1.mdx`
-- `content/knowledge/week-2.mdx`
-- `content/knowledge/week-3.mdx`
-- `content/knowledge/week-4.mdx`
-
-建议结构：
-
-```mdx
----
-week: 1
-title: Week 1 知识点解析
-updatedAt: 2026-09-20
----
-
-## HTML Fundamentals
-
-### 核心讲解
-...
-
-### 易错点
-...
-
-### 例子
-```html
-...
-```
-
-### 关联题
-- W1-HTML-Q1
-- W1-HTML-Q2
-```
-
-## 10.2 模拟题库（单题结构）
-
-建议每题为一条独立记录。
-
-建议字段：
-
-```json
-{
-  "id": "W1-HTML-Q1",
-  "week": 1,
-  "module": "practice",
-  "category": "HTML",
-  "questionNo": 1,
-  "question": "在下面代码中，哪一部分属于页面主体内容？为什么？",
-  "codeBlocks": [
-    {
-      "language": "html",
-      "code": "<!doctype html>...</html>"
-    }
-  ],
-  "images": [
-    {
-      "src": "/images/week1/example-1.png",
-      "alt": "Week 1 example screenshot",
-      "caption": "示意图"
-    }
-  ],
-  "knowledgePoint": "HTML 文档结构（head 与 body）",
-  "answerExplanation": "页面主体内容是 body 内的内容。head 主要放文档元信息。",
-  "difficulty": "easy",
-  "source": "simulation",
-  "tags": ["HTML", "文档结构", "基础语义"]
-}
-```
-
-### 字段说明
-
-- `id`：全局唯一题目编号
-- `week`：所属周次
-- `module`：当前模块，通常为 `practice`
-- `category`：题目分类，例如 `HTML`、`CSS`
-- `questionNo`：在当前分类中的序号
-- `question`：题目正文
-- `codeBlocks`：可选代码块数组
-- `images`：可选图片数组，用于未来支持截图题、图示题、UI 判断题
-- `knowledgePoint`：题目对应知识点
-- `answerExplanation`：答案解析
-- `difficulty`：难度
-- `source`：来源，例如 `simulation`
-- `tags`：检索标签
-
-其中你当前最关心的三部分仍然是：
-
-- `question`
-- `knowledgePoint`
-- `answerExplanation`
-
-## 10.3 模拟真题（套卷结构）
-
-建议结构：
-
-```json
-{
-  "week": 1,
-  "exams": [
-    {
-      "id": "W1-EXAM-01",
-      "title": "Week 1 模拟真题 1",
-      "type": "mock",
-      "questionCount": 10,
-      "questions": [
-        {
-          "id": "W1-EXAM-01-Q1",
-          "questionNo": 1,
-          "question": "在 HTML 基本文档中，head 和 body 的职责分别是什么？",
-          "knowledgePoint": "HTML 文档结构",
-          "answerExplanation": "head 放元信息，body 放主体内容",
-          "codeBlocks": [],
-          "images": []
-        }
-      ]
-    }
-  ]
-}
-```
+## 10. 当前维护原则
 
-### 扩展约定
+在这个项目里，内容更新通常不是“只改一个文件”。
 
-未来如果引入历年真题，可直接扩展：
+一条比较完整的更新路径通常是：
 
-- `type: "past-paper"`
-- `year: 2024`
+1. 更新 `content/exams/*.json` 或 `content/questions/*.json`
+2. 同步对应的 practice bank
+3. 若题面需要截图感，优先补 `mockup`
+4. 同步 `quizs/*.md`
+5. 更新测试并运行验证
 
-这样不需要重构页面。
+这些协作规则已经在：
 
-## 11. React 组件结构建议
+- [AGENTS.md](file:///Users/luffyzh/luffyzh/github/irbtree/comp6080-quizs/AGENTS.md)
 
-## 11.1 全局布局组件
+中固定下来，README 只保留面向人类的摘要说明。
 
-- `AppShell`
-- `Header`
-- `Footer`
-- `MainContainer`
+## 11. 为什么现在这样设计
 
-## 11.2 模块级组件
+当前架构能同时兼顾：
 
-知识点模块：
+### 对教学使用
 
-- `KnowledgePage`
-- `KnowledgeSection`
-- `KnowledgeAnchorNav`
-- `RelatedQuestions`
+- 课程模块适合按节奏讲授
+- 题库模块适合逐题训练与讲评
+- 试卷模块适合整卷复盘与专项模拟
 
-题库模块：
+### 对学生使用
 
-- `PracticePage`
-- `QuestionCard`
-- `QuestionCodeBlock`
-- `QuestionImages`
-- `QuestionDetailsCollapse`
+- 可以按课程主线学
+- 可以按题库刷
+- 可以按整卷练
+- 页面信息密度较高，但结构明确
 
-真题模块：
+### 对内容维护
 
-- `MockExamPage`
-- `ExamPaper`
-- `ExamQuestionList`
-- `ExamAnswerSection`
+- 知识点、题库、试卷分层清晰
+- 结构化内容便于批量扩展
+- HTML Mockup 降低截图资源维护成本
+- 测试可以对内容完整性做基本兜底
 
-## 11.3 通用组件
+## 12. 当前结论
 
-- `WeekTabs`
-- `ModuleTabs`
-- `Badge`
-- `SectionCard`
-- `EmptyState`
+这个项目现在应被理解为：
 
-## 12. 交互设计
+- 一个以教学为核心的内容平台
+- 一个支持课程、题库、试卷三条使用路径的学习系统
+- 一个逐步从“原型文档”演进到“可持续维护知识库”的真实仓库
 
-### 12.1 知识点解析
-
-- 默认展示完整知识点内容
-- 支持跳转到对应题目
-
-### 12.2 模拟题库
-
-- 默认展示题目
-- 点击展开知识点与答案解析
-- 每题单独控制展开状态
-
-### 12.3 模拟真题
-
-- 先展示整套题
-- 再展示整套答案
-- 后续可以扩展为“题目 / 答案”切换视图
-
-## 13. 为什么这样设计
-
-这套设计同时满足了三种需求：
-
-### 对讲师
-
-- 知识点模块适合讲课与备课
-- 题库模块适合按知识点讲评
-- 真题模块适合课后训练和模考讲解
-
-### 对学生
-
-- 可以按模块进入，不会迷失在内容中
-- 可以按周聚焦，不需要一次面对整门课程
-- 每道题都是独立卡片，阅读与练习节奏更清晰
-
-### 对后续扩展
-
-- 周次可以继续增加
-- 题目字段可以继续增加
-- 图片题、截图题、UI 判断题可以自然纳入
-- 将来做收藏、做题状态、错题本时无需推翻当前结构
-
-## 14. 第一版实现优先级
-
-建议实现顺序：
-
-1. 全局布局与路由骨架
-2. Header / Footer / Week Tabs
-3. 知识点解析模块
-4. 模拟题库模块
-5. 模拟真题模块
-6. 导入 Week 1 内容样板
-7. 预留 Week 2–4 空内容结构
-
-## 15. 验收标准
-
-第一版完成后应满足：
-
-1. 页面符合 `Header + Main + Footer` 结构
-2. 全局使用 Light 模式与科技蓝主题
-3. 三大模块可以正常切换
-4. 每个模块支持 `Week 1–4` 切换
-5. `知识点解析` 使用 `MDX`
-6. `模拟题库` 按“一题一卡片”展示
-7. 题库题默认只展示题目，展开后显示知识点与答案解析
-8. `模拟真题` 至少支持两套 Week 1 套卷
-9. 题目数据结构支持 `images` 扩展字段
-10. 后续扩展 Week 2–4 时不需要重构整体系统
-
-## 16. 结论
-
-这套 `COMP6080` 题库系统第一版应被视为一个“教学内容平台”，而不是刷题 App。
-
-因此第一版重点不是复杂交互，而是：
-
-- 让知识点讲解清晰
-- 让题目结构稳定
-- 让真题组织合理
-- 为后续扩展保留足够空间
-
-在这个前提下，`React + TailwindCSS + MDX + 结构化题目数据` 是当前最合适的实现方案。
-
+因此，当前最重要的不是继续沿用早期蓝色原型设定，而是让 README 与现有代码、现有内容结构、现有协作规则保持一致。

@@ -1,0 +1,38 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>02D · 定位与层叠实验</title>
+  <meta name="description" content="COMP6080 Week 2：观察 position 与 z-index。" />
+  <link rel="icon" href="data:," />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="../week4/assets/demo.css" />
+  <style>
+    .page-head { display: none; }
+    .demo-page { min-height: auto; padding: 0; }
+    .demo-wrap { max-width: none; margin: 0; }
+  </style>
+</head>
+<body>
+  <main class="demo-page"><div class="demo-wrap"><section class="demo reveal"><div class="demo-head"><h3>演示 D · 定位与层叠实验</h3><span class="pill">live</span></div><div class="demo-body"><p class="demo-sub">切换定位方式和层级，观察元素为何会遮挡或压不过去。</p><div class="row"><button class="btn primary sm" data-mode="absolute" type="button">absolute</button><button class="btn sm" data-mode="sticky" type="button">sticky</button><button class="btn sm" data-mode="stacking" type="button">stacking context</button></div><div class="status-line" id="meta"></div><div class="out pre tall idle" id="out">点击按钮开始。</div></div></section></div></main>
+  <script src="../week4/assets/demo.js"></script>
+  <script>
+    const samples = {
+      absolute: { tone: 'ok', label: 'absolute', text: 'position: absolute;\ntop: 8px;\nright: 8px;\n\n它会相对最近的定位祖先来定位。' },
+      sticky: { tone: 'teal', label: 'sticky', text: 'position: sticky;\ntop: 0;\n\n滚动到阈值前后，元素会表现出“粘住”的效果。' },
+      stacking: { tone: 'warn', label: 'stacking context', text: '父级如果形成新的 stacking context，子元素的 z-index 再高也跳不出去。' }
+    };
+    const out = document.querySelector('#out');
+    const meta = document.querySelector('#meta');
+    document.querySelectorAll('[data-mode]').forEach((btn) => btn.addEventListener('click', () => {
+      const sample = samples[btn.dataset.mode];
+      meta.innerHTML = '<span class="chip ' + sample.tone + '">' + sample.label + '</span>';
+      out.className = 'out pre tall ' + sample.tone;
+      out.textContent = sample.text;
+    }));
+  </script>
+</body>
+</html>

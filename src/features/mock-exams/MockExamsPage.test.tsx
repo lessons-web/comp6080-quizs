@@ -40,7 +40,9 @@ describe('MockExamsPage', () => {
     ).toBeInTheDocument()
 
     expect(screen.getByText('A test exam')).toBeInTheDocument()
-    expect(screen.getByText('总分: 20')).toBeInTheDocument()
+    expect(
+      screen.getByText((_, node) => node?.textContent === '总分20'),
+    ).toBeInTheDocument()
     expect(screen.getByText('真题')).toBeInTheDocument()
   })
 

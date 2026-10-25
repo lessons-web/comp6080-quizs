@@ -1,0 +1,78 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>01B · 语义化地标实验</title>
+  <meta name="description" content="COMP6080 Week 1：对照 div 结构与语义化结构。" />
+  <link rel="icon" href="data:," />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600&family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600&display=swap"
+    rel="stylesheet"
+  />
+  <link rel="stylesheet" href="../week4/assets/demo.css" />
+  <style>
+    .page-head { display: none; }
+    .demo-page { min-height: auto; padding: 0; }
+    .demo-wrap { max-width: none; margin: 0; }
+  </style>
+</head>
+<body>
+  <main class="demo-page">
+    <div class="demo-wrap">
+      <section class="demo reveal">
+        <div class="demo-head">
+          <h3>演示 B · 语义化地标实验</h3>
+          <span class="pill">live</span>
+        </div>
+        <div class="demo-body">
+          <p class="demo-sub">切换 div 版与语义版，观察同样的页面结构在“角色解释”上会不会更清楚。</p>
+          <div class="row">
+            <button class="btn primary sm" data-mode="div" type="button">div 版</button>
+            <button class="btn sm" data-mode="semantic" type="button">语义版</button>
+          </div>
+          <div class="status-line" id="meta"></div>
+          <div class="out pre tall idle" id="out">点击按钮后查看结构说明。</div>
+        </div>
+      </section>
+    </div>
+  </main>
+
+  <script src="../week4/assets/demo.js"></script>
+  <script>
+    const $ = W4.$;
+    const out = $('#out');
+    const meta = $('#meta');
+
+    const samples = {
+      div: {
+        label: 'div 版',
+        tone: 'err',
+        code: '<div class="page">\n  <div class="top">Quiz Hub</div>\n  <div class="menu">Home · Courses · Practice</div>\n  <div class="content"><div class="block">Week 1 notes</div></div>\n</div>',
+        note: '所有块都能显示出来，但从标签本身看不出哪里是导航、哪里是正文。'
+      },
+      semantic: {
+        label: '语义版',
+        tone: 'ok',
+        code: '<header>Quiz Hub</header>\n<nav>Home · Courses · Practice</nav>\n<main>\n  <section>\n    <h1>Week 1 notes</h1>\n  </section>\n</main>',
+        note: 'header / nav / main / section 把结构角色直接表达出来，读代码的人不需要猜。'
+      }
+    };
+
+    function render(mode) {
+      const sample = samples[mode];
+      meta.innerHTML = '<span class="chip ' + sample.tone + '">' + sample.label + '</span>';
+      out.className = 'out pre tall ' + sample.tone;
+      out.textContent = sample.note + '\n\n' + sample.code;
+    }
+
+    W4.$$('[data-mode]').forEach(function (btn) {
+      btn.addEventListener('click', function () {
+        render(btn.dataset.mode);
+      });
+    });
+  </script>
+</body>
+</html>

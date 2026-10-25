@@ -771,6 +771,102 @@
       "codeBlocks": [],
       "images": [],
       "createdAt": "2026-10-08"
+    },
+    {
+      "id": "GIT-Q1",
+      "topic": "html",
+      "weeks": [
+        "week-1"
+      ],
+      "difficulty": "easy",
+      "tags": [
+        "Git",
+        "工作流",
+        "暂存区"
+      ],
+      "question": "在一次最小 Git 工作流里，开发者依次执行了：\n```bash\ngit add index.html\ngit commit -m \"add hero section\"\ngit push\n```\n(a) `git add` 和 `git commit` 分别完成了什么？为什么两者要分开执行？\n(b) 如果跳过 `git commit` 直接执行 `git push`，远端仓库会发生什么？",
+      "knowledgePoint": "Git 最小工作流",
+      "answerExplanation": "(a) `git add` 把工作区的改动登记到暂存区（staging area），决定哪些改动要进入这次提交；`git commit` 把暂存区内容固化成一条历史记录。两者分开是为了让一次提交只包含一组相关改动，先 add 能挑选要提交的文件，而不是把所有改动一把提交。\n\n(b) 远端不会有任何变化。`git push` 只推送本地已经存在的提交，如果没有新的 commit，就没有东西可以推。",
+      "codeBlocks": [],
+      "images": [],
+      "createdAt": "2026-10-25"
+    },
+    {
+      "id": "GIT-Q2",
+      "topic": "html",
+      "weeks": [
+        "week-1"
+      ],
+      "difficulty": "easy",
+      "tags": [
+        "Git",
+        "自检",
+        "git diff"
+      ],
+      "question": "为什么在 `git add` 之前通常先执行 `git diff`？它解决了什么问题？",
+      "knowledgePoint": "提交前自检（git diff）",
+      "answerExplanation": "`git diff` 让你在提交前复查工作区相对上次提交到底改了什么，避免把调试代码、临时改动或误删一起提交进去。它是提交前的自检手段，能显著降低把无关改动混进提交的概率。",
+      "codeBlocks": [],
+      "images": [],
+      "createdAt": "2026-10-25"
+    },
+    {
+      "id": "GIT-Q3",
+      "topic": "html",
+      "weeks": [
+        "week-1"
+      ],
+      "difficulty": "medium",
+      "tags": [
+        "Git",
+        "协作",
+        "提交粒度"
+      ],
+      "question": "新同学克隆仓库后想提交改动，请按顺序写出最小闭环的四个步骤（从 `git clone` 开始）。为什么说“提交信息（commit message）”本身也是协作的一部分？",
+      "knowledgePoint": "Git 协作闭环与提交信息",
+      "answerExplanation": "最小闭环：`git clone` → 修改文件（edit）→ `git add` + `git commit` → `git push`。\n\n提交信息是协作的一部分，因为它是给未来的人（包括几个月后的自己）看的变更说明。清晰、聚焦的提交信息能让人快速理解“这次改了什么、为什么改”，便于 review、回溯与定位问题；含糊或杂糅的提交信息会让历史记录失去价值。",
+      "codeBlocks": [],
+      "images": [],
+      "createdAt": "2026-10-25"
+    },
+    {
+      "id": "QUIZ2-W1-Q1",
+      "topic": "html",
+      "weeks": [
+        "week-1"
+      ],
+      "difficulty": "medium",
+      "tags": [
+        "Quiz2",
+        "语义化",
+        "可访问性",
+        "alt"
+      ],
+      "question": "```html\n<section class=\"card\">\n  <div class=\"title\">Course Guide</div>\n  <img src=\"images/quiz2.png\" alt=\"image\">\n  <div class=\"copy\">Review the sample before Friday.</div>\n</section>\n```\n指出这段 markup 中两个与语义化或可访问性有关的问题，并说明怎样改更合适。",
+      "knowledgePoint": "语义结构与替代文本",
+      "answerExplanation": "问题 1：标题不该只是普通 `<div>`，更合适的是 `<h1>`/`<h2>` 这类有层级语义的标题元素。问题 2：`alt=\"image\"` 几乎没有信息量，应该改成能描述图片内容或功能的文本；若图片纯装饰，则应使用空 alt。核心思路是：结构要表达角色，替代文本要表达意义。",
+      "codeBlocks": [],
+      "images": [],
+      "createdAt": "2026-10-25"
+    },
+    {
+      "id": "QUIZ2-W1-Q2",
+      "topic": "html",
+      "weeks": [
+        "week-1"
+      ],
+      "difficulty": "easy",
+      "tags": [
+        "Quiz2",
+        "可访问性",
+        "图片"
+      ],
+      "question": "为什么 `alt=\"image\"` 通常不算一个好答案？什么时候可以把 `alt` 设为空字符串？",
+      "knowledgePoint": "图片可访问性的有效替代文本",
+      "answerExplanation": "`alt=\"image\"` 只是在重复“这是一张图”，并没有帮助用户理解图片承载的信息。真正有用的 alt 应该描述图片的内容或功能。如果图片只是装饰性的，不承载信息，也不需要用户操作，那么可以把 alt 设为空字符串，让读屏器跳过它。",
+      "codeBlocks": [],
+      "images": [],
+      "createdAt": "2026-10-25"
     }
   ]
 }

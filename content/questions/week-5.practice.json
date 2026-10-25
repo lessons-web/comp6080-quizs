@@ -164,6 +164,25 @@
       "createdAt": "2026-10-18"
     },
     {
+      "id": "QUIZ2-W5-Q1",
+      "topic": "ui-ux",
+      "weeks": [
+        "week-5"
+      ],
+      "difficulty": "medium",
+      "tags": [
+        "Quiz2",
+        "Constraints",
+        "Feedback"
+      ],
+      "question": "一个表单页面在所有输入框都为空时，`Submit` 按钮仍然可以点击。用户点击后 3 秒内没有任何提示，最后页面直接刷新，也没有解释发生了什么。这个设计至少违反了哪两条 UI 检查原则？为什么？",
+      "knowledgePoint": "UI 设计检查清单 12 条",
+      "answerExplanation": "至少违反了约束（Constraints）和反馈（Feedback）。约束被违反，是因为系统没有在事前阻止无效输入提交；反馈被违反，是因为点击后长时间没有 loading、错误提示或结果说明，用户无法判断系统是否收到操作。最小改进可以是为空时禁用按钮，或提交后立即显示 loading / error message。",
+      "codeBlocks": [],
+      "images": [],
+      "createdAt": "2026-10-25"
+    },
+    {
       "id": "REACT-Q1",
       "topic": "react",
       "weeks": [
@@ -316,6 +335,126 @@
       "codeBlocks": [],
       "images": [],
       "createdAt": "2026-10-18"
+    },
+    {
+      "id": "QUIZ2-W5-Q2",
+      "topic": "javascript",
+      "weeks": [
+        "week-5"
+      ],
+      "difficulty": "medium",
+      "tags": [
+        "Quiz2",
+        "Async UI",
+        "重复提交",
+        "保存状态"
+      ],
+      "question": "一个 notes app 的 Save 需要大约 3 秒。学生连点三次后列表里出现三条一模一样的 note。为什么会这样？页面高层上该如何避免？如果请求失败了，为什么必须显式告诉学生？",
+      "knowledgePoint": "Saving a note",
+      "answerExplanation": "因为每次点击都会独立发起新的保存请求，而页面既没有在保存中禁用按钮，也没有清空输入或显示明确的 in-progress 状态，所以服务器把三次点击都当成三条新 note。高层修正可以是：保存开始后禁用 Save，或设置 `saving` 标记忽略后续点击。若请求失败又没有 `.catch(...)` 和错误提示，学生根本不知道是没保存、保存慢还是已经成功，容易重复点击或误以为数据丢了，所以必须显式显示失败并允许重试。",
+      "codeBlocks": [],
+      "images": [],
+      "createdAt": "2026-10-25"
+    },
+    {
+      "id": "QUIZ2-W5-Q3",
+      "topic": "javascript",
+      "weeks": [
+        "week-5"
+      ],
+      "difficulty": "medium",
+      "tags": [
+        "Quiz2",
+        "loading state",
+        "错误状态",
+        "重试"
+      ],
+      "question": "一个 inbox 页面一打开就先把内容区写成 `No messages`，然后再 fetch 真正的消息；如果请求失败，它也没有 `.catch(...)`。为什么这会在“加载中”和“加载失败”两种情况下都说假话？高层上应该怎样改状态设计？",
+      "knowledgePoint": "Inbox that says no messages",
+      "answerExplanation": "这会说假话，因为加载中时页面其实还不知道有没有消息，却先断言成 `No messages`；而失败时又因为没有错误处理，默认文本不会被替换，所以失败也伪装成“空 inbox”。高层上应把页面拆成至少 loading / success-empty / success-has-data / failed 这些明确状态：加载时显示 spinner，只有请求成功且结果为空时才写 `No messages`，失败时则显示 error 和 Retry。",
+      "codeBlocks": [],
+      "images": [],
+      "createdAt": "2026-10-25"
+    },
+    {
+      "id": "QUIZ2-W5-Q4",
+      "topic": "javascript",
+      "weeks": [
+        "week-5"
+      ],
+      "difficulty": "medium",
+      "tags": [
+        "Quiz2",
+        "轮询",
+        "重绘",
+        "输入保护"
+      ],
+      "question": "一个 discussion page 每 2 秒轮询一次线程，并在成功后把整个 thread 容器清空再重画。为什么学生正在输入的 reply 会消失？如果改成“有输入就暂停轮询”，它的一个好处和一个坏处分别是什么？",
+      "knowledgePoint": "Live comments",
+      "answerExplanation": "reply 会消失，因为正在输入的 textarea 也属于被整块清空重建的 DOM；新渲染出来的是一个全新的空输入框，旧框里的文字和光标位置都不在了。改成“有输入就暂停轮询”的好处是实现简单，而且确实能保护输入中的内容；坏处是页面会在学生打字期间停止看到别人新发的评论，线程会越来越旧。",
+      "codeBlocks": [],
+      "images": [],
+      "createdAt": "2026-10-25"
+    },
+    {
+      "id": "QUIZ2-W5-Q5",
+      "topic": "ui-ux",
+      "weeks": [
+        "week-5"
+      ],
+      "difficulty": "medium",
+      "tags": [
+        "Quiz2",
+        "UI hierarchy",
+        "Affordance",
+        "Feedback"
+      ],
+      "question": "一个 enrolment 页面把真正的 `confirm enrolment` 放在页脚最右边，排在 `Help` 和 `Privacy` 后面，看起来像普通 footer 文字；而课程卡片里反而有一个明显的 `View course outline` 链接。为什么这会让学生找不到下一步？如果学生点了 confirm 后页面又刷新成几乎一样，说明还缺了哪条 UI 原则？",
+      "knowledgePoint": "Finding the confirm action",
+      "answerExplanation": "这会让学生找不到下一步，因为最重要的主行动作既不显眼，也不像按钮或主要 CTA；它违背了视觉层级、可见性和 affordance。相反，课程卡片中的 outline link 更像“下一步”，所以学生会被带偏。若点击 confirm 后页面几乎不变，则还缺少明确反馈，也就是 visibility of system status：系统没有清楚告诉用户“你已经 enrol 成功了”。",
+      "codeBlocks": [],
+      "images": [],
+      "createdAt": "2026-10-25"
+    },
+    {
+      "id": "QUIZ2-W5-Q6",
+      "topic": "ui-ux",
+      "weeks": [
+        "week-5"
+      ],
+      "difficulty": "medium",
+      "tags": [
+        "Quiz2",
+        "Safety",
+        "Constraints",
+        "Destructive action"
+      ],
+      "question": "一个 settings 页面把 `Save changes` 和 `Delete account` 两个按钮并排放在一起，而且 Delete 一点就立刻生效。为什么这会造成误删？高层上至少应该补哪两类保护？",
+      "knowledgePoint": "Delete beside Save",
+      "answerExplanation": "它容易误删，是因为安全动作和破坏性动作外观太像、距离太近，而且删除又没有任何额外约束，用户在瞄准 Save 时很容易滑到 Delete。高层保护至少包括两类：一类是视觉与空间上的区分，例如把 Delete 挪远、做成危险样式；另一类是行为上的二次确认或 typed acknowledgement，让删除不可能被一次误触直接触发。",
+      "codeBlocks": [],
+      "images": [],
+      "createdAt": "2026-10-25"
+    },
+    {
+      "id": "QUIZ2-W5-Q7",
+      "topic": "ui-ux",
+      "weeks": [
+        "week-5"
+      ],
+      "difficulty": "medium",
+      "tags": [
+        "Quiz2",
+        "Cognitive load",
+        "Form design",
+        "Error message"
+      ],
+      "question": "一个 signup form 一页塞满了两列字段，还在多个输入框下面放了长帮助文案，很多学生做到一半就放弃。为什么这会让人觉得“a lot”？如果 email 填错了，错误信息应该怎么写、放在哪里才更好？",
+      "knowledgePoint": "A crowded signup form",
+      "answerExplanation": "因为页面一次性要求用户处理太多字段和说明，认知负担很高，而且 required / optional 没有清楚分层，整体看起来像一大堵墙。更好的错误提示应当是具体、可执行、礼貌的，例如 `Please enter a valid email address, such as name@student.example`，并紧贴在 email 字段旁边或下方出现，同时保留用户原本输入的其他内容。",
+      "codeBlocks": [],
+      "images": [],
+      "createdAt": "2026-10-25"
     }
   ]
 }

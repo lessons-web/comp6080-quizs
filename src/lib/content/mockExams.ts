@@ -25,16 +25,8 @@ const examLoaders: Record<string, () => Promise<MockExamCollection>> = {
     import('@/content/exams/mock-exam-2.json').then(
       (m) => m.default as unknown as MockExamCollection,
     ),
-  'week1-sim': () =>
-    import('@/content/exams/week1-sim.json').then(
-      (m) => m.default as unknown as MockExamCollection,
-    ),
-  'week2-sim': () =>
-    import('@/content/exams/week2-sim.json').then(
-      (m) => m.default as unknown as MockExamCollection,
-    ),
-  'week3-sim': () =>
-    import('@/content/exams/week3-sim.json').then(
+  'quiz-2.mock-exams': () =>
+    import('@/content/exams/quiz-2.mock-exams.json').then(
       (m) => m.default as unknown as MockExamCollection,
     ),
 }

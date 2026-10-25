@@ -1,0 +1,1144 @@
+{
+  "topic": "javascript",
+  "exams": [
+    {
+      "id": "2026T3-QUIZ2",
+      "title": "2026 Term 3 Quiz 2 模拟卷",
+      "description": "按老师 clarification 与样本截图重构：覆盖 Weeks 1-5 lectures and tutorials + assignment 3，但明确排除 Week 5 React lectures。",
+      "tags": [
+        "Quiz 2",
+        "样本复刻",
+        "Weeks1-5",
+        "No React"
+      ],
+      "totalMarks": 90,
+      "time": "2026-10-25 21:00",
+      "questions": [
+        {
+          "id": "Q1.1",
+          "title": "Box sizing and available width",
+          "marks": 3,
+          "contentMdx": "A product card is placed in a column that is 320px wide. The markup and styles are in `index.html` and `card.css`, and a screenshot of the page is below. With `box-sizing: border-box`, an element's width includes its padding and border.",
+          "subQuestions": [
+            {
+              "id": "Q1.1-a",
+              "label": "(a)",
+              "marks": 2,
+              "questionMdx": "Using the screenshot, describe what is wrong with the card. How wide is the card actually, and why?",
+              "answerMdx": "The card is 346px wide, so it sticks out 26px past the 320px column. The declared `width: 300px` sets only the content area; the 20px of padding and 3px of border on each side are added outside it: `300 + 40 + 6 = 346`.",
+              "markingMdx": "1 mark for calculating 346px.\n1 mark for explaining that padding and border are added outside the declared content width.",
+              "questionMdxZh": "结合截图，说明这个 card 出了什么问题。它的实际总宽度是多少，为什么会这样？",
+              "answerMdxZh": "这个卡片实际宽度是 346px，所以它会比 320px 的列多伸出去 26px。因为声明的 `width: 300px` 在默认盒模型下只表示内容区宽度，左右各 20px 的 padding 和各 3px 的 border 会额外加在外面，所以总宽度是 `300 + 40 + 6 = 346`。",
+              "markingMdxZh": "1 分：算出总宽度是 346px。\n1 分：解释清楚默认情况下 padding 和 border 会加在声明宽度之外。"
+            },
+            {
+              "id": "Q1.1-b",
+              "label": "(b)",
+              "marks": 1,
+              "questionMdx": "A teammate adds `box-sizing: border-box` to the `.card` rule. What is the card's total width now, does it fit in the column, and why?",
+              "answerMdx": "The card is 300px wide in total, so it fits with 20px to spare. With `border-box`, the declared width includes the padding and the border, so the text area shrinks instead of the card growing.",
+              "markingMdx": "1 mark for stating that `border-box` keeps the total width at 300px and therefore the card fits.",
+              "questionMdxZh": "队友在 `.card` 上加了 `box-sizing: border-box`。现在 card 的总宽度是多少？它还能不能放进这根列里？为什么？",
+              "answerMdxZh": "现在 card 的总宽度会变成 300px，所以它能放进 320px 的列里，还会剩下 20px 空间。因为 `border-box` 会把 padding 和 border 都包含进声明的宽度里，真正被压缩的是内容区，而不是让整个卡片继续变宽。",
+              "markingMdxZh": "1 分：说明总宽度变成 300px，并因此可以放入列中。"
+            }
+          ],
+          "displayNumber": "Q1.1",
+          "categoryLabel": "HTML/CSS Layout and Responsive Behaviour",
+          "displayStyle": "quiz-sample",
+          "mockup": {
+            "files": [
+              {
+                "name": "card.png"
+              },
+              {
+                "name": "card.css",
+                "code": ".column {\n  width: 320px;\n}\n\n.card {\n  width: 300px;\n  padding: 20px;\n  border: 3px solid #b45309;\n}",
+                "codeZh": ".column {\n  width: 320px;\n}\n\n.card {\n  width: 300px;\n  padding: 20px;\n  border: 3px solid #b45309;\n}"
+              },
+              {
+                "name": "index.html",
+                "active": true,
+                "code": "<div class=\"column\">\n  <div class=\"card\">Product card</div>\n</div>",
+                "codeZh": "<div class=\"column\">\n  <div class=\"card\">产品卡片</div>\n</div>"
+              }
+            ],
+            "html": "<div class=\"exam-ui-stage exam-ui-center\" style=\"padding:1.25rem;\"><div style=\"width:320px;border:1px dashed #c7ccd4;padding:0.5rem;background:#fcfcfb;\"><div class=\"exam-ui-outline\" style=\"width:346px;border:3px solid #b45309;padding:20px;background:#ffffff;color:#7f4d3b;font-weight:600;\">Product card</div></div></div>",
+            "htmlZh": "<div class=\"exam-ui-stage exam-ui-center\" style=\"padding:1.25rem;\"><div style=\"width:320px;border:1px dashed #c7ccd4;padding:0.5rem;background:#fcfcfb;\"><div class=\"exam-ui-outline\" style=\"width:346px;border:3px solid #b45309;padding:20px;background:#ffffff;color:#7f4d3b;font-weight:600;\">产品卡片</div></div></div>"
+          },
+          "titleZh": "盒模型与可用宽度",
+          "contentMdxZh": "一个产品卡片被放在一个宽度为 320px 的列里。相关 markup 和样式分别在 `index.html` 与 `card.css` 中，下方给出了页面截图。提醒：只有在 `box-sizing: border-box` 时，元素的宽度才会把 padding 和 border 一起算进去。"
+        },
+        {
+          "id": "Q1.2",
+          "title": "Flexbox axis relationships",
+          "marks": 3,
+          "contentMdx": "A toolbar holds three buttons. The markup and styles are in `index.html` and `toolbar.css`, and a screenshot of the toolbar as it is now is below.",
+          "subQuestions": [
+            {
+              "id": "Q1.2-a",
+              "label": "(a)",
+              "marks": 2,
+              "questionMdx": "A teammate changes `flex-direction` from `row` to `column`. The toolbar stays 600px wide and 160px tall. Describe where the three buttons now sit.",
+              "answerMdx": "The buttons are stacked from top to bottom. `space-between` now works along the vertical main axis, so the first button is at the top, the last is at the bottom and the middle one is halfway between them, spread over the 160px height. `align-items: center` now works across the horizontal cross axis, so each button is centred horizontally in the 600px width.",
+              "markingMdx": "1 mark for describing the vertical stack with top / middle / bottom placement.\n1 mark for correctly relating `justify-content` to the main axis and `align-items` to the cross axis.",
+              "questionMdxZh": "队友把 `flex-direction` 从 `row` 改成了 `column`。toolbar 仍然保持 600px 宽、160px 高。请描述这三个按钮现在会落在什么位置。",
+              "answerMdxZh": "按钮会从上到下堆叠。因为 `space-between` 现在沿着垂直主轴工作，所以第一个按钮会到顶部，最后一个到底部，中间那个位于两者之间；而 `align-items: center` 现在作用在水平交叉轴上，所以三个按钮都会在 600px 宽度里水平居中。",
+              "markingMdxZh": "1 分：描述出按钮会纵向堆叠，并分布在顶部/中部/底部。\n1 分：正确说明 `justify-content` 管主轴，`align-items` 管交叉轴。"
+            },
+            {
+              "id": "Q1.2-b",
+              "label": "(b)",
+              "marks": 1,
+              "questionMdx": "The designer now wants the stacked buttons packed together at the top of the toolbar, still centred horizontally. Which one property should change, and to what value?",
+              "answerMdx": "`justify-content` should change to `flex-start` (or `start`). It controls the main axis, which is now vertical, so `flex-start` packs the buttons at the top while `align-items: center` continues to keep them horizontally centred.",
+              "markingMdx": "1 mark for changing `justify-content` to `flex-start` / `start`.",
+              "questionMdxZh": "设计师希望这三个纵向堆叠的按钮贴在 toolbar 顶部，但仍然保持水平居中。应该改哪一个属性，改成什么值？",
+              "answerMdxZh": "应该把 `justify-content` 改成 `flex-start`（或 `start`）。因为在 `column` 下主轴已经变成垂直方向，要贴顶部就得改主轴分布；`align-items: center` 继续负责水平居中。",
+              "markingMdxZh": "1 分：答出把 `justify-content` 改成 `flex-start` / `start`。"
+            }
+          ],
+          "displayNumber": "Q1.2",
+          "categoryLabel": "HTML/CSS Layout and Responsive Behaviour",
+          "displayStyle": "quiz-sample",
+          "mockup": {
+            "files": [
+              {
+                "name": "toolbar.png",
+                "active": true
+              },
+              {
+                "name": "index.html",
+                "code": "<div class=\"toolbar\">\n  <button>New</button>\n  <button>Open</button>\n  <button>Save</button>\n</div>",
+                "codeZh": "<div class=\"toolbar\">\n  <button>新建</button>\n  <button>打开</button>\n  <button>保存</button>\n</div>"
+              },
+              {
+                "name": "toolbar.css",
+                "code": ".toolbar {\n  display: flex;\n  flex-direction: row;\n  justify-content: space-between;\n  align-items: center;\n  width: 600px;\n  height: 160px;\n}",
+                "codeZh": ".toolbar {\n  display: flex;\n  flex-direction: row;\n  justify-content: space-between;\n  align-items: center;\n  width: 600px;\n  height: 160px;\n}"
+              }
+            ],
+            "html": "<div class='exam-ui-stage'><div class='exam-ui-toolbar-demo'><button class='exam-ui-big-button'>New</button><button class='exam-ui-big-button'>Open</button><button class='exam-ui-big-button'>Save</button></div><div class='exam-ui-help' style='margin-top:0.5rem'>dashed outline: the toolbar (600px wide, 160px tall)</div></div>",
+            "htmlZh": "<div class='exam-ui-stage'><div class='exam-ui-toolbar-demo'><button class='exam-ui-big-button'>新建</button><button class='exam-ui-big-button'>打开</button><button class='exam-ui-big-button'>保存</button></div><div class='exam-ui-help' style='margin-top:0.5rem'>虚线外框：toolbar（宽 600px，高 160px）</div></div>"
+          },
+          "titleZh": "Flexbox 轴线关系",
+          "contentMdxZh": "一个 toolbar 里有三个按钮。相关 markup 和样式在 `index.html` 与 `toolbar.css` 中，下方展示的是它当前的截图。"
+        },
+        {
+          "id": "Q1.3",
+          "title": "Specificity and source order",
+          "marks": 3,
+          "contentMdx": "A page has one button. The markup and styles are in `index.html` and `style.css`, and a screenshot of the page is below.",
+          "subQuestions": [
+            {
+              "id": "Q1.3-a",
+              "label": "(a)",
+              "marks": 2,
+              "questionMdx": "A teammate says the button should be blue, because the `button.action` rule is the last one in the stylesheet. The screenshot shows it is green. Explain why.",
+              "answerMdx": "The `#panel .action` rule has a higher specificity because it contains an id selector, and specificity is compared before source order. Order only decides between rules of equal specificity, so the later but less specific `button.action` rule does not override the green.",
+              "markingMdx": "1 mark for identifying the id-based rule as more specific.\n1 mark for explaining that source order only breaks ties after specificity.",
+              "questionMdxZh": "队友说这个按钮应该是蓝色，因为 `button.action` 规则写在样式表最后。但截图里它明明是绿色。请解释为什么。",
+              "answerMdxZh": "因为 `#panel .action` 这个选择器带有 id，所以它的 specificity 更高。浏览器会先比较 specificity，只有 specificity 打平时才会再比较 source order。因此即使 `button.action` 写在更后面，它也不能覆盖更具体的绿色规则。",
+              "markingMdxZh": "1 分：指出带 id 的规则更具体。\n1 分：说明 source order 只有在 specificity 打平时才起作用。"
+            },
+            {
+              "id": "Q1.3-b",
+              "label": "(b)",
+              "marks": 1,
+              "questionMdx": "The teammate instead deletes `id=\"panel\"` from the section in `index.html`. What colour is the button now, and why?",
+              "answerMdx": "Blue. Nothing on the page matches `#panel .action` any more, so that rule stops participating. Of the remaining rules, `button.action` is more specific than `.action` alone and it also comes later, so blue wins.",
+              "markingMdx": "1 mark for stating that the button becomes blue because `button.action` becomes the winning matching rule.",
+              "questionMdxZh": "队友后来把 `index.html` 里 section 上的 `id=\"panel\"` 删掉了。现在按钮会变成什么颜色？为什么？",
+              "answerMdxZh": "按钮会变成蓝色。因为 `#panel .action` 已经不再匹配，剩下的候选规则里 `button.action` 比单纯的 `.action` 更具体，而且它也写得更靠后，所以最终是蓝色。",
+              "markingMdxZh": "1 分：说明删除 id 后，`button.action` 成为新的获胜规则，按钮因此变蓝。"
+            }
+          ],
+          "displayNumber": "Q1.3",
+          "categoryLabel": "HTML/CSS Layout and Responsive Behaviour",
+          "displayStyle": "quiz-sample",
+          "mockup": {
+            "files": [
+              {
+                "name": "page.png",
+                "active": true
+              },
+              {
+                "name": "index.html",
+                "code": "<section id=\"panel\">\n  <button class=\"action\">Continue</button>\n</section>",
+                "codeZh": "<section id=\"panel\">\n  <button class=\"action\">继续</button>\n</section>"
+              },
+              {
+                "name": "style.css",
+                "code": ".action {\n  color: #2563eb;\n}\n\n#panel .action {\n  color: #12911e;\n}\n\nbutton.action {\n  color: #2563eb;\n}",
+                "codeZh": ".action {\n  color: #2563eb;\n}\n\n#panel .action {\n  color: #12911e;\n}\n\nbutton.action {\n  color: #2563eb;\n}"
+              }
+            ],
+            "html": "<div class='exam-ui-stage exam-ui-center'><button class='exam-ui-big-button' style='font-size:1.05rem;color:#12911e;border-width:2px;padding:0.65rem 1.2rem'>Continue</button></div>",
+            "htmlZh": "<div class='exam-ui-stage exam-ui-center'><button class='exam-ui-big-button' style='font-size:1.05rem;color:#12911e;border-width:2px;padding:0.65rem 1.2rem'>继续</button></div>"
+          },
+          "titleZh": "Specificity 与 source order",
+          "contentMdxZh": "页面里只有一个按钮。相关 markup 和样式在 `index.html` 与 `style.css` 中，下方给出了页面截图。"
+        },
+        {
+          "id": "Q2.1",
+          "title": "Shared object state",
+          "marks": 3,
+          "contentMdx": "A settings editor lets a student change a count and then press Save or Cancel. A summary panel next to it always shows the saved settings. The code runs in the order shown in `settings.js`.",
+          "subQuestions": [
+            {
+              "id": "Q2.1-a",
+              "label": "(a)",
+              "marks": 1,
+              "questionMdx": "The student presses + once in the editor and has not pressed Save. What does the summary panel show, and why?",
+              "answerMdx": "The summary shows 4. `let draft = settings` does not copy the object: `draft` and `settings` are two names for the same object, so changing `draft.count` also changes `settings.count`, which is what the summary reads.",
+              "markingMdx": "1 mark for stating that the summary shows 4 because both variables refer to the same object.",
+              "questionMdxZh": "学生在 editor 里按了一次 `+`，但还没有按 Save。summary panel 会显示什么，为什么？",
+              "answerMdxZh": "summary 会显示 `4`。因为 `let draft = settings` 并没有复制对象，`draft` 和 `settings` 只是同一个对象的两个名字。所以改了 `draft.count`，也就等于改了 `settings.count`，而 summary 读取的正是它。",
+              "markingMdxZh": "1 分：说明 summary 会显示 4，并解释两者其实指向同一个对象。"
+            },
+            {
+              "id": "Q2.1-b",
+              "label": "(b)",
+              "marks": 1,
+              "questionMdx": "A teammate changes the editor line to `let draft = { ...settings };`, which makes a new object with the same properties. Starting again from a count of 3, the student presses + once and has not pressed Save. What does the summary panel show now, and why?",
+              "answerMdx": "The summary shows 3. `draft` is now a separate top-level object, so `draft.count = draft.count + 1` changes only the copy and `settings.count`, which the summary reads, is untouched until Save.",
+              "markingMdx": "1 mark for stating that the summary stays at 3 because the spread makes a separate top-level object.",
+              "questionMdxZh": "队友把初始化那一行改成 `let draft = { ...settings };`，也就是做一个拥有相同属性的新对象。若重新从 count = 3 开始，学生再按一次 `+`，此时 summary 会显示什么，为什么？",
+              "answerMdxZh": "summary 会显示 `3`。因为现在 `draft` 已经是一个新的顶层对象了，`draft.count = draft.count + 1` 只会改这份副本；而 summary 读取的 `settings.count` 在 Save 之前并没有被动到。",
+              "markingMdxZh": "1 分：说明 summary 仍然是 3，因为 spread 创建了独立的顶层对象。"
+            },
+            {
+              "id": "Q2.1-c",
+              "label": "(c)",
+              "marks": 1,
+              "questionMdx": "The settings also hold an accent colour in `colours`, and the summary shows it too. With `let draft = { ...settings };` in place, the student changes the accent in the editor, which runs `draft.colours.accent = 'red';`, and has not pressed Save. What accent does the summary show, and why?",
+              "answerMdx": "Red. `{ ...settings }` copies only the top level: the new object gets its own `count`, but its `colours` property still points to the same nested object as `settings.colours`. Changing a property inside it changes what the summary reads.",
+              "markingMdx": "1 mark for explaining that a shallow copy still shares the nested `colours` object, so the summary shows red.",
+              "questionMdxZh": "settings 里还有一个 `colours` 对象，summary 也会显示其中的 accent colour。在已经使用 `let draft = { ...settings };` 的前提下，学生又执行了 `draft.colours.accent = \"red\"`。此时 summary 会显示什么颜色？为什么？",
+              "answerMdxZh": "summary 会显示红色。因为 `{ ...settings }` 只做了浅拷贝：顶层对象虽然变成新的了，但 `colours` 这个嵌套对象仍然和原来的 `settings.colours` 共用同一个引用。改它里面的属性，summary 看到的也会一起变。",
+              "markingMdxZh": "1 分：说明浅拷贝仍会共享嵌套对象，因此 summary 会显示 red。"
+            }
+          ],
+          "displayNumber": "Q2.1",
+          "categoryLabel": "JavaScript and the DOM",
+          "displayStyle": "quiz-sample",
+          "mockup": {
+            "files": [
+              {
+                "name": "settings.js",
+                "active": true,
+                "code": "const settings = {\n  theme: 'dark',\n  count: 3,\n  colours: { accent: 'blue' },\n}\n\nlet draft = settings\n\nfunction increaseDraft() {\n  draft.count = draft.count + 1\n}\n\nfunction changeAccent() {\n  draft.colours.accent = 'red'\n}",
+                "codeZh": "const settings = {\n  theme: 'dark',\n  count: 3,\n  colours: { accent: 'blue' },\n}\n\nlet draft = settings\n\nfunction increaseDraft() {\n  draft.count = draft.count + 1\n}\n\nfunction changeAccent() {\n  draft.colours.accent = 'red'\n}"
+              }
+            ],
+            "html": "<div class='exam-ui-code-preview'><div class='exam-ui-code-grid'><div class='exam-ui-line-nos'>1<br>2<br>3<br>4<br>5<br>6<br>7<br>8<br>9<br>10<br>11<br>12</div><pre class='exam-ui-code'>const settings = { theme: 'dark', count: 3, colours: { accent: 'blue' } };\n\n// the editor opens\nlet draft = settings;\n\n// the student presses '+' once in the editor\ndraft.count = draft.count + 1;\n\n// the summary panel shows settings.count\n\n// the student presses Cancel\ndraft = null;</pre></div></div>",
+            "htmlZh": "<div class='exam-ui-code-preview'><div class='exam-ui-code-grid'><div class='exam-ui-line-nos'>1<br>2<br>3<br>4<br>5<br>6<br>7<br>8<br>9<br>10<br>11<br>12</div><pre class='exam-ui-code'>const settings = { theme: 'dark', count: 3, colours: { accent: 'blue' } };\n\n// editor 被打开\nlet draft = settings;\n\n// 学生在 editor 里按了一次 '+'\ndraft.count = draft.count + 1;\n\n// summary panel 显示 settings.count\n\n// 学生按下 Cancel\ndraft = null;</pre></div></div>"
+          },
+          "titleZh": "共享对象状态",
+          "contentMdxZh": "一个 settings editor 允许学生修改 count，然后再决定按 Save 还是 Cancel。旁边的 summary panel 永远显示“已保存”的 settings。代码会按照 `settings.js` 里给出的顺序运行。"
+        },
+        {
+          "id": "Q2.2",
+          "title": "Event origin and listener context",
+          "marks": 3,
+          "contentMdx": "A Save button has its label wrapped in a span. A student reports that Save works when they click near the edge of the button but does nothing when they click on the words, and nothing appears in the console. The markup and the click listener are in `index.html` and `script.js`. In a click listener, `event.target` is the innermost element the click landed on.",
+          "subQuestions": [
+            {
+              "id": "Q2.2-a",
+              "label": "(a)",
+              "marks": 1,
+              "questionMdx": "Explain why Save does nothing when the student clicks on the words of the button.",
+              "answerMdx": "The click lands on the `<span>`, so `event.target` is the span, which has no `data-action`. `event.target.dataset.action` is `undefined` and `runAction(undefined)` does nothing. The listener still runs, but the click's target is the wrong element for reading the data.",
+              "markingMdx": "1 mark for explaining that `event.target` becomes the inner span and therefore the dataset read fails.",
+              "questionMdxZh": "解释为什么学生点击按钮文字时，Save 什么都没发生。",
+              "answerMdxZh": "因为点击落点是内部的 `<span>`，所以 `event.target` 变成了这个 span，而不是外层按钮。span 上没有 `data-action`，因此 `event.target.dataset.action` 会得到 `undefined`，后面的逻辑也就读不到正确动作。",
+              "markingMdxZh": "1 分：指出 `event.target` 变成内部 span，因此读 dataset 失败。"
+            },
+            {
+              "id": "Q2.2-b",
+              "label": "(b)",
+              "marks": 1,
+              "questionMdx": "Describe a change to the listener so that Save works wherever on the button the student clicks.",
+              "answerMdx": "Read the data from the element the listener is attached to, which is always the button: use `event.currentTarget.dataset.action`. Using `event.target.closest('button')`, or a variable that holds the button, is also accepted.",
+              "markingMdx": "1 mark for a correct fix using `currentTarget` or `closest('button')`.",
+              "questionMdxZh": "描述一种修改 listener 的办法，让学生无论点按钮哪里都能触发 Save。",
+              "answerMdxZh": "可以改成从监听器真正绑定的那个元素上读值，也就是 `event.currentTarget.dataset.action`。也可以先用 `event.target.closest('button')` 回到按钮，再去读取 dataset。",
+              "markingMdxZh": "1 分：给出正确修法，例如 `currentTarget` 或 `closest('button')`。"
+            },
+            {
+              "id": "Q2.2-c",
+              "label": "(c)",
+              "marks": 1,
+              "questionMdx": "Instead of changing the listener, a teammate adds a second listener to the span: `document.querySelector('#save span').addEventListener('click', () => runAction('save'));`. The student clicks on the words. How many times does `runAction` run, and with what?",
+              "answerMdx": "Twice. The span's listener runs first and calls `runAction('save')`. The click then bubbles up to the button, whose listener still reads `event.target`, which is the span, so it calls `runAction(undefined)`.",
+              "markingMdx": "1 mark for identifying the two calls: one with `'save'` and one with `undefined`.",
+              "questionMdxZh": "不改原 listener，队友反而给 span 又加了一个 listener：`document.querySelector('#save span').addEventListener('click', () => runAction('save'));`。如果学生点在按钮文字上，`runAction` 一共会执行几次？参数分别是什么？",
+              "answerMdxZh": "会执行两次。第一次是 span 自己的 listener，参数是 `save`；第二次事件冒泡到按钮后，旧 listener 还会跑一次，而它依然从 `event.target` 读值，所以通常会得到 `undefined`。",
+              "markingMdxZh": "1 分：指出会调用两次，其中一次是 `save`，另一次是 `undefined`。"
+            }
+          ],
+          "displayNumber": "Q2.2",
+          "categoryLabel": "JavaScript and the DOM",
+          "displayStyle": "quiz-sample",
+          "mockup": {
+            "files": [
+              {
+                "name": "button.png",
+                "active": true
+              },
+              {
+                "name": "index.html",
+                "code": "<button id=\"save\" data-action=\"save\">\n  <span>Save</span>\n</button>",
+                "codeZh": "<button id=\"save\" data-action=\"save\">\n  <span>保存</span>\n</button>"
+              },
+              {
+                "name": "script.js",
+                "code": "const button = document.querySelector('#save')\n\nbutton.addEventListener('click', (event) => {\n  runAction(event.target.dataset.action)\n})",
+                "codeZh": "const button = document.querySelector('#save')\n\nbutton.addEventListener('click', (event) => {\n  runAction(event.target.dataset.action)\n})"
+              }
+            ],
+            "html": "<div class='exam-ui-stage exam-ui-center'><button class='exam-ui-big-button' style='font-size:1.1rem;padding:0.7rem 1.4rem'>Save changes</button></div>",
+            "htmlZh": "<div class='exam-ui-stage exam-ui-center'><button class='exam-ui-big-button' style='font-size:1.1rem;padding:0.7rem 1.4rem'>保存修改</button></div>"
+          },
+          "titleZh": "事件来源与监听器上下文",
+          "contentMdxZh": "一个 Save 按钮把文字包在了 span 里。学生发现：点按钮边缘时 Save 能工作，但点在文字上就没反应，而且控制台也没输出。相关 markup 和 click listener 分别在 `index.html` 与 `script.js` 中。已知 click listener 里的 `event.target` 表示点击真正落到的最内层元素。"
+        },
+        {
+          "id": "Q2.3",
+          "title": "Form submission and DOM state",
+          "marks": 3,
+          "contentMdx": "A profile form shows a message under it when the student presses Save. A student reports that the message flashes for a moment and then the page reloads with the form empty. The markup and the submit handler are in `index.html` and `profile.js`.",
+          "subQuestions": [
+            {
+              "id": "Q2.3-a",
+              "label": "(a)",
+              "marks": 1,
+              "questionMdx": "Explain why the message disappears and the form empties.",
+              "answerMdx": "Submitting a form has a default action: the browser sends the form and loads the page again. The handler sets the message, but nothing stops the default action, so the page reloads straight afterwards and the message and typed text are lost with the old page. Calling `event.preventDefault()` in the handler stops this.",
+              "markingMdx": "1 mark for identifying the default submit / reload and linking it to the disappearing message and empty form.",
+              "questionMdxZh": "解释为什么这条 message 会消失，而且表单内容也会被清空。",
+              "answerMdxZh": "因为提交表单本身有默认行为：浏览器会真正提交并重新加载页面。handler 虽然先把 message 写到了 DOM 里，但如果没有阻止默认提交，页面会立刻刷新，刚才那条 message 和输入框内容都会跟着旧页面一起消失。",
+              "markingMdxZh": "1 分：解释清楚默认提交 / 刷新导致 DOM 状态被抹掉。"
+            },
+            {
+              "id": "Q2.3-b",
+              "label": "(b)",
+              "marks": 1,
+              "questionMdx": "The teammate stops the reload, but also moves `const name = document.querySelector('#name').value;` to the top of the file, above the listener. The student types a name and presses Save, and still sees `Name required`. Explain why.",
+              "answerMdx": "The moved line runs once, when the script loads, and the box is empty then. `name` holds that text, which is a copy and is not linked to the box, so the handler keeps testing the old empty string however much the student types. The value has to be read inside the handler, when the form is submitted.",
+              "markingMdx": "1 mark for explaining that the value was captured once too early, before the user typed.",
+              "questionMdxZh": "队友修掉了刷新，但又把 `const name = document.querySelector('#name').value;` 挪到了文件顶部、listener 外面。学生输入名字后点击 Save，为什么仍然可能看到 `Name required`？",
+              "answerMdxZh": "因为这行代码只会在脚本加载时执行一次。当时输入框还是空的，所以 `name` 保存的是那一刻的旧值副本，并不会随着用户后续输入自动变化。真正的值必须在 submit 发生时，在 handler 里面重新读取。",
+              "markingMdxZh": "1 分：指出值被过早读取，只捕获了页面刚加载时的旧内容。"
+            },
+            {
+              "id": "Q2.3-c",
+              "label": "(c)",
+              "marks": 1,
+              "questionMdx": "With both problems fixed, the designer adds a second button inside the form, `<button id=\"clear\">Clear</button>`, with a click listener that empties the name box. A student types a name and clicks Clear, and the message says `Name required`. Explain why.",
+              "answerMdx": "A button inside a form with no `type` is a submit button, so clicking Clear also submits the form. The click listener empties the box first, then the submit handler runs, reads the now-empty box and shows `Name required`. Giving it `type=\"button\"` stops it submitting.",
+              "markingMdx": "1 mark for identifying the default button type as submit and linking that to the extra form submission.",
+              "questionMdxZh": "在前两个问题都修好之后，设计师又在 form 里加了一个 `<button id=\"clear\">Clear</button>`，并绑定 click listener 去清空输入框。为什么学生点 Clear 时，页面反而又提示了 `Name required`？",
+              "answerMdxZh": "因为 form 里的 `<button>` 如果没显式写 `type`，默认就是 `submit`。所以点击 Clear 时，它会先执行自己的 click 逻辑把输入框清空，然后又顺手提交表单。submit handler 读到的就已经是空值，于是显示 `Name required`。",
+              "markingMdxZh": "1 分：说明 form 内 button 默认是 submit，因此会额外触发表单提交。"
+            }
+          ],
+          "displayNumber": "Q2.3",
+          "categoryLabel": "JavaScript and the DOM",
+          "displayStyle": "quiz-sample",
+          "mockup": {
+            "files": [
+              {
+                "name": "form.png",
+                "active": true
+              },
+              {
+                "name": "index.html",
+                "code": "<form id=\"profile-form\">\n  <input id=\"name\" value=\"Priya\" />\n  <button type=\"submit\">Save</button>\n</form>\n<p id=\"message\"></p>",
+                "codeZh": "<form id=\"profile-form\">\n  <input id=\"name\" value=\"Priya\" />\n  <button type=\"submit\">保存</button>\n</form>\n<p id=\"message\"></p>"
+              },
+              {
+                "name": "profile.js",
+                "code": "const form = document.querySelector('#profile-form')\nconst message = document.querySelector('#message')\n\nform.addEventListener('submit', () => {\n  message.textContent = 'Saved'\n})",
+                "codeZh": "const form = document.querySelector('#profile-form')\nconst message = document.querySelector('#message')\n\nform.addEventListener('submit', () => {\n  message.textContent = '已保存'\n})"
+              }
+            ],
+            "html": "<div class='exam-ui-stage exam-ui-center'><div class='exam-ui-space-between' style='width:80%'><input class='exam-ui-input' value='Priya' style='font-size:1.05rem;padding:0.65rem 0.8rem' /><button class='exam-ui-big-button' style='font-size:1.05rem'>Save</button></div></div>",
+            "htmlZh": "<div class='exam-ui-stage exam-ui-center'><div class='exam-ui-space-between' style='width:80%'><input class='exam-ui-input' value='Priya' style='font-size:1.05rem;padding:0.65rem 0.8rem' /><button class='exam-ui-big-button' style='font-size:1.05rem'>保存</button></div></div>"
+          },
+          "titleZh": "表单提交与 DOM 状态",
+          "contentMdxZh": "一个 profile form 在学生按 Save 后会在下面显示一条消息。学生报告说：这条消息只会闪一下，然后页面刷新，表单也重新变空。相关 markup 和 submit handler 分别在 `index.html` 与 `profile.js` 中。"
+        },
+        {
+          "id": "Q3.1",
+          "title": "Export that freezes the page",
+          "marks": 6,
+          "contentMdx": "A timetable admin page can export all 200,000 enrolment rows as a CSV file. A clock in the corner ticks every second, and a Cancel button is meant to stop an export that is running. Staff report that during an export the clock freezes and Cancel does nothing, and that `Cancelled` then appears after `Done`. The code, a screenshot of the page and a timeline of one export are below.",
+          "subQuestions": [
+            {
+              "id": "Q3.1-a",
+              "label": "(a)",
+              "marks": 2,
+              "questionMdx": "Using the timeline, describe why the clock stops ticking and why the Cancel click has no effect until the export has finished.",
+              "answerMdx": "JavaScript in the page runs one thing at a time, and the export click handler runs all the way to the end before anything else can start. The clock's timer callbacks and the Cancel click handler are not lost, but they wait in the queue until the export handler returns and the call stack is empty. Only then can the event loop run them, at about 4 seconds, which is why `Cancelled` appears after `Done` and the cancelled flag is set too late to stop anything.",
+              "markingMdx": "1 mark for explaining that the long export handler blocks the main thread.\n1 mark for explaining that queued timer and click callbacks only run after the handler finishes.",
+              "questionMdxZh": "结合时间线，说明为什么时钟会停止跳动，以及为什么 Cancel 要等导出结束后才“生效”。",
+              "answerMdxZh": "因为这段导出逻辑在一个长时间运行的 click handler 里同步执行到底，JavaScript 主线程始终被这个 handler 占着。时钟的 timer callback 和 Cancel 的 click handler 并没有丢失，只是排队等待当前调用栈清空。只有 export handler 返回后，事件循环才能继续处理它们，所以时钟在这段时间看起来冻结，`Cancelled` 也会晚于 `Done` 才出现。",
+              "markingMdxZh": "1 分：说明长时间运行的导出 handler 阻塞了主线程。\n1 分：说明 timer 和 click callback 要等 handler 结束后才会被事件循环处理。"
+            },
+            {
+              "id": "Q3.1-b",
+              "label": "(b)",
+              "marks": 2,
+              "questionMdx": "Describe, at a high level, one change so that the clock keeps ticking and Cancel works while an export is running, and say what the student would notice. You do not need to write code.",
+              "answerMdx": "Split the export into small chunks and schedule each next chunk with a timer instead of one long loop. Between chunks the queued clock ticks and Cancel click can run, so the clock keeps going and Cancel can stop the export. The export takes a little longer overall, but the page stays responsive.",
+              "markingMdx": "1 mark for a fix that yields back to the event loop, such as chunking the work.\n1 mark for correctly describing the user-visible effect.",
+              "questionMdxZh": "不写代码，描述一种高层修改方式，让导出过程中时钟仍继续走，Cancel 也能真的生效，并说明学生会看到什么。",
+              "answerMdxZh": "可以把导出拆成很多小批次，用 `setTimeout(..., 0)` 或类似方式把每一批安排到后续任务里，而不是一次性同步跑完。这样每一批之间，浏览器都有机会处理时钟更新和 Cancel 点击。用户会看到时钟继续走，点击 Cancel 后导出能在中途停下，只是整体导出可能比一次性同步循环稍微慢一点。",
+              "markingMdxZh": "1 分：给出能把执行权还给事件循环的高层修法，例如分批处理。\n1 分：正确说明用户可见的效果。"
+            },
+            {
+              "id": "Q3.1-c",
+              "label": "(c)",
+              "marks": 2,
+              "questionMdx": "A student gets impatient and clicks Export a second time, one second after the first click. With the current code, describe when the second click is handled and what the student ends up seeing.",
+              "answerMdx": "The second click is not lost, and it does not start a second export at the same time. It waits in the queue until the first click handler has finished, at about 4 seconds, and only then does its handler run. That starts a new export, so the page freezes again until about 8 seconds and the student effectively gets the file twice.",
+              "markingMdx": "1 mark for placing the second click after the first long handler completes.\n1 mark for describing the resulting second export and extra freeze.",
+              "questionMdxZh": "学生不耐烦，在第一次导出开始 1 秒后又点了一次 Export。按照当前代码，第二次点击会在什么时候被处理？学生最后会看到什么？",
+              "answerMdxZh": "第二次点击不会并行启动第二个导出，也不会丢失；它会先排队，等第一次长循环全部结束后才轮到它自己的 handler 运行。于是页面会先因为第一次导出卡住，第一次结束后又立刻开始第二次同样的长导出，用户会感觉页面又卡了一轮，并且通常会拿到两次导出结果。",
+              "markingMdxZh": "1 分：指出第二次点击要等第一次长 handler 全部结束后才会处理。\n1 分：说明之后会再触发一轮导出和额外卡顿。"
+            }
+          ],
+          "displayNumber": "Q3.1",
+          "categoryLabel": "Async JavaScript: Event Loop and Promises",
+          "displayStyle": "quiz-sample",
+          "mockup": {
+            "files": [
+              {
+                "name": "export.png",
+                "active": true
+              },
+              {
+                "name": "timeline.svg"
+              },
+              {
+                "name": "export.js",
+                "code": "const button = document.querySelector('#export')\n\nbutton.addEventListener('click', () => {\n  const rows = buildCsvRows(200000)\n  downloadCsv(rows)\n})",
+                "codeZh": "const button = document.querySelector('#export')\n\nbutton.addEventListener('click', () => {\n  const rows = buildCsvRows(200000)\n  downloadCsv(rows)\n})"
+              }
+            ],
+            "html": "<div class='exam-ui-shell'><div class='exam-ui-topbar'><span>Timetable admin</span><span>09:41</span></div><div class='exam-ui-body'><h3 class='exam-ui-page-title'>Export enrolments</h3><div class='exam-ui-card' style='max-width:300px'><p class='exam-ui-label'>All enrolment rows</p><p class='exam-ui-value'>200,000 rows · CSV file</p><div class='exam-ui-form-actions'><button class='exam-ui-button'>Export CSV</button><button class='exam-ui-button exam-ui-button-secondary'>Cancel</button></div><p class='exam-ui-help'>Status:</p></div></div></div>",
+            "htmlZh": "<div class='exam-ui-shell'><div class='exam-ui-topbar'><span>课表后台</span><span>09:41</span></div><div class='exam-ui-body'><h3 class='exam-ui-page-title'>导出报名数据</h3><div class='exam-ui-card' style='max-width:300px'><p class='exam-ui-label'>全部报名记录</p><p class='exam-ui-value'>200,000 行 · CSV 文件</p><div class='exam-ui-form-actions'><button class='exam-ui-button'>导出 CSV</button><button class='exam-ui-button exam-ui-button-secondary'>取消</button></div><p class='exam-ui-help'>状态：</p></div></div></div>"
+          },
+          "titleZh": "会卡死页面的导出",
+          "contentMdxZh": "一个 timetable admin 页面可以把全部 200,000 条 enrolment row 导出成 CSV。页面角落有一个每秒跳动一次的时钟，还有一个 Cancel 按钮，本来应该能在导出进行中中止导出。老师反馈：导出时页面上的时钟会停住，Cancel 也没有反应，而且 `Cancelled` 还会在 `Done` 之后才出现。相关代码、页面截图和一次导出时间线如下。"
+        },
+        {
+          "id": "Q3.2",
+          "title": "Undo after removing a song",
+          "marks": 6,
+          "contentMdx": "A playlist app shows a toast at the bottom of the page whenever a song is removed: `Song removed. Undo.` The Undo link, which is not part of the code below, puts the song back. After 5 seconds the toast disappears and the playlist is saved to the browser's local storage without that song, after which the removal cannot be undone. A tester removed two songs 3 seconds apart and says the toast for the second song vanished after only 2 seconds. The code, a screenshot and a timeline of that test are below.",
+          "subQuestions": [
+            {
+              "id": "Q3.2-a",
+              "label": "(a)",
+              "marks": 2,
+              "questionMdx": "Using the timeline, explain why the toast for the second song disappears after only 2 seconds.",
+              "answerMdx": "Every call to `removeSong` schedules its own timer, and nothing cancels the earlier one. Song A's timer is still waiting when song B is removed. At 5 seconds it fires and hides the toast, which by then is showing song B's message, so B's toast was visible for only 2 seconds. Song B's own timer fires later and hides a toast that is already gone.",
+              "markingMdx": "1 mark for identifying the first timer as still active when the second song is removed.\n1 mark for linking that old timer to the second toast disappearing early.",
+              "questionMdxZh": "结合时间线，解释为什么第二首歌的 toast 只显示了 2 秒就消失。",
+              "answerMdxZh": "因为每次调用 `removeSong` 都会各自安排一个 timer，而旧的 timer 并没有在新 toast 出现时被取消。第一首歌留下的 timer 还在等待，当时间到 5 秒时，它会把当前 toast 隐藏掉；但那时页面上显示的已经是第二首歌的消息，所以第二条 toast 实际上只展示了 2 秒。",
+              "markingMdxZh": "1 分：指出第一首歌对应的旧 timer 仍然存在。\n1 分：解释旧 timer 提前把第二条 toast 隐藏掉了。"
+            },
+            {
+              "id": "Q3.2-b",
+              "label": "(b)",
+              "marks": 2,
+              "questionMdx": "Describe, at a high level, one change so that the toast for the song just removed always stays for its full 5 seconds, however soon the next song is removed, and say what else it buys. You do not need to write code.",
+              "answerMdx": "Store the timer id and cancel the earlier timer when another song is removed, so only the latest timer is running. The newest toast then lasts a full 5 seconds from its own removal. This also means an older timeout cannot hide a newer song's message.",
+              "markingMdx": "1 mark for a fix that prevents an old timeout from hiding the new toast.\n1 mark for an extra benefit such as isolating each toast lifetime.",
+              "questionMdxZh": "不写代码，描述一种高层修改方式，让“最新删除的歌曲”对应的 toast 一定完整显示 5 秒，并说明它额外还带来什么好处。",
+              "answerMdxZh": "可以把 timer id 保存下来，每次又删除新歌曲时先取消旧 timer，再启动新的 timer。这样页面上最新的 toast 会从自己的出现时刻开始完整存活 5 秒；同时旧 timeout 也不会再把新消息错关掉。",
+              "markingMdxZh": "1 分：给出能阻止旧 timeout 干扰新 toast 的修法。\n1 分：说明额外收益，例如每条 toast 生命周期互不串扰。"
+            },
+            {
+              "id": "Q3.2-c",
+              "label": "(c)",
+              "marks": 2,
+              "questionMdx": "A student removes a song and closes the browser tab 2 seconds later. With the current code, what happens to the removal, and how should the app make sure a removal is never lost this way?",
+              "answerMdx": "The removal may be lost. `saveWithout` is called only from inside the timer callback. Closing the tab destroys the page together with its pending timer, so the callback never runs and the playlist in local storage is never updated. The app should save the playlist without the song straight away, and make Undo put the song back and save again.",
+              "markingMdx": "1 mark for explaining that closing the tab kills the pending timer and therefore the save.\n1 mark for a correct high-level fix using immediate save plus undo.",
+              "questionMdxZh": "如果学生删掉一首歌后，2 秒后就直接关闭浏览器标签页，按照当前代码会发生什么？应用应该怎么改，才能保证这种删除不会丢？",
+              "answerMdxZh": "这次删除可能会丢，因为真正的保存逻辑是在延迟的 timer callback 里执行的。标签页一旦被关掉，页面和挂起的 timer 都会一起消失，回调也就永远不会运行。更稳的做法是先立刻保存“删掉后的 playlist”，而 Undo 只是一个后续反向操作：把歌加回来后再保存一次。",
+              "markingMdxZh": "1 分：说明关标签会把待执行 timer 一起销毁，因此保存不会发生。\n1 分：给出“先立即保存，再用 Undo 反向恢复”的高层修法。"
+            }
+          ],
+          "displayNumber": "Q3.2",
+          "categoryLabel": "Async JavaScript: Event Loop and Promises",
+          "displayStyle": "quiz-sample",
+          "mockup": {
+            "files": [
+              {
+                "name": "playlist.png",
+                "active": true
+              },
+              {
+                "name": "timeline.svg"
+              },
+              {
+                "name": "playlist.js",
+                "code": "let hideToastTimer = null\n\nfunction removeSong(title) {\n  showToast(title + ' removed')\n  hideToastTimer = setTimeout(() => hideToast(), 3000)\n}",
+                "codeZh": "let hideToastTimer = null\n\nfunction removeSong(title) {\n  showToast(title + ' 已移除')\n  hideToastTimer = setTimeout(() => hideToast(), 3000)\n}"
+              }
+            ],
+            "html": "<div class='exam-ui-shell'><div class='exam-ui-topbar'><span>Playlist: Study mix</span><span>5 ↺</span></div><div class='exam-ui-body'><div class='exam-ui-card'><div class='exam-ui-list'><div class='exam-ui-list-row'><span class='exam-ui-value'>Night Owl — Kiri Vale</span><button class='exam-ui-button exam-ui-button-secondary'>Remove</button></div><div class='exam-ui-list-row'><span class='exam-ui-value'>Paper Planes — The Hollows</span><button class='exam-ui-button exam-ui-button-secondary'>Remove</button></div><div class='exam-ui-list-row'><span class='exam-ui-value'>Slow Tide — Marlo</span><button class='exam-ui-button exam-ui-button-secondary'>Remove</button></div><div class='exam-ui-list-row'><span class='exam-ui-value'>Ember — Sunday Club</span><button class='exam-ui-button exam-ui-button-secondary'>Remove</button></div></div></div><div style='margin-top:3rem;text-align:center'><span class='exam-ui-toast'>\"Blue Hour\" removed. <span class='exam-ui-link' style='color:#93c5fd'>Undo</span></span></div></div></div>",
+            "htmlZh": "<div class='exam-ui-shell'><div class='exam-ui-topbar'><span>播放列表：学习歌单</span><span>5 ↺</span></div><div class='exam-ui-body'><div class='exam-ui-card'><div class='exam-ui-list'><div class='exam-ui-list-row'><span class='exam-ui-value'>Night Owl — Kiri Vale</span><button class='exam-ui-button exam-ui-button-secondary'>移除</button></div><div class='exam-ui-list-row'><span class='exam-ui-value'>Paper Planes — The Hollows</span><button class='exam-ui-button exam-ui-button-secondary'>移除</button></div><div class='exam-ui-list-row'><span class='exam-ui-value'>Slow Tide — Marlo</span><button class='exam-ui-button exam-ui-button-secondary'>移除</button></div><div class='exam-ui-list-row'><span class='exam-ui-value'>Ember — Sunday Club</span><button class='exam-ui-button exam-ui-button-secondary'>移除</button></div></div></div><div style='margin-top:3rem;text-align:center'><span class='exam-ui-toast'>“Blue Hour” 已移除。<span class='exam-ui-link' style='color:#93c5fd'>撤销</span></span></div></div></div>"
+          },
+          "titleZh": "删除歌曲后的撤销问题",
+          "contentMdxZh": "一个 playlist app 会在每次移除歌曲后，在页面底部显示一条 toast：`Song removed. Undo.`。其中 Undo 链接会把歌加回来。5 秒后 toast 会消失，并把“移除后的 playlist”保存进浏览器 local storage，之后这次删除就不能再撤销。测试者隔了 3 秒连续删掉两首歌，却发现第二首歌对应的 toast 只显示了 2 秒就消失了。相关代码、截图和时间线如下。"
+        },
+        {
+          "id": "Q3.3",
+          "title": "Two clicks, one summary",
+          "marks": 6,
+          "contentMdx": "A cinema page lets a student pick a movie by clicking its poster and a session time by clicking a time button, in either order, and then press Book. A summary line under the choices reads, for example, `Dune at 7:30pm`. Testers report that after their first click the summary sometimes reads `Dune at undefined`, and sometimes stays blank with an error in the console. After their second click it is always right. The code, a screenshot of each outcome and a timeline of two testers are below.",
+          "subQuestions": [
+            {
+              "id": "Q3.3-a",
+              "label": "(a)",
+              "marks": 2,
+              "questionMdx": "Using the timeline, explain why the summary is sometimes wrong after the first click, but always ends up right.",
+              "answerMdx": "Each click listener runs only when its own click happens, and the student decides which comes first. Both listeners redraw the whole summary straight away, using both values, without checking that the other choice has been made. So the first click always draws with the other value still missing: clicking a poster first gives `Dune at undefined`, and clicking a time first makes the code fail when it reads `movie.title`; so the summary stays blank and an error appears in the console. The second click redraws with both values present, which is why it always ends up right.",
+              "markingMdx": "1 mark for identifying the redraw as using incomplete state after the first click.\n1 mark for explaining why the second click fixes it once both values exist.",
+              "questionMdxZh": "结合时间线，解释为什么第一次点击后 summary 有时不对，但第二次点击后又总会变正确。",
+              "answerMdxZh": "因为每个 click listener 都会在自己的点击发生时立刻重画整条 summary，而且它默认两个值都已经齐了，却没有先检查“另一个选择”是否已经做完。于是第一次点击时总会有一个值缺失：先点电影就会得到 `Dune at undefined`；先点时间则可能在读取 `movie.title` 时直接报错。等第二次点击后，两个值终于都存在了，所以重画结果也就正确了。",
+              "markingMdxZh": "1 分：指出第一次重画时使用了不完整状态。\n1 分：说明第二次点击后两个值都到位，所以 summary 才正确。"
+            },
+            {
+              "id": "Q3.3-b",
+              "label": "(b)",
+              "marks": 2,
+              "questionMdx": "Describe, at a high level, one change so that the summary is never shown with a value missing, and say what the student would notice. You do not need to write code.",
+              "answerMdx": "Only draw the summary once both a movie and a time have been chosen, and show a prompt such as `Choose a movie and a time` until then. Another acceptable fix is to draw the two parts separately with placeholders. The student sees either no summary or an obviously incomplete prompt, rather than `undefined` or an error, until after the second click.",
+              "markingMdx": "1 mark for a high-level fix that guards against incomplete state.\n1 mark for the user-visible effect.",
+              "questionMdxZh": "不写代码，描述一种高层修改方式，让 summary 不会再显示缺值版本，并说明学生会看到什么。",
+              "answerMdxZh": "可以只在“电影和时间都已选中”时才渲染完整 summary；在那之前显示诸如 `Choose a movie and a time` 的提示，或者把两部分分别显示并用占位词表示未选。学生看到的就不再是 `undefined` 或报错，而是明确的“尚未选完”状态。",
+              "markingMdxZh": "1 分：给出能防止不完整状态直接渲染出来的高层修法。\n1 分：正确说明用户会看到的变化。"
+            },
+            {
+              "id": "Q3.3-c",
+              "label": "(c)",
+              "marks": 2,
+              "questionMdx": "A student clicks the Dune poster and then presses Book, without clicking a time. With the current code, what does the summary say, and what is booked? How should the page stop this?",
+              "answerMdx": "The summary says `Dune at undefined`, and Book calls `book(movie, time)` with `time` still undefined, so a booking for Dune is made with no session time. The page should not let Book work until both are chosen: keep the Book button disabled until a movie and a time have been picked, or have Book check first and ask the student to choose a time.",
+              "markingMdx": "1 mark for describing the incorrect summary or booking with undefined time.\n1 mark for a correct prevention strategy.",
+              "questionMdxZh": "如果学生只点了 Dune 海报就直接按 Book，没有再点时间，当前代码会发生什么？页面应该怎么阻止这种情况？",
+              "answerMdxZh": "此时 summary 会显示 `Dune at undefined`，而 Book 也会把 `undefined` 这个时间一起传进预订逻辑，等于发起了一次缺少场次的预订。页面应该在电影和时间都选好之前禁用 Book，或者在 Book 触发时先检查缺少哪一项，再提示学生补选时间。",
+              "markingMdxZh": "1 分：说明会出现带 `undefined` 的 summary 或不完整预订。\n1 分：给出正确的阻止策略。"
+            }
+          ],
+          "displayNumber": "Q3.3",
+          "categoryLabel": "Async JavaScript: Event Loop and Promises",
+          "displayStyle": "quiz-sample",
+          "mockup": {
+            "files": [
+              {
+                "name": "outcomes.png",
+                "active": true
+              },
+              {
+                "name": "timeline.svg"
+              },
+              {
+                "name": "booking.js",
+                "code": "let selectedMovie\nlet selectedSession\n\nfunction chooseMovie(movie) {\n  selectedMovie = movie\n  renderSummary()\n}\n\nfunction renderSummary() {\n  summary.textContent = selectedMovie + ' at ' + selectedSession.time\n}",
+                "codeZh": "let selectedMovie\nlet selectedSession\n\nfunction chooseMovie(movie) {\n  selectedMovie = movie\n  renderSummary()\n}\n\nfunction renderSummary() {\n  summary.textContent = selectedMovie + ' at ' + selectedSession.time\n}"
+              }
+            ],
+            "html": "<div class='exam-ui-shell'><div class='exam-ui-topbar'><span>Tester 1 / Tester 2</span><span>Outcome</span></div><div class='exam-ui-body'><div class='exam-ui-grid-2'><div class='exam-ui-card'><p class='exam-ui-label'>Movie</p><div class='exam-ui-button-row'><button class='exam-ui-button' style='background:#c76e0e;border-color:#c76e0e'>Dune</button><button class='exam-ui-button' style='background:#1f9d55;border-color:#1f9d55'>Wicked</button><button class='exam-ui-button' style='background:#3366cc;border-color:#3366cc'>Paddington</button></div><p class='exam-ui-label' style='margin-top:0.8rem'>Session</p><div class='exam-ui-button-row'><button class='exam-ui-button exam-ui-button-secondary'>4:00pm</button><button class='exam-ui-button exam-ui-button-secondary'>7:30pm</button><button class='exam-ui-button exam-ui-button-secondary'>9:15pm</button></div><p class='exam-ui-value' style='margin-top:0.8rem'>Dune at undefined</p></div><div class='exam-ui-card'><p class='exam-ui-label'>Movie</p><div class='exam-ui-button-row'><button class='exam-ui-button' style='background:#c76e0e;border-color:#c76e0e'>Dune</button><button class='exam-ui-button' style='background:#1f9d55;border-color:#1f9d55'>Wicked</button><button class='exam-ui-button' style='background:#3366cc;border-color:#3366cc'>Paddington</button></div><p class='exam-ui-label' style='margin-top:0.8rem'>Session</p><div class='exam-ui-button-row'><button class='exam-ui-button exam-ui-button-secondary'>4:00pm</button><button class='exam-ui-button' style='background:#111827;border-color:#111827'>7:30pm</button><button class='exam-ui-button exam-ui-button-secondary'>9:15pm</button></div><p class='exam-ui-help exam-ui-danger' style='margin-top:0.8rem'>Uncaught TypeError: Cannot read properties of undefined</p></div></div></div></div>",
+            "htmlZh": "<div class='exam-ui-shell'><div class='exam-ui-topbar'><span>测试者 1 / 测试者 2</span><span>结果</span></div><div class='exam-ui-body'><div class='exam-ui-grid-2'><div class='exam-ui-card'><p class='exam-ui-label'>电影</p><div class='exam-ui-button-row'><button class='exam-ui-button' style='background:#c76e0e;border-color:#c76e0e'>Dune</button><button class='exam-ui-button' style='background:#1f9d55;border-color:#1f9d55'>Wicked</button><button class='exam-ui-button' style='background:#3366cc;border-color:#3366cc'>Paddington</button></div><p class='exam-ui-label' style='margin-top:0.8rem'>场次</p><div class='exam-ui-button-row'><button class='exam-ui-button exam-ui-button-secondary'>4:00pm</button><button class='exam-ui-button exam-ui-button-secondary'>7:30pm</button><button class='exam-ui-button exam-ui-button-secondary'>9:15pm</button></div><p class='exam-ui-value' style='margin-top:0.8rem'>Dune at undefined</p></div><div class='exam-ui-card'><p class='exam-ui-label'>电影</p><div class='exam-ui-button-row'><button class='exam-ui-button' style='background:#c76e0e;border-color:#c76e0e'>Dune</button><button class='exam-ui-button' style='background:#1f9d55;border-color:#1f9d55'>Wicked</button><button class='exam-ui-button' style='background:#3366cc;border-color:#3366cc'>Paddington</button></div><p class='exam-ui-label' style='margin-top:0.8rem'>场次</p><div class='exam-ui-button-row'><button class='exam-ui-button exam-ui-button-secondary'>4:00pm</button><button class='exam-ui-button' style='background:#111827;border-color:#111827'>7:30pm</button><button class='exam-ui-button exam-ui-button-secondary'>9:15pm</button></div><p class='exam-ui-help exam-ui-danger' style='margin-top:0.8rem'>Uncaught TypeError: Cannot read properties of undefined</p></div></div></div></div>"
+          },
+          "titleZh": "两次点击，一个 summary",
+          "contentMdxZh": "一个 cinema 页面允许学生通过点击电影海报选择电影，再通过点击时间按钮选择场次，顺序不限，然后按 Book。选项下方会显示一行 summary，比如 `Dune at 7:30pm`。测试者发现：第一次点击后，summary 有时会变成 `Dune at undefined`，有时甚至直接报错留空；但第二次点击后又总是正确。相关代码、两种截图和时间线如下。"
+        },
+        {
+          "id": "Q4.1",
+          "title": "Recent orders panel",
+          "marks": 6,
+          "contentMdx": "A shop's account page has a Recent orders panel. The page first asks the server who the logged-in customer is (`/api/me`), then uses that customer's id to ask for their orders. A spinner is shown while the page loads. Customers report that the spinner disappears quickly but the panel stays empty for a moment before the orders appear. The code, a screenshot taken half a second after the page opened and a timeline of one page load are below.",
+          "subQuestions": [
+            {
+              "id": "Q4.1-a",
+              "label": "(a)",
+              "marks": 2,
+              "questionMdx": "Using the timeline, explain why the spinner disappears before the orders appear.",
+              "answerMdx": "At 0.3 seconds the page has received only the answer to the first request (who the customer is), yet it hides the spinner as if everything had finished. The orders request has been started, but nothing in the chain waits for it, so the next step, hiding the spinner, runs straight away. The orders are still on their way, so between 0.3 and 1.0 seconds the student sees an empty panel with no spinner.",
+              "markingMdx": "1 mark for explaining that the second request is started but not waited for.\n1 mark for linking that to the spinner disappearing early.",
+              "questionMdxZh": "结合时间线，解释为什么 spinner 会先消失，但 orders 还要过一会儿才出现。",
+              "answerMdxZh": "因为在第一段请求结束后，代码虽然启动了第二个 orders 请求，但并没有真正把它接回同一条等待链上。于是外层加载流程误以为“事情已经做完”，就提前把 spinner 隐藏了；而 orders 请求其实还在路上，所以用户会先看到一个没有 spinner 的空白面板。",
+              "markingMdxZh": "1 分：指出第二个请求虽然启动了，但并没有被等待。\n1 分：把这一点和 spinner 提前消失联系起来。"
+            },
+            {
+              "id": "Q4.1-b",
+              "label": "(b)",
+              "marks": 2,
+              "questionMdx": "Describe, at a high level, one change to the page, without changing the server, so that the spinner stays until the orders have arrived, and say what the student would notice. You do not need to write code.",
+              "answerMdx": "Keep one loading sequence for the whole page. Return the inner request so the chain waits for it, or use `async/await` and only clear loading after the orders are processed. The student then sees the spinner until the orders are ready, with no empty gap.",
+              "markingMdx": "1 mark for a fix that keeps loading tied to the second request.\n1 mark for the correct user-visible result.",
+              "questionMdxZh": "不写代码，描述一种高层修改方式，在不改服务器的前提下，让 spinner 一直显示到 orders 真正到达为止，并说明用户会看到什么。",
+              "answerMdxZh": "可以让整个页面只维护一条完整的 loading 流程：把内部 orders 请求 return 回 promise chain，或者改成 `async/await` 并在 orders 真正处理完后再关掉 loading。这样用户会一直看到 spinner，直到 Recent orders 已经准备好，不会再出现中间那段空白。",
+              "markingMdxZh": "1 分：给出能把 loading 和第二个请求重新绑定的修法。\n1 分：正确说明用户可见的变化。"
+            },
+            {
+              "id": "Q4.1-c",
+              "label": "(c)",
+              "marks": 2,
+              "questionMdx": "The team could add a server endpoint that returns the user together with their recent orders in one response, so the page makes only one request. Give one benefit and one cost of that design.",
+              "answerMdx": "A benefit is that there is no second request to wait for, so the panel can appear sooner and the client code becomes simpler. A cost is that the server must change, and the new endpoint is shaped around this page, so it may be less reusable or force the page to wait for the slower combined result.",
+              "markingMdx": "1 mark for a valid benefit of a combined endpoint.\n1 mark for a valid cost or trade-off.",
+              "questionMdxZh": "团队还考虑过让服务器提供一个新接口，一次性把用户信息和 recent orders 一起返回，让页面只发一个请求。请各给出一个 benefit 和一个 cost。",
+              "answerMdxZh": "好处是减少了一次网络往返，客户端逻辑也更简单，面板可能更快出现。代价是服务器要为这个页面做一个更“定制化”的接口，复用性可能变差，而且页面也必须等整包数据都返回后才能一起展示。",
+              "markingMdxZh": "1 分：给出一个合理好处。\n1 分：给出一个合理代价或权衡。"
+            }
+          ],
+          "displayNumber": "Q4.1",
+          "categoryLabel": "Requests: Fetch, Combining and Recovery",
+          "displayStyle": "quiz-sample",
+          "mockup": {
+            "files": [
+              {
+                "name": "orders.png",
+                "active": true
+              },
+              {
+                "name": "timeline.svg"
+              },
+              {
+                "name": "orders.js",
+                "code": "fetch('/api/me')\n  .then((response) => response.json())\n  .then((user) => fetch('/api/orders?userId=' + user.id))\n  .then((response) => response.json())\n  .then((orders) => renderOrders(orders))\n\nhideSpinner()",
+                "codeZh": "fetch('/api/me')\n  .then((response) => response.json())\n  .then((user) => fetch('/api/orders?userId=' + user.id))\n  .then((response) => response.json())\n  .then((orders) => renderOrders(orders))\n\nhideSpinner()"
+              }
+            ],
+            "html": "<div class='exam-ui-shell'><div class='exam-ui-topbar'><span>Book Nook</span><span>My account · B-</span></div><div class='exam-ui-body'><h3 class='exam-ui-page-title'>My account</h3><div class='exam-ui-grid-2'><div class='exam-ui-card'><p class='exam-ui-label'>Details</p><p class='exam-ui-value'>Priya Shah</p><p class='exam-ui-help'>priya@student.example</p><p class='exam-ui-help'>Member since 2024</p></div><div class='exam-ui-card'><p class='exam-ui-label'>Recent orders</p><div style='height:100px'></div></div></div></div></div>",
+            "htmlZh": "<div class='exam-ui-shell'><div class='exam-ui-topbar'><span>Book Nook</span><span>我的账户 · B-</span></div><div class='exam-ui-body'><h3 class='exam-ui-page-title'>我的账户</h3><div class='exam-ui-grid-2'><div class='exam-ui-card'><p class='exam-ui-label'>资料</p><p class='exam-ui-value'>Priya Shah</p><p class='exam-ui-help'>priya@student.example</p><p class='exam-ui-help'>自 2024 年起成为会员</p></div><div class='exam-ui-card'><p class='exam-ui-label'>最近订单</p><div style='height:100px'></div></div></div></div></div>"
+          },
+          "titleZh": "Recent orders 面板",
+          "contentMdxZh": "一个商店账户页有一个 Recent orders 面板。页面会先请求 `/api/me` 获取当前登录用户，再根据用户 id 请求订单。页面加载期间会显示 spinner。用户反馈：spinner 很快就消失了，但 Recent orders 面板会先空白一小段时间，然后订单才出现。相关代码、半秒时的截图和时间线如下。"
+        },
+        {
+          "id": "Q4.2",
+          "title": "Old prices on a cafe menu",
+          "marks": 6,
+          "contentMdx": "A campus café has an ordering page that lists the menu with prices. A student adds items to a basket and presses Order. At 12:00 the café raises the price of a flat white from $5.00 to $6.00. A student who opened the page at 11:50 and ordered at 12:05 saw a flat white at $5.00 the whole time. The code, a screenshot of the student's page at 12:05 and a timeline of their visit are below.",
+          "mockup": {
+            "files": [
+              {
+                "name": "menu.png",
+                "active": true
+              },
+              {
+                "name": "timeline.svg"
+              },
+              {
+                "name": "menu.js",
+                "code": "let menu = []\nlet basket = []\n\nfetch('/api/menu')\n  .then((response) => response.json())\n  .then((data) => {\n    menu = data\n    renderMenu(menu)\n  })\n\nfunction getTotal() {\n  return basket.reduce((sum, item) => sum + item.price, 0)\n}",
+                "codeZh": "let menu = []\nlet basket = []\n\nfetch('/api/menu')\n  .then((response) => response.json())\n  .then((data) => {\n    menu = data\n    renderMenu(menu)\n  })\n\nfunction getTotal() {\n  return basket.reduce((sum, item) => sum + item.price, 0)\n}"
+              }
+            ],
+            "viewport": "desktop",
+            "caption": "The menu is on the left and the basket is on the right. The key evidence here is that the page still shows the old price `$5.00`, and the total is also calculated from the stale menu copy.",
+            "html": "<div class=\"exam-ui-shell\"><div class=\"exam-ui-topbar\"><span>Campus Cafe</span><span></span></div><div class=\"exam-ui-body\"><div style=\"display:grid;grid-template-columns:minmax(0,1.2fr) minmax(220px,.8fr);gap:1rem;\"><div class=\"exam-ui-card\"><p class=\"exam-ui-value\" style=\"font-weight:700;margin-bottom:.75rem;\">Menu</p><div class=\"exam-ui-stack\"><div style=\"display:flex;align-items:center;justify-content:space-between;gap:.75rem;\"><span class=\"exam-ui-value\">Flat white</span><span class=\"exam-ui-value\">$5.00</span><button class=\"exam-ui-button exam-ui-button-secondary\" style=\"padding:.3rem .55rem;\">Add</button></div><div style=\"display:flex;align-items:center;justify-content:space-between;gap:.75rem;\"><span class=\"exam-ui-value\">Banana bread</span><span class=\"exam-ui-value\">$4.50</span><button class=\"exam-ui-button exam-ui-button-secondary\" style=\"padding:.3rem .55rem;\">Add</button></div><div style=\"display:flex;align-items:center;justify-content:space-between;gap:.75rem;\"><span class=\"exam-ui-value\">Iced tea</span><span class=\"exam-ui-value\">$4.00</span><button class=\"exam-ui-button exam-ui-button-secondary\" style=\"padding:.3rem .55rem;\">Add</button></div><div style=\"display:flex;align-items:center;justify-content:space-between;gap:.75rem;\"><span class=\"exam-ui-value\">Cheese toastie</span><span class=\"exam-ui-value\">$7.50</span><button class=\"exam-ui-button exam-ui-button-secondary\" style=\"padding:.3rem .55rem;\">Add</button></div></div></div><div class=\"exam-ui-card\"><p class=\"exam-ui-value\" style=\"font-weight:700;margin-bottom:.75rem;\">Your basket</p><div class=\"exam-ui-stack\"><div style=\"display:flex;justify-content:space-between;gap:.75rem;\"><span class=\"exam-ui-value\">Flat white</span><span class=\"exam-ui-value\">$5.00</span></div><div class=\"exam-ui-divider\"></div><div style=\"display:flex;justify-content:space-between;gap:.75rem;\"><span class=\"exam-ui-value\" style=\"font-weight:700;\">Total</span><span class=\"exam-ui-value\" style=\"font-weight:700;\">$5.00</span></div><button class=\"exam-ui-button\" style=\"margin-top:.25rem;width:100%;\">Order</button></div></div></div></div></div>",
+            "captionZh": "左边是 menu，右边是 basket。这个题真正要看的是：页面仍然展示旧价 `$5.00`，而且 total 也是按旧菜单副本算出来的。",
+            "htmlZh": "<div class=\"exam-ui-shell\"><div class=\"exam-ui-topbar\"><span>校园咖啡馆</span><span></span></div><div class=\"exam-ui-body\"><div style=\"display:grid;grid-template-columns:minmax(0,1.2fr) minmax(220px,.8fr);gap:1rem;\"><div class=\"exam-ui-card\"><p class=\"exam-ui-value\" style=\"font-weight:700;margin-bottom:.75rem;\">菜单</p><div class=\"exam-ui-stack\"><div style=\"display:flex;align-items:center;justify-content:space-between;gap:.75rem;\"><span class=\"exam-ui-value\">Flat white</span><span class=\"exam-ui-value\">$5.00</span><button class=\"exam-ui-button exam-ui-button-secondary\" style=\"padding:.3rem .55rem;\">加入</button></div><div style=\"display:flex;align-items:center;justify-content:space-between;gap:.75rem;\"><span class=\"exam-ui-value\">Banana bread</span><span class=\"exam-ui-value\">$4.50</span><button class=\"exam-ui-button exam-ui-button-secondary\" style=\"padding:.3rem .55rem;\">加入</button></div><div style=\"display:flex;align-items:center;justify-content:space-between;gap:.75rem;\"><span class=\"exam-ui-value\">Iced tea</span><span class=\"exam-ui-value\">$4.00</span><button class=\"exam-ui-button exam-ui-button-secondary\" style=\"padding:.3rem .55rem;\">加入</button></div><div style=\"display:flex;align-items:center;justify-content:space-between;gap:.75rem;\"><span class=\"exam-ui-value\">Cheese toastie</span><span class=\"exam-ui-value\">$7.50</span><button class=\"exam-ui-button exam-ui-button-secondary\" style=\"padding:.3rem .55rem;\">加入</button></div></div></div><div class=\"exam-ui-card\"><p class=\"exam-ui-value\" style=\"font-weight:700;margin-bottom:.75rem;\">购物篮</p><div class=\"exam-ui-stack\"><div style=\"display:flex;justify-content:space-between;gap:.75rem;\"><span class=\"exam-ui-value\">Flat white</span><span class=\"exam-ui-value\">$5.00</span></div><div class=\"exam-ui-divider\"></div><div style=\"display:flex;justify-content:space-between;gap:.75rem;\"><span class=\"exam-ui-value\" style=\"font-weight:700;\">总价</span><span class=\"exam-ui-value\" style=\"font-weight:700;\">$5.00</span></div><button class=\"exam-ui-button\" style=\"margin-top:.25rem;width:100%;\">下单</button></div></div></div></div></div>"
+          },
+          "subQuestions": [
+            {
+              "id": "Q4.2-a",
+              "label": "(a)",
+              "marks": 2,
+              "questionMdx": "Using the timeline, explain why the student still sees a flat white at $5.00 at 12:05.",
+              "answerMdx": "The page asks the server for the menu only once, when it opens at 11:50, and keeps that copy. The price changes on the server at 12:00, but nothing on the page asks for the menu again, so the page goes on showing the $5.00 it was given.",
+              "markingMdx": "1 mark for identifying the menu as fetched only once.\n1 mark for linking that stale local copy to the old price still being shown.",
+              "questionMdxZh": "结合时间线，解释为什么学生到 12:05 仍然看到 flat white 是 `$5.00`。",
+              "answerMdxZh": "因为页面只在 11:50 打开时请求过一次菜单，并把那份结果缓存成本地副本。服务器虽然后来在 12:00 更新了价格，但页面此后从未再次拉取菜单，所以它会一直用旧副本继续渲染，直到刷新或重新请求。",
+              "markingMdxZh": "1 分：指出菜单只在页面打开时请求过一次。\n1 分：说明旧副本导致页面一直展示老价格。"
+            },
+            {
+              "id": "Q4.2-b",
+              "label": "(b)",
+              "marks": 2,
+              "questionMdx": "Describe, at a high level, one change so that a student who keeps the page open sees the new prices, and say what the student would notice. You do not need to write code.",
+              "answerMdx": "Ask the server for the menu again at the moments that matter, such as every few minutes, when the student returns to the tab, or just before Order. The student sees current prices before ordering, or sees the prices update while the page is open.",
+              "markingMdx": "1 mark for a valid high-level refresh strategy.\n1 mark for the correct user-visible effect.",
+              "questionMdxZh": "不写代码，描述一种高层修法，让学生在页面一直开着的情况下也能看到新价格，并说明他们会注意到什么。",
+              "answerMdxZh": "可以定时重新请求菜单，或者至少在学生即将下单前再次向服务器确认当前价格。这样学生要么会看到菜单价格自动更新，要么会在按 Order 时被明确告知“flat white 已改价为 `$6.00`”。",
+              "markingMdxZh": "1 分：给出一种合理的重新获取最新价格的策略。\n1 分：说明用户会看到价格更新或下单前提示。"
+            },
+            {
+              "id": "Q4.2-c",
+              "label": "(c)",
+              "marks": 2,
+              "questionMdx": "When the student presses Order at 12:05, the server charges the total that the page sends. What goes wrong, and what should the server do instead?",
+              "answerMdx": "The page works out the total from its old copy of the menu, so it sends $5.00 and the student is charged $5.00 for a drink that now costs $6.00. The server should work out the total itself from the items ordered and its own current prices, and not trust a total sent by the page.",
+              "markingMdx": "1 mark for explaining the stale or untrusted total problem.\n1 mark for stating that the server should recalculate from authoritative current prices.",
+              "questionMdxZh": "当前页面在 Order 时会把自己算出的 `total` 发给服务器。这里会出什么问题？服务器应该怎么做才对？",
+              "answerMdxZh": "问题在于页面是用旧菜单副本算 total 的，所以它可能把 `$5.00` 的旧总价发给服务器；而且客户端传来的 total 本身也可能被篡改。正确做法是服务器根据商品 id / 数量自己查当前价格并重新计算总价，而不是盲信页面给的金额。",
+              "markingMdxZh": "1 分：说明 stale total 或客户端 total 不可信。\n1 分：说明服务器应以自己的当前价格重新计算。"
+            }
+          ],
+          "displayNumber": "Q4.2",
+          "categoryLabel": "Requests: Fetch, Combining and Recovery",
+          "displayStyle": "quiz-sample",
+          "titleZh": "咖啡菜单里的旧价格",
+          "contentMdxZh": "一个校园咖啡馆页面会展示菜单和价格，学生可以把项目加入购物篮后再按 Order。中午 12:00，咖啡馆把 flat white 的价格从 $5.00 提到 $6.00。一个学生 11:50 打开页面，12:05 才下单，却始终看到 $5.00。相关代码、12:05 时的页面截图和时间线如下。"
+        },
+        {
+          "id": "Q4.3",
+          "title": "A count that takes ten seconds",
+          "marks": 6,
+          "contentMdx": "A course home page shows how many students are enrolled, for example `4812 students enrolled`. On campus wifi the count appears about a second after the page opens. Students on their phones say it takes about ten seconds, and the box shows `...` until then. The code, a screenshot of the page on a phone after five seconds and a timeline of both are below.",
+          "mockup": {
+            "files": [
+              {
+                "name": "phone.png",
+                "active": true
+              },
+              {
+                "name": "timeline.svg"
+              },
+              {
+                "name": "count.js",
+                "code": "fetch('/api/enrolments')\n  .then((response) => response.json())\n  .then((enrolments) => {\n    countEl.textContent = enrolments.length + ' students enrolled'\n  })",
+                "codeZh": "fetch('/api/enrolments')\n  .then((response) => response.json())\n  .then((enrolments) => {\n    countEl.textContent = enrolments.length + ' students enrolled'\n  })"
+              }
+            ],
+            "viewport": "mobile",
+            "caption": "This mobile mockup highlights that the page body has loaded, but the enrolment count area still shows `...`, emphasising how long the student waits just to see one number.",
+            "html": "<div class=\"exam-ui-shell\"><div class=\"exam-ui-topbar\"><span>UNSW Courses</span><span></span></div><div class=\"exam-ui-body\"><p class=\"exam-ui-page-title\" style=\"margin-bottom:.2rem;\">COMP6080</p><p class=\"exam-ui-muted\" style=\"margin:0 0 .85rem;font-size:.8rem;\">Web Front-End Programming · Term 3</p><div class=\"exam-ui-card\" style=\"padding:1rem 1.1rem;margin-bottom:.9rem;\"><p class=\"exam-ui-value\" style=\"font-size:1.25rem;color:#9ca3af;\">...</p></div><div class=\"exam-ui-card\" style=\"margin-bottom:.75rem;\"><p class=\"exam-ui-value\" style=\"font-weight:700;\">Week 6 lecture</p><p class=\"exam-ui-muted\" style=\"margin:.2rem 0 0;font-size:.76rem;\">Requests and fetch</p></div><div class=\"exam-ui-card\"><p class=\"exam-ui-value\" style=\"font-weight:700;\">Assignment 3</p><p class=\"exam-ui-muted\" style=\"margin:.2rem 0 0;font-size:.76rem;\">Due Friday, week 8</p></div></div></div>",
+            "captionZh": "这个 mobile mockup 还原的是：页面主体已经出来了，但 enrolment count 位置还只是 `...`，用来强调“为显示一个数字却等了很久”。",
+            "htmlZh": "<div class=\"exam-ui-shell\"><div class=\"exam-ui-topbar\"><span>UNSW 课程</span><span></span></div><div class=\"exam-ui-body\"><p class=\"exam-ui-page-title\" style=\"margin-bottom:.2rem;\">COMP6080</p><p class=\"exam-ui-muted\" style=\"margin:0 0 .85rem;font-size:.8rem;\">Web 前端编程 · T3</p><div class=\"exam-ui-card\" style=\"padding:1rem 1.1rem;margin-bottom:.9rem;\"><p class=\"exam-ui-value\" style=\"font-size:1.25rem;color:#9ca3af;\">...</p></div><div class=\"exam-ui-card\" style=\"margin-bottom:.75rem;\"><p class=\"exam-ui-value\" style=\"font-weight:700;\">第 6 周讲座</p><p class=\"exam-ui-muted\" style=\"margin:.2rem 0 0;font-size:.76rem;\">Requests and fetch</p></div><div class=\"exam-ui-card\"><p class=\"exam-ui-value\" style=\"font-weight:700;\">作业 3</p><p class=\"exam-ui-muted\" style=\"margin:.2rem 0 0;font-size:.76rem;\">第 8 周周五截止</p></div></div></div>"
+          },
+          "subQuestions": [
+            {
+              "id": "Q4.3-a",
+              "label": "(a)",
+              "marks": 2,
+              "questionMdx": "Using the code and the timeline, explain why the count takes about ten seconds to appear on a phone.",
+              "answerMdx": "To show one number, the page downloads every enrolment record, about 4 MB, and then only counts them. The count cannot appear until all of it has arrived. On campus wifi 4 MB takes about a second, but on a slower mobile connection it takes about ten.",
+              "markingMdx": "1 mark for identifying the large unnecessary data transfer.\n1 mark for linking the slow mobile connection to the delayed count.",
+              "questionMdxZh": "结合代码和时间线，解释为什么这个数字在手机上大约要 10 秒才出现。",
+              "answerMdxZh": "因为页面为了显示一个数字，竟然把所有 enrolment records 都下载了下来，大约有 4MB，然后再在前端数长度。只有这些数据全部到齐后，数字才能显示。校内 wifi 下 4MB 传得快，而手机网络慢，所以占位符 `...` 会停留更久。",
+              "markingMdxZh": "1 分：指出页面下载了远超所需的大量数据。\n1 分：说明慢连接让这个多余下载变得特别明显。"
+            },
+            {
+              "id": "Q4.3-b",
+              "label": "(b)",
+              "marks": 2,
+              "questionMdx": "Describe, at a high level, one change so that the count appears quickly on a phone, and say what the student would notice. You do not need to write code.",
+              "answerMdx": "Ask the server just for the number, or include the count in another small response the page already needs. The reply is only a few bytes, so the count appears almost at once on any connection instead of waiting for a large download.",
+              "markingMdx": "1 mark for a high-level fix that sends only the count or another minimal response.\n1 mark for the correct user-visible result.",
+              "questionMdxZh": "不写代码，描述一种高层修法，让手机上也能很快看到这个 count，并说明学生会看到什么。",
+              "answerMdxZh": "可以让服务器直接提供一个只返回 count 的接口，或者把这个 count 塞进页面本来就会请求的其他小响应里。这样客户端拿到的是一个很小的结果，学生几乎立刻就能看到人数，而不用等 4MB 数据下完。",
+              "markingMdxZh": "1 分：给出“只返回 count / 最小必要数据”的高层修法。\n1 分：说明用户会更快看到数字。"
+            },
+            {
+              "id": "Q4.3-c",
+              "label": "(c)",
+              "marks": 2,
+              "questionMdx": "Each enrolment record holds a student's name, zID, email and degree, and anything the server sends to the browser can be seen by the person using it. Why is sending these records to this page a problem, and what does it show about what a server should send?",
+              "answerMdx": "Anyone who opens the course page receives the name, zID, email and degree of all 4,812 students, even though the page shows none of it. That is other students' personal information given to people who have no reason to see it. It shows that a server should send only what the page needs and what this person is allowed to see, here just the count.",
+              "markingMdx": "1 mark for identifying the privacy or over-exposure problem.\n1 mark for stating the principle of sending only necessary authorised data.",
+              "questionMdxZh": "每条 enrolment record 里还包含学生姓名、zID、邮箱和学位，而这个页面本身只显示人数。为什么这会成为问题？这说明服务器应该只发送什么？",
+              "answerMdxZh": "这会造成数据过度暴露：任何打开这个页面的人都能在浏览器里拿到所有学生的个人信息，尽管页面根本不需要这些字段。它说明服务器应当只发送页面真正需要、而且当前用户也被允许看到的数据；这里其实只需要一个 count。",
+              "markingMdxZh": "1 分：指出这是隐私 / 过度暴露问题。\n1 分：说明服务器应只返回必要且有权限的数据。"
+            }
+          ],
+          "displayNumber": "Q4.3",
+          "categoryLabel": "Requests: Fetch, Combining and Recovery",
+          "displayStyle": "quiz-sample",
+          "titleZh": "一个要等十秒的计数",
+          "contentMdxZh": "一个课程首页会显示报名人数，例如 `4812 students enrolled`。在校内 wifi 上，这个数字大约 1 秒后就会出现；但手机端同学说要等大约 10 秒，中间计数框一直显示 `...`。相关代码、手机端 5 秒时的截图和时间线如下。"
+        },
+        {
+          "id": "Q5.1",
+          "title": "Saving a note",
+          "marks": 6,
+          "contentMdx": "A notes app has a Save button that sends the note to the server. On a slow connection a save takes about 3 seconds. Students sometimes find the same note saved several times in their list. The code, a screenshot of a student's notes list and a timeline of one slow save are below.",
+          "mockup": {
+            "files": [
+              {
+                "name": "notes.png",
+                "active": true
+              },
+              {
+                "name": "timeline.svg"
+              },
+              {
+                "name": "notes.js",
+                "code": "saveButton.addEventListener('click', () => {\n  fetch('/api/notes', {\n    method: 'POST',\n    body: JSON.stringify({ text: noteInput.value }),\n  })\n    .then(() => showStatus('Saved'))\n})",
+                "codeZh": "saveButton.addEventListener('click', () => {\n  fetch('/api/notes', {\n    method: 'POST',\n    body: JSON.stringify({ text: noteInput.value }),\n  })\n    .then(() => showStatus('已保存'))\n})"
+              }
+            ],
+            "viewport": "desktop",
+            "caption": "The repeated copy of the same note on the right is the key visual evidence for this question.",
+            "html": "<div class=\"exam-ui-shell\"><div class=\"exam-ui-topbar\"><span>Quick Notes</span><span>12:14</span></div><div class=\"exam-ui-body\"><div style=\"display:grid;grid-template-columns:minmax(0,1fr) minmax(220px,.95fr);gap:1rem;\"><div class=\"exam-ui-card\"><p class=\"exam-ui-value\" style=\"font-weight:700;margin-bottom:.75rem;\">New note</p><div class=\"exam-ui-textarea\">Buy milk and eggs</div><button class=\"exam-ui-button\" style=\"margin-top:.75rem;\">Save</button></div><div class=\"exam-ui-card\"><p class=\"exam-ui-value\" style=\"font-weight:700;margin-bottom:.75rem;\">My notes</p><div class=\"exam-ui-stack\"><div style=\"border-radius:.45rem;background:#fff8dc;padding:.55rem .7rem;font-size:.75rem;color:#374151;\">Buy milk and eggs</div><div style=\"border-radius:.45rem;background:#fff8dc;padding:.55rem .7rem;font-size:.75rem;color:#374151;\">Buy milk and eggs</div><div style=\"border-radius:.45rem;background:#fff8dc;padding:.55rem .7rem;font-size:.75rem;color:#374151;\">Buy milk and eggs</div><div style=\"border-radius:.45rem;background:#f8fafc;padding:.55rem .7rem;font-size:.75rem;color:#374151;\">Return library books</div></div></div></div></div></div>",
+            "captionZh": "右侧重复出现的同一条 note，就是这个题的关键视觉证据。",
+            "htmlZh": "<div class=\"exam-ui-shell\"><div class=\"exam-ui-topbar\"><span>Quick Notes</span><span>12:14</span></div><div class=\"exam-ui-body\"><div style=\"display:grid;grid-template-columns:minmax(0,1fr) minmax(220px,.95fr);gap:1rem;\"><div class=\"exam-ui-card\"><p class=\"exam-ui-value\" style=\"font-weight:700;margin-bottom:.75rem;\">新建 note</p><div class=\"exam-ui-textarea\">买牛奶和鸡蛋</div><button class=\"exam-ui-button\" style=\"margin-top:.75rem;\">保存</button></div><div class=\"exam-ui-card\"><p class=\"exam-ui-value\" style=\"font-weight:700;margin-bottom:.75rem;\">我的 notes</p><div class=\"exam-ui-stack\"><div style=\"border-radius:.45rem;background:#fff8dc;padding:.55rem .7rem;font-size:.75rem;color:#374151;\">买牛奶和鸡蛋</div><div style=\"border-radius:.45rem;background:#fff8dc;padding:.55rem .7rem;font-size:.75rem;color:#374151;\">买牛奶和鸡蛋</div><div style=\"border-radius:.45rem;background:#fff8dc;padding:.55rem .7rem;font-size:.75rem;color:#374151;\">买牛奶和鸡蛋</div><div style=\"border-radius:.45rem;background:#f8fafc;padding:.55rem .7rem;font-size:.75rem;color:#374151;\">归还图书馆的书</div></div></div></div></div></div>"
+          },
+          "subQuestions": [
+            {
+              "id": "Q5.1-a",
+              "label": "(a)",
+              "marks": 2,
+              "questionMdx": "Using the timeline, describe why three copies of the note end up saved.",
+              "answerMdx": "Every click starts its own request, and nothing in the page stops a second click while the first request is still in progress. The Save button looks and behaves the same for the whole 3 seconds and the note stays in the box, so nothing tells the student the first click was received, and they click again. The server treats each request as a new note, so three copies are saved.",
+              "markingMdx": "1 mark for explaining that each click triggers a separate save request.\n1 mark for explaining why the unchanged UI leads the student to click again.",
+              "questionMdxZh": "结合时间线，解释为什么最后会存出三份一模一样的 note。",
+              "answerMdxZh": "因为每次点击 Save 都会单独发起一个新的 POST 请求，而页面在请求进行中并没有禁用按钮、也没有清空输入框或提示“正在保存”。于是学生觉得第一次点击可能没成功，就又点了几次。服务器则把这几次请求都当成新的 note 创建，所以最后出现三份副本。",
+              "markingMdxZh": "1 分：说明每次点击都会触发新的保存请求。\n1 分：说明缺少反馈导致学生重复点击。"
+            },
+            {
+              "id": "Q5.1-b",
+              "label": "(b)",
+              "marks": 2,
+              "questionMdx": "Describe, at a high level, one change so that three clicks can no longer create three copies of the note, and say what the student would notice. You do not need to write code.",
+              "answerMdx": "Stop repeat clicks while a save is running: disable the Save button until the request finishes, or ignore clicks with a `saving` flag. The student sees the button greyed out or a second click doing nothing. Clearing the note box as soon as the first click is accepted is also accepted.",
+              "markingMdx": "1 mark for a valid high-level fix that stops duplicate submission.\n1 mark for the correct user-visible result.",
+              "questionMdxZh": "不写代码，描述一种高层改法，让三次点击不可能再创建三份副本，并说明学生会注意到什么。",
+              "answerMdxZh": "可以在第一次点击后立刻禁用 Save 按钮，或者设置 `saving` 标记忽略后续点击；也可以在接受第一次点击后就清空输入框。这样学生会看到按钮变灰、再次点击没有反应，或者输入框马上被清空，知道这次保存已经在路上。",
+              "markingMdxZh": "1 分：给出一种能阻止重复提交的高层修法。\n1 分：说明学生会看到按钮变灰、点击无效或输入框清空等反馈。"
+            },
+            {
+              "id": "Q5.1-c",
+              "label": "(c)",
+              "marks": 2,
+              "questionMdx": "With the current code, the connection drops and the save request fails. What does the student see, and what should the page do instead?",
+              "answerMdx": "Nothing useful changes. There is no `.catch`, so the failure is never handled: `Saved` never appears, no error appears, and the note is still in the box. The student cannot tell whether it saved, so they either assume it did and lose the note, or click again and maybe duplicate it. The page should tell the student the save failed, keep their text in the box, and let them try again.",
+              "markingMdx": "1 mark for describing the missing failure feedback.\n1 mark for a correct fix with explicit error handling and retry.",
+              "questionMdxZh": "如果这次 save 请求因为断网失败，按照当前代码学生会看到什么？页面原本应该怎么做？",
+              "answerMdxZh": "学生基本看不到明确失败信号。因为这里只有 `.then(...)` 没有 `.catch(...)`，所以失败时不会显示错误，也不会告诉学生到底有没有保存成功。更好的做法是保留输入内容，明确提示“保存失败”，并给出 Retry 或再次保存的路径。",
+              "markingMdxZh": "1 分：说明当前代码没有把失败状态反馈给学生。\n1 分：给出正确的错误提示与重试方案。"
+            }
+          ],
+          "displayNumber": "Q5.1",
+          "categoryLabel": "Application State: Async UI, Auth and Storage",
+          "displayStyle": "quiz-sample",
+          "titleZh": "保存 note",
+          "contentMdxZh": "一个 notes app 有一个 Save 按钮，会把 note 发给服务器。在慢连接下，一次保存大约要 3 秒。学生有时会发现同一条 note 在列表里出现了好几份。相关代码、截图和一次慢速保存的时间线如下。"
+        },
+        {
+          "id": "Q5.2",
+          "title": "Inbox that says no messages",
+          "marks": 6,
+          "contentMdx": "An inbox page shows a student's messages. Students report that the page says `No messages` when they first open it, and that their messages appear a moment later. On a poor connection the page keeps saying `No messages`. The code, screenshots taken half a second after the page opened and a timeline of two page loads are below.",
+          "mockup": {
+            "files": [
+              {
+                "name": "inbox.png",
+                "active": true
+              },
+              {
+                "name": "timeline.svg"
+              },
+              {
+                "name": "inbox.js",
+                "code": "emptyState.textContent = 'No messages'\n\nfetch('/api/messages')\n  .then((response) => response.json())\n  .then((messages) => renderMessages(messages))",
+                "codeZh": "emptyState.textContent = '没有消息'\n\nfetch('/api/messages')\n  .then((response) => response.json())\n  .then((messages) => renderMessages(messages))"
+              }
+            ],
+            "viewport": "desktop",
+            "caption": "This kind of question does not need a real screenshot; it only needs to recreate the evidence that the empty-state text appears too early during loading.",
+            "html": "<div class=\"exam-ui-shell\"><div class=\"exam-ui-topbar\"><span>Student mail</span><span>Priya</span></div><div class=\"exam-ui-body\"><div class=\"exam-ui-card\"><div style=\"display:flex;align-items:center;justify-content:space-between;gap:.75rem;margin-bottom:.8rem;\"><p class=\"exam-ui-page-title\" style=\"margin:0;font-size:1rem;\">Inbox</p><button class=\"exam-ui-button exam-ui-button-secondary\">Refresh</button></div><div style=\"display:flex;align-items:center;justify-content:center;min-height:180px;border-radius:.85rem;background:#f8fafc;color:#6b7280;font-size:.88rem;\">No messages</div></div></div></div>",
+            "captionZh": "这类题不需要真的截图；只要把“空状态文案在 loading 阶段就提前出现”这个证据还原出来就够了。",
+            "htmlZh": "<div class=\"exam-ui-shell\"><div class=\"exam-ui-topbar\"><span>学生邮箱</span><span>Priya</span></div><div class=\"exam-ui-body\"><div class=\"exam-ui-card\"><div style=\"display:flex;align-items:center;justify-content:space-between;gap:.75rem;margin-bottom:.8rem;\"><p class=\"exam-ui-page-title\" style=\"margin:0;font-size:1rem;\">收件箱</p><button class=\"exam-ui-button exam-ui-button-secondary\">刷新</button></div><div style=\"display:flex;align-items:center;justify-content:center;min-height:180px;border-radius:.85rem;background:#f8fafc;color:#6b7280;font-size:.88rem;\">没有消息</div></div></div></div>"
+          },
+          "subQuestions": [
+            {
+              "id": "Q5.2-a",
+              "label": "(a)",
+              "marks": 2,
+              "questionMdx": "Using the timeline, describe each situation in which the page tells a student `No messages` although their inbox is not empty, and explain why it does.",
+              "answerMdx": "While loading, the page writes `No messages` straight away, before the request has finished, so it claims the inbox is empty although the answer is not known yet. After a failure, nothing runs to change that text because the success handler never runs and there is no `.catch`, so a failed request looks exactly like a successful request that returned an empty inbox.",
+              "markingMdx": "1 mark for the false `No messages` during loading.\n1 mark for the false `No messages` after failure due to missing error handling.",
+              "questionMdxZh": "结合时间线，说明页面会在哪两种情况下对学生说出“不真实的 No messages”，以及为什么会这样。",
+              "answerMdxZh": "第一种是假空状态：页面一开始就先把 `No messages` 写了上去，但请求此时还没完成，真实结果根本还不知道。第二种是失败伪装成空状态：如果请求失败，由于没有 `.catch(...)`，页面也不会切换到错误态，于是原本那句 `No messages` 就会一直留着，让失败看起来像“收件箱真的为空”。",
+              "markingMdxZh": "1 分：指出 loading 过程中出现了假的 `No messages`。\n1 分：指出请求失败后由于缺少错误处理，页面仍保留了假的 `No messages`。"
+            },
+            {
+              "id": "Q5.2-b",
+              "label": "(b)",
+              "marks": 2,
+              "questionMdx": "Describe, at a high level, one change so that the page tells the truth whatever happens to the request, and say what the student would notice. You do not need to write code.",
+              "answerMdx": "Keep an explicit state for the request: loading, loaded-empty, loaded-has-data and failed, and draw the page from that state. The student can always tell if loading, empty and failed are different: a spinner while loading, `No messages` only for a successful empty list, and an error with a Retry button on failure.",
+              "markingMdx": "1 mark for a correct state design that separates loading, empty and failed.\n1 mark for the corresponding user-visible result.",
+              "questionMdxZh": "不写代码，描述一种高层改法，让页面无论请求成功、失败还是仍在加载，都能“说真话”，并说明学生会看到什么。",
+              "answerMdxZh": "可以把页面状态明确拆成 loading、loaded-empty、loaded-has-data 和 failed 四种。然后根据状态分别渲染 spinner、真正的 `No messages`、消息列表和错误提示 / Retry。这样学生就能清楚地区分“还在加载”“真的为空”和“请求坏了”。",
+              "markingMdxZh": "1 分：给出能区分 loading / empty / failed 的状态设计。\n1 分：说明学生会看到不同且真实的界面反馈。"
+            },
+            {
+              "id": "Q5.2-c",
+              "label": "(c)",
+              "marks": 2,
+              "questionMdx": "A teammate suggests that when the request fails, the page should keep a spinner up and quietly try again every 2 seconds until it works. Give one benefit and one cost of that.",
+              "answerMdx": "A benefit is that a brief failure, such as a dropped connection or a server restart, fixes itself without the student doing anything, so they never see a scary error for a blip. A cost is that if the server is down for a long time, the spinner never stops and the student is never told anything is wrong, and repeated retries add load to a server that may already be struggling.",
+              "markingMdx": "1 mark for a valid benefit of silent retry.\n1 mark for a valid cost such as hiding failure or adding server load.",
+              "questionMdxZh": "如果有人提议：请求失败时不要报错，而是一直显示 spinner，并且每 2 秒悄悄重试一次直到成功。请给出一个 benefit 和一个 cost。",
+              "answerMdxZh": "好处是遇到短暂故障时，页面可能自己就恢复了，学生不用手动刷新。代价是如果服务器长时间有问题，学生会一直被 spinner 吊着，却不知道到底出了什么事；而且不断重试还会给已经吃紧的服务器继续加压。",
+              "markingMdxZh": "1 分：给出一个合理好处。\n1 分：给出一个合理代价，例如隐藏失败真相或增加服务器负担。"
+            }
+          ],
+          "displayNumber": "Q5.2",
+          "categoryLabel": "Application State: Async UI, Auth and Storage",
+          "displayStyle": "quiz-sample",
+          "titleZh": "总说没有消息的 Inbox",
+          "contentMdxZh": "一个 inbox 页面会显示学生的消息。学生反馈：页面刚打开时会先说 `No messages`，过一会儿消息才出现；在很差的网络下，它甚至会一直停留在 `No messages`。相关代码、页面半秒时的截图和两次加载时间线如下。"
+        },
+        {
+          "id": "Q5.3",
+          "title": "Live comments",
+          "marks": 6,
+          "contentMdx": "A course discussion page shows a question, its comments and a box for writing a reply. To show comments posted by other students, the page asks the server for the thread every 2 seconds and redraws it. Students report that a reply they are typing sometimes disappears after a couple of seconds. The code, a screenshot of a student part-way through a reply and a timeline are below.",
+          "mockup": {
+            "files": [
+              {
+                "name": "thread.png",
+                "active": true
+              },
+              {
+                "name": "timeline.svg"
+              },
+              {
+                "name": "thread.js",
+                "code": "setInterval(() => {\n  fetch('/api/thread')\n    .then((response) => response.json())\n    .then((thread) => {\n      threadRoot.innerHTML = renderThread(thread)\n    })\n}, 2000)",
+                "codeZh": "setInterval(() => {\n  fetch('/api/thread')\n    .then((response) => response.json())\n    .then((thread) => {\n      threadRoot.innerHTML = renderThread(thread)\n    })\n}, 2000)"
+              }
+            ],
+            "viewport": "desktop",
+            "caption": "The key evidence is not the image itself, but the situation where the comments list redraws every 2 seconds while the reply box still contains half-finished text.",
+            "html": "<div class=\"exam-ui-shell\"><div class=\"exam-ui-topbar\"><span>Course discussion</span><span>COMP6080</span></div><div class=\"exam-ui-body\"><div class=\"exam-ui-card\" style=\"max-width:420px;\"><p class=\"exam-ui-value\" style=\"font-weight:700;\">What does a closure capture?</p><div class=\"exam-ui-stack\" style=\"margin-top:.75rem;\"><div><p class=\"exam-ui-label\">Sam · 2 min ago</p><p class=\"exam-ui-value\" style=\"font-size:.74rem;\">It keeps the variables from the place where the function was created.</p></div><div><p class=\"exam-ui-label\">Jo · 1 min ago</p><p class=\"exam-ui-value\" style=\"font-size:.74rem;\">Each call to the outer function gets its own copy.</p></div></div><div class=\"exam-ui-textarea\" style=\"margin-top:.85rem;\">I think the answer is that the inner function keeps</div><button class=\"exam-ui-button\" style=\"margin-top:.65rem;\">Send</button></div></div></div>",
+            "captionZh": "关键不是图片本身，而是“评论区每 2 秒重绘、输入框里有一段还没发完的话”这个场景证据。",
+            "htmlZh": "<div class=\"exam-ui-shell\"><div class=\"exam-ui-topbar\"><span>课程讨论</span><span>COMP6080</span></div><div class=\"exam-ui-body\"><div class=\"exam-ui-card\" style=\"max-width:420px;\"><p class=\"exam-ui-value\" style=\"font-weight:700;\">闭包会捕获什么？</p><div class=\"exam-ui-stack\" style=\"margin-top:.75rem;\"><div><p class=\"exam-ui-label\">Sam · 2 分钟前</p><p class=\"exam-ui-value\" style=\"font-size:.74rem;\">它会保留函数创建位置上的那些变量。</p></div><div><p class=\"exam-ui-label\">Jo · 1 分钟前</p><p class=\"exam-ui-value\" style=\"font-size:.74rem;\">每次调用外层函数都会得到自己的一份副本。</p></div></div><div class=\"exam-ui-textarea\" style=\"margin-top:.85rem;\">我觉得答案是：内部函数会保留</div><button class=\"exam-ui-button\" style=\"margin-top:.65rem;\">发送</button></div></div></div>"
+          },
+          "subQuestions": [
+            {
+              "id": "Q5.3-a",
+              "label": "(a)",
+              "marks": 2,
+              "questionMdx": "Using the timeline, explain why the text a student has typed in the reply box disappears.",
+              "answerMdx": "Each poll redraws the whole thread, including the reply box the student is typing in. The old textarea element is destroyed and a new empty one is created, so the typed text, cursor position and focus are all lost because they were only present in the old DOM node.",
+              "markingMdx": "1 mark for identifying the whole-thread redraw.\n1 mark for linking that redraw to the old textarea being replaced and its contents disappearing.",
+              "questionMdxZh": "结合时间线，解释为什么学生在 reply box 里打到一半的内容会突然消失。",
+              "answerMdxZh": "因为每次轮询返回后，页面都会把整个 thread 重新渲染一遍，其中也包括用户正在输入的 reply box。旧的 textarea 节点被销毁，新建出来的是一个空的 textarea，所以原先输入的文字、光标位置和焦点都会一起丢掉。",
+              "markingMdxZh": "1 分：指出页面每次轮询都会整块重画 thread。\n1 分：解释旧 textarea 被替换，导致已输入内容丢失。"
+            },
+            {
+              "id": "Q5.3-b",
+              "label": "(b)",
+              "marks": 2,
+              "questionMdx": "Describe, at a high level, one change so that new comments still appear but a reply in progress is not lost, and say what else it buys. You do not need to write code.",
+              "answerMdx": "Redraw only the comments list while keeping the reply box outside the replaced DOM, or patch only new comments into the existing list. That preserves the student's in-progress reply and also avoids unnecessary rebuilding of UI that has not changed.",
+              "markingMdx": "1 mark for a high-level fix that keeps the reply editor out of the destructive redraw path.\n1 mark for an additional benefit such as less unnecessary rebuild work.",
+              "questionMdxZh": "不写代码，描述一种高层改法，让新评论仍然继续出现，但正在输入的 reply 不会丢，并说明额外收益。",
+              "answerMdxZh": "可以只更新评论列表，而把 reply box 放在不会被替换的区域；或者只把“新增评论” patch 到现有列表里。这样既能保住用户正在输入的内容，也能减少那些其实没有变化的 UI 被反复重建。",
+              "markingMdxZh": "1 分：给出一种能让 reply editor 脱离“整块重画路径”的高层修法。\n1 分：说明额外收益，例如减少不必要的重建。"
+            },
+            {
+              "id": "Q5.3-c",
+              "label": "(c)",
+              "marks": 2,
+              "questionMdx": "A teammate's quick fix is to skip the redraw whenever the reply box has any text in it. Give one benefit and one problem.",
+              "answerMdx": "The benefit is that a reply in progress will not be lost, and the change is relatively simple. The problem is that while the user is typing, they stop seeing any new comments, so the discussion becomes stale and they may reply to outdated context.",
+              "markingMdx": "1 mark for a valid benefit.\n1 mark for a valid problem such as stale comments while typing.",
+              "questionMdxZh": "如果有人提出一个“快速小修”：只要 reply box 里有任何文字，就暂停轮询刷新。请给出一个 benefit 和一个 problem。",
+              "answerMdxZh": "好处是实现简单，而且能保证正在写的 reply 不会被刷掉。问题是学生一旦开始打字，就看不到其他人后续发出的新评论，讨论上下文会变旧，可能让他们回复的是已经过时的内容。",
+              "markingMdxZh": "1 分：给出一个合理 benefit。\n1 分：给出一个合理 problem，例如评论会变 stale。"
+            }
+          ],
+          "displayNumber": "Q5.3",
+          "categoryLabel": "Application State: Async UI, Auth and Storage",
+          "displayStyle": "quiz-sample",
+          "titleZh": "实时评论",
+          "contentMdxZh": "一个课程讨论页面会显示问题、评论，以及一个用于写回复的输入框。为了让学生看到其他人刚发的新评论，页面每隔 2 秒就会重新请求一次 thread 并重画页面。学生发现：自己正在输入的 reply 有时会突然消失。相关代码、学生输入到一半时的截图和时间线如下。"
+        },
+        {
+          "id": "Q6.1",
+          "title": "Finding the confirm action",
+          "marks": 6,
+          "contentMdx": "An enrolment page shows a course's details. The link that confirms the enrolment is the `confirm enrolment` text at the right-hand end of the footer, after `Help` and `Privacy`. In a usability test, 6 of 8 students could not work out how to finish enrolling: two clicked the course outline link, and one gave up and reloaded the page. The page's screenshot is below.",
+          "mockup": {
+            "files": [
+              {
+                "name": "enrol.png",
+                "active": true
+              }
+            ],
+            "viewport": "desktop",
+            "caption": "This HTML mockup recreates the exam screenshot: the main content area only shows the course card, while the real confirm action is buried down in the footer corner.",
+            "html": "<div class=\"exam-ui-shell\"><div class=\"exam-ui-topbar\"><span>UNSW Enrolment</span><span>Priya</span></div><div class=\"exam-ui-body\"><p class=\"exam-ui-page-title\">Enrol in COMP6080</p><div class=\"exam-ui-card\" style=\"max-width:320px;\"><p class=\"exam-ui-value\" style=\"font-weight:700;\">Web Front-End Programming</p><p class=\"exam-ui-label\">Term 3 · Online · 6 units of credit</p><a class=\"exam-ui-link\" href=\"#\">View course outline</a></div><div class=\"exam-ui-footer-links\"><span>Help</span><span>Privacy</span><span>confirm enrolment</span></div></div></div>",
+            "captionZh": "用 HTML 还原的题面截图：主内容区只有课程卡片，真正的 confirm action 被放进了页脚角落。",
+            "htmlZh": "<div class=\"exam-ui-shell\"><div class=\"exam-ui-topbar\"><span>UNSW 注册</span><span>Priya</span></div><div class=\"exam-ui-body\"><p class=\"exam-ui-page-title\">注册 COMP6080</p><div class=\"exam-ui-card\" style=\"max-width:320px;\"><p class=\"exam-ui-value\" style=\"font-weight:700;\">Web 前端编程</p><p class=\"exam-ui-label\">T3 · 在线 · 6 学分</p><a class=\"exam-ui-link\" href=\"#\">查看课程大纲</a></div><div class=\"exam-ui-footer-links\"><span>帮助</span><span>隐私</span><span>确认注册</span></div></div></div>"
+          },
+          "subQuestions": [
+            {
+              "id": "Q6.1-a",
+              "label": "(a)",
+              "marks": 2,
+              "questionMdx": "Name two UI principles that the `confirm enrolment` link breaks, and for each say how it explains what the testers did.",
+              "answerMdx": "Two strong answers are:\n- Visual hierarchy / visibility: the most important action is the smallest, lowest-contrast thing on the page, placed at the bottom among footer links, so testers looked elsewhere and some reloaded still unsure how to finish.\n- Affordance / consistency: the primary action looks like plain footer text instead of a main button, while `View course outline` looks more obviously clickable, so two testers followed the outline link instead.",
+              "markingMdx": "1 mark for naming a valid UI principle such as visibility, hierarchy, affordance, or consistency.\n1 mark for linking that principle to the observed user behaviour.",
+              "questionMdxZh": "请说出这个 `confirm enrolment` 链接至少违反了哪两个 UI 原则，并分别说明它们如何解释测试者的行为。",
+              "answerMdxZh": "它违反了视觉层级 / 可见性，因为最重要的主操作反而被做成了页脚里最不起眼的小字，学生自然会先去看更显眼的 `View course outline`。它也违反了 affordance / 习惯一致性，因为用户通常会期待主操作长得像按钮或明显 CTA，而不是像普通 footer link，所以他们会误判下一步在哪里。",
+              "markingMdxZh": "1 分：给出一个正确原则，例如视觉层级 / 可见性，并把它和用户行为联系起来。\n1 分：给出第二个正确原则，例如 affordance / 一致性，并说明它如何导致误点或放弃。"
+            },
+            {
+              "id": "Q6.1-b",
+              "label": "(b)",
+              "marks": 2,
+              "questionMdx": "Describe two changes that would help students find and recognise the Confirm action. No code is needed.",
+              "answerMdx": "Two good changes are:\n- Move the action out of the footer and place it next to the course summary where students are making the decision.\n- Style it like the site's primary button pattern, with strong contrast, a clear label, and enough size to stand out as the next step.",
+              "markingMdx": "1 mark for repositioning the action to a more visible location.\n1 mark for changing its visual treatment so it looks like the primary action.",
+              "questionMdxZh": "不写代码，描述两种不同的修改方式，让学生更容易找到并识别 Confirm 操作。",
+              "answerMdxZh": "第一，可以把 Confirm 从页脚挪出来，放到课程概要旁边，让用户在做决定的位置就能看到它。第二，可以把它做成页面主按钮样式，使用更明显的颜色、尺寸和标签，例如 `Confirm enrolment`，让它一眼就像“下一步”。",
+              "markingMdxZh": "1 分：给出一种和位置 / 可见性有关的改法。\n1 分：给出另一种和样式 / 文案识别有关的改法。"
+            },
+            {
+              "id": "Q6.1-c",
+              "label": "(c)",
+              "marks": 2,
+              "questionMdx": "Two testers did click the `confirm enrolment` link, but then said they were not sure whether they were enrolled, because the page reloaded looking the same. Name the UI principle involved and describe one change that would fix it.",
+              "answerMdx": "This is a feedback / visibility of system status problem. After the action, the page should clearly show the result, for example a success message such as `You are enrolled in COMP6080`, a changed button state like `Enrolled`, or a confirmation page that looks different from the pre-submit state.",
+              "markingMdx": "1 mark for identifying feedback / visibility of system status.\n1 mark for describing a concrete post-action confirmation change.",
+              "questionMdxZh": "有两位测试者确实点了 `confirm enrolment`，但之后仍然不确定自己到底有没有注册成功，因为页面看起来几乎没变化。这里缺的是哪条 UI 原则？应该怎样补？",
+              "answerMdxZh": "缺的是反馈 / system status 可见性。完成操作后，页面应该明确告诉用户“你已注册成功”，例如显示成功消息、把按钮状态改成 `Enrolled`，或者跳到一个明显不同的确认页。",
+              "markingMdxZh": "1 分：指出缺的是反馈 / system status 可见性。\n1 分：给出一种能让成功结果被看见的修法。"
+            }
+          ],
+          "displayNumber": "Q6.1",
+          "categoryLabel": "UI Design Principles and User Experience Reasoning",
+          "displayStyle": "quiz-sample",
+          "titleZh": "找不到确认操作",
+          "contentMdxZh": "一个 enrolment 页面会显示课程信息，而真正用来完成注册的链接其实是页脚最右边的 `confirm enrolment` 文本，排在 `Help` 和 `Privacy` 后面。在一次可用性测试中，8 个学生里有 6 个没能顺利完成注册：其中 2 个点了 course outline，1 个甚至直接放弃并刷新页面。页面截图如下。"
+        },
+        {
+          "id": "Q6.2",
+          "title": "Delete beside Save",
+          "marks": 6,
+          "contentMdx": "An account settings page has two buttons side by side, `Save changes` and `Delete account`. Clicking Delete account deletes the account straight away. In a usability test, 2 of 10 students deleted their account by accident while trying to save their changes. The page's screenshot is below.",
+          "mockup": {
+            "files": [
+              {
+                "name": "settings.png",
+                "active": true
+              }
+            ],
+            "viewport": "desktop",
+            "caption": "This DOM mockup recreates the dangerous layout where Save and Delete sit side by side and look almost identical.",
+            "html": "<div class=\"exam-ui-shell\"><div class=\"exam-ui-topbar\"><span>Account settings</span><span>Alex N.</span></div><div class=\"exam-ui-body\"><div class=\"exam-ui-card\" style=\"max-width:360px;\"><div class=\"exam-ui-stack\"><div><p class=\"exam-ui-label\">Display name</p><div class=\"exam-ui-input\">Alex Nguyen</div></div><div><p class=\"exam-ui-label\">Email</p><div class=\"exam-ui-input\">alex@student.example</div></div></div><div class=\"exam-ui-form-actions\"><button class=\"exam-ui-button\">Save changes</button><button class=\"exam-ui-button\">Delete account</button></div></div></div></div>",
+            "captionZh": "这里用 DOM 卡片还原了“Save 和 Delete 并排且样式几乎一样”的危险布局。",
+            "htmlZh": "<div class=\"exam-ui-shell\"><div class=\"exam-ui-topbar\"><span>账户设置</span><span>Alex N.</span></div><div class=\"exam-ui-body\"><div class=\"exam-ui-card\" style=\"max-width:360px;\"><div class=\"exam-ui-stack\"><div><p class=\"exam-ui-label\">显示名称</p><div class=\"exam-ui-input\">Alex Nguyen</div></div><div><p class=\"exam-ui-label\">邮箱</p><div class=\"exam-ui-input\">alex@student.example</div></div></div><div class=\"exam-ui-form-actions\"><button class=\"exam-ui-button\">保存修改</button><button class=\"exam-ui-button\">删除账号</button></div></div></div></div>"
+          },
+          "subQuestions": [
+            {
+              "id": "Q6.2-a",
+              "label": "(a)",
+              "marks": 2,
+              "questionMdx": "Name two UI principles from the course that these two buttons break, and for each say how it led to the accidental deletions.",
+              "answerMdx": "Two valid principles are:\n- Safety / constraints: a destructive, hard-to-reverse action can be triggered in one click with no guard, so a simple slip causes permanent damage.\n- Visual hierarchy / distinction: the safe action and destructive action look almost identical and sit side by side, so users aiming for Save can easily hit Delete instead.",
+              "markingMdx": "1 mark for naming a valid principle such as safety, constraints, visual hierarchy, or feedback.\n1 mark for connecting it to the accidental deletion behaviour.",
+              "questionMdxZh": "请说出这两个按钮至少违反了哪两个课程里的 UI 原则，并分别说明它们如何导致误删。",
+              "answerMdxZh": "它违反了安全性 / constraints，因为一个代价极高且难以逆转的动作居然可以被一击触发，没有确认也没有保护。它也违反了视觉区分 / 层级，因为危险操作和安全操作长得几乎一样、还靠得太近，学生很容易手滑点错。",
+              "markingMdxZh": "1 分：给出一个正确原则，例如安全性 / 约束。\n1 分：给出第二个正确原则，例如视觉区分 / 层级，并说明它怎样导致误删。"
+            },
+            {
+              "id": "Q6.2-b",
+              "label": "(b)",
+              "marks": 2,
+              "questionMdx": "Describe two different changes that would reduce accidental deletion. You do not need to write code.",
+              "answerMdx": "Two good changes are:\n- Separate Delete from Save and style it as a destructive secondary action instead of making it look like the main button.\n- Add a confirmation step or typed acknowledgement before account deletion actually happens, so a stray click can be caught before it becomes permanent.",
+              "markingMdx": "1 mark for physically or visually separating the destructive action.\n1 mark for adding a second deliberate confirmation or constraint before deletion.",
+              "questionMdxZh": "不写代码，描述两种不同的修改方式，降低这种误删风险。",
+              "answerMdxZh": "一种方法是把 Delete 挪远一点，并做成明显的危险样式，例如红色轮廓按钮或次级位置，不再和 Save 像同一优先级。另一种方法是加入确认步骤、输入账号名确认、宽限期或 Undo，让一次手滑不至于立刻造成不可逆后果。",
+              "markingMdxZh": "1 分：给出一种“把危险操作在视觉或空间上拉开”的方案。\n1 分：给出另一层行为保护，例如确认、宽限期或 Undo。"
+            },
+            {
+              "id": "Q6.2-c",
+              "label": "(c)",
+              "marks": 2,
+              "questionMdx": "A manager suggests removing the Delete account button from the page altogether, so that students must email support to delete an account. Give one benefit and one cost of that for students.",
+              "answerMdx": "Benefit: accidental deletion becomes much less likely because the destructive action is no longer one click away on the settings page.\nCost: students who genuinely want to delete their account lose a direct self-service path and now face a slower, more frustrating support workflow.",
+              "markingMdx": "1 mark for one valid benefit of removing the risky control.\n1 mark for one valid student cost such as reduced efficiency, extra friction, or slower resolution.",
+              "questionMdxZh": "如果经理提议干脆把 Delete account 按钮从页面上完全移除，让学生必须发邮件给支持团队才能删号。请各给出一个 benefit 和一个 cost。",
+              "answerMdxZh": "好处是安全性最高：学生几乎不可能因为误点而把账号删掉。代价是用户控制权和效率会下降，真正想删号的人需要额外等待支持团队处理，而不能自己即时完成操作。",
+              "markingMdxZh": "1 分：给出一个合理 benefit。\n1 分：给出一个合理 cost，例如降低用户控制权或效率。"
+            }
+          ],
+          "displayNumber": "Q6.2",
+          "categoryLabel": "UI Design Principles and User Experience Reasoning",
+          "displayStyle": "quiz-sample",
+          "titleZh": "Delete 挨着 Save",
+          "contentMdxZh": "一个 account settings 页面里，`Save changes` 和 `Delete account` 两个按钮并排放在一起。点击 Delete 会立刻删号。在一次可用性测试中，有 10 个学生里的 2 个在本来只想保存修改时，误删了自己的账号。页面截图如下。"
+        },
+        {
+          "id": "Q6.3",
+          "title": "A crowded signup form",
+          "marks": 6,
+          "contentMdx": "A new student signup form shows all of its fields on one page, with a paragraph of help text under several of them. In a usability test, 5 of 10 students abandoned the form before submitting it, and several said it was `a lot`. The page's screenshot is below.",
+          "mockup": {
+            "files": [
+              {
+                "name": "signup.png",
+                "active": true
+              }
+            ],
+            "viewport": "desktop",
+            "caption": "This kind of mockup works better as HTML because the real evidence is the density of fields, helper text, and grouping on the form.",
+            "html": "<div class=\"exam-ui-shell\"><div class=\"exam-ui-topbar\"><span>Create your account</span><span></span></div><div class=\"exam-ui-body\"><div class=\"exam-ui-card\"><div class=\"exam-ui-grid-2\"><div class=\"exam-ui-stack\"><div><div class=\"exam-ui-input\">First name</div></div><div><div class=\"exam-ui-input\">Last name</div></div><div><div class=\"exam-ui-input\">Date of birth</div><div class=\"exam-ui-help\">Enter your name exactly as it appears on your student ID card.</div></div><div><div class=\"exam-ui-input\">Student email</div></div><div><div class=\"exam-ui-input\">Mobile number</div></div><div><div class=\"exam-ui-input\">Home address</div></div><div><div class=\"exam-ui-input\">Emergency contact name</div></div></div><div class=\"exam-ui-stack\"><div><div class=\"exam-ui-input\">Emergency contact number</div></div><div><div class=\"exam-ui-input\">Preferred pronouns</div></div><div><div class=\"exam-ui-input\">Dietary requirements</div></div><div><div class=\"exam-ui-input\">Preferred study mode</div><div class=\"exam-ui-help\">You can change this later in your profile settings.</div></div><div><div class=\"exam-ui-input\">How did you hear about us?</div></div><div><div class=\"exam-ui-input\">Password</div><div class=\"exam-ui-help\">Use at least 8 characters, with a number and a symbol.</div></div><div><div class=\"exam-ui-input\">Confirm password</div></div><button class=\"exam-ui-button\" style=\"width:140px;\">Create account</button></div></div></div></div></div>",
+            "captionZh": "这类 mockup 更适合用 HTML 还原，因为本质就是表单字段、帮助文案和分组密度。",
+            "htmlZh": "<div class=\"exam-ui-shell\"><div class=\"exam-ui-topbar\"><span>创建你的账号</span><span></span></div><div class=\"exam-ui-body\"><div class=\"exam-ui-card\"><div class=\"exam-ui-grid-2\"><div class=\"exam-ui-stack\"><div><div class=\"exam-ui-input\">名字</div></div><div><div class=\"exam-ui-input\">姓氏</div></div><div><div class=\"exam-ui-input\">出生日期</div><div class=\"exam-ui-help\">请输入与你学生证上一致的姓名。</div></div><div><div class=\"exam-ui-input\">学生邮箱</div></div><div><div class=\"exam-ui-input\">手机号</div></div><div><div class=\"exam-ui-input\">家庭住址</div></div><div><div class=\"exam-ui-input\">紧急联系人姓名</div></div></div><div class=\"exam-ui-stack\"><div><div class=\"exam-ui-input\">紧急联系人电话</div></div><div><div class=\"exam-ui-input\">偏好代词</div></div><div><div class=\"exam-ui-input\">饮食要求</div></div><div><div class=\"exam-ui-input\">偏好学习方式</div><div class=\"exam-ui-help\">你之后还可以在个人资料设置里修改。</div></div><div><div class=\"exam-ui-input\">你是如何知道我们的？</div></div><div><div class=\"exam-ui-input\">密码</div><div class=\"exam-ui-help\">至少使用 8 个字符，并包含数字和符号。</div></div><div><div class=\"exam-ui-input\">确认密码</div></div><button class=\"exam-ui-button\" style=\"width:140px;\">创建账号</button></div></div></div></div></div>"
+          },
+          "subQuestions": [
+            {
+              "id": "Q6.3-a",
+              "label": "(a)",
+              "marks": 2,
+              "questionMdx": "Name two UI principles from the course that this form breaks, and for each say how it led students to give up.",
+              "answerMdx": "Two strong principles are:\n- Cognitive load: students must process too many fields and instructions at once, making the task feel large and hard to start.\n- Visual hierarchy / efficiency: required and optional information are not clearly grouped or prioritised, so the form looks like more work than is really necessary and students lose momentum.",
+              "markingMdx": "1 mark for naming a valid principle such as cognitive load, hierarchy, efficiency, or aesthetics.\n1 mark for connecting it to the observed abandonment behaviour.",
+              "questionMdxZh": "请说出这个表单至少违反了哪两个课程里的 UI 原则，并分别说明它们为什么会让学生放弃。",
+              "answerMdxZh": "它违反了认知负担 / 效率，因为学生必须同时处理太多字段和说明，任务看起来非常重。它也违反了视觉层级 / 分组，因为 required 和 optional、主信息和次要信息都没有被清楚地分层，页面像一整堵表单墙。",
+              "markingMdxZh": "1 分：给出一个正确原则，例如认知负担 / 效率。\n1 分：给出第二个正确原则，例如层级 / 分组，并说明它如何导致放弃。"
+            },
+            {
+              "id": "Q6.3-b",
+              "label": "(b)",
+              "marks": 2,
+              "questionMdx": "Describe two different changes that would make the form easier to complete. You do not need to write code.",
+              "answerMdx": "Two good changes are:\n- Split the signup into a few smaller steps and show progress, so each screen asks for less at once.\n- Ask only for the minimum needed to create the account now, and move optional profile details to a later screen or a profile-completion flow.",
+              "markingMdx": "1 mark for reducing the amount shown at once, such as through steps or grouping.\n1 mark for reducing unnecessary fields in the initial signup flow.",
+              "questionMdxZh": "不写代码，描述两种不同的改法，让这个表单更容易填写。",
+              "answerMdxZh": "第一，可以把注册拆成几个更短的步骤，并加上进度提示，让学生一次只处理少量字段。第二，可以只先收创建账号必需的信息，把其他可选资料挪到之后的资料补充页。也可以顺手减少始终可见的帮助文案，并按主题对字段分组。",
+              "markingMdxZh": "1 分：给出一种有效的简化策略。\n1 分：给出另一种不同的简化策略。"
+            },
+            {
+              "id": "Q6.3-c",
+              "label": "(c)",
+              "marks": 2,
+              "questionMdx": "A student submits a form with an invalid email address. The page should help them correct the error. Describe what the error message should say and where it should appear.",
+              "answerMdx": "The message should be plain and specific, for example `Please enter a valid email address, such as name@student.example`. It should appear right next to or directly under the email field, keep the student's typed content in place, and clearly show which field needs fixing.",
+              "markingMdx": "1 mark for describing a clear, specific, polite error message.\n1 mark for placing the message near the relevant field and preserving the student's input.",
+              "questionMdxZh": "如果学生提交时 email 地址无效，页面应该怎样给出错误提示？请说明错误信息该写什么、出现在什么位置。",
+              "answerMdxZh": "错误提示应该具体、礼貌、可操作，例如 `请输入有效的邮箱地址，例如 name@student.example`。它应该紧贴在 email 字段旁边或下方显示，并保留学生已经输入的其他内容，让他们只需要修正有问题的那一项。",
+              "markingMdxZh": "1 分：描述清楚、具体、可执行的错误提示。\n1 分：说明提示应贴近对应字段，并保留用户已输入的内容。"
+            }
+          ],
+          "displayNumber": "Q6.3",
+          "categoryLabel": "UI Design Principles and User Experience Reasoning",
+          "displayStyle": "quiz-sample",
+          "titleZh": "一个过于拥挤的注册表单",
+          "contentMdxZh": "一个新的学生注册表单把所有字段都塞在了同一页里，而且不少输入框下面还跟着一整段帮助文案。在一次可用性测试中，10 个学生里有 5 个在提交前就放弃了，很多人表示它“信息量太大了”。页面截图如下。"
+        }
+      ],
+      "descriptionZh": "本卷按老师 clarification 与样本截图重构：覆盖 Weeks 1-5 lectures and tutorials + assignment 3，但明确排除 Week 5 React lectures。"
+    }
+  ]
+}

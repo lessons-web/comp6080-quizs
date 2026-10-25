@@ -1,4 +1,242 @@
 {
-  "topic": "react",
-  "exams": []
+  "topic": "javascript",
+  "exams": [
+    {
+      "id": "WEEK3-SIM",
+      "title": "Week 3 模拟试卷",
+      "description": "Week 3 知识点模拟试卷：覆盖 JS 语法、函数与闭包、生态与 npm、DOM、事件委托、表单校验与 localStorage 七条主线。",
+      "tags": [
+        "模拟题",
+        "Week3"
+      ],
+      "totalMarks": 42,
+      "questions": [
+        {
+          "id": "Q1",
+          "title": "JavaScript 语言特性与语法",
+          "marks": 6,
+          "contentMdx": "```javascript\nconst scores = [72, 88, 95];\n\nfunction grade(score) {\n  let label = 'fail';\n  if (score >= 50) label = 'pass';\n  return label;\n}\n```",
+          "subQuestions": [
+            {
+              "id": "Q1-a",
+              "label": "(a)",
+              "marks": 2,
+              "questionMdx": "`const` 和 `let` 有什么区别？上面代码里 `scores` 用 `const` 声明，是否意味着数组内容不能被修改？",
+              "answerMdx": "`let` 声明的变量可以重新赋值，`const` 声明的变量不能重新赋值。但 `const` 约束的是“变量绑定”而不是“对象内容”：`scores.push(60)` 这类修改数组内部元素的写法仍然合法，只有 `scores = [...]` 这种重新赋值才会报错。",
+              "markingMdx": "1 mark for reassignment being blocked by const.\n1 mark for explaining that object/array contents can still be mutated."
+            },
+            {
+              "id": "Q1-b",
+              "label": "(b)",
+              "marks": 2,
+              "questionMdx": "`==` 和 `===` 有什么区别？为什么通常推荐用 `===`？",
+              "answerMdx": "`==` 会在比较前进行隐式类型转换，例如 `'0' == false` 为 true；`===` 要求类型与值都相同才为 true。推荐 `===` 是因为它不会因为隐式转换产生反直觉的结果，行为更可预测，能减少一类难以排查的 bug。",
+              "markingMdx": "1 mark for explaining type coercion in ==.\n1 mark for explaining === compares type and value without coercion."
+            },
+            {
+              "id": "Q1-c",
+              "label": "(c)",
+              "marks": 2,
+              "questionMdx": "在 `if (value)` 里，哪些值会被当作假值（falsy）？举出至少三个。",
+              "answerMdx": "常见的 falsy 值有：`false`、`0`、`''`（空字符串）、`null`、`undefined`、`NaN`。除此之外的值在布尔判断中都是 truthy（包括 `'0'`、`[]`、`{}`）。",
+              "markingMdx": "1 mark for three correct falsy values.\n1 mark for noting that values like '0', [] and {} are truthy."
+            }
+          ]
+        },
+        {
+          "id": "Q2",
+          "title": "高级函数与闭包",
+          "marks": 6,
+          "contentMdx": "```javascript\nfunction createCounter() {\n  let count = 0;\n  return function () {\n    count += 1;\n    return count;\n  };\n}\n\nconst next = createCounter();\n```",
+          "subQuestions": [
+            {
+              "id": "Q2-a",
+              "label": "(a)",
+              "marks": 2,
+              "questionMdx": "连续调用 `next()` 三次，分别得到什么？为什么 `count` 没有被重置？",
+              "answerMdx": "依次得到 1、2、3。`createCounter` 只执行了一次，`count` 被创建一次；返回的内部函数一直“记住”着这个 `count` 变量，所以每次调用都会在同一个变量上累加，而不会重置。",
+              "markingMdx": "1 mark for the sequence 1, 2, 3.\n1 mark for explaining that the inner function retains the same count variable."
+            },
+            {
+              "id": "Q2-b",
+              "label": "(b)",
+              "marks": 2,
+              "questionMdx": "请用自己的话说出什么是闭包（closure）。",
+              "answerMdx": "闭包是指函数与其定义时所处词法作用域的组合。即使外层函数已经返回，内部函数仍能访问并保持外层作用域中的变量。简单说，就是“函数记住了它出生时能看到的变量”。",
+              "markingMdx": "1 mark for mentioning a function retaining access to its lexical scope.\n1 mark for noting the scope survives after the outer function returns."
+            },
+            {
+              "id": "Q2-c",
+              "label": "(c)",
+              "marks": 2,
+              "questionMdx": "用 `var` 在一个循环里给多个按钮绑定点击事件时，常见 bug 是点击每个按钮都输出同一个最终值。请说明原因和修正方式。",
+              "answerMdx": "因为 `var` 是函数作用域，整个循环共享同一个变量，所有回调最终读到的都是循环结束后的值。修正方式有两种：用 `let` 声明循环变量（每次迭代生成新的绑定），或在每次迭代中用函数（IIFE）创建一个新的作用域把当前值捕获下来。",
+              "markingMdx": "1 mark for explaining var shares one function-scoped binding.\n1 mark for a correct fix using let or an IIFE."
+            }
+          ]
+        },
+        {
+          "id": "Q3",
+          "title": "JavaScript 生态、Node 与 npm",
+          "marks": 6,
+          "contentMdx": "```json\n{\n  \"name\": \"my-app\",\n  \"scripts\": { \"dev\": \"vite\", \"build\": \"vite build\" },\n  \"dependencies\": { \"react\": \"^19.0.0\" },\n  \"devDependencies\": { \"vite\": \"^8.0.0\" }\n}\n```",
+          "subQuestions": [
+            {
+              "id": "Q3-a",
+              "label": "(a)",
+              "marks": 2,
+              "questionMdx": "`dependencies` 和 `devDependencies` 有什么区别？`vite` 放在 `devDependencies` 合理吗？",
+              "answerMdx": "`dependencies` 是应用运行时需要的包，`devDependencies` 只在开发、构建、测试等阶段需要，不会打进最终产物。`vite` 是构建工具，生产运行时不依赖它，所以放在 `devDependencies` 是合理的。",
+              "markingMdx": "1 mark for runtime vs build-time distinction.\n1 mark for justifying vite as a build-time tool."
+            },
+            {
+              "id": "Q3-b",
+              "label": "(b)",
+              "marks": 2,
+              "questionMdx": "`npm install` 执行后发生了什么？它如何知道要装哪些包、装什么版本？",
+              "answerMdx": "它读取 `package.json` 中声明的依赖，解析版本范围，并把对应的包下载到 `node_modules`，同时更新 `package-lock.json` 锁定精确版本。之后在别的机器上执行 `npm install`，会依据 lock 文件还原出一致的依赖树。",
+              "markingMdx": "1 mark for reading package.json and installing into node_modules.\n1 mark for mentioning the lock file pinning exact versions."
+            },
+            {
+              "id": "Q3-c",
+              "label": "(c)",
+              "marks": 2,
+              "questionMdx": "`node_modules` 目录是否应该提交到 Git？为什么？",
+              "answerMdx": "不应该。`node_modules` 体积巨大且可由 `package.json` 与 lock 文件完全重建，提交它会让仓库臃肿、diff 噪声巨大、跨平台还可能出问题。正确做法是把它写进 `.gitignore`，协作者各自 `npm install` 即可。",
+              "markingMdx": "1 mark for stating it should not be committed.\n1 mark for explaining it is reproducible from package.json/lock file."
+            }
+          ]
+        },
+        {
+          "id": "Q4",
+          "title": "DOM 查询与操作",
+          "marks": 6,
+          "contentMdx": "```javascript\nconst items = document.querySelectorAll('.item');\nconst title = document.querySelector('#title');\n\ntitle.textContent = 'Updated';\n```",
+          "subQuestions": [
+            {
+              "id": "Q4-a",
+              "label": "(a)",
+              "marks": 2,
+              "questionMdx": "`querySelector` 和 `querySelectorAll` 的返回值分别是什么？后者能不能直接用 `forEach` 遍历？",
+              "answerMdx": "`querySelector` 返回第一个匹配的元素（找不到返回 `null`）；`querySelectorAll` 返回一个静态的 NodeList（不是数组）。NodeList 支持 `forEach`，但不能直接调用 `map`、`filter` 等数组方法；需要先转成数组，例如 `[...items]` 或 `Array.from(items)`。",
+              "markingMdx": "1 mark for a single element vs a NodeList.\n1 mark for noting NodeList is array-like but not a full array."
+            },
+            {
+              "id": "Q4-b",
+              "label": "(b)",
+              "marks": 2,
+              "questionMdx": "`textContent` 和 `innerHTML` 有什么区别？把用户输入的内容写进页面时该用哪个，为什么？",
+              "answerMdx": "`textContent` 把内容当纯文本，会转义标签；`innerHTML` 会把字符串解析成 HTML。写入用户输入时应使用 `textContent`，否则用户输入里若包含 `<script>` 或事件属性等内容就会被当作 HTML 执行，造成 XSS 注入风险。",
+              "markingMdx": "1 mark for text vs parsed HTML difference.\n1 mark for choosing textContent to avoid XSS."
+            },
+            {
+              "id": "Q4-c",
+              "label": "(c)",
+              "marks": 2,
+              "questionMdx": "为什么把脚本放在 `<body>` 末尾，或者使用 `DOMContentLoaded`？",
+              "answerMdx": "因为浏览器从上到下解析 HTML，如果脚本放在 `<head>` 且直接查询尚不存在的元素，会得到 `null` 而报错。把脚本放到 `<body>` 末尾，或在 `DOMContentLoaded` 事件回调里执行，可以保证脚本运行时目标元素已经被解析出来。",
+              "markingMdx": "1 mark for identifying the parse-order problem.\n1 mark for explaining the placement or DOMContentLoaded fix."
+            }
+          ]
+        },
+        {
+          "id": "Q5",
+          "title": "事件与事件委托",
+          "marks": 6,
+          "contentMdx": "```javascript\nconst list = document.querySelector('#list');\n\nlist.addEventListener('click', (event) => {\n  if (event.target.matches('li')) {\n    console.log(event.target.textContent);\n  }\n});\n```",
+          "subQuestions": [
+            {
+              "id": "Q5-a",
+              "label": "(a)",
+              "marks": 2,
+              "questionMdx": "`addEventListener('click', handler)` 与 `addEventListener('click', handler())` 有什么区别？",
+              "answerMdx": "前者把函数引用注册为回调，只有点击时才执行；后者会在绑定那一刻立即调用 `handler()`，并把它的返回值（通常是 `undefined`）当作回调，点击时不会再有反应。",
+              "markingMdx": "1 mark for passing a reference vs invoking immediately.\n1 mark for explaining the consequences on when the code runs."
+            },
+            {
+              "id": "Q5-b",
+              "label": "(b)",
+              "marks": 2,
+              "questionMdx": "上面这段代码用的是什么技巧？它相比给每个 `<li>` 单独绑定监听有什么好处？",
+              "answerMdx": "这是事件委托：利用事件冒泡，把监听器绑在父元素 `#list` 上，通过 `event.target` 判断真正被点击的子元素。好处是只用绑定一个监听器，动态新增的 `<li>` 也能自动生效，且内存与维护成本更低。",
+              "markingMdx": "1 mark for identifying event delegation via bubbling.\n1 mark for noting it covers dynamically added children with one listener."
+            },
+            {
+              "id": "Q5-c",
+              "label": "(c)",
+              "marks": 2,
+              "questionMdx": "`event.preventDefault()` 和 `event.stopPropagation()` 分别阻止什么？",
+              "answerMdx": "`preventDefault()` 阻止元素的默认行为（例如链接跳转、表单提交），但不影响事件继续冒泡；`stopPropagation()` 阻止事件继续向上冒泡到祖先元素，但不影响默认行为。两者作用不同，常被混淆。",
+              "markingMdx": "1 mark for preventDefault stopping default behaviour.\n1 mark for stopPropagation stopping bubbling."
+            }
+          ]
+        },
+        {
+          "id": "Q6",
+          "title": "表单与客户端校验",
+          "marks": 6,
+          "contentMdx": "```html\n<form id=\"signup\">\n  <input id=\"name\" type=\"text\">\n  <button type=\"submit\">Sign up</button>\n</form>\n<p id=\"output\"></p>\n```\n\n```javascript\nconst form = document.getElementById('signup');\nform.addEventListener('submit', (event) => {\n  event.preventDefault();\n  const name = document.getElementById('name').value;\n  document.getElementById('output').textContent = 'Welcome, ' + name;\n});\n```",
+          "subQuestions": [
+            {
+              "id": "Q6-a",
+              "label": "(a)",
+              "marks": 2,
+              "questionMdx": "用户输入 Sam 并提交后，页面上显示什么？`name` 的值从哪里来？",
+              "answerMdx": "显示 \"Welcome, Sam\"。`name` 来自 `document.getElementById('name').value`，也就是输入框里用户填写的文本。",
+              "markingMdx": "1 mark for the output \"Welcome, Sam\".\n1 mark for explaining .value reads the input's text."
+            },
+            {
+              "id": "Q6-b",
+              "label": "(b)",
+              "marks": 2,
+              "questionMdx": "如果删掉 `event.preventDefault();`，提交表单时会发生什么？",
+              "answerMdx": "浏览器会执行默认提交行为，页面重新加载，刚显示的欢迎信息随即消失（甚至根本来不及看到）。`preventDefault` 的作用就是阻止这个默认提交。",
+              "markingMdx": "1 mark for the page reloading on submit.\n1 mark for explaining preventDefault stops the default submit."
+            },
+            {
+              "id": "Q6-c",
+              "label": "(c)",
+              "marks": 2,
+              "questionMdx": "想在不写 JavaScript 的前提下阻止空值提交，应该给输入框加什么属性？加上后空值提交会怎样？",
+              "answerMdx": "给输入框加 `required` 属性：`<input id=\"name\" type=\"text\" required>`。这样当输入框为空并点击提交时，浏览器会阻止提交并弹出提示，要求用户填写该字段。",
+              "markingMdx": "1 mark for adding the required attribute.\n1 mark for explaining the browser blocks submission and shows a prompt."
+            }
+          ]
+        },
+        {
+          "id": "Q7",
+          "title": "localStorage 与持久化",
+          "marks": 6,
+          "contentMdx": "```javascript\nconst notes = [{ id: 1, text: 'buy milk' }];\n\nlocalStorage.setItem('notes', JSON.stringify(notes));\n\nconst raw = localStorage.getItem('notes');\nconst restored = raw ? JSON.parse(raw) : [];\n```",
+          "subQuestions": [
+            {
+              "id": "Q7-a",
+              "label": "(a)",
+              "marks": 2,
+              "questionMdx": "为什么 `setItem` 之前要先 `JSON.stringify(notes)`，而不能直接把数组传进去？",
+              "answerMdx": "因为 localStorage 只能存字符串，不能直接存对象或数组。`JSON.stringify` 把数组序列化成 JSON 字符串再存入；读取时用 `JSON.parse` 还原回原来的数组结构。",
+              "markingMdx": "1 mark for stating localStorage only stores strings.\n1 mark for explaining stringify/parse as the serialize-deserialize pair."
+            },
+            {
+              "id": "Q7-b",
+              "label": "(b)",
+              "marks": 2,
+              "questionMdx": "第一次访问时 `localStorage.getItem('notes')` 返回什么？代码里的三元判断解决了什么问题？",
+              "answerMdx": "返回 `null`，因为此前没有存过这个键。三元判断 `raw ? JSON.parse(raw) : []` 避免了直接对 `null` 调用 `JSON.parse` 而抛错，同时给出一个空数组作为安全默认值。",
+              "markingMdx": "1 mark for identifying null on first visit.\n1 mark for explaining the fallback avoids parsing null."
+            },
+            {
+              "id": "Q7-c",
+              "label": "(c)",
+              "marks": 2,
+              "questionMdx": "如果有人手动把 'notes' 改成了非法 JSON，上面的读取代码会发生什么？更稳妥的写法是什么？",
+              "answerMdx": "`JSON.parse(raw)` 会抛出异常，导致后续代码中断。更稳妥的做法是用 `try/catch` 包住解析过程，解析失败时回退到默认值（如空数组），并可选地记录一条警告。",
+              "markingMdx": "1 mark for stating JSON.parse throws on invalid JSON.\n1 mark for suggesting try/catch with a safe fallback."
+            }
+          ]
+        }
+      ],
+      "time": "2026-10-25 10:00"
+    }
+  ]
 }

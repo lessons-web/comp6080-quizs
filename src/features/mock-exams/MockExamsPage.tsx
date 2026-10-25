@@ -219,34 +219,51 @@ export function MockExamsPage() {
                     className="group relative flex flex-col justify-between overflow-hidden rounded-3xl border border-[#ddd5c8] bg-[#f7f4ed] p-6 shadow-[0_1px_2px_rgba(22,24,29,.05)] opacity-95"
                   >
                     <div aria-hidden className="pointer-events-none absolute inset-0 bg-[#faf8f4]/80 backdrop-blur-[1px]" />
-                    <div className="relative">
-                      <div className="flex items-start justify-between gap-4">
-                        <h3 className="text-xl font-semibold text-[#4c5159]">
-                          {exam.title}
-                        </h3>
+                    <div className="relative flex flex-1 flex-col">
+                      <h3 className="text-xl font-semibold text-[#4c5159]">
+                        {exam.title}
+                      </h3>
+                      <div className="mt-3 flex flex-wrap gap-2">
                         <span className="inline-flex shrink-0 items-center gap-1 rounded-full bg-[#ebe5da] px-2.5 py-0.5 text-[11px] font-semibold text-[#6a6257] ring-1 ring-[#d8d1c5]">
                           <svg viewBox="0 0 12 12" aria-hidden="true" className="h-3 w-3">
                             <path fill="currentColor" d="M8.5 4.5V4a2.5 2.5 0 0 0-5 0v.5H2.5A1.5 1.5 0 0 0 1 6v3.5A1.5 1.5 0 0 0 2.5 11h7A1.5 1.5 0 0 0 10.5 9.5V6A1.5 1.5 0 0 0 9 4.5h-.5Zm-4 0V4a1.5 1.5 0 0 1 3 0v.5h-3ZM6 9A1 1 0 1 1 6 7a1 1 0 0 1 0 2Z" />
                           </svg>
                           仅登录后可查看
                         </span>
+                        {exam.tags && exam.tags.length > 0 && (
+                          <>
+                            {exam.tags.map(tag => (
+                              <span key={tag} className={`inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium ring-1 ring-inset ${
+                                tag === '真题'
+                                  ? 'bg-[#fbf0dc] text-[#8b5e34] ring-[#eed9ab]'
+                                  : 'bg-[#eef6f2] text-[#2f6b5f] ring-[#cfe7db]'
+                              }`}>
+                                {tag}
+                              </span>
+                            ))}
+                          </>
+                        )}
                       </div>
                       {exam.description && (
-                        <p className="mt-3 line-clamp-2 text-sm text-[#6b7078]">
+                        <p className="mt-4 line-clamp-3 text-sm leading-6 text-[#6b7078]">
                           {exam.description}
                         </p>
                       )}
                       {exam.time && (
-                        <p className="mt-2 text-xs text-[#8b9099]">
-                          发布于：{new Date(exam.time).toLocaleDateString('zh-CN', { year: 'numeric', month: '2-digit', day: '2-digit' })}
-                        </p>
+                        <div className="mt-4 inline-flex w-fit items-center gap-2 rounded-full bg-[#f1ede4] px-3 py-1 text-[11px] font-medium text-[#8b9099]">
+                          <span className="text-[#7e847c]">发布于</span>
+                          <span>{new Date(exam.time).toLocaleDateString('zh-CN', { year: 'numeric', month: '2-digit', day: '2-digit' })}</span>
+                        </div>
                       )}
                       <div className="mt-4 rounded-xl border border-dashed border-[#e6d7b8] bg-[#fff7e8] p-3 text-[12px] leading-5 text-[#6a6257]">
                         访客仅开放「模拟试卷 1」和「2026 Term 3 Quiz 1」两套试卷。登录或扫码咨询老师解锁全部。
                       </div>
                     </div>
-                    <div className="relative mt-6 flex items-center justify-between text-sm text-[#8b9099]">
-                      <span>总分: {exam.totalMarks}</span>
+                    <div className="relative mt-6 flex items-center justify-between border-t border-[#e7e0d5] pt-4 text-sm text-[#8b9099]">
+                      <span className="inline-flex items-center gap-2 rounded-full bg-[#efe9de] px-3 py-1 text-[12px] font-semibold text-[#6a6257]">
+                        <span className="text-[#8b9099]">总分</span>
+                        <span>{exam.totalMarks}</span>
+                      </span>
                       <Link
                         href={loginHref}
                         className="font-medium text-[#2f6b5f] hover:text-[#245348]"
@@ -263,43 +280,45 @@ export function MockExamsPage() {
                   href={`/exams/${exam.id}`}
                   className="group relative flex flex-col justify-between overflow-hidden rounded-3xl border border-[#e3ded4] bg-[#fffdfa] p-6 shadow-[0_1px_2px_rgba(22,24,29,.05)] transition-all hover:-translate-y-1 hover:border-[#bdd5c7] hover:shadow-[0_2px_4px_rgba(22,24,29,.05),0_18px_36px_-24px_rgba(22,24,29,.2)]"
                 >
-                  <div>
-                    <div className="flex items-start justify-between gap-4">
-                      <h3 className="text-xl font-semibold text-[#16181d] group-hover:text-[#2f6b5f]">
-                        {exam.title}
-                      </h3>
-                      <div className="flex flex-wrap gap-2 shrink-0">
-                        <span className="inline-flex items-center gap-1 rounded-full bg-[#edf7f1] px-2.5 py-0.5 text-xs font-medium text-[#24745c] ring-1 ring-inset ring-[#cfe7db]">
-                          访客可预览
-                        </span>
-                        {exam.tags && exam.tags.length > 0 && (
-                          <div className="flex flex-wrap gap-2 shrink-0">
-                            {exam.tags.map(tag => (
-                              <span key={tag} className={`inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium ring-1 ring-inset ${
-                                tag === '真题' 
-                                  ? 'bg-[#fbf0dc] text-[#8b5e34] ring-[#eed9ab]'
-                                  : 'bg-[#eef6f2] text-[#2f6b5f] ring-[#cfe7db]'
-                              }`}>
-                                {tag}
-                              </span>
-                            ))}
-                          </div>
-                        )}
-                      </div>
+                  <div className="flex flex-1 flex-col">
+                    <h3 className="text-xl font-semibold text-[#16181d] group-hover:text-[#2f6b5f]">
+                      {exam.title}
+                    </h3>
+                    <div className="mt-3 flex flex-wrap gap-2">
+                      <span className="inline-flex items-center gap-1 rounded-full bg-[#edf7f1] px-2.5 py-0.5 text-xs font-medium text-[#24745c] ring-1 ring-inset ring-[#cfe7db]">
+                        访客可预览
+                      </span>
+                      {exam.tags && exam.tags.length > 0 && (
+                        <>
+                          {exam.tags.map(tag => (
+                            <span key={tag} className={`inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium ring-1 ring-inset ${
+                              tag === '真题'
+                                ? 'bg-[#fbf0dc] text-[#8b5e34] ring-[#eed9ab]'
+                                : 'bg-[#eef6f2] text-[#2f6b5f] ring-[#cfe7db]'
+                            }`}>
+                              {tag}
+                            </span>
+                          ))}
+                        </>
+                      )}
                     </div>
                     {exam.description && (
-                      <p className="mt-3 line-clamp-2 text-sm text-[#4c5159]">
+                      <p className="mt-4 line-clamp-3 text-sm leading-6 text-[#4c5159]">
                         {exam.description}
                       </p>
                     )}
                     {exam.time && (
-                      <p className="mt-2 text-xs text-[#8b9099]">
-                        发布于：{new Date(exam.time).toLocaleDateString('zh-CN', { year: 'numeric', month: '2-digit', day: '2-digit' })}
-                      </p>
+                      <div className="mt-4 inline-flex w-fit items-center gap-2 rounded-full bg-[#f4f1ea] px-3 py-1 text-[11px] font-medium text-[#8b9099]">
+                        <span className="text-[#6b7078]">发布于</span>
+                        <span>{new Date(exam.time).toLocaleDateString('zh-CN', { year: 'numeric', month: '2-digit', day: '2-digit' })}</span>
+                      </div>
                     )}
                   </div>
-                  <div className="mt-6 flex items-center justify-between text-sm text-[#6a6257]">
-                    <span>总分: {exam.totalMarks}</span>
+                  <div className="mt-6 flex items-center justify-between border-t border-[#ece7dd] pt-4 text-sm text-[#6a6257]">
+                    <span className="inline-flex items-center gap-2 rounded-full bg-[#f4f1ea] px-3 py-1 text-[12px] font-semibold text-[#5d635c]">
+                      <span className="text-[#8b9099]">总分</span>
+                      <span>{exam.totalMarks}</span>
+                    </span>
                     <span className="font-medium text-[#2f6b5f] opacity-0 transition-opacity group-hover:opacity-100">
                       开始测试 →
                     </span>

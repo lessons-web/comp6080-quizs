@@ -292,6 +292,211 @@
         }
       ],
       "time": "2026-10-03 10:00"
+    },
+    {
+      "id": "WEEK1-SIM",
+      "title": "Week 1 模拟试卷",
+      "description": "Week 1 知识点模拟试卷：覆盖 Git 最小工作流、HTML 文档结构、语义化标签、链接图片路径与列表表格代码标签五条主线。",
+      "tags": [
+        "模拟题",
+        "Week1"
+      ],
+      "totalMarks": 38,
+      "questions": [
+        {
+          "id": "Q1",
+          "title": "Git 最小工作流",
+          "marks": 6,
+          "contentMdx": "```bash\ngit clone <repo-url>\n# 修改 index.html\ngit add index.html\ngit commit -m \"add hero section\"\ngit push\n```",
+          "subQuestions": [
+            {
+              "id": "Q1-a",
+              "label": "(a)",
+              "marks": 2,
+              "questionMdx": "上面的命令序列里，`git add` 和 `git commit` 分别完成了什么？为什么两者要分开执行，而不是合并成一步？",
+              "answerMdx": "`git add` 把工作区的改动登记到暂存区（staging area），决定“哪些改动要进入这次提交”；`git commit` 把暂存区里的内容固化成一条历史记录。分开是因为一次提交往往只应包含一组相关改动，先 `add` 让你有机会挑选要提交的文件，而不是把所有改动一把提交。",
+              "markingMdx": "1 mark for describing add as staging changes.\n1 mark for describing commit as recording the staged snapshot, and why staging is a separate step."
+            },
+            {
+              "id": "Q1-b",
+              "label": "(b)",
+              "marks": 2,
+              "questionMdx": "如果开发者跳过 `git commit` 直接执行 `git push`，远端仓库会发生什么？",
+              "answerMdx": "远端不会有任何变化。`git push` 只是把本地已经存在的提交推送到远端；如果本地没有新的 commit，就没有东西可以推。",
+              "markingMdx": "1 mark for stating the remote does not change.\n1 mark for explaining that push only sends existing local commits."
+            },
+            {
+              "id": "Q1-c",
+              "label": "(c)",
+              "marks": 2,
+              "questionMdx": "为什么在 `git add` 之前通常先执行 `git diff`？它解决了什么问题？",
+              "answerMdx": "`git diff` 让你在提交前复查工作区相对上次提交到底改了什么，避免把调试代码、临时改动或误删一起提交进去。它是提交前的自检手段。",
+              "markingMdx": "1 mark for stating that git diff previews unstaged changes.\n1 mark for explaining it prevents committing unintended changes."
+            }
+          ]
+        },
+        {
+          "id": "Q2",
+          "title": "HTML 文档结构",
+          "marks": 8,
+          "contentMdx": "```html\n<!DOCTYPE html>\n<html lang=\"en\">\n  <head>\n    <meta charset=\"utf-8\">\n    <title>My Trip</title>\n  </head>\n  <body>\n    <h1>Trip to Sydney</h1>\n  </body>\n</html>\n```",
+          "subQuestions": [
+            {
+              "id": "Q2-a",
+              "label": "(a)",
+              "marks": 2,
+              "questionMdx": "第一行的 `<!DOCTYPE html>` 有什么作用？如果把它删掉，浏览器会怎么处理这个页面？",
+              "answerMdx": "它告诉浏览器使用标准模式（standards mode）渲染页面。删掉后浏览器可能退回怪异模式（quirks mode），导致盒模型计算、排版等行为与预期不一致。",
+              "markingMdx": "1 mark for identifying the standard rendering mode.\n1 mark for mentioning quirks mode or inconsistent rendering without it."
+            },
+            {
+              "id": "Q2-b",
+              "label": "(b)",
+              "marks": 2,
+              "questionMdx": "这段代码里的 \"My Trip\" 和 \"Trip to Sydney\" 分别显示在哪里？",
+              "answerMdx": "\"My Trip\" 显示在浏览器标签页（窗口标题）上，因为它位于 `<head>` 里的 `<title>` 中；\"Trip to Sydney\" 显示在页面正文里，因为它是 `<body>` 中的 `<h1>`。",
+              "markingMdx": "1 mark for placing \"My Trip\" in the browser tab.\n1 mark for placing \"Trip to Sydney\" in the page body."
+            },
+            {
+              "id": "Q2-c",
+              "label": "(c)",
+              "marks": 2,
+              "questionMdx": "`<head>` 和 `<body>` 各自承载什么内容？为什么 `<title>` 不能放在 `<body>` 里？",
+              "answerMdx": "`<head>` 放页面的元信息，例如 `<title>`、`<meta>`、样式表和脚本引用，这些不会直接显示为正文；`<body>` 放用户在页面上能看到的所有内容。`<title>` 属于元信息，所以必须放在 `<head>`，放在 `<body>` 里既不符合规范也不会被当作页面标题处理。",
+              "markingMdx": "1 mark for contrasting metadata (head) with visible content (body).\n1 mark for explaining why title belongs to head."
+            },
+            {
+              "id": "Q2-d",
+              "label": "(d)",
+              "marks": 2,
+              "questionMdx": "`<html lang=\"en\">` 中 `lang` 属性的意义是什么？",
+              "answerMdx": "它声明了文档的主要语言，帮助屏幕阅读器用正确的语音朗读，也让浏览器翻译、拼写检查与搜索引擎更好地理解内容。",
+              "markingMdx": "1 mark for identifying document language declaration.\n1 mark for mentioning accessibility or translation/SEO benefits."
+            }
+          ]
+        },
+        {
+          "id": "Q3",
+          "title": "语义化标签与标题层级",
+          "marks": 8,
+          "contentMdx": "```html\n<div class=\"top-nav\">\n  <div class=\"logo\">Course App</div>\n  <div class=\"menu\"><a href=\"/home\">Home</a></div>\n</div>\n<div class=\"main\">\n  <div class=\"post\">\n    <div class=\"title\">Learning HTML</div>\n    <div class=\"body\">HTML is the foundation of the web.</div>\n  </div>\n</div>\n```",
+          "subQuestions": [
+            {
+              "id": "Q3-a",
+              "label": "(a)",
+              "marks": 2,
+              "questionMdx": "上面这段代码被称为 \"div soup\"。请用合适的语义化标签重构顶层结构（导航区和主内容区）。",
+              "answerMdx": "```html\n<header class=\"top-nav\">\n  <div class=\"logo\">Course App</div>\n  <nav class=\"menu\"><a href=\"/home\">Home</a></nav>\n</header>\n<main class=\"main\">\n  <article class=\"post\">\n    <h1 class=\"title\">Learning HTML</h1>\n    <p class=\"body\">HTML is the foundation of the web.</p>\n  </article>\n</main>\n```",
+              "markingMdx": "1 mark for using header/nav for the top area.\n1 mark for using main/article and h1/p for the content area."
+            },
+            {
+              "id": "Q3-b",
+              "label": "(b)",
+              "marks": 2,
+              "questionMdx": "使用语义化标签相比全部用 `<div>` 更好，请给出至少两个原因。",
+              "answerMdx": "1. 可访问性（A11Y）：屏幕阅读器能识别页面结构，帮助视障用户跳转和导航。\n2. SEO：搜索引擎能更好理解内容层次与重点。\n3. 可读性：开发者不必完全依赖 class 命名就能看懂结构。",
+              "markingMdx": "1 mark for accessibility or screen readers.\n1 mark for SEO or developer readability."
+            },
+            {
+              "id": "Q3-c",
+              "label": "(c)",
+              "marks": 2,
+              "questionMdx": "`<h1>` 到 `<h6>` 表达的是视觉大小还是结构层级？一个页面通常应该有几个 `<h1>`？",
+              "answerMdx": "表达的是结构层级（标题的重要性与从属关系），而不是视觉大小；视觉大小应交给 CSS 控制。一个页面通常只应有一个 `<h1>` 作为主标题。",
+              "markingMdx": "1 mark for stating h1-h6 express structural hierarchy, not visual size.\n1 mark for stating a page should normally have a single h1."
+            },
+            {
+              "id": "Q3-d",
+              "label": "(d)",
+              "marks": 2,
+              "questionMdx": "什么情况下应该继续使用 `<div>` / `<span>`，而不是强行套语义标签？",
+              "answerMdx": "当这一段内容只是出于布局或样式的需要，本身没有独立语义（例如单纯的分组容器），且没有更合适的语义标签时，用 `<div>` 做块级分组、`<span>` 做行内分组是合适的。语义标签要用在真正表达结构的地方，滥用反而会误导辅助技术。",
+              "markingMdx": "1 mark for explaining div/span as neutral containers for styling or layout.\n1 mark for warning against misusing semantic tags where no semantics exist."
+            }
+          ]
+        },
+        {
+          "id": "Q4",
+          "title": "链接、图片与路径",
+          "marks": 8,
+          "contentMdx": "```html\n<img src=\"images/logo.png\" alt=\"Course logo\">\n<a href=\"/about\">About</a>\n```\n\n假设页面本身位于 `/pages/detail.html`。",
+          "subQuestions": [
+            {
+              "id": "Q4-a",
+              "label": "(a)",
+              "marks": 2,
+              "questionMdx": "`src=\"images/logo.png\"` 与 `src=\"/images/logo.png\"` 有什么区别？在上面的页面地址下，两者分别会请求哪个路径？",
+              "answerMdx": "`images/logo.png` 是相对路径，相对于当前页面所在目录解析，会请求 `/pages/images/logo.png`；`/images/logo.png` 是根路径，相对于站点根目录解析，会请求 `/images/logo.png`。前者容易在页面移动到别的目录后失效。",
+              "markingMdx": "1 mark for distinguishing relative vs root-relative resolution.\n1 mark for giving the correct resolved paths or the fragility of relative paths."
+            },
+            {
+              "id": "Q4-b",
+              "label": "(b)",
+              "marks": 2,
+              "questionMdx": "`alt` 属性的作用是什么？请给出两个场景。",
+              "answerMdx": "`alt` 提供图片的替代文本。1) 图片加载失败时浏览器显示这段文字；2) 屏幕阅读器读出它，让视障用户理解图片内容。它也是搜索引擎理解图片的依据。",
+              "markingMdx": "1 mark for accessibility / screen reader usage.\n1 mark for fallback when the image fails to load, or SEO."
+            },
+            {
+              "id": "Q4-c",
+              "label": "(c)",
+              "marks": 2,
+              "questionMdx": "站点需要一张真实风景照片和一个线条风格的 logo。分别更适合用哪种图片格式？各说明理由。",
+              "answerMdx": "风景照片适合 JPG：它是有损压缩，能在保持观感的同时大幅减小照片体积。线条 logo 适合 SVG：它是矢量格式，任意缩放都不失真，通常体积小，并且可用 CSS/JS 修改样式。",
+              "markingMdx": "1 mark for JPG for photos with a valid reason.\n1 mark for SVG for a logo with a valid reason."
+            },
+            {
+              "id": "Q4-d",
+              "label": "(d)",
+              "marks": 2,
+              "questionMdx": "如果开发者把 `src` 写成自己电脑上的绝对文件路径（例如 `/Users/sam/project/logo.png`），部署上线后会出现什么问题？为什么？",
+              "answerMdx": "其他访客的浏览器里没有这个本地文件路径，图片会加载失败。网页里的资源路径应使用相对于站点根目录或当前文档的路径，而不是本机文件系统路径，因为服务器与用户机器上的文件结构完全不同。",
+              "markingMdx": "1 mark for stating the image breaks for other users.\n1 mark for explaining that local filesystem paths do not exist on the server or client."
+            }
+          ]
+        },
+        {
+          "id": "Q5",
+          "title": "列表、表格与预格式化文本",
+          "marks": 8,
+          "contentMdx": "```html\n<ul>\n  <li>Opera House</li>\n  <li>Harbour Bridge</li>\n</ul>\n\n<pre><code>npm run dev</code></pre>\n\n<table>\n  <thead>\n    <tr><th>City</th><th>Population</th></tr>\n  </thead>\n  <tbody>\n    <tr><td>Sydney</td><td>5.3M</td></tr>\n  </tbody>\n</table>\n```",
+          "subQuestions": [
+            {
+              "id": "Q5-a",
+              "label": "(a)",
+              "marks": 2,
+              "questionMdx": "`<ul>` 和 `<ol>` 有什么区别？想把上面的地点列表改成带编号的 1、2，应该改什么？",
+              "answerMdx": "`<ul>` 是无序列表，用圆点等符号展示，各条目没有先后顺序；`<ol>` 是有序列表，用数字编号展示，条目顺序有意义。把 `<ul>` 改成 `<ol>`（结尾的 `</ul>` 改成 `</ol>`）即可。",
+              "markingMdx": "1 mark for distinguishing unordered vs ordered semantics.\n1 mark for changing ul to ol."
+            },
+            {
+              "id": "Q5-b",
+              "label": "(b)",
+              "marks": 2,
+              "questionMdx": "上面的表格里，`<thead>` / `<tbody>` / `<th>` / `<td>` 分别承担什么职责？",
+              "answerMdx": "`<thead>` 是表头区域，`<tbody>` 是表体区域，用于把表头行和数据行分组；`<th>` 是表头单元格，语义上是列的标题；`<td>` 是普通数据单元格。它们的区分让辅助技术能正确理解表格的行列关系。",
+              "markingMdx": "1 mark for explaining thead/tbody grouping.\n1 mark for explaining th (header cell) vs td (data cell)."
+            },
+            {
+              "id": "Q5-c",
+              "label": "(c)",
+              "marks": 2,
+              "questionMdx": "`<pre>` 和 `<code>` 的区别是什么？为什么展示代码时常把两者一起用？",
+              "answerMdx": "`<code>` 只是语义上表示“这是一段代码”，本身不会保留空格和换行；`<pre>` 会保留原文的空白和换行。把 `<code>` 放进 `<pre>` 里，既声明了内容是代码，又保留了代码的缩进与换行格式。",
+              "markingMdx": "1 mark for code as semantic marker and pre as preserving whitespace.\n1 mark for explaining the combined use."
+            },
+            {
+              "id": "Q5-d",
+              "label": "(d)",
+              "marks": 2,
+              "questionMdx": "什么时候适合用 `<table>` 展示数据，而不是用 flex/grid 去拼一个“看起来像表格”的布局？",
+              "answerMdx": "当内容本质上是“行与列的二维数据”（如城市与人口、课程与分数）时，应该用 `<table>`，因为它带有行列语义，便于屏幕阅读器理解；flex/grid 只负责视觉布局，不提供数据语义。反过来，仅为了排版对齐而用 `<table>` 也是不推荐的。",
+              "markingMdx": "1 mark for using table when content is genuinely tabular data.\n1 mark for noting flex/grid offer layout but no data semantics."
+            }
+          ]
+        }
+      ],
+      "time": "2026-10-25 10:00"
     }
   ]
 }

@@ -1,0 +1,38 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>02C · Flex 对齐工作台</title>
+  <meta name="description" content="COMP6080 Week 2：观察 Flex 对齐与空间分配。" />
+  <link rel="icon" href="data:," />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="../week4/assets/demo.css" />
+  <style>
+    .page-head { display: none; }
+    .demo-page { min-height: auto; padding: 0; }
+    .demo-wrap { max-width: none; margin: 0; }
+  </style>
+</head>
+<body>
+  <main class="demo-page"><div class="demo-wrap"><section class="demo reveal"><div class="demo-head"><h3>演示 C · Flex 对齐工作台</h3><span class="pill">live</span></div><div class="demo-body"><p class="demo-sub">切换对齐方式和 grow / shrink，理解主轴与交叉轴上的变化。</p><div class="row"><button class="btn primary sm" data-mode="space-between" type="button">space-between</button><button class="btn sm" data-mode="center" type="button">items-center</button><button class="btn sm" data-mode="grow" type="button">content grow</button></div><div class="status-line" id="meta"></div><div class="out pre tall idle" id="out">点击按钮开始。</div></div></section></div></main>
+  <script src="../week4/assets/demo.js"></script>
+  <script>
+    const samples = {
+      'space-between': { tone: 'ok', label: 'justify-content', text: 'display: flex;\njustify-content: space-between;\n\n剩余空间沿主轴平均分到项目之间。' },
+      center: { tone: 'teal', label: 'align-items', text: 'display: flex;\nalign-items: center;\n\n项目在交叉轴上垂直居中。' },
+      grow: { tone: 'warn', label: 'flex-grow', text: '.content { flex: 1 1 auto; }\n\n内容区会吃掉剩余空间，其他项目保持自己的基础宽度。' }
+    };
+    const out = document.querySelector('#out');
+    const meta = document.querySelector('#meta');
+    document.querySelectorAll('[data-mode]').forEach((btn) => btn.addEventListener('click', () => {
+      const sample = samples[btn.dataset.mode];
+      meta.innerHTML = '<span class="chip ' + sample.tone + '">' + sample.label + '</span>';
+      out.className = 'out pre tall ' + sample.tone;
+      out.textContent = sample.text;
+    }));
+  </script>
+</body>
+</html>

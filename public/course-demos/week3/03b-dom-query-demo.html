@@ -1,0 +1,30 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>03B · DOM 查询实验</title>
+  <meta name="description" content="COMP6080 Week 3：观察 DOM 查询与修改。" />
+  <link rel="icon" href="data:," />
+  <link rel="stylesheet" href="../week4/assets/demo.css" />
+  <style>.page-head{display:none}.demo-page{min-height:auto;padding:0}.demo-wrap{max-width:none;margin:0}</style>
+</head>
+<body>
+  <main class="demo-page"><div class="demo-wrap"><section class="demo reveal"><div class="demo-head"><h3>演示 B · DOM 查询实验</h3><span class="pill">live</span></div><div class="demo-body"><p class="demo-sub">切换单个查询和批量查询，观察 DOM 节点是怎样被改写的。</p><div class="row"><button class="btn primary sm" data-mode="single" type="button">单个标题</button><button class="btn sm" data-mode="all" type="button">全部项目</button></div><div class="status-line" id="meta"></div><div class="out pre tall idle" id="out">点击按钮开始。</div></div></section></div></main>
+  <script src="../week4/assets/demo.js"></script>
+  <script>
+    const samples = {
+      single: { tone: 'ok', label: 'querySelector', text: "const titleEl = document.querySelector('.profile-title')\ntitleEl.textContent = 'Updated'\n\n只拿到第一个匹配节点，适合唯一目标。" },
+      all: { tone: 'teal', label: 'querySelectorAll', text: "const itemEls = document.querySelectorAll('.item')\nitemEls.forEach((node) => node.classList.add('is-active'))\n\n拿到的是一组节点，适合批量修改。" }
+    };
+    const out = document.querySelector('#out');
+    const meta = document.querySelector('#meta');
+    document.querySelectorAll('[data-mode]').forEach((btn) => btn.addEventListener('click', () => {
+      const sample = samples[btn.dataset.mode];
+      meta.innerHTML = '<span class="chip ' + sample.tone + '">' + sample.label + '</span>';
+      out.className = 'out pre tall ' + sample.tone;
+      out.textContent = sample.text;
+    }));
+  </script>
+</body>
+</html>

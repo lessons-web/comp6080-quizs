@@ -1,0 +1,30 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>03C · 事件传播实验</title>
+  <meta name="description" content="COMP6080 Week 3：观察事件冒泡与委托。" />
+  <link rel="icon" href="data:," />
+  <link rel="stylesheet" href="../week4/assets/demo.css" />
+  <style>.page-head{display:none}.demo-page{min-height:auto;padding:0}.demo-wrap{max-width:none;margin:0}</style>
+</head>
+<body>
+  <main class="demo-page"><div class="demo-wrap"><section class="demo reveal"><div class="demo-head"><h3>演示 C · 事件传播实验</h3><span class="pill">live</span></div><div class="demo-body"><p class="demo-sub">观察 target、currentTarget 和事件委托是怎么配合工作的。</p><div class="row"><button class="btn primary sm" data-mode="bubble" type="button">冒泡顺序</button><button class="btn sm" data-mode="delegate" type="button">事件委托</button></div><div class="status-line" id="meta"></div><div class="out pre tall idle" id="out">点击按钮开始。</div></div></section></div></main>
+  <script src="../week4/assets/demo.js"></script>
+  <script>
+    const samples = {
+      bubble: { tone: 'ok', label: '冒泡', text: 'button -> card -> page\n\n点击最里面的按钮时，外层监听器也会按顺序收到同一事件。' },
+      delegate: { tone: 'warn', label: '委托', text: "listEl.addEventListener('click', function (event) {\n  const itemEl = event.target.closest('[data-item]')\n})\n\n监听只绑在父容器上，也能知道点中了哪个子项。" }
+    };
+    const out = document.querySelector('#out');
+    const meta = document.querySelector('#meta');
+    document.querySelectorAll('[data-mode]').forEach((btn) => btn.addEventListener('click', () => {
+      const sample = samples[btn.dataset.mode];
+      meta.innerHTML = '<span class="chip ' + sample.tone + '">' + sample.label + '</span>';
+      out.className = 'out pre tall ' + sample.tone;
+      out.textContent = sample.text;
+    }));
+  </script>
+</body>
+</html>

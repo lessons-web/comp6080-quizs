@@ -17,6 +17,14 @@ vi.mock('./ExamSubQuestionList', () => ({
   )
 }))
 
+vi.mock('./ExamQuestionMockup', () => ({
+  ExamQuestionMockup: ({ mockup }: any) => (
+    <div data-testid="exam-mockup">
+      {mockup.files.map((file: any) => file.name).join(', ')}
+    </div>
+  )
+}))
+
 describe('ExamQuestionCard', () => {
   const mockQuestion: ExamQuestion = {
     id: 'q1',
@@ -69,5 +77,20 @@ describe('ExamQuestionCard', () => {
     const subList = screen.getByTestId('sub-question-list')
     expect(subList).toBeInTheDocument()
     expect(subList).toHaveTextContent('2 sub-questions')
+  })
+
+  it('renders mockup when provided', () => {
+    const questionWithMockup = {
+      ...mockQuestion,
+      mockup: {
+        files: [{ name: 'example.png', active: true }],
+        html: '<div>Mockup</div>',
+        viewport: 'desktop' as const,
+      },
+    }
+
+    render(<ExamQuestionCard question={questionWithMockup} />)
+
+    expect(screen.getByTestId('exam-mockup')).toHaveTextContent('example.png')
   })
 })

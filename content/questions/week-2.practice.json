@@ -40,6 +40,161 @@
       "codeBlocks": [],
       "images": [],
       "createdAt": "2026-10-08"
+    },
+    {
+      "id": "CSS-Q1",
+      "topic": "css",
+      "weeks": [
+        "week-2"
+      ],
+      "difficulty": "medium",
+      "tags": [
+        "选择器",
+        "优先级",
+        "层叠"
+      ],
+      "question": "Given `<p class=\"note\" id=\"intro\">Hi</p>` and the CSS:\n```css\np { color: blue; }\n.note { color: green; }\n#intro { color: red; }\n```\n(a) What colour is the paragraph? Explain using specificity.\n(b) If the `#intro` rule is removed, which rule wins and why?\n(c) Why is `!important` generally discouraged?",
+      "knowledgePoint": "CSS 选择器与层叠优先级",
+      "answerExplanation": "(a) Red. An id selector (#intro) has higher specificity than a class selector, which has higher specificity than a type selector, so the id rule wins regardless of order.\n(b) Green. Both `.note` and `p` match the element, and with the id rule gone the class selector has the higher specificity.\n(c) `!important` breaks the normal cascade, so later readers (and future you) cannot override a rule with custom CSS. It is fine for a very small number of utility overrides but should not be used to win specificity fights.",
+      "codeBlocks": [],
+      "images": [],
+      "createdAt": "2026-10-25"
+    },
+    {
+      "id": "CSS-Q2",
+      "topic": "css",
+      "weeks": [
+        "week-2"
+      ],
+      "difficulty": "medium",
+      "tags": [
+        "盒模型",
+        "单位",
+        "box-sizing"
+      ],
+      "question": "```css\n.card {\n  width: 300px;\n  padding: 20px;\n  border: 5px solid black;\n  box-sizing: content-box;\n}\n```\n(a) What is the total horizontal space the `.card` takes up?\n(b) How does adding `box-sizing: border-box` change this?\n(c) When would you prefer `rem` over `px` for a font size?",
+      "knowledgePoint": "CSS 盒模型与单位",
+      "answerExplanation": "(a) 300 + 20 + 20 + 5 + 5 = 350px. With content-box the declared width only covers the content, so padding and border are added on top.\n(b) With border-box the 300px includes padding and border, so the content area shrinks and the total width stays 300px.\n(c) Use rem when the size should scale with the user's root font size (better for accessibility), e.g. body or heading text. Use px for things that should stay fixed regardless of user settings, like a 1px border.",
+      "codeBlocks": [],
+      "images": [],
+      "createdAt": "2026-10-25"
+    },
+    {
+      "id": "CSS-Q3",
+      "topic": "css",
+      "weeks": [
+        "week-2"
+      ],
+      "difficulty": "medium",
+      "tags": [
+        "Flexbox",
+        "布局",
+        "justify-content"
+      ],
+      "question": "```css\n.row {\n  display: flex;\n  justify-content: space-between;\n  align-items: center;\n}\n```\n(a) What does `justify-content` control, and how is that different from `align-items`?\n(b) How would you change the CSS so the children stack vertically and are centred?\n(c) What does `flex: 1` on a child do?",
+      "knowledgePoint": "CSS Flexbox 布局",
+      "answerExplanation": "(a) On a row (default) flex container, justify-content spreads children along the main axis (horizontally), while align-items aligns them along the cross axis (vertically).\n(b) Add `flex-direction: column;` and change the alignment, e.g. `align-items: center;` to centre horizontally and `justify-content: center;` for the vertical axis.\n(c) `flex: 1` lets the child grow and shrink to fill the free space, so siblings share the leftover width proportionally.",
+      "codeBlocks": [],
+      "images": [],
+      "createdAt": "2026-10-25"
+    },
+    {
+      "id": "CSS-Q4",
+      "topic": "css",
+      "weeks": [
+        "week-2"
+      ],
+      "difficulty": "medium",
+      "tags": [
+        "Grid",
+        "CSS框架",
+        "复用"
+      ],
+      "question": "```css\n.grid {\n  display: grid;\n  grid-template-columns: 1fr 2fr;\n  gap: 16px;\n}\n```\n(a) How many columns are created, and how does `1fr 2fr` split the width?\n(b) What is `gap` for?\n(c) Why do many teams reach for a CSS framework or utility classes instead of writing every rule by hand?",
+      "knowledgePoint": "CSS Grid、框架与样式复用",
+      "answerExplanation": "(a) Two columns. The free space is split into 3 parts; the first column gets 1 part (~1/3) and the second gets 2 parts (~2/3).\n(b) `gap` adds consistent space between rows and columns without margins, so the layout does not depend on margin collapsing or gutters on edge items.\n(c) A framework or utility layer provides a consistent, documented set of primitives (spacing, layout, components), which speeds up development and keeps spacing and responsive behaviour consistent across a team.",
+      "codeBlocks": [],
+      "images": [],
+      "createdAt": "2026-10-25"
+    },
+    {
+      "id": "CSS-Q5",
+      "topic": "css",
+      "weeks": [
+        "week-2"
+      ],
+      "difficulty": "medium",
+      "tags": [
+        "定位",
+        "z-index",
+        "层叠上下文"
+      ],
+      "question": "```css\n.card { position: relative; }\n.badge {\n  position: absolute;\n  top: 8px;\n  right: 8px;\n  z-index: 10;\n}\n```\n(a) Relative to what is `.badge` positioned, and why does `.card` need `position: relative`?\n(b) What does `z-index` control, and why does it sometimes appear to have no effect?\n(c) What is the difference between `position: relative` and `position: absolute`?",
+      "knowledgePoint": "CSS 定位与 z-index",
+      "answerExplanation": "(a) An absolutely positioned element is positioned relative to its nearest ancestor that is not `position: static`. Setting `.card` to `position: relative` makes it that ancestor, so the badge's `top`/`right` are measured from the card, not the whole page.\n(b) z-index controls stacking order among positioned elements on the same level. It does nothing when the element is `static`, or when the elements are in different stacking contexts (for example a parent with its own z-index or opacity), which is the usual reason it 'does not work'.\n(c) `relative` keeps the element in the normal flow and offsets it from its own original position; `absolute` takes it out of the flow and positions it against its containing block, so it no longer reserves space.",
+      "codeBlocks": [],
+      "images": [],
+      "createdAt": "2026-10-25"
+    },
+    {
+      "id": "QUIZ2-W2-Q1",
+      "topic": "css",
+      "weeks": [
+        "week-2"
+      ],
+      "difficulty": "medium",
+      "tags": [
+        "Quiz2",
+        "box-sizing",
+        "盒模型",
+        "Screenshot sample"
+      ],
+      "question": "A product card is inside a 320px column. The card rule declares `width: 300px`, plus 20px padding and 3px border on each side. What is the card's real total width, why does it overflow, and what changes if `.card` gets `box-sizing: border-box`?",
+      "knowledgePoint": "Box sizing and available width",
+      "answerExplanation": "Without `border-box`, the declared width is only the content box, so the total width is `300 + 40 + 6 = 346px`, which overflows the 320px column by 26px. With `box-sizing: border-box`, the declared 300px includes padding and border, so the total width becomes 300px and the content area shrinks instead of the whole card growing.",
+      "codeBlocks": [],
+      "images": [],
+      "createdAt": "2026-10-25"
+    },
+    {
+      "id": "QUIZ2-W2-Q2",
+      "topic": "css",
+      "weeks": [
+        "week-2"
+      ],
+      "difficulty": "medium",
+      "tags": [
+        "Quiz2",
+        "Flexbox",
+        "主轴交叉轴",
+        "Screenshot sample"
+      ],
+      "question": "A toolbar is `display: flex`, `justify-content: space-between`, `align-items: center`, and stays 600px by 160px. If `flex-direction` changes from `row` to `column`, where do the three buttons move, and which property should change if the designer wants them packed at the top but still centred horizontally?",
+      "knowledgePoint": "Flexbox axis relationships",
+      "answerExplanation": "Changing to `column` makes the main axis vertical, so `justify-content: space-between` spreads the buttons from top to bottom while `align-items: center` keeps them centred horizontally. To pack them at the top, change `justify-content` to `flex-start` (or `start`).",
+      "codeBlocks": [],
+      "images": [],
+      "createdAt": "2026-10-25"
+    },
+    {
+      "id": "QUIZ2-W2-Q3",
+      "topic": "css",
+      "weeks": [
+        "week-2"
+      ],
+      "difficulty": "medium",
+      "tags": [
+        "Quiz2",
+        "specificity",
+        "层叠",
+        "Screenshot sample"
+      ],
+      "question": "A green button is matched by `button`, `.action`, `button.action`, and `#panel .action`. Why does the id-based rule beat the later `button.action` rule, and what colour wins if `id=\"panel\"` is removed from the markup?",
+      "knowledgePoint": "Specificity and source order",
+      "answerExplanation": "The id-based selector wins because specificity is compared before source order. `#panel .action` includes an id, so it beats `button.action` even if the latter is later in the stylesheet. If the id is removed, that rule stops matching and `button.action` becomes the winning rule, so the button turns blue.",
+      "codeBlocks": [],
+      "images": [],
+      "createdAt": "2026-10-25"
     }
   ]
 }

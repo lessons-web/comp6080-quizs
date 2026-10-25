@@ -422,6 +422,166 @@
       ],
       "images": [],
       "createdAt": "2026-10-24"
+    },
+    {
+      "id": "QUIZ2-W4-Q1",
+      "topic": "javascript",
+      "weeks": [
+        "week-4"
+      ],
+      "difficulty": "medium",
+      "tags": [
+        "Quiz2",
+        "fetch",
+        "Response",
+        "res.ok"
+      ],
+      "question": "```javascript\nasync function loadUsers() {\n  const res = await fetch('/api/users');\n  const users = await res.json();\n  console.log(users.length);\n}\n```\n`await fetch('/api/users')` 得到的第一层结果是什么？为什么很多代码会先检查 `res.ok` 或 `res.status`，再调用 `res.json()`？",
+      "knowledgePoint": "fetch、Response 与 HTTP 状态",
+      "answerExplanation": "第一层结果是 `Response` 对象，而不是最终的 `users` 数组。`fetch` 不会因为 404、500 之类的 HTTP 状态自动 reject，所以实际代码通常要先检查 `res.ok` 或 `res.status`，避免把错误响应继续当成成功数据解析，或者把 HTML 错误页错误地喂给 `res.json()`。",
+      "codeBlocks": [],
+      "images": [],
+      "createdAt": "2026-10-25"
+    },
+    {
+      "id": "QUIZ2-W4-Q2",
+      "topic": "javascript",
+      "weeks": [
+        "week-4"
+      ],
+      "difficulty": "easy",
+      "tags": [
+        "Quiz2",
+        "async",
+        "await",
+        "执行顺序"
+      ],
+      "question": "```javascript\nasync function loadUsers() {\n  const res = await fetch('/api/users');\n  const users = await res.json();\n  console.log('A', users.length);\n}\n\nloadUsers();\nconsole.log('B', 'after call');\n```\n控制台里通常会先看到 `A` 还是 `B`？为什么？",
+      "knowledgePoint": "async/await 与同步代码的执行顺序",
+      "answerExplanation": "通常会先看到 `B`。因为调用 `loadUsers()` 后，函数很快就返回一个 Promise；内部在 `await` 网络结果时会暂停，外层同步的 `console.log('B')` 继续执行。等请求完成并且 JSON 被解析后，才会轮到输出 `A`。",
+      "codeBlocks": [],
+      "images": [],
+      "createdAt": "2026-10-25"
+    },
+    {
+      "id": "QUIZ2-W4-Q3",
+      "topic": "javascript",
+      "weeks": [
+        "week-4"
+      ],
+      "difficulty": "hard",
+      "tags": [
+        "Quiz2",
+        "事件循环",
+        "阻塞",
+        "取消"
+      ],
+      "question": "一个导出按钮会同步循环处理 200000 行 CSV。老师说导出过程中页面时钟停了、Cancel 也要等导出结束后才“生效”。请用事件循环解释为什么会这样，并描述一种高层修正方式。",
+      "knowledgePoint": "Export that freezes the page",
+      "answerExplanation": "原因是长时间运行的 export click handler 一直占着主线程，调用栈没有清空，timer callback 和 Cancel 的 click handler 都只能排队等待，所以时钟暂停、Cancel 变晚。高层修正可以是把导出拆成很多小批次，让每批之间把控制权还给事件循环；这样时钟能继续更新，Cancel 也能在批次之间被处理。",
+      "codeBlocks": [],
+      "images": [],
+      "createdAt": "2026-10-25"
+    },
+    {
+      "id": "QUIZ2-W4-Q4",
+      "topic": "javascript",
+      "weeks": [
+        "week-4"
+      ],
+      "difficulty": "medium",
+      "tags": [
+        "Quiz2",
+        "定时器",
+        "Undo",
+        "toast"
+      ],
+      "question": "一个删除歌曲后的 toast 会显示 5 秒，并在 timer callback 里真正保存“删除后的列表”。如果 3 秒内连续删两首歌，为什么第二条 toast 只显示 2 秒？如果用户 2 秒后就关掉标签页，为什么这次删除可能根本没保存下来？",
+      "knowledgePoint": "Undo after removing a song",
+      "answerExplanation": "因为第一次删除安排的旧 timer 还在等，它不会因为第二次删除而自动取消；当旧 timer 到点时，它会把当前显示着的第二条 toast 一起关掉，所以第二条只活了 2 秒。至于关页丢数据，是因为真正的保存动作也放在延迟 timer 里；标签页一关，页面和它的 pending timers 一起消失，这次保存就不会执行。更稳妥的做法是立即保存新列表，再把 Undo 设计成“恢复后再保存”。",
+      "codeBlocks": [],
+      "images": [],
+      "createdAt": "2026-10-25"
+    },
+    {
+      "id": "QUIZ2-W4-Q5",
+      "topic": "javascript",
+      "weeks": [
+        "week-4"
+      ],
+      "difficulty": "medium",
+      "tags": [
+        "Quiz2",
+        "状态组合",
+        "渲染",
+        "防御式编程"
+      ],
+      "question": "一个 cinema page 允许用户先点电影、也允许先点场次，但每次点击都会立刻拼出 `${movie.title} at ${time}`。为什么第一次点击后有时是 `Dune at undefined`，有时直接报错？怎样高层修正才不会在缺一项时渲染错误 summary？",
+      "knowledgePoint": "Two clicks, one summary",
+      "answerExplanation": "因为第一次点击时只有一半状态准备好了。若先点电影，`movie` 有值而 `time` 仍未定义，于是得到 `Dune at undefined`；若先点时间，`time` 有值但 `movie` 还是 `undefined`，读取 `movie.title` 就会报错。修正方式是在渲染前先检查两个值是否都存在，只有完整时才显示完整 summary，否则显示占位提示或分段显示未完成状态。",
+      "codeBlocks": [],
+      "images": [],
+      "createdAt": "2026-10-25"
+    },
+    {
+      "id": "QUIZ2-W4-Q6",
+      "topic": "javascript",
+      "weeks": [
+        "week-4"
+      ],
+      "difficulty": "medium",
+      "tags": [
+        "Quiz2",
+        "Fetch",
+        "Promise链",
+        "loading"
+      ],
+      "question": "页面先 `fetch('/api/me')` 拿用户，再根据 `user.id` 去 `fetch('/api/orders?...')`。如果第二个 `fetch` 在 `.then` 里被调用了但没有 `return`，为什么 spinner 会先消失、orders 面板却还空着？要怎样高层修正？",
+      "knowledgePoint": "Recent orders panel",
+      "answerExplanation": "因为没有 `return`，外层 Promise 链根本不会等待第二个请求完成，就会继续执行到 `.finally()` 把 loading 关掉。结果是 spinner 消失了，但 orders 请求还在路上，所以面板暂时留空。修正方式是把内层请求 return 回链上，或用 `async/await` 明确等待 orders 完成后再关闭 loading。",
+      "codeBlocks": [],
+      "images": [],
+      "createdAt": "2026-10-25"
+    },
+    {
+      "id": "QUIZ2-W4-Q7",
+      "topic": "javascript",
+      "weeks": [
+        "week-4"
+      ],
+      "difficulty": "medium",
+      "tags": [
+        "Quiz2",
+        "缓存",
+        "价格一致性",
+        "服务端权威"
+      ],
+      "question": "一个 cafe 页面只在打开时 fetch 一次 menu，然后用那份本地 menu 副本去算 basket total 并把 `total` 发给服务器。为什么学生可能在 12:05 还看着 11:50 的旧价格下单？为什么服务器不该相信页面传来的 total？",
+      "knowledgePoint": "Old prices on a cafe menu",
+      "answerExplanation": "因为页面只在最开始请求过一次 menu，之后服务器即使改价，页面也不会重新拿新价格，所以它会继续显示并计算旧价。服务器也不能相信页面传来的 total，因为它既可能基于过期数据算出来，也可能被人为篡改。正确做法是服务器根据商品 id 和当前服务器价格重新计算订单金额。",
+      "codeBlocks": [],
+      "images": [],
+      "createdAt": "2026-10-25"
+    },
+    {
+      "id": "QUIZ2-W4-Q8",
+      "topic": "javascript",
+      "weeks": [
+        "week-4"
+      ],
+      "difficulty": "medium",
+      "tags": [
+        "Quiz2",
+        "最小数据原则",
+        "性能",
+        "隐私"
+      ],
+      "question": "一个 course page 为了显示“4812 students enrolled”，却向浏览器发了所有 enrolment records（姓名、zID、邮箱、学位等）。为什么这会让手机上 count 很慢？为什么这同时还是一个数据暴露问题？",
+      "knowledgePoint": "A count that takes ten seconds",
+      "answerExplanation": "它很慢，是因为页面为了显示一个数字，却下载了远超所需的大数据集；慢连接上要花很久才能传完，所以 count 很晚才出现。它也是数据暴露问题，因为浏览器拿到的每条记录都能被打开开发者工具的人看到，而页面本身根本不需要这些敏感信息。服务器应只发送页面真正需要且用户有权看到的数据，例如单独的 count。",
+      "codeBlocks": [],
+      "images": [],
+      "createdAt": "2026-10-25"
     }
   ]
 }

@@ -202,3 +202,329 @@ body {
   font-family: 'IBM Plex Mono', ui-monospace, SFMono-Regular, Menlo, Consolas,
     'Liberation Mono', monospace;
 }
+
+.exam-ui-root {
+  color: #111827;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+}
+
+.exam-ui-root * {
+  box-sizing: border-box;
+}
+
+.exam-ui-root .exam-ui-shell {
+  overflow: hidden;
+  border: 1px solid #e5e7eb;
+  border-radius: 0.875rem;
+  background: #f8fafc;
+}
+
+.exam-ui-root .exam-ui-topbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: #0f172a;
+  color: #ffffff;
+  padding: 0.65rem 1rem;
+  font-size: 0.75rem;
+  font-weight: 600;
+}
+
+.exam-ui-root .exam-ui-body {
+  padding: 1rem;
+  background: #f8fafc;
+}
+
+.exam-ui-root .exam-ui-page-title {
+  margin: 0 0 0.75rem;
+  font-size: 1.125rem;
+  font-weight: 700;
+  color: #111827;
+}
+
+.exam-ui-root .exam-ui-card {
+  border: 1px solid #e5e7eb;
+  border-radius: 0.875rem;
+  background: #ffffff;
+  padding: 1rem;
+  box-shadow: 0 1px 2px rgba(15, 23, 42, 0.04);
+}
+
+.exam-ui-root .exam-ui-card + .exam-ui-card {
+  margin-top: 0.875rem;
+}
+
+.exam-ui-root .exam-ui-label {
+  margin: 0 0 0.25rem;
+  font-size: 0.68rem;
+  color: #6b7280;
+}
+
+.exam-ui-root .exam-ui-value {
+  margin: 0;
+  font-size: 0.8rem;
+  color: #111827;
+}
+
+.exam-ui-root .exam-ui-muted {
+  color: #6b7280;
+}
+
+.exam-ui-root .exam-ui-link {
+  color: #2563eb;
+  text-decoration: underline;
+  font-size: 0.76rem;
+}
+
+.exam-ui-root .exam-ui-button-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.exam-ui-root .exam-ui-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 0.45rem;
+  border: 1px solid #2563eb;
+  background: #2563eb;
+  color: #ffffff;
+  padding: 0.4rem 0.7rem;
+  font-size: 0.72rem;
+  font-weight: 600;
+  line-height: 1;
+}
+
+.exam-ui-root .exam-ui-button-secondary {
+  border-color: #cbd5e1;
+  background: #f8fafc;
+  color: #475569;
+}
+
+.exam-ui-root .exam-ui-button-danger {
+  border-color: #dc2626;
+  background: #ffffff;
+  color: #dc2626;
+}
+
+.exam-ui-root .exam-ui-input,
+.exam-ui-root .exam-ui-select,
+.exam-ui-root .exam-ui-textarea {
+  width: 100%;
+  border: 1px solid #d1d5db;
+  border-radius: 0.45rem;
+  background: #ffffff;
+  padding: 0.45rem 0.6rem;
+  font-size: 0.74rem;
+  color: #111827;
+}
+
+.exam-ui-root .exam-ui-textarea {
+  min-height: 5rem;
+  resize: none;
+}
+
+.exam-ui-root .exam-ui-grid-2 {
+  display: grid;
+  gap: 0.625rem;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.exam-ui-root .exam-ui-stack {
+  display: flex;
+  flex-direction: column;
+  gap: 0.625rem;
+}
+
+.exam-ui-root .exam-ui-footer-links {
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.5rem;
+  border-top: 1px solid #e5e7eb;
+  margin-top: 4rem;
+  padding-top: 0.5rem;
+  font-size: 0.58rem;
+  color: #9ca3af;
+}
+
+.exam-ui-root .exam-ui-form-actions {
+  display: flex;
+  gap: 0.5rem;
+  margin-top: 0.75rem;
+}
+
+.exam-ui-root .exam-ui-help {
+  margin-top: 0.2rem;
+  font-size: 0.66rem;
+  color: #9ca3af;
+}
+
+.exam-ui-root .exam-ui-divider {
+  height: 1px;
+  background: #e5e7eb;
+  margin: 0.75rem 0;
+}
+
+.exam-ui-root .exam-ui-note {
+  border-radius: 0.75rem;
+  background: #f8fafc;
+  padding: 0.75rem;
+  font-size: 0.75rem;
+  color: #475569;
+}
+
+.exam-ui-root .exam-ui-code-preview {
+  overflow: hidden;
+  border: 1px solid #e5e7eb;
+  border-radius: 0.875rem;
+  background: #ffffff;
+}
+
+.exam-ui-root .exam-ui-code-grid {
+  display: grid;
+  grid-template-columns: 42px minmax(0, 1fr);
+}
+
+.exam-ui-root .exam-ui-line-nos {
+  border-right: 1px solid #eef2f7;
+  background: #f8fafc;
+  color: #a0a8b3;
+  padding: 0.75rem 0.5rem;
+  text-align: right;
+  font-size: 0.74rem;
+  line-height: 1.9;
+  font-family: 'SF Mono', Menlo, Monaco, Consolas, 'Liberation Mono', 'Courier New', monospace;
+}
+
+.exam-ui-root .exam-ui-code {
+  margin: 0;
+  padding: 0.75rem 1rem;
+  white-space: pre-wrap;
+  font-size: 0.8rem;
+  line-height: 1.9;
+  color: #7f4d3b;
+  font-family: 'SF Mono', Menlo, Monaco, Consolas, 'Liberation Mono', 'Courier New', monospace;
+}
+
+.exam-ui-root .exam-ui-stage {
+  border: 1px dashed #c7ccd4;
+  border-radius: 0.25rem;
+  background: #fcfcfb;
+  min-height: 160px;
+  padding: 1rem;
+}
+
+.exam-ui-root .exam-ui-center {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.exam-ui-root .exam-ui-space-between {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.exam-ui-root .exam-ui-toolbar-demo {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  min-height: 140px;
+  border: 1px dashed #c6ccd5;
+  background: #fcfcfb;
+  padding: 1rem;
+}
+
+.exam-ui-root .exam-ui-chip {
+  display: inline-flex;
+  align-items: center;
+  border-radius: 999px;
+  background: #f3f4f6;
+  padding: 0.1rem 0.45rem;
+  font-size: 0.65rem;
+  color: #6b7280;
+}
+
+.exam-ui-root .exam-ui-outline {
+  border: 1px solid #d1d5db;
+  border-radius: 0.4rem;
+  background: #fff;
+}
+
+.exam-ui-root .exam-ui-stat {
+  font-size: 0.68rem;
+  color: #6b7280;
+}
+
+.exam-ui-root .exam-ui-big-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 0.55rem;
+  border: 1px solid #9ca3af;
+  background: #fff;
+  padding: 0.5rem 0.95rem;
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: #111827;
+}
+
+.exam-ui-root .exam-ui-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 999px;
+  background: #f3f4f6;
+  padding: 0.25rem 0.6rem;
+  font-size: 0.68rem;
+  font-weight: 600;
+  color: #6b7280;
+}
+
+.exam-ui-root .exam-ui-toast {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  border-radius: 0.5rem;
+  background: #0f172a;
+  color: white;
+  padding: 0.45rem 0.7rem;
+  font-size: 0.68rem;
+}
+
+.exam-ui-root .exam-ui-list {
+  display: flex;
+  flex-direction: column;
+  border: 1px solid #e5e7eb;
+  border-radius: 0.85rem;
+  overflow: hidden;
+  background: #fff;
+}
+
+.exam-ui-root .exam-ui-list-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  padding: 0.7rem 0.9rem;
+  border-top: 1px solid #eef2f7;
+}
+
+.exam-ui-root .exam-ui-list-row:first-child {
+  border-top: 0;
+}
+
+.exam-ui-root .exam-ui-kicker {
+  font-size: 0.62rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: #6b7280;
+}
+
+.exam-ui-root .exam-ui-danger {
+  color: #d14343;
+}

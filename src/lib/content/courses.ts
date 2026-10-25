@@ -338,46 +338,882 @@ export const COURSE_WEEKS: CourseWeek[] = [
     accent: 'amber',
     topics: ['html'],
     lessons: [
-      placeholderLesson(
-        'course-overview-git',
-        '课程概览与 Git 入门',
-        '课程概览与 Git',
-        '理解课程节奏、评估方式，以及最小可用的 Git 工作流。',
-        ['课程目标与学习方式', '为什么前端课从 Git 开始', 'clone / commit / push 的最小闭环'],
-        ['课程概览', 'Git'],
-      ),
-      placeholderLesson(
-        'structure',
-        'HTML 文档结构',
-        '文档结构',
-        'head 与 body 的分工，一份最小可用文档的骨架。',
-        ['doctype / html / head / body 各自职责', 'meta 与 title 的作用', '最小可用文档骨架'],
-        ['文档结构', '语义化'],
-      ),
-      placeholderLesson(
-        'semantics',
-        '语义化标签与标题层级',
-        '语义化',
-        'div 不是万能的：用对标签让结构与含义同时正确。',
-        ['语义标签概览（header / nav / main / section）', '标题层级 h1–h6 的规范用法', 'div 与 span 何时才该用'],
-        ['语义化', '标题层级'],
-      ),
-      placeholderLesson(
-        'links-images',
-        '链接、图片与路径',
-        '链接与图片',
-        '相对路径与绝对路径，以及图片替代文本与图像类型。',
-        ['a 标签与 href 取值', '相对路径 vs 绝对路径', 'img / alt 与常见图像类型'],
-        ['链接', '图片', '路径'],
-      ),
-      placeholderLesson(
-        'lists-tables',
-        '列表、表格与预格式文本',
-        '列表与表格',
-        '有序/无序列表、表格结构，以及代码展示标签。',
-        ['ol / ul / li 的语义差异', 'table 的 thead / tbody / th', 'pre / code 与等宽文本'],
-        ['列表', '表格'],
-      ),
+      {
+        id: 'overview',
+        title: '本周导览：从 Git 到 HTML 语义结构',
+        short: '本周导览',
+        summary:
+          '先看 Week 1 的学习地图：工作流怎么启动、页面骨架怎么写、结构为什么要讲语义。',
+        tags: ['导览', 'Git', 'HTML'],
+        status: 'ready',
+        slides: [
+          {
+            id: 'cover',
+            kind: 'cover',
+            eyebrow: 'Week 1 · HTML 与 Git 起步',
+            title: '先把页面骨架和工作流搭起来',
+            subtitle:
+              '这一周先别追求花哨效果。我们先解决两件最根本的事：怎么开始协作，页面到底由哪些最小结构组成。',
+            points: [
+              '先建立最小 Git 闭环',
+              '写出合法的 HTML 文档骨架',
+              '知道什么叫“有语义的结构”',
+              '能正确处理链接、图片、列表、表格和代码文本',
+            ],
+          },
+          {
+            id: 'roadmap',
+            kind: 'roadmap',
+            eyebrow: 'Week 1 · 主线地图',
+            title: '五个节点，搭起第一张网页',
+            subtitle:
+              'Git 负责工作流，HTML 负责结构。Week 1 的目标不是好看，而是写得对、读得懂、能持续往上加。',
+            roadmap: [
+              {
+                label: '01',
+                title: '课程概览与 Git',
+                description: '把 clone -> edit -> commit -> push 这条最小协作线走通。',
+              },
+              {
+                label: '02',
+                title: 'HTML 文档结构',
+                description: '按 doctype -> html -> head -> body 读懂一份完整页面。',
+              },
+              {
+                label: '03',
+                title: '结构表达与语义化',
+                description: '在知道骨架后，再学会用标题层级和语义标签表达结构。',
+              },
+              {
+                label: '04',
+                title: '链接、图片与路径',
+                description: '知道页面怎么互相跳转、资源怎么被正确引用。',
+              },
+              {
+                label: '05',
+                title: '列表、表格与代码标签',
+                description: '掌握最常见的结构化内容表达方式。',
+              },
+            ],
+          },
+          {
+            id: 'cards',
+            kind: 'cards',
+            eyebrow: 'Week 1 · 目录',
+            title: '这一周每节都在补一个基础洞',
+            subtitle:
+              'Week 1 的知识点看起来很碎，但它们共同决定了你写出的页面是不是“合法、可维护、能继续往上长”。',
+            cards: [
+              {
+                eyebrow: 'Lesson 1',
+                title: '课程概览与 Git 入门',
+                description: '理解评估方式、仓库协作和最小提交流程。',
+                meta: '重点：clone / commit / push',
+              },
+              {
+                eyebrow: 'Lesson 2',
+                title: 'HTML 文档结构',
+                description: '从 html 根节点一路看到 head、body 和页面语义骨架。',
+                meta: '重点：doctype / html / head / body / meta',
+              },
+              {
+                eyebrow: 'Lesson 3',
+                title: '结构表达与语义化',
+                description: '不要只会堆 div，要学会用标题层级和语义边界组织内容。',
+                meta: '重点：h1-h6 / section / article / div / span',
+              },
+              {
+                eyebrow: 'Lesson 4',
+                title: '链接、图片与路径',
+                description: '让页面和资源都能被正确找到。',
+                meta: '重点：href / src / alt / 相对路径',
+              },
+              {
+                eyebrow: 'Lesson 5',
+                title: '列表、表格与代码标签',
+                description: '把常见内容表达成规范结构，而不是乱堆文本。',
+                meta: '重点：ul / ol / table / pre / code',
+              },
+            ],
+          },
+          {
+            id: 'closing',
+            kind: 'closing',
+            eyebrow: '本周带走什么',
+            title: '先把页面写对，再谈做漂亮',
+            points: [
+              'Git 让你能持续提交和协作；HTML 让你写出有结构的页面。',
+              'Week 1 的所有内容都在为后面的 CSS 和 JavaScript 打地基。',
+              '会写并不够，关键是写得合法、清晰、可维护。',
+            ],
+          },
+        ],
+      },
+      {
+        id: 'course-overview-git',
+        title: '课程概览与 Git 入门',
+        short: '课程概览与 Git',
+        summary:
+          '理解课程节奏、评估方式，以及最小可用的 Git 工作流，先把开发起点打通。',
+        tags: ['课程概览', 'Git'],
+        status: 'ready',
+        slides: [
+          {
+            id: 'cover',
+            kind: 'cover',
+            eyebrow: 'Week 1 · Lesson 1',
+            title: '先建立最小开发闭环',
+            subtitle:
+              '第一节先回答两个问题：这门课到底怎么学，以及为什么所有网页开发都要从版本管理开始。',
+            points: [
+              '课程目标与学习方式',
+              '为什么前端课从 Git 开始',
+              '先把 pull / edit / add / commit / push 这套日常闭环走顺',
+            ],
+          },
+          {
+            id: 'workflow',
+            kind: 'content',
+            eyebrow: 'Lesson 1 · 工作流',
+            title: '日常 Git 闭环长这样',
+            subtitle:
+              '第一次会先 clone 仓库；真正进入日常协作后，更常见的节奏是先 pull 最新代码，再修改、提交，最后 push 回去。',
+            flow: [
+              {
+                label: '01',
+                title: 'clone',
+                description: '第一次把老师或团队的远端仓库复制到本地，得到一个可编辑工作区。',
+              },
+              {
+                label: '02',
+                title: 'pull',
+                description: '开始动手前先同步远端最新版本，避免你在旧代码上继续改。',
+              },
+              {
+                label: '03',
+                title: 'edit',
+                description: '修改 HTML、CSS 或 JS 文件，形成这次学习任务的最小变更。',
+              },
+              {
+                label: '04',
+                title: 'commit',
+                description: '先 add 再 commit，给这次变更一个清晰快照，让你和别人都知道“为什么改了它”。',
+              },
+              {
+                label: '05',
+                title: 'push',
+                description: '把本地提交同步回远端，形成可以共享和备份的版本记录。',
+              },
+            ],
+            note: {
+              tone: 'rule',
+              label: '先记住',
+              text: 'clone 通常只做一次；平时真正高频的是 pull -> edit -> add -> commit -> push 这条日常闭环。',
+            },
+          },
+          {
+            id: 'good-vs-bad-commit',
+            kind: 'compare',
+            eyebrow: 'Lesson 1 · 提交信息',
+            title: '同样是提交，信息密度可以差很多',
+            subtitle:
+              'commit message 的价值，不在于“写了点什么”，而在于让未来的你和队友能快速知道为什么改。',
+            compare: {
+              leftTitle: '✗ 不好的提交',
+              rightTitle: '✓ 更好的提交',
+              left: {
+                items: ['update', 'fix bug', 'final version', '改了一下'],
+              },
+              right: {
+                items: [
+                  'add week 1 html skeleton slides',
+                  'fix broken image path in links demo',
+                  'update table markup example for semantic headers',
+                ],
+              },
+            },
+          },
+          {
+            id: 'minimum-commands',
+            kind: 'cards',
+            eyebrow: 'Lesson 1 · 最小命令集',
+            title: '现在先会这六个命令就够用了',
+            subtitle:
+              '这一节不追求背全 Git，而是先把最常用、最容易真的在作业里用到的 6 个命令分清楚。',
+            cards: [
+              {
+                eyebrow: '同步远端',
+                title: 'git pull',
+                description: '开工前先拉最新版本，先对齐仓库，再开始改。',
+                meta: '减少和远端脱节的概率。',
+              },
+              {
+                eyebrow: '仓库状态',
+                title: 'git status',
+                description: '看哪些文件被改了、哪些还没被提交。',
+                meta: '先看状态，再做下一步。',
+              },
+              {
+                eyebrow: '查看差异',
+                title: 'git diff',
+                description: '看这次到底改了什么，不靠记忆。',
+                meta: '提交前最好先看一眼。',
+              },
+              {
+                eyebrow: '暂存改动',
+                title: 'git add',
+                description: '先把这次准备提交的文件放进暂存区，告诉 Git “这些要进下一次提交”。',
+                meta: '它不是提交，只是先选中改动。',
+              },
+              {
+                eyebrow: '创建提交',
+                title: 'git commit',
+                description: '把暂存区里的内容做成一次正式提交，并写清楚这次为什么改。',
+                meta: '提交信息要说明“为什么”。',
+              },
+              {
+                eyebrow: '同步远端',
+                title: 'git push',
+                description: '把本地提交同步回仓库。',
+                meta: '形成共享版本记录。',
+              },
+            ],
+          },
+          {
+            id: 'closing',
+            kind: 'closing',
+            title: '这一节先带走三句话',
+            points: [
+              '课程真正的目标不是“写完页面”，而是持续做出可解释、可维护的网页作品。',
+              '第一次拿仓库会用 clone；日常协作更常走的是 pull -> edit -> add -> commit -> push。',
+              '现在先掌握最小工作流，不必一开始就把 Git 学成命令百科全书。',
+            ],
+          },
+        ],
+      },
+      {
+        id: 'structure',
+        title: 'HTML 文档结构',
+        short: '文档结构',
+        summary:
+          '按 doctype、html、head、body 的真实顺序，自上而下拆开一份 HTML 文档，并建立 head 配置与 body 语义骨架的完整直觉。',
+        tags: ['文档结构', 'head/body', '语义骨架'],
+        status: 'ready',
+        slides: [
+          {
+            id: 'cover',
+            kind: 'cover',
+            eyebrow: 'Week 1 · Lesson 2',
+            title: '先把整份 HTML 文档从上到下看一遍',
+            subtitle:
+              '学 HTML 不是背一串零散标签，而是先知道浏览器拿到文档后，会先看到什么、再理解什么、最后显示什么。',
+            points: [
+              'doctype / html / head / body 的顺序和职责',
+              'head 里最基础的 meta / link / title',
+              'body 里的常见结构、语义地标与元素类别',
+            ],
+          },
+          {
+            id: 'outline',
+            kind: 'outline',
+            title: '这一节回答这些问题',
+            points: [
+              '浏览器如何从 doctype 一路读到 body',
+              'head 里最常见的 meta / link / title 各做什么',
+              'body 里如何组织内容、地标和块级 / 行内元素',
+            ],
+          },
+          {
+            id: 'document-order',
+            kind: 'content',
+            eyebrow: 'Lesson 2 · 阅读顺序',
+            title: '浏览器理解一份 HTML 文档，大致按这个顺序',
+            flow: [
+              {
+                label: '01',
+                title: '<!doctype html>',
+                description: '先声明这是现代 HTML 文档，避免浏览器掉回旧时代的怪异模式。',
+              },
+              {
+                label: '02',
+                title: '<html>',
+                description: '这是整份文档的根节点，所有 head 和 body 内容都被它包起来，lang 也通常写在这里。',
+              },
+              {
+                label: '03',
+                title: '<head>',
+                description: '这部分主要放元信息，帮助浏览器、搜索引擎和设备理解这页怎么被解释和展示。',
+              },
+              {
+                label: '04',
+                title: '<body>',
+                description: '页面真正呈现给用户看的内容都在这里，包括标题、段落、导航、主内容和页脚。',
+              },
+            ],
+            note: {
+              tone: 'rule',
+              label: '先建立主线',
+              text: '先分清“head 负责配置和说明”与“body 负责真实内容”，后面学到的很多标签才不会碎成记忆点。',
+            },
+          },
+          {
+            id: 'head-essentials',
+            kind: 'content',
+            eyebrow: 'Lesson 2 · head',
+            title: '先看 head：它不是给用户读的，而是给浏览器读的',
+            table: {
+              headers: ['标签', '最常见写法', '它在解决什么问题'],
+              rows: [
+                ['meta charset', '<meta charset="utf-8" />', '告诉浏览器按什么编码读这份文档，避免乱码'],
+                ['meta viewport', '<meta name="viewport" content="width=device-width, initial-scale=1" />', '让移动端按设备宽度渲染，而不是假装桌面页面'],
+                ['title', '<title>Page title</title>', '定义浏览器标签名，也是搜索和收藏时最先看到的标题'],
+                ['link', '<link rel="stylesheet" href="./styles.css" />', '把外部样式表等资源接进这份文档'],
+              ],
+            },
+            note: {
+              tone: 'tip',
+              label: '先记这四个',
+              text: 'Week 1 不需要把 head 所有标签背成百科，但 `charset`、`viewport`、`title`、`link` 这四个要先形成直觉。',
+            },
+          },
+          {
+            id: 'body-structure',
+            kind: 'content',
+            eyebrow: 'Lesson 2 · body',
+            title: '再看 body：用户真正看到的内容，从这里开始',
+            bullets: [
+              {
+                title: 'body 是显示区',
+                text: '标题、段落、列表、图片、表单、表格和按钮等真正呈现在页面上的内容，都应该写在 body 里。',
+              },
+              {
+                title: '先搭大结构',
+                text: '常见页面会先分出 `header`、`nav`、`main`、`aside`、`footer` 这些大区域，再继续往里放内容。',
+              },
+              {
+                title: '再分主题块',
+                text: '`section` 常用来表达一个主题分区，`article` 常用来表达一块可以独立存在的内容。',
+              },
+              {
+                title: '最后才回到通用容器',
+                text: '当没有更准确语义时，再使用 `div` 和 `span` 这类通用容器，而不是一开始就全部用它们堆。',
+              },
+            ],
+            note: {
+              tone: 'rule',
+              label: '阅读顺序',
+              text: '先想“页面被切成哪些区域”，再想“每个区域里放哪些元素”，最后才考虑样式类名。',
+            },
+          },
+          {
+            id: 'block-inline',
+            kind: 'content',
+            eyebrow: 'Lesson 2 · 元素类别',
+            title: 'body 里的元素，先建立块级和行内的基本直觉',
+            table: {
+              headers: ['类别', '常见标签', '默认表现', '最常承载什么'],
+              rows: [
+                ['块级元素', 'h1, p, div, section, article, ul', '默认独占一行，从上到下排开', '页面结构块、段落、列表、分区'],
+                ['行内元素', 'a, span, strong, em, code', '默认和文字排在同一行', '词语强调、链接、局部说明、短代码'],
+              ],
+            },
+            note: {
+              tone: 'warn',
+              label: '先有直觉就够',
+              text: '这里先掌握“块级更像结构块、行内更像句子里的局部片段”。后面学 CSS 时，你会知道 `display` 可以改变它们的视觉表现。',
+            },
+          },
+          {
+            id: 'minimum-skeleton',
+            kind: 'code',
+            eyebrow: 'Lesson 2 · 完整骨架',
+            title: '一份更像真实页面的 HTML 骨架，通常长这样',
+            code: {
+              language: 'html',
+              filename: 'week1-structure.html',
+              source: `<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>COMP6080 Week 1</title>
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <header>
+      <h1>HTML Structure Notes</h1>
+      <nav>
+        <a href="./index.html">Home</a>
+        <a href="./week1.html">Week 1</a>
+      </nav>
+    </header>
+
+    <main>
+      <section>
+        <h2>Document overview</h2>
+        <p>This page has a valid HTML document structure.</p>
+      </section>
+
+      <article>
+        <h2>Key takeaway</h2>
+        <p>Head configures the page, body presents the page.</p>
+      </article>
+    </main>
+  </body>
+</html>`,
+              highlightLines: [1, 2, 4, 5, 6, 8, 9, 16, 18],
+            },
+          },
+          {
+            id: 'structure-demo',
+            kind: 'demo',
+            eyebrow: 'Lesson 2 · live demo',
+            title: 'live demo · HTML 文档骨架观察器',
+            subtitle:
+              '点几组预设，观察 doctype、title、head、body 缺失或简化后浏览器到底少了什么，再回到代码里把它补回来。',
+            demo: {
+              route: '/demos/week-1/html/document-skeleton',
+              ctaLabel: '打开实验',
+              objectives: [
+                '观察 doctype / title / body 缺失时的差异',
+                '建立从 head 到 body 的完整骨架直觉',
+              ],
+              note: '建议先点“移除 title”和“只保留 body”，再观察右侧结构提示卡，看哪些信息属于 head，哪些属于 body。',
+            },
+          },
+          {
+            id: 'closing',
+            kind: 'closing',
+            title: '这一节带走什么',
+            points: [
+              'HTML 文档不是一堆散标签，而是从 doctype 到 body 有明确层级顺序。',
+              'head 负责配置和说明，body 负责真实内容与页面结构。',
+              '写 body 时，先想区域和语义，再想块级 / 行内，再想样式。',
+            ],
+          },
+        ],
+      },
+      {
+        id: 'semantics',
+        title: '结构表达与标题层级',
+        short: '结构表达',
+        summary:
+          '在知道文档骨架之后，继续学习如何用标题层级、section/article 边界和 div/span 兜底策略，把结构写得更清楚。',
+        tags: ['语义化', '标题层级', '结构表达'],
+        status: 'ready',
+        slides: [
+          {
+            id: 'cover',
+            kind: 'cover',
+            eyebrow: 'Week 1 · Lesson 3',
+            title: '结构写对之后，还要继续写清楚',
+            subtitle:
+              '上一节解决“页面由什么组成”，这一节继续解决“这些部分之间的层级和边界该怎么表达”。',
+            points: [
+              '标题层级 h1-h6 怎么组织',
+              'section 和 article 分别在表达什么',
+              '什么时候该优先用语义标签，什么时候退回 div / span',
+            ],
+          },
+          {
+            id: 'semantic-map',
+            kind: 'content',
+            eyebrow: 'Lesson 3 · 结构表达',
+            title: '先把“页面区域”和“内容层级”两条线分开看',
+            bullets: [
+              {
+                title: '区域线索',
+                text: '`header`、`nav`、`main`、`aside`、`footer` 更像页面地标，帮助你切出大区域。',
+              },
+              {
+                title: '层级线索',
+                text: '`h1-h6` 表达的是标题层级，告诉读者和机器“谁是谁的上级标题”。',
+              },
+              {
+                title: '主题线索',
+                text: '`section` 用来组织一个主题块，`article` 用来表达一块可以独立存在或复用的内容。',
+              },
+              {
+                title: '兜底线索',
+                text: '如果真的找不到更准确的语义，再回到 `div` 和 `span` 这类通用容器。',
+              },
+            ],
+          },
+          {
+            id: 'headings',
+            kind: 'content',
+            eyebrow: 'Lesson 3 · 标题层级',
+            title: 'h1-h6 写的是结构层级，不是视觉大小',
+            table: {
+              headers: ['标签', '应该表达什么', '不要误用成什么'],
+              rows: [
+                ['h1', '整页或整块最核心标题', '只是想让字变大'],
+                ['h2', 'h1 下一级主题', '跳过层级乱写'],
+                ['h3-h6', '继续向下分层', '纯粹为了样式改层级'],
+              ],
+            },
+            note: {
+              tone: 'trap',
+              label: '常见误会',
+              text: '标题标签表达的是文档结构层级，不是视觉字号。字号应该交给 CSS 处理。',
+            },
+          },
+          {
+            id: 'section-article',
+            kind: 'compare',
+            eyebrow: 'Lesson 3 · 边界判断',
+            title: 'section 和 article 很像，但表达的边界不同',
+            subtitle:
+              '`section` 更像“这个主题下的一块内容”，`article` 更像“单独拿出去也说得通的一篇内容或一个卡片单元”。',
+            compare: {
+              leftTitle: 'section 更像主题分区',
+              rightTitle: 'article 更像独立内容',
+              left: {
+                items: [
+                  '常见于课程页面中的“本周目标”“作业要求”“FAQ”分块',
+                  '通常依附于整页上下文来理解',
+                  '内部常常会再配一个 h2 / h3 标题',
+                ],
+              },
+              right: {
+                items: [
+                  '常见于博客文章、新闻卡片、论坛帖子、商品卡片',
+                  '单独摘出来通常仍然说得通',
+                  '更强调“这是一个独立内容单元”',
+                ],
+              },
+            },
+          },
+          {
+            id: 'semantic-compare',
+            kind: 'compare',
+            eyebrow: 'Lesson 3 · 好坏对照',
+            title: '同样的页面，用 div soup 和语义标签写出来差很多',
+            subtitle:
+              '“能显示出来”不代表“结构写对了”。更好的写法能让读代码、改代码、做无障碍都更轻松。',
+            compare: {
+              leftTitle: '✗ 全部用 div 堆起来',
+              rightTitle: '✓ 用语义标签表达结构角色',
+              left: {
+                code: {
+                  language: 'html',
+                  source: `<div class="page">
+  <div class="top">Quiz Hub</div>
+  <div class="menu">Home · Courses · Practice</div>
+  <div class="content">
+    <div class="block">Week 1 notes</div>
+  </div>
+</div>`,
+                },
+              },
+              right: {
+                code: {
+                  language: 'html',
+                  source: `<header>Quiz Hub</header>
+<nav>Home · Courses · Practice</nav>
+<main>
+  <section>
+    <h1>Week 1 notes</h1>
+  </section>
+</main>`,
+                },
+              },
+            },
+          },
+          {
+            id: 'div-span-fallback',
+            kind: 'content',
+            eyebrow: 'Lesson 3 · 兜底策略',
+            title: '什么时候该优先用语义标签，什么时候退回 div / span',
+            table: {
+              headers: ['场景', '优先考虑什么', '什么时候退回 div / span'],
+              rows: [
+                ['站点头部或栏目头部', 'header', '只是为了排版包一层，没有额外语义时可用 div'],
+                ['导航链接区', 'nav', '只是局部按钮组、并非导航时可用 div'],
+                ['页面主内容', 'main', '整页只应有一个 main，不要随便用 div 代替'],
+                ['主题分块 / 独立内容', 'section / article', '单纯为了布局切列时可回到 div'],
+                ['句子中的局部强调', 'a / strong / em / code', '没有更明确含义、只想包一小段文字时可用 span'],
+              ],
+            },
+            note: {
+              tone: 'tip',
+              label: '一个判断口诀',
+              text: '先问“它是什么角色”，再问“它长什么样子”。角色由 HTML 表达，样子交给 CSS。',
+            },
+          },
+          {
+            id: 'closing',
+            kind: 'closing',
+            title: '这一节带走什么',
+            points: [
+              '语义化不是装饰，而是在表达页面结构关系和内容边界。',
+              '标题层级表达结构关系，字号和样式交给 CSS。',
+              '有更合适标签时优先用语义标签，没有明确语义时再退回 div / span。',
+            ],
+          },
+        ],
+      },
+      {
+        id: 'links-images',
+        title: '链接、图片与路径',
+        short: '链接与图片',
+        summary:
+          '理解 a / img 的基本职责，搞清相对路径与绝对路径，并记住 alt 是图片语义的一部分。',
+        tags: ['链接', '图片', '路径'],
+        status: 'ready',
+        slides: [
+          {
+            id: 'cover',
+            kind: 'cover',
+            eyebrow: 'Week 1 · Lesson 4',
+            title: '页面不仅要显示内容，还要能跳、能找、能说明',
+            subtitle:
+              '一张网页不是孤岛。链接负责把页面串起来，路径负责把资源找对，图片还要告诉读屏和加载失败时“它本来是什么”。',
+            points: [
+              'a 标签与 href 的基本写法',
+              '相对路径 vs 绝对路径',
+              'img / alt 与常见图像类型',
+            ],
+          },
+          {
+            id: 'link-basics',
+            kind: 'content',
+            eyebrow: 'Lesson 4 · 基础规则',
+            title: '先分清链接和资源引用',
+            bullets: [
+              {
+                title: 'a[href]',
+                text: '告诉浏览器“点这里要跳去哪里”，它连的是页面或资源地址。',
+              },
+              {
+                title: 'img[src]',
+                text: '告诉浏览器“去哪里把图片取过来”，它连的是图像资源地址。',
+              },
+              {
+                title: 'alt',
+                text: '不是可有可无的备注，而是图片语义的一部分：加载失败和无障碍场景都依赖它。',
+              },
+            ],
+          },
+          {
+            id: 'path-compare',
+            kind: 'compare',
+            eyebrow: 'Lesson 4 · 路径对照',
+            title: '相对路径和绝对路径都能用，但语境完全不同',
+            subtitle:
+              '静态站点和课程作业里最常见的问题不是“不会写 img”，而是路径一旦移动目录就全断。',
+            compare: {
+              leftTitle: '相对路径：跟着当前文件走',
+              rightTitle: '绝对路径：从站点根开始找',
+              left: {
+                code: {
+                  language: 'html',
+                  source: `<a href="./week-1.html">Week 1</a>
+<img src="./images/hero.png" alt="课程封面" />`,
+                },
+                items: ['目录一变，引用关系也会变。', '更适合课程静态资源与 GitHub Pages 子路径环境。'],
+              },
+              right: {
+                code: {
+                  language: 'html',
+                  source: `<a href="/courses/week-1">Week 1</a>
+<img src="/assets/hero.png" alt="课程封面" />`,
+                },
+                items: ['永远从站点根开始找。', '在子路径部署里如果配置不对，最容易 404。'],
+              },
+            },
+          },
+          {
+            id: 'links-code',
+            kind: 'code',
+            eyebrow: 'Lesson 4 · 最小证据',
+            title: '链接、图片与说明文本',
+            code: {
+              language: 'html',
+              filename: 'week1-links-images.html',
+              source: `<nav>
+  <a href="./practice.html">进入题库</a>
+</nav>
+
+<figure>
+  <img src="./images/html-structure.png" alt="HTML 文档结构示意图" />
+  <figcaption>Week 1 的页面骨架示意图。</figcaption>
+</figure>`,
+              highlightLines: [2, 6, 7],
+            },
+          },
+          {
+            id: 'links-demo',
+            kind: 'demo',
+            eyebrow: 'Lesson 4 · live demo',
+            title: 'live demo · 路径与图片实验',
+            subtitle:
+              '切换相对路径、站点根路径和错误路径，直接看哪种能命中、哪种会 404，并观察 alt 在图片失效时怎样兜底。',
+            demo: {
+              route: '/demos/week-1/html/paths-and-images',
+              ctaLabel: '打开实验',
+              objectives: [
+                '观察相对路径与绝对路径的差别',
+                '观察图片加载失败时 alt 的作用',
+              ],
+              note: '建议先切换到“错误路径”，再看右侧资源状态面板。',
+            },
+          },
+          {
+            id: 'closing',
+            kind: 'closing',
+            title: '这一节带走什么',
+            points: [
+              '链接是页面之间的跳转关系，图片是资源引用关系，它们都依赖正确路径。',
+              '相对路径更适合课程静态资源和子路径部署环境。',
+              'alt 不是摆设，它决定图片失效或读屏时页面还能不能表达清楚。',
+            ],
+          },
+        ],
+      },
+      {
+        id: 'lists-tables',
+        title: '列表、表格与预格式文本',
+        short: '列表与表格',
+        summary:
+          '掌握最常见的结构化内容标签：什么时候用列表，什么时候用表格，什么时候用 pre / code 展示代码。',
+        tags: ['列表', '表格'],
+        status: 'ready',
+        slides: [
+          {
+            id: 'cover',
+            kind: 'cover',
+            eyebrow: 'Week 1 · Lesson 5',
+            title: '让内容自己带结构，而不是靠排版凑出来',
+            subtitle:
+              '清单、成绩、代码片段都不是普通段落。HTML 里已经有现成的结构标签，关键是知道该用谁。',
+            points: [
+              'ol / ul / li 的语义差异',
+              'table / thead / tbody / th 的职责',
+              'pre / code 与等宽文本展示',
+            ],
+          },
+          {
+            id: 'list-rules',
+            kind: 'content',
+            eyebrow: 'Lesson 5 · 列表',
+            title: '列表表达的是“同类项目的集合”',
+            bullets: [
+              {
+                title: 'ul',
+                text: '适合没有先后顺序的项目，例如功能点、标签、知识点清单。',
+              },
+              {
+                title: 'ol',
+                text: '适合有明确先后顺序的步骤，例如安装流程、提交流程。',
+              },
+              {
+                title: 'li',
+                text: '列表项必须包在 ul 或 ol 里，而不是单独散在页面上。',
+              },
+            ],
+          },
+          {
+            id: 'table-compare',
+            kind: 'compare',
+            eyebrow: 'Lesson 5 · 表格',
+            title: '表格用来表达“行列关系”，不是用来做页面布局',
+            subtitle:
+              '只要内容本质上不是二维表，就不要硬塞到 table 里。table 的价值在于明确表头和数据格的关系。',
+            compare: {
+              leftTitle: '✗ 把表格当布局工具',
+              rightTitle: '✓ 用表头表达二维数据关系',
+              left: {
+                code: {
+                  language: 'html',
+                  source: `<table>
+  <tr>
+    <td>左边导航</td>
+    <td>右边正文</td>
+  </tr>
+</table>`,
+                },
+              },
+              right: {
+                code: {
+                  language: 'html',
+                  source: `<table>
+  <thead>
+    <tr><th>Week</th><th>Topic</th></tr>
+  </thead>
+  <tbody>
+    <tr><td>1</td><td>HTML</td></tr>
+  </tbody>
+</table>`,
+                },
+              },
+            },
+          },
+          {
+            id: 'lists-tables-code',
+            kind: 'codes',
+            eyebrow: 'Lesson 5 · 最小证据',
+            title: '三种内容，三种最适合的标签',
+            subtitle: '清单用列表，成绩用表格，代码片段用 pre / code。',
+            codes: [
+              {
+                language: 'html',
+                filename: 'week1-list.html',
+                source: `<ol>
+  <li>git clone</li>
+  <li>edit files</li>
+  <li>git commit</li>
+</ol>`,
+              },
+              {
+                language: 'html',
+                filename: 'week1-table.html',
+                source: `<table>
+  <thead>
+    <tr><th>Tag</th><th>Meaning</th></tr>
+  </thead>
+  <tbody>
+    <tr><td>h1</td><td>Main heading</td></tr>
+  </tbody>
+</table>`,
+              },
+              {
+                language: 'html',
+                filename: 'week1-code.html',
+                source: `<pre><code>&lt;h1&gt;Hello&lt;/h1&gt;
+&lt;p&gt;Week 1&lt;/p&gt;</code></pre>`,
+              },
+            ],
+          },
+          {
+            id: 'lists-tables-demo',
+            kind: 'demo',
+            eyebrow: 'Lesson 5 · live demo',
+            title: 'live demo · 列表、表格与代码标签实验',
+            subtitle:
+              '切换“清单 / 二维数据 / 代码片段”三种场景，观察哪种标签最贴切，以及结构不对时页面为什么会显得别扭。',
+            demo: {
+              route: '/demos/week-1/html/lists-tables-code',
+              ctaLabel: '打开实验',
+              objectives: [
+                '区分列表、表格与代码片段的适用场景',
+                '理解 table 的价值是表头与数据关系，而不是布局',
+              ],
+              note: '建议依次点击“流程清单”“成绩表”“代码片段”，再看结构说明。',
+            },
+          },
+          {
+            id: 'closing',
+            kind: 'closing',
+            title: '这一节带走什么',
+            points: [
+              '列表、表格和代码块分别表达三种完全不同的结构。',
+              'table 的职责是表达二维数据，不是拿来做页面布局。',
+              'pre / code 让代码展示保留格式，也让语义更准确。',
+            ],
+          },
+        ],
+      },
     ],
   },
   {
@@ -390,54 +1226,725 @@ export const COURSE_WEEKS: CourseWeek[] = [
     accent: 'sky',
     topics: ['css'],
     lessons: [
-      placeholderLesson(
-        'selectors-cascade',
-        '选择器与层叠优先级',
-        '选择器与层叠',
-        '同一元素被多条规则命中时，谁说了算。',
-        ['选择器类型与权重计算', '层叠顺序与继承', '!important 的代价'],
-        ['选择器', '优先级'],
-      ),
-      placeholderLesson(
-        'box-model',
-        '盒模型与单位',
-        '盒模型',
-        'content / padding / border / margin 与实际占位。',
-        ['盒模型的四层结构', 'box-sizing 的作用', 'px / em / rem / % 的取舍'],
-        ['盒模型', '单位'],
-      ),
-      placeholderLesson(
-        'flexbox',
-        'Flexbox 布局',
-        'Flexbox',
-        '一维布局的首选工具：主轴、交叉轴与对齐。',
-        ['主轴与交叉轴', 'justify-content / align-items', 'flex-grow / shrink / basis'],
-        ['Flexbox', '布局'],
-      ),
-      placeholderLesson(
-        'grid-frameworks',
-        'CSS Grid、框架与样式复用',
-        'Grid 与框架',
-        '从二维布局到 CSS 框架，理解“自己写”和“借助抽象”的边界。',
-        ['CSS Grid 的核心概念', '何时引入 CSS 框架', '样式复用与可维护性'],
-        ['Grid', 'CSS Framework'],
-      ),
-      placeholderLesson(
-        'positioning-stacking',
-        '定位、z-index 与视觉层级',
-        '定位与层叠',
-        'position 的几种取值，以及 z-index 为什么有时不生效。',
-        ['static / relative / absolute / fixed / sticky', '层叠上下文如何形成', 'z-index 失效的常见原因'],
-        ['定位', '层叠上下文'],
-      ),
-      placeholderLesson(
-        'responsive-viewport',
-        '移动端、媒体查询与开发者工具',
-        '响应式与 DevTools',
-        'viewport meta、媒体查询、移动优先，以及 DevTools 的调试路径。',
-        ['viewport meta 的作用', '媒体查询语法与断点', '移动优先与 DevTools 调试'],
-        ['响应式', 'viewport', 'DevTools'],
-      ),
+      {
+        id: 'overview',
+        title: '本周导览：从层叠到响应式',
+        short: '本周导览',
+        summary:
+          'Week 2 讲的不是“背属性”，而是理解 CSS 如何决定谁生效、占多大、怎么排、怎么适配。',
+        tags: ['导览', 'CSS', '布局'],
+        status: 'ready',
+        slides: [
+          {
+            id: 'cover',
+            kind: 'cover',
+            eyebrow: 'Week 2 · CSS：样式、布局与响应式',
+            title: '让页面真正像一个产品',
+            subtitle:
+              'Week 1 写出了结构，Week 2 开始让界面变得有层级、可阅读、能适配屏幕。重点不是背属性，而是理解浏览器怎么做样式决策。',
+            points: [
+              '知道哪条规则最终生效',
+              '理解盒模型和尺寸占位',
+              '掌握 Flex / Grid / 定位三种布局思路',
+              '建立响应式和 DevTools 的调试直觉',
+            ],
+          },
+          {
+            id: 'roadmap',
+            kind: 'roadmap',
+            eyebrow: 'Week 2 · 主线地图',
+            title: 'CSS 周的六个关键问题',
+            subtitle:
+              '如果把 CSS 看成“谁生效、占多大、怎么排、怎么适配”的连续回答，这一周的结构会清楚很多。',
+            roadmap: [
+              {
+                label: '01',
+                title: '选择器与层叠',
+                description: '同一个元素被多条规则命中时，到底谁说了算。',
+              },
+              {
+                label: '02',
+                title: '盒模型与单位',
+                description: '元素实际占多大，为什么加了 padding 会把布局撑开。',
+              },
+              {
+                label: '03',
+                title: 'Flexbox',
+                description: '一维布局如何在主轴和交叉轴上对齐分配空间。',
+              },
+              {
+                label: '04',
+                title: 'Grid 与样式复用',
+                description: '二维布局和抽象层带来的效率与边界。',
+              },
+              {
+                label: '05',
+                title: '定位与层叠',
+                description: 'position、stacking context 和 z-index 如何共同决定视觉层级。',
+              },
+              {
+                label: '06',
+                title: '响应式与 DevTools',
+                description: '让页面在不同屏幕宽度下持续可用。',
+              },
+            ],
+          },
+          {
+            id: 'cards',
+            kind: 'cards',
+            eyebrow: 'Week 2 · 目录',
+            title: '这一周每一课都在回答一个“样式决策”问题',
+            cards: [
+              {
+                eyebrow: 'Lesson 1',
+                title: '选择器与层叠优先级',
+                description: '理解匹配命中后到底谁覆盖谁。',
+                meta: '重点：specificity / cascade / inheritance',
+              },
+              {
+                eyebrow: 'Lesson 2',
+                title: '盒模型与单位',
+                description: '理解元素真实占位与尺寸单位。',
+                meta: '重点：content-box / border-box / rem / %',
+              },
+              {
+                eyebrow: 'Lesson 3',
+                title: 'Flexbox',
+                description: '掌握最常用的一维布局方案。',
+                meta: '重点：main axis / cross axis / flex-grow',
+              },
+              {
+                eyebrow: 'Lesson 4',
+                title: 'Grid 与样式复用',
+                description: '知道什么时候自己写布局，什么时候借助框架。',
+                meta: '重点：grid tracks / utility classes / trade-offs',
+              },
+              {
+                eyebrow: 'Lesson 5',
+                title: '定位与层叠',
+                description: '解释看似“浮起来”的元素为什么会重叠或失效。',
+                meta: '重点：position / z-index / stacking context',
+              },
+              {
+                eyebrow: 'Lesson 6',
+                title: '响应式与 DevTools',
+                description: '把页面调到不同宽度下仍然清楚可用。',
+                meta: '重点：viewport / media query / mobile first',
+              },
+            ],
+          },
+          {
+            id: 'closing',
+            kind: 'closing',
+            title: '这一周先带走三句话',
+            points: [
+              'CSS 的关键不是属性多，而是搞清浏览器如何做样式决策。',
+              '布局能力来自盒模型、Flex/Grid 和定位三套机制的协同。',
+              '响应式不是“最后补一个断点”，而是从一开始就考虑不同屏幕。',
+            ],
+          },
+        ],
+      },
+      {
+        id: 'selectors-cascade',
+        title: '选择器与层叠优先级',
+        short: '选择器与层叠',
+        summary:
+          '同一元素被多条规则命中时，先看匹配，再看优先级、来源顺序和继承。',
+        tags: ['选择器', '优先级'],
+        status: 'ready',
+        slides: [
+          {
+            id: 'cover',
+            kind: 'cover',
+            eyebrow: 'Week 2 · Lesson 1',
+            title: '同一个元素，为什么最后长成这个样子',
+            subtitle:
+              '很多 CSS 问题不是“属性不会写”，而是写了多条规则却不知道最终哪条生效。先搞清 cascade，后面的调样式才会稳。',
+            points: [
+              '选择器类型与匹配范围',
+              'specificity 和后写覆盖',
+              '继承与 !important 的代价',
+            ],
+          },
+          {
+            id: 'selector-types',
+            kind: 'content',
+            eyebrow: 'Lesson 1 · 匹配入口',
+            title: '先问：这条规则有没有命中',
+            bullets: [
+              { title: 'element selector', text: '直接匹配标签名，范围最大，约束最弱。' },
+              { title: 'class selector', text: '最常见也最稳妥，表达“这个元素扮演某种样式角色”。' },
+              { title: 'id selector', text: '优先级高，但复用性差，通常不适合作为通用样式入口。' },
+              { title: 'compound selector', text: '选择器越具体，命中的条件越严，也更容易难以覆盖。' },
+            ],
+          },
+          {
+            id: 'cascade-rules',
+            kind: 'content',
+            eyebrow: 'Lesson 1 · 决策顺序',
+            title: '浏览器决定谁生效，通常按这条线走',
+            flow: [
+              { label: '01', title: '先匹配', description: '规则没命中，后面优先级再高也没意义。' },
+              { label: '02', title: '比 specificity', description: '越具体的选择器通常越难被覆盖。' },
+              { label: '03', title: '看来源顺序', description: '优先级相同，就看谁写在后面。' },
+              { label: '04', title: '最后才是继承', description: '没有直接声明时，部分属性才会继承父元素。' },
+            ],
+            note: {
+              tone: 'rule',
+              label: '调试口诀',
+              text: '先确认命中，再比优先级，最后再看顺序和继承。',
+            },
+          },
+          {
+            id: 'cascade-compare',
+            kind: 'compare',
+            eyebrow: 'Lesson 1 · 对照',
+            title: '写法越“用力”，后面越难维护',
+            compare: {
+              leftTitle: '✗ 过度依赖 id 与 !important',
+              rightTitle: '✓ 以类名为主，保持可覆盖',
+              left: {
+                code: {
+                  language: 'css',
+                  source: `#hero-title {
+  color: red !important;
+}`,
+                },
+                items: ['短期有效，长期很难覆盖。'],
+              },
+              right: {
+                code: {
+                  language: 'css',
+                  source: `.hero-title {
+  color: var(--ink-strong);
+}`,
+                },
+                items: ['默认更容易复用，也更容易在局部覆盖。'],
+              },
+            },
+          },
+          {
+            id: 'cascade-demo',
+            kind: 'demo',
+            eyebrow: 'Lesson 1 · live demo',
+            title: 'live demo · 选择器与层叠检视器',
+            subtitle:
+              '切换不同规则顺序和选择器强度，直接看同一个按钮最后为什么变成那种颜色和边框。',
+            demo: {
+              route: '/demos/week-2/css/cascade-inspector',
+              ctaLabel: '打开实验',
+              objectives: [
+                '观察 specificity 与后写覆盖的差异',
+                '确认 !important 为什么会把后续维护变难',
+              ],
+              note: '建议先保持同类选择器，只改顺序；再切换到 id / !important 观察跳变。',
+            },
+          },
+          {
+            id: 'closing',
+            kind: 'closing',
+            title: '这一节带走什么',
+            points: [
+              'CSS 先看命中，再比优先级，最后看顺序和继承。',
+              '类名通常是最稳妥的样式入口，id 和 !important 要谨慎。',
+              '调样式时先定位“哪条规则赢了”，再决定怎么改。',
+            ],
+          },
+        ],
+      },
+      {
+        id: 'box-model',
+        title: '盒模型与单位',
+        short: '盒模型',
+        summary:
+          '元素的真实占位由 content、padding、border、margin 共同决定，单位选择会直接影响响应式表现。',
+        tags: ['盒模型', '单位'],
+        status: 'ready',
+        slides: [
+          {
+            id: 'cover',
+            kind: 'cover',
+            eyebrow: 'Week 2 · Lesson 2',
+            title: '元素到底占多大，不是只看 width',
+            subtitle:
+              '很多布局被撑坏，根因都是盒模型没想清楚。写了 width 只是开始，真正占位还要算 padding、border 和 margin。',
+            points: [
+              '盒模型四层结构',
+              'box-sizing 的作用',
+              'px / rem / % 的取舍',
+            ],
+          },
+          {
+            id: 'box-layers',
+            kind: 'content',
+            eyebrow: 'Lesson 2 · 四层结构',
+            title: '从里到外看一层层加出来的空间',
+            bullets: [
+              { title: 'content', text: '真正承载文字或图片的内容区。' },
+              { title: 'padding', text: '内容和边框之间的内边距，会把视觉盒子撑大。' },
+              { title: 'border', text: '边框宽度同样会计入最终占位。' },
+              { title: 'margin', text: '和外部元素拉开的距离，不属于盒子本体但影响排布。' },
+            ],
+          },
+          {
+            id: 'box-sizing-compare',
+            kind: 'compare',
+            eyebrow: 'Lesson 2 · 对照',
+            title: 'content-box 与 border-box 的思维方式完全不同',
+            compare: {
+              leftTitle: 'content-box',
+              rightTitle: 'border-box',
+              left: {
+                code: {
+                  language: 'css',
+                  source: `.card {
+  width: 320px;
+  padding: 24px;
+  border: 2px solid #0f766e;
+}`,
+                },
+                items: ['最终宽度会超过 320px。'],
+              },
+              right: {
+                code: {
+                  language: 'css',
+                  source: `.card {
+  box-sizing: border-box;
+  width: 320px;
+  padding: 24px;
+}`,
+                },
+                items: ['padding / border 被算进 320px，更适合产品级布局。'],
+              },
+            },
+          },
+          {
+            id: 'units',
+            kind: 'content',
+            eyebrow: 'Lesson 2 · 单位',
+            title: '选单位，其实是在决定“谁跟着谁变”',
+            table: {
+              headers: ['单位', '适合什么', '常见提醒'],
+              rows: [
+                ['px', '精确控制边框、阴影、细节尺寸', '非常稳定，但适配弹性弱。'],
+                ['rem', '全局字号与间距体系', '跟着根字号变，适合设计系统。'],
+                ['%', '相对父容器占比', '很适合流式布局，但依赖父级尺寸。'],
+              ],
+            },
+          },
+          {
+            id: 'box-demo',
+            kind: 'demo',
+            eyebrow: 'Lesson 2 · live demo',
+            title: 'live demo · 盒模型实验室',
+            subtitle:
+              '拖动 padding、border 和 box-sizing，直接看卡片宽度、内容区和外部占位如何一起变化。',
+            demo: {
+              route: '/demos/week-2/css/box-model-lab',
+              ctaLabel: '打开实验',
+              objectives: [
+                '观察 padding / border 如何改变最终占位',
+                '理解 border-box 为什么更适合稳定布局',
+              ],
+              note: '建议先固定 width，只改 padding 和 box-sizing。',
+            },
+          },
+          {
+            id: 'closing',
+            kind: 'closing',
+            title: '这一节带走什么',
+            points: [
+              '真实占位从来不只看 width，还要看 padding、border 和 margin。',
+              '大多数产品布局更适合用 border-box。',
+              '选单位时要想清楚它应该跟谁联动变化。',
+            ],
+          },
+        ],
+      },
+      {
+        id: 'flexbox',
+        title: 'Flexbox 布局',
+        short: 'Flexbox',
+        summary:
+          '一维布局优先考虑 Flexbox，重点理解主轴、交叉轴、对齐方式和剩余空间分配。',
+        tags: ['Flexbox', '布局'],
+        status: 'ready',
+        slides: [
+          {
+            id: 'cover',
+            kind: 'cover',
+            eyebrow: 'Week 2 · Lesson 3',
+            title: '一排东西怎么排整齐，Flexbox 是首选',
+            subtitle:
+              '按钮条、卡片行、工具栏、表单行，很多常见 UI 都是“一维布局”问题。Flexbox 正是为这种场景准备的。',
+            points: [
+              '主轴与交叉轴',
+              'justify-content / align-items',
+              'flex-grow / shrink / basis',
+            ],
+          },
+          {
+            id: 'axes',
+            kind: 'content',
+            eyebrow: 'Lesson 3 · 两根轴',
+            title: '先认清主轴和交叉轴',
+            bullets: [
+              { title: 'main axis', text: '元素默认沿主轴排布，row 时是横向，column 时是纵向。' },
+              { title: 'cross axis', text: '与主轴垂直的那根轴，决定另一方向上的对齐。' },
+              { title: 'justify-content', text: '控制主轴上怎么分配剩余空间。' },
+              { title: 'align-items', text: '控制交叉轴上的对齐。' },
+            ],
+          },
+          {
+            id: 'flex-compare',
+            kind: 'compare',
+            eyebrow: 'Lesson 3 · 常见误区',
+            title: '别把“横向分布”和“纵向对齐”弄反',
+            compare: {
+              leftTitle: '✗ 混淆轴向',
+              rightTitle: '✓ 先定 flex-direction 再想对齐',
+              left: {
+                items: [
+                  'row 下 justify-content 控制左右分布。',
+                  'row 下 align-items 控制上下对齐。',
+                  'column 时这两个概念会反过来。',
+                ],
+              },
+              right: {
+                code: {
+                  language: 'css',
+                  source: `.toolbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}`,
+                },
+              },
+            },
+          },
+          {
+            id: 'flex-growth',
+            kind: 'code',
+            eyebrow: 'Lesson 3 · 最小证据',
+            title: '剩余空间如何分配',
+            code: {
+              language: 'css',
+              filename: 'week2-flex.css',
+              source: `.sidebar {
+  flex: 0 0 240px;
+}
+
+.content {
+  flex: 1 1 auto;
+}`,
+              highlightLines: [2, 6],
+            },
+          },
+          {
+            id: 'flex-demo',
+            kind: 'demo',
+            eyebrow: 'Lesson 3 · live demo',
+            title: 'live demo · Flex 对齐工作台',
+            subtitle:
+              '切换 justify-content、align-items、flex-grow 和 shrink，直接看工具栏和卡片行如何重新分配空间。',
+            demo: {
+              route: '/demos/week-2/css/flex-alignment',
+              ctaLabel: '打开实验',
+              objectives: [
+                '比较 justify-content / align-items 的差异',
+                '观察 flex-grow / shrink 带来的布局变化',
+              ],
+              note: '建议先保持 row，只切对齐；再慢慢改 grow / shrink 看剩余空间分配。',
+            },
+          },
+          {
+            id: 'closing',
+            kind: 'closing',
+            title: '这一节带走什么',
+            points: [
+              'Flexbox 解决的是一维布局问题，先想“沿哪根轴排”。',
+              'justify-content 管主轴，align-items 管交叉轴。',
+              'grow / shrink / basis 决定剩余空间如何分配和压缩。',
+            ],
+          },
+        ],
+      },
+      {
+        id: 'grid-frameworks',
+        title: 'CSS Grid、框架与样式复用',
+        short: 'Grid 与框架',
+        summary:
+          'Grid 更擅长二维布局，而样式复用与框架引入则是在讨论抽象层的收益和边界。',
+        tags: ['Grid', 'CSS Framework'],
+        status: 'ready',
+        slides: [
+          {
+            id: 'cover',
+            kind: 'cover',
+            eyebrow: 'Week 2 · Lesson 4',
+            title: '二维布局和样式抽象，什么时候值得上',
+            subtitle:
+              '不是所有布局都该用 Grid，也不是所有项目都该引框架。这一节核心是判断“什么时候值得”。',
+            points: [
+              'Grid 的行列思维',
+              '什么时候用 Grid，什么时候用 Flex',
+              '框架与样式复用的收益和代价',
+            ],
+          },
+          {
+            id: 'grid-core',
+            kind: 'content',
+            eyebrow: 'Lesson 4 · Grid',
+            title: 'Grid 适合同时控制行和列',
+            bullets: [
+              { title: 'grid container', text: '先定义行列轨道，再把子项放进网格。' },
+              { title: 'tracks and gaps', text: '轨道大小和间距一起决定整体节奏。' },
+              { title: 'use cases', text: '看板、卡片墙、仪表盘这类二维排布更适合 Grid。' },
+            ],
+            note: {
+              tone: 'tip',
+              label: '经验',
+              text: '如果你主要在想“一排元素怎么对齐”，优先用 Flex；如果你同时在想“几行几列怎么安排”，再考虑 Grid。',
+            },
+          },
+          {
+            id: 'grid-code',
+            kind: 'code',
+            eyebrow: 'Lesson 4 · 最小证据',
+            title: '一个最小 Grid 例子',
+            code: {
+              language: 'css',
+              filename: 'week2-grid.css',
+              source: `.board {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 16px;
+}`,
+              highlightLines: [1, 2, 3],
+            },
+          },
+          {
+            id: 'grid-framework-compare',
+            kind: 'compare',
+            eyebrow: 'Lesson 4 · 抽象取舍',
+            title: '自己写样式和借助框架，各赢在哪',
+            compare: {
+              leftTitle: '自己写 CSS',
+              rightTitle: '借助框架 / utility',
+              left: {
+                items: ['控制力强，更贴项目语义。', '前期更慢，但长期可塑性更高。'],
+              },
+              right: {
+                items: ['起步更快，组合速度高。', '抽象层会带来约束，需要理解它的规则。'],
+              },
+            },
+          },
+          {
+            id: 'closing',
+            kind: 'closing',
+            title: '这一节带走什么',
+            points: [
+              'Grid 适合二维布局，Flex 更适合一维布局。',
+              '框架不是魔法，它是在速度和控制力之间做取舍。',
+              '样式复用的目标是减少重复，而不是让类名越堆越多。',
+            ],
+          },
+        ],
+      },
+      {
+        id: 'positioning-stacking',
+        title: '定位、z-index 与视觉层级',
+        short: '定位与层叠',
+        summary:
+          'position 改变的是元素脱离普通文档流的方式，而 z-index 只有在合适的上下文里才会生效。',
+        tags: ['定位', '层叠上下文'],
+        status: 'ready',
+        slides: [
+          {
+            id: 'cover',
+            kind: 'cover',
+            eyebrow: 'Week 2 · Lesson 5',
+            title: '元素为什么浮起来了，又为什么压不过去',
+            subtitle:
+              '定位与层叠问题看起来像“玄学”，其实都有固定原因：先看 position， 再看 stacking context。',
+            points: [
+              '五种 position 的差异',
+              'stacking context 如何形成',
+              'z-index 为什么有时看起来失效',
+            ],
+          },
+          {
+            id: 'position-types',
+            kind: 'content',
+            eyebrow: 'Lesson 5 · 定位类型',
+            title: '先分清元素有没有脱离普通流',
+            table: {
+              headers: ['position', '发生了什么', '最常见场景'],
+              rows: [
+                ['static', '默认文档流', '普通内容块'],
+                ['relative', '保留原位置，再做相对偏移', '给 absolute 子元素提供定位参考'],
+                ['absolute', '脱离普通流，相对最近定位祖先定位', '徽标、角标、浮层'],
+                ['fixed', '相对视口固定', '固定操作按钮、吸顶工具'],
+                ['sticky', '在阈值前后切换文档流 / 固定感', '分组标题、粘性栏'],
+              ],
+            },
+          },
+          {
+            id: 'stacking-flow',
+            kind: 'content',
+            eyebrow: 'Lesson 5 · 层叠路径',
+            title: 'z-index 不是全局开战，而是在上下文里比赛',
+            flow: [
+              { label: '01', title: '元素先有定位或新上下文', description: '没有合适上下文时，z-index 常常没有你以为的效果。' },
+              { label: '02', title: '比较同一 stacking context 内的层级', description: '只在同一上下文里直接比较大小。' },
+              { label: '03', title: '父级上下文会整体参与排序', description: '子元素再高，也跳不出父级被压住的命运。' },
+            ],
+            note: {
+              tone: 'trap',
+              label: '典型误会',
+              text: 'z-index: 9999 也不代表一定在最上层，先看它是不是被困在更低的 stacking context 里。',
+            },
+          },
+          {
+            id: 'position-compare',
+            kind: 'compare',
+            eyebrow: 'Lesson 5 · 对照',
+            title: '同样是“浮层”，不同定位方式的参考系完全不同',
+            compare: {
+              leftTitle: 'absolute',
+              rightTitle: 'fixed / sticky',
+              left: {
+                items: ['跟着最近定位祖先走。', '父容器一变，位置也会跟着变。'],
+              },
+              right: {
+                items: ['fixed 相对视口，sticky 介于流内和固定之间。', '更适合工具栏、粘性标题和悬浮操作。'],
+              },
+            },
+          },
+          {
+            id: 'position-demo',
+            kind: 'demo',
+            eyebrow: 'Lesson 5 · live demo',
+            title: 'live demo · 定位与层叠实验',
+            subtitle:
+              '切换 relative / absolute / sticky 和不同 z-index 组合，直接看元素为什么会遮住彼此，或者为什么压不过去。',
+            demo: {
+              route: '/demos/week-2/css/position-stacking',
+              ctaLabel: '打开实验',
+              objectives: [
+                '观察不同 position 的参考系差异',
+                '理解 z-index 需要放回 stacking context 里看',
+              ],
+              note: '建议先只改 position，再开始改 z-index，避免把两个变量混在一起看。',
+            },
+          },
+          {
+            id: 'closing',
+            kind: 'closing',
+            title: '这一节带走什么',
+            points: [
+              'position 决定元素怎样脱离或保留在普通文档流里。',
+              'z-index 只在合适的上下文里比较，不能脱离 stacking context 单独看。',
+              '定位问题要先看参考系，再看层叠顺序。',
+            ],
+          },
+        ],
+      },
+      {
+        id: 'responsive-viewport',
+        title: '移动端、媒体查询与开发者工具',
+        short: '响应式与 DevTools',
+        summary:
+          '响应式不是最后补救，而是从视口、断点和内容优先级一起考虑；DevTools 则是最快的验证现场。',
+        tags: ['响应式', 'viewport', 'DevTools'],
+        status: 'ready',
+        slides: [
+          {
+            id: 'cover',
+            kind: 'cover',
+            eyebrow: 'Week 2 · Lesson 6',
+            title: '页面在不同宽度下还能不能继续好用',
+            subtitle:
+              '响应式的本质不是“手机上别炸”，而是让内容层级、布局方式和操作路径在不同屏幕下都保持清楚。',
+            points: [
+              'viewport meta 的作用',
+              '媒体查询与断点命中',
+              '移动优先与 DevTools 调试',
+            ],
+          },
+          {
+            id: 'viewport-basics',
+            kind: 'content',
+            eyebrow: 'Lesson 6 · 入口',
+            title: '没有 viewport，移动端起点就不对',
+            bullets: [
+              { title: 'meta viewport', text: '告诉移动端浏览器按设备宽度解释页面，而不是先缩小整页。' },
+              { title: 'breakpoints', text: '断点不是设备清单，而是内容什么时候撑不下去。' },
+              { title: 'mobile first', text: '先保证窄屏成立，再逐步加宽屏增强。' },
+            ],
+          },
+          {
+            id: 'breakpoint-flow',
+            kind: 'content',
+            eyebrow: 'Lesson 6 · 断点逻辑',
+            title: '媒体查询命中时，浏览器大致按这个思路工作',
+            flow: [
+              { label: '01', title: '先应用基础样式', description: '不在媒体查询里的规则默认先成立。' },
+              { label: '02', title: '检查当前 viewport 宽度', description: '浏览器判断哪些断点条件被命中。' },
+              { label: '03', title: '命中的规则继续覆盖', description: '后写且命中的断点规则会在基础样式之上生效。' },
+            ],
+          },
+          {
+            id: 'responsive-code',
+            kind: 'code',
+            eyebrow: 'Lesson 6 · 最小证据',
+            title: '从单列到双列的最小媒体查询',
+            code: {
+              language: 'css',
+              filename: 'week2-responsive.css',
+              source: `.cards {
+  display: grid;
+  grid-template-columns: 1fr;
+}
+
+@media (min-width: 900px) {
+  .cards {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}`,
+              highlightLines: [1, 2, 5, 7],
+            },
+          },
+          {
+            id: 'responsive-demo',
+            kind: 'demo',
+            eyebrow: 'Lesson 6 · live demo',
+            title: 'live demo · 响应式断点实验',
+            subtitle:
+              '切换不同 viewport 宽度和断点规则，观察卡片列表什么时候换列、字号什么时候收缩，以及 DevTools 应该盯哪里看。',
+            demo: {
+              route: '/demos/week-2/css/responsive-breakpoints',
+              ctaLabel: '打开实验',
+              objectives: [
+                '观察断点命中前后布局如何变化',
+                '理解移动优先为什么更容易维护',
+              ],
+              note: '建议先保持默认窄屏，再切到 768 / 1024 宽度观察布局切换。',
+            },
+          },
+          {
+            id: 'closing',
+            kind: 'closing',
+            title: '这一节带走什么',
+            points: [
+              '响应式从 viewport 起步，不是最后硬补几个断点。',
+              '断点应该跟内容压力走，而不是死背设备型号。',
+              'DevTools 是最快的断点验证现场，要学会用它看宽度、盒模型和命中规则。',
+            ],
+          },
+        ],
+      },
     ],
   },
   {
@@ -450,62 +1957,693 @@ export const COURSE_WEEKS: CourseWeek[] = [
     accent: 'yellow',
     topics: ['javascript'],
     lessons: [
-      placeholderLesson(
-        'js-intro-syntax',
-        'JavaScript 语言特性与语法',
-        'JS 语法基础',
-        '从和 C / Python 的差异入手，建立 JS 的基本执行模型。',
-        ['变量、类型与弱类型直觉', '函数、对象与数组', '语句、表达式与常见语法坑'],
-        ['JavaScript', 'Syntax'],
-      ),
-      placeholderLesson(
-        'functions-closures',
-        '高级函数与闭包',
-        '函数与闭包',
-        '函数是一等公民，以及闭包为什么在前端里无处不在。',
-        ['函数作为参数和返回值', '作用域链与闭包', '闭包的常见实际场景'],
-        ['函数', '闭包'],
-      ),
-      placeholderLesson(
-        'ecosystem-npm',
-        'JavaScript 生态、Node 与 npm',
-        '生态与 npm',
-        '理解前端不只是语言本身，还包含运行时、包管理与工程生态。',
-        ['浏览器 JS vs Node.js', 'npm 的作用', '依赖安装与 package.json'],
-        ['Node.js', 'npm', '生态'],
-      ),
-      placeholderLesson(
-        'dom',
-        'DOM 查询与操作',
-        'DOM 操作',
-        '把页面当成一棵树来查找和修改。',
-        ['querySelector / querySelectorAll', '创建与插入节点', '修改属性、类名与文本'],
-        ['DOM', '查询'],
-      ),
-      placeholderLesson(
-        'events',
-        '事件与事件委托',
-        '事件',
-        '事件流、监听器，以及用委托处理动态列表。',
-        ['事件流与冒泡', 'addEventListener 与事件对象', '事件委托的适用场景'],
-        ['事件', '事件委托'],
-      ),
-      placeholderLesson(
-        'forms',
-        '表单与客户端校验',
-        '表单',
-        '读取输入、阻止默认提交、给出即时的错误反馈。',
-        ['读取表单元素的值', 'preventDefault 与提交时机', '校验与错误提示'],
-        ['表单', '校验'],
-      ),
-      placeholderLesson(
-        'storage',
-        'localStorage 与持久化',
-        '本地存储',
-        '只能存字符串的键值仓库，以及“读后 parse”的规律。',
-        ['localStorage / sessionStorage 差异', '只能存字符串的限制', '读后 parse、写前 stringify'],
-        ['localStorage', '持久化'],
-      ),
+      {
+        id: 'overview',
+        title: '本周导览：让页面开始响应用户',
+        short: '本周导览',
+        summary:
+          'Week 3 把页面从“静态结构”推进到“会响应、会记住、会处理输入”的状态。',
+        tags: ['导览', 'JavaScript', '浏览器'],
+        status: 'ready',
+        slides: [
+          {
+            id: 'cover',
+            kind: 'cover',
+            eyebrow: 'Week 3 · JavaScript 与浏览器基础',
+            title: '让页面开始响应用户',
+            subtitle:
+              '这一周的主线不是背语法点，而是建立浏览器行为层：写 JS、找 DOM、绑事件、处理表单、把状态存起来。',
+            points: [
+              '先建立 JavaScript 基础直觉',
+              '理解函数、闭包和浏览器生态',
+              '进入 DOM / events / forms / storage 闭环',
+              '为 Week 4 的异步和网络打前置基础',
+            ],
+          },
+          {
+            id: 'roadmap',
+            kind: 'roadmap',
+            eyebrow: 'Week 3 · 主线地图',
+            title: '从语言基础一路走到浏览器交互',
+            roadmap: [
+              {
+                label: '01',
+                title: 'JS 语法',
+                description: '建立变量、类型、表达式和对象数组的基础执行直觉。',
+              },
+              {
+                label: '02',
+                title: '函数与闭包',
+                description: '理解函数是一等公民，以及闭包为什么能“记住”外部变量。',
+              },
+              {
+                label: '03',
+                title: 'Node / npm',
+                description: '理解浏览器 JS、运行时和包管理之间的关系。',
+              },
+              {
+                label: '04',
+                title: 'DOM',
+                description: '把页面当成一棵树来查询和修改。',
+              },
+              {
+                label: '05',
+                title: 'Events',
+                description: '理解点击、冒泡和事件委托。',
+              },
+              {
+                label: '06',
+                title: 'Forms',
+                description: '读取输入、阻止默认提交并给出即时反馈。',
+              },
+              {
+                label: '07',
+                title: 'localStorage',
+                description: '让页面在刷新后还能记住状态。',
+              },
+            ],
+          },
+          {
+            id: 'cards',
+            kind: 'cards',
+            eyebrow: 'Week 3 · 目录',
+            title: '这一周从语言层走到页面行为层',
+            cards: [
+              {
+                eyebrow: 'Lesson 1',
+                title: 'JavaScript 语法',
+                description: '建立变量、类型、对象和数组的基本读写直觉。',
+                meta: '重点：表达式、对象、数组、弱类型',
+              },
+              {
+                eyebrow: 'Lesson 2',
+                title: '函数与闭包',
+                description: '理解函数作为参数 / 返回值，以及闭包如何记住外部变量。',
+                meta: '重点：scope / closure / callback',
+              },
+              {
+                eyebrow: 'Lesson 3',
+                title: 'Node 与 npm',
+                description: '建立运行时、包管理和工程生态认知。',
+                meta: '重点：browser vs node / package.json',
+              },
+              {
+                eyebrow: 'Lesson 4-7',
+                title: 'DOM、事件、表单与存储',
+                description: '把 JS 真正接到浏览器页面上，让内容动起来并能记住状态。',
+                meta: '重点：query / listen / validate / persist',
+              },
+            ],
+          },
+          {
+            id: 'closing',
+            kind: 'closing',
+            title: '这一周先带走三句话',
+            points: [
+              'JavaScript 不只是语法，而是页面行为层。',
+              '浏览器里的交互闭环大致是：查 DOM -> 绑事件 -> 处理输入 -> 更新状态。',
+              '学完 Week 3，页面不再只是“显示内容”，而会真正响应用户。',
+            ],
+          },
+        ],
+      },
+      {
+        id: 'js-intro-syntax',
+        title: 'JavaScript 语言特性与语法',
+        short: 'JS 语法基础',
+        summary:
+          '从变量、类型、对象、数组和表达式入手，建立 JavaScript 与其他语言不同的执行直觉。',
+        tags: ['JavaScript', 'Syntax'],
+        status: 'ready',
+        slides: [
+          {
+            id: 'cover',
+            kind: 'cover',
+            eyebrow: 'Week 3 · Lesson 1',
+            title: '先别急着碰 DOM，先会读 JavaScript',
+            subtitle:
+              '很多浏览器交互问题，根因其实不是 DOM 不会，而是 JavaScript 数据和语句模型没建立起来。',
+            points: [
+              '变量、类型与弱类型直觉',
+              '对象、数组和函数值',
+              '语句、表达式与常见语法坑',
+            ],
+          },
+          {
+            id: 'types',
+            kind: 'content',
+            eyebrow: 'Lesson 1 · 类型',
+            title: 'JavaScript 的“灵活”常常也是坑点来源',
+            bullets: [
+              { title: 'dynamic typing', text: '变量本身不固定类型，值才携带类型。' },
+              { title: 'truthy / falsy', text: '条件判断里不只是真假布尔值在起作用。' },
+              { title: 'objects and arrays', text: '对象和数组都是引用值，改动时要有共享意识。' },
+            ],
+            note: {
+              tone: 'trap',
+              label: '常见误会',
+              text: '“看起来像数字的字符串”并不会自动变成你想要的数字，比较和拼接时尤其容易出事。',
+            },
+          },
+          {
+            id: 'syntax-compare',
+            kind: 'compare',
+            eyebrow: 'Lesson 1 · 对照',
+            title: '语句能跑，不代表表达式就清楚',
+            compare: {
+              leftTitle: '✗ 混着写，读起来很难',
+              rightTitle: '✓ 先拆出中间值，再表达意图',
+              left: {
+                code: {
+                  language: 'javascript',
+                  source: `if (input.value && Number(input.value) > 0) {
+  total = total + Number(input.value)
+}`,
+                },
+              },
+              right: {
+                code: {
+                  language: 'javascript',
+                  source: `const amount = Number(input.value)
+
+if (Number.isFinite(amount) && amount > 0) {
+  total += amount
+}`,
+                },
+              },
+            },
+          },
+          {
+            id: 'syntax-code',
+            kind: 'code',
+            eyebrow: 'Lesson 1 · 最小证据',
+            title: '对象和数组是浏览器状态管理的基础材料',
+            code: {
+              language: 'javascript',
+              filename: 'week3-syntax.js',
+              source: `const user = {
+  name: 'Ada',
+  skills: ['HTML', 'CSS', 'JavaScript'],
+}
+
+const firstSkill = user.skills[0]`,
+              highlightLines: [1, 3, 6],
+            },
+          },
+          {
+            id: 'closing',
+            kind: 'closing',
+            title: '这一节带走什么',
+            points: [
+              'JavaScript 变量是动态的，值的类型才决定后续行为。',
+              '对象和数组会在后面的 DOM、表单和存储里反复出现。',
+              '先把中间值拆清楚，代码会比一口气写到底更稳。',
+            ],
+          },
+        ],
+      },
+      {
+        id: 'functions-closures',
+        title: '高级函数与闭包',
+        short: '函数与闭包',
+        summary:
+          '函数可以作为参数和返回值，而闭包会把外层作用域中的变量一起记住。',
+        tags: ['函数', '闭包'],
+        status: 'ready',
+        slides: [
+          {
+            id: 'cover',
+            kind: 'cover',
+            eyebrow: 'Week 3 · Lesson 2',
+            title: '函数不只是“写一段逻辑”，它还能被传来传去',
+            subtitle:
+              '一旦理解函数是一等公民，回调、事件监听、Promise 和闭包都会顺很多。',
+            points: [
+              '函数作为参数和返回值',
+              '作用域链与闭包',
+              '闭包的实际使用场景',
+            ],
+          },
+          {
+            id: 'function-values',
+            kind: 'content',
+            eyebrow: 'Lesson 2 · 函数值',
+            title: '函数可以像其他值一样被传递',
+            bullets: [
+              { title: 'as argument', text: '事件监听和数组方法都会把函数当参数传进去。' },
+              { title: 'as return value', text: '一个函数可以返回另一个函数，常见于工厂函数和封装状态。' },
+              { title: 'closure', text: '返回出来的函数会连同外层变量一起被保留下来。' },
+            ],
+          },
+          {
+            id: 'closure-flow',
+            kind: 'content',
+            eyebrow: 'Lesson 2 · 闭包路径',
+            title: '闭包不是魔法，只是函数把环境也一起带走了',
+            flow: [
+              { label: '01', title: '创建外层变量', description: '比如 count、prefix 或某个配置值。' },
+              { label: '02', title: '定义内层函数', description: '内层函数引用了这些外层变量。' },
+              { label: '03', title: '把内层函数返回或保存出去', description: '函数离开了原来的定义位置。' },
+              { label: '04', title: '后续调用时仍能访问旧变量', description: '这就是“记住了外部环境”。' },
+            ],
+          },
+          {
+            id: 'closure-demo',
+            kind: 'demo',
+            eyebrow: 'Lesson 2 · live demo',
+            title: 'live demo · 闭包快照实验',
+            subtitle:
+              '点几次按钮，观察同一个外层变量怎样被多次调用的内层函数持续记住。',
+            demo: {
+              route: '/demos/week-3/javascript/closure-snapshot',
+              ctaLabel: '打开实验',
+              objectives: [
+                '观察闭包如何记住外层变量',
+                '区分“重新创建函数”和“继续调用旧函数”的差别',
+              ],
+              note: '建议先连续点“继续调用”，再点“重置计数器”看环境切换。',
+            },
+          },
+          {
+            id: 'closing',
+            kind: 'closing',
+            title: '这一节带走什么',
+            points: [
+              '函数可以像值一样传递，这是很多浏览器 API 的基础。',
+              '闭包本质上是“函数 + 它记住的外层环境”。',
+              '理解闭包后，事件监听、回调和模块封装都会更容易读懂。',
+            ],
+          },
+        ],
+      },
+      {
+        id: 'ecosystem-npm',
+        title: 'JavaScript 生态、Node 与 npm',
+        short: '生态与 npm',
+        summary:
+          '理解浏览器 JS、Node.js、npm 与 package.json 各自处于什么位置，建立最小工程生态认知。',
+        tags: ['Node.js', 'npm', '生态'],
+        status: 'ready',
+        slides: [
+          {
+            id: 'cover',
+            kind: 'cover',
+            eyebrow: 'Week 3 · Lesson 3',
+            title: '前端不只有语言，还有运行时和工程生态',
+            subtitle:
+              '浏览器能跑 JavaScript，但项目为什么还要 Node、npm、package.json？这一节先把角色分清。',
+            points: [
+              '浏览器 JS vs Node.js',
+              'npm 的作用',
+              '依赖安装与 package.json',
+            ],
+          },
+          {
+            id: 'runtime-flow',
+            kind: 'content',
+            eyebrow: 'Lesson 3 · 角色地图',
+            title: '从写代码到跑起来，中间其实经过这些角色',
+            flow: [
+              { label: '01', title: '你写源代码', description: '项目里会有自己的 JS、CSS、配置和依赖声明。' },
+              { label: '02', title: 'npm 管理依赖', description: '根据 package.json 安装和记录外部包。' },
+              { label: '03', title: 'Node 跑工具链', description: '构建、测试、打包通常都在 Node 环境里执行。' },
+              { label: '04', title: '浏览器运行最终页面', description: '用户真正交互的是浏览器里的输出结果。' },
+            ],
+          },
+          {
+            id: 'browser-node-compare',
+            kind: 'compare',
+            eyebrow: 'Lesson 3 · 对照',
+            title: '浏览器 JS 和 Node.js 都跑 JavaScript，但职责不同',
+            compare: {
+              leftTitle: '浏览器',
+              rightTitle: 'Node.js',
+              left: {
+                items: ['直接操作 DOM、事件、表单和网络请求。', '面向用户交互。'],
+              },
+              right: {
+                items: ['跑构建工具、测试脚本和服务器程序。', '面向开发流程与服务端环境。'],
+              },
+            },
+          },
+          {
+            id: 'package-code',
+            kind: 'code',
+            eyebrow: 'Lesson 3 · 最小证据',
+            title: '一个最小 package.json 在声明什么',
+            code: {
+              language: 'json',
+              filename: 'package.json',
+              source: `{
+  "name": "comp6080-quizs",
+  "scripts": {
+    "dev": "vite",
+    "test": "vitest run"
+  }
+}`,
+              highlightLines: [2, 4, 5],
+            },
+          },
+          {
+            id: 'closing',
+            kind: 'closing',
+            title: '这一节带走什么',
+            points: [
+              '浏览器 JS 面向交互，Node.js 面向运行工具链和服务。',
+              'npm 的价值是管理依赖和脚本，而不是“只是一个安装命令”。',
+              '理解这层生态后，前端项目目录和脚本就不会再显得神秘。',
+            ],
+          },
+        ],
+      },
+      {
+        id: 'dom',
+        title: 'DOM 查询与操作',
+        short: 'DOM 操作',
+        summary:
+          '把页面看成树，通过 querySelector、classList、textContent 等 API 查找和修改节点。',
+        tags: ['DOM', '查询'],
+        status: 'ready',
+        slides: [
+          {
+            id: 'cover',
+            kind: 'cover',
+            eyebrow: 'Week 3 · Lesson 4',
+            title: '页面不是一张图片，而是一棵可被修改的树',
+            subtitle:
+              '一旦把 DOM 看成节点树，查找、修改、插入这些操作就会比“记 API”容易得多。',
+            points: [
+              'querySelector / querySelectorAll',
+              '创建与插入节点',
+              '修改属性、类名与文本',
+            ],
+          },
+          {
+            id: 'dom-queries',
+            kind: 'content',
+            eyebrow: 'Lesson 4 · 查询',
+            title: '先找到节点，再谈修改',
+            bullets: [
+              { title: 'querySelector', text: '只拿第一项，适合明确知道只要一个目标元素。' },
+              { title: 'querySelectorAll', text: '返回节点列表，适合批量处理一组元素。' },
+              { title: 'textContent / classList', text: '是最常见的“改文字”和“改状态”入口。' },
+            ],
+          },
+          {
+            id: 'dom-compare',
+            kind: 'compare',
+            eyebrow: 'Lesson 4 · 对照',
+            title: '先拿准对象，再改内容会更稳',
+            compare: {
+              leftTitle: '✗ 选择太宽泛',
+              rightTitle: '✓ 用更明确的选择器和变量名',
+              left: {
+                code: {
+                  language: 'javascript',
+                  source: `const el = document.querySelector('div')
+el.textContent = 'Updated'`,
+                },
+              },
+              right: {
+                code: {
+                  language: 'javascript',
+                  source: `const titleEl = document.querySelector('.profile-title')
+titleEl.textContent = 'Updated'`,
+                },
+              },
+            },
+          },
+          {
+            id: 'dom-demo',
+            kind: 'demo',
+            eyebrow: 'Lesson 4 · live demo',
+            title: 'live demo · DOM 查询实验',
+            subtitle:
+              '分别切换单个查询、批量查询和 classList 修改，直接看页面节点状态如何被改写。',
+            demo: {
+              route: '/demos/week-3/javascript/dom-query',
+              ctaLabel: '打开实验',
+              objectives: [
+                '比较 querySelector / querySelectorAll 的返回值',
+                '观察 classList / textContent 的修改结果',
+              ],
+              note: '建议先点“单个标题”，再点“全部项目”看批量修改差异。',
+            },
+          },
+          {
+            id: 'closing',
+            kind: 'closing',
+            title: '这一节带走什么',
+            points: [
+              'DOM 是一棵节点树，先找准节点，再决定如何修改。',
+              'querySelector 和 querySelectorAll 的差别会直接影响后续代码写法。',
+              'textContent、classList 和属性修改是最常用的页面更新入口。',
+            ],
+          },
+        ],
+      },
+      {
+        id: 'events',
+        title: '事件与事件委托',
+        short: '事件',
+        summary:
+          '理解点击、输入和冒泡流程，以及为什么动态列表里经常用事件委托。',
+        tags: ['事件', '事件委托'],
+        status: 'ready',
+        slides: [
+          {
+            id: 'cover',
+            kind: 'cover',
+            eyebrow: 'Week 3 · Lesson 5',
+            title: '页面为什么能“听到”点击和输入',
+            subtitle:
+              '用户操作不是神秘触发的，它们会以事件的形式沿着页面结构传播，监听器只是把某一步拦下来处理。',
+            points: [
+              '事件流与冒泡',
+              'addEventListener 与事件对象',
+              '事件委托的适用场景',
+            ],
+          },
+          {
+            id: 'event-flow',
+            kind: 'content',
+            eyebrow: 'Lesson 5 · 传播路径',
+            title: '点击一个子元素时，事件会一路往外冒',
+            flow: [
+              { label: '01', title: '事件发生在目标元素', description: '比如点击某个按钮或列表项。' },
+              { label: '02', title: '事件对象被传进监听器', description: '可以读取 target、currentTarget 等信息。' },
+              { label: '03', title: '事件继续向外冒泡', description: '父级监听器也有机会收到这次事件。' },
+              { label: '04', title: '必要时可阻止传播', description: '但通常应该先理解传播，再决定要不要阻止。' },
+            ],
+          },
+          {
+            id: 'delegation-compare',
+            kind: 'compare',
+            eyebrow: 'Lesson 5 · 委托',
+            title: '列表项很多时，委托通常比逐个绑更轻',
+            compare: {
+              leftTitle: '逐个监听',
+              rightTitle: '事件委托',
+              left: {
+                items: ['每个子项单独绑定。', '动态新增项目时还得再补一次监听。'],
+              },
+              right: {
+                items: ['监听绑在父容器上。', '通过 event.target 判断用户点到了哪个子元素。'],
+              },
+            },
+          },
+          {
+            id: 'events-demo',
+            kind: 'demo',
+            eyebrow: 'Lesson 5 · live demo',
+            title: 'live demo · 事件传播实验',
+            subtitle:
+              '点不同层级的区域，观察 target、currentTarget 和冒泡日志，再看事件委托如何在列表里工作。',
+            demo: {
+              route: '/demos/week-3/javascript/event-propagation',
+              ctaLabel: '打开实验',
+              objectives: [
+                '观察事件从目标元素向外冒泡的顺序',
+                '理解事件委托为什么适合动态列表',
+              ],
+              note: '建议先点最里面的按钮，再看日志里哪几层都收到了事件。',
+            },
+          },
+          {
+            id: 'closing',
+            kind: 'closing',
+            title: '这一节带走什么',
+            points: [
+              '事件监听的本质是：在传播路径上某一层拦住并处理用户动作。',
+              'event.target 和 currentTarget 不是一回事，读错很容易误判。',
+              '事件委托对动态列表尤其有价值。',
+            ],
+          },
+        ],
+      },
+      {
+        id: 'forms',
+        title: '表单与客户端校验',
+        short: '表单',
+        summary:
+          '读取输入值、阻止默认提交、给出即时错误提示，让表单从“能填”升级成“能正确反馈”。',
+        tags: ['表单', '校验'],
+        status: 'ready',
+        slides: [
+          {
+            id: 'cover',
+            kind: 'cover',
+            eyebrow: 'Week 3 · Lesson 6',
+            title: '表单不只是收值，还要给用户明确反馈',
+            subtitle:
+              '浏览器能帮你提交表单，但真实产品往往还要先读值、校验、提示，再决定是否继续。',
+            points: [
+              '读取表单元素的值',
+              'preventDefault 与提交时机',
+              '校验与错误提示',
+            ],
+          },
+          {
+            id: 'form-rules',
+            kind: 'content',
+            eyebrow: 'Lesson 6 · 基本动作',
+            title: '处理表单时，通常会先做这三步',
+            bullets: [
+              { title: '读值', text: '从 input、textarea、select 等元素里拿到当前内容。' },
+              { title: '校验', text: '检查空值、长度、格式或业务规则是否满足。' },
+              { title: '反馈', text: '通过错误提示、成功状态或按钮禁用告诉用户当前结果。' },
+            ],
+          },
+          {
+            id: 'prevent-default',
+            kind: 'code',
+            eyebrow: 'Lesson 6 · 最小证据',
+            title: '提交前先截住默认行为',
+            code: {
+              language: 'javascript',
+              filename: 'week3-form.js',
+              source: `formEl.addEventListener('submit', function (event) {
+  event.preventDefault()
+
+  const email = emailInput.value.trim()
+  if (!email.includes('@')) {
+    errorEl.textContent = '请输入合法邮箱'
+  }
+})`,
+              highlightLines: [1, 2, 4, 5],
+            },
+          },
+          {
+            id: 'forms-demo',
+            kind: 'demo',
+            eyebrow: 'Lesson 6 · live demo',
+            title: 'live demo · 表单校验工作台',
+            subtitle:
+              '切换“空值 / 格式错误 / 校验通过”三种输入，观察提交是否被拦住以及页面反馈怎样变化。',
+            demo: {
+              route: '/demos/week-3/javascript/form-validation',
+              ctaLabel: '打开实验',
+              objectives: [
+                '观察 preventDefault 如何阻止默认提交',
+                '比较错误提示和成功提示的反馈节奏',
+              ],
+              note: '建议先试空值，再试不含 @ 的邮箱，最后输入合法值。',
+            },
+          },
+          {
+            id: 'closing',
+            kind: 'closing',
+            title: '这一节带走什么',
+            points: [
+              '表单处理通常是读值 -> 校验 -> 反馈，而不是直接提交。',
+              'preventDefault 让你能在浏览器默认提交前接管流程。',
+              '好的表单反馈要清楚、及时，而且和输入错误一一对应。',
+            ],
+          },
+        ],
+      },
+      {
+        id: 'storage',
+        title: 'localStorage 与持久化',
+        short: '本地存储',
+        summary:
+          '理解 localStorage 为什么只能存字符串，以及“写前 stringify、读后 parse”的闭环。',
+        tags: ['localStorage', '持久化'],
+        status: 'ready',
+        slides: [
+          {
+            id: 'cover',
+            kind: 'cover',
+            eyebrow: 'Week 3 · Lesson 7',
+            title: '刷新页面后还记得刚才的状态，靠的是本地存储',
+            subtitle:
+              '浏览器默认不会帮你记住内存里的对象。想跨刷新保留状态，就要借助 localStorage 这类持久化容器。',
+            points: [
+              'localStorage / sessionStorage 差异',
+              '只能存字符串的限制',
+              '读后 parse、写前 stringify',
+            ],
+          },
+          {
+            id: 'storage-table',
+            kind: 'content',
+            eyebrow: 'Lesson 7 · 存储边界',
+            title: '本地存储先记住这几个边界',
+            table: {
+              headers: ['能力', 'localStorage', 'sessionStorage'],
+              rows: [
+                ['存储周期', '长期保留，除非主动清掉', '标签页关闭后通常失效'],
+                ['数据类型', '字符串', '字符串'],
+                ['适合什么', '偏好、草稿、小型本地状态', '短会话临时状态'],
+              ],
+            },
+          },
+          {
+            id: 'storage-code',
+            kind: 'code',
+            eyebrow: 'Lesson 7 · 最小证据',
+            title: '对象想存进去，先得变成字符串',
+            code: {
+              language: 'javascript',
+              filename: 'week3-storage.js',
+              source: `const notes = [{ id: 'n1', text: 'review DOM' }]
+
+localStorage.setItem('week3:notes', JSON.stringify(notes))
+
+const raw = localStorage.getItem('week3:notes')
+const parsed = raw ? JSON.parse(raw) : []`,
+              highlightLines: [3, 5, 6],
+            },
+          },
+          {
+            id: 'storage-demo',
+            kind: 'demo',
+            eyebrow: 'Lesson 7 · live demo',
+            title: 'live demo · localStorage 笔记实验',
+            subtitle:
+              '现场添加一条笔记、刷新后再读回来，完整看一遍 stringify -> setItem -> getItem -> parse。',
+            demo: {
+              route: '/demos/week-3/javascript/localstorage-notes',
+              ctaLabel: '打开实验',
+              objectives: [
+                '观察 localStorage 里实际保存的是字符串',
+                '理解写前 stringify、读后 parse 的闭环',
+              ],
+              note: '建议先新增一条笔记，再刷新页面继续读取。',
+            },
+          },
+          {
+            id: 'closing',
+            kind: 'closing',
+            title: '这一节带走什么',
+            points: [
+              'localStorage 很适合保存小型本地状态，但它只能存字符串。',
+              '对象和数组要先 stringify，再在读取后 parse 回来。',
+              '持久化的目标不是“把所有东西都存起来”，而是保留真正有价值的本地状态。',
+            ],
+          },
+        ],
+      },
     ],
   },
   {

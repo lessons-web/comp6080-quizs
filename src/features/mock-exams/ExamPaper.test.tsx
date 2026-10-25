@@ -1,5 +1,5 @@
-import { render, screen } from '@testing-library/react'
-import { describe, expect, it, vi } from 'vitest'
+import { fireEvent, render, screen } from '@testing-library/react'
+import { beforeEach, describe, expect, it, vi } from 'vitest'
 
 import { ExamPaper } from './ExamPaper'
 import type { ExamPaper as ExamPaperType } from '../../types/content'
@@ -34,7 +34,23 @@ const fixture: ExamPaperType = {
   ],
 }
 
+const bilingualFixture: ExamPaperType = {
+  ...fixture,
+  titleZh: '测试试卷',
+  descriptionZh: '测试试卷说明',
+  questions: fixture.questions.map((question) => ({
+    ...question,
+    titleZh: `${question.title} 中文版`,
+    contentMdxZh: `${question.contentMdx} 中文版`,
+    subQuestions: [],
+  })),
+}
+
 describe('ExamPaper', () => {
+  beforeEach(() => {
+    window.localStorage.clear()
+  })
+
   it('renders exam title, description and total marks', () => {
     render(<ExamPaper exam={fixture} />)
     
@@ -44,10 +60,12 @@ describe('ExamPaper', () => {
   })
 
   it('uses the brand exam paper header theme', () => {
-    render(<ExamPaper exam={fixture} isGuest />)
+    render(<ExamPaper exam={bilingualFixture} isGuest />)
 
-    const totalMarks = screen.getByText('30 marks')
-    const guestPreview = screen.getByText('访客预览模式 · 已展示前 2 题')
+    const totalMarks = screen.getByText('30 分')
+    const guestPreview = screen.getByText((_, node) => (
+      node?.textContent?.replace(/\s+/g, ' ').trim() === '访客预览 · 已展示前 2 题'
+    ))
 
     expect(totalMarks).toHaveClass('text-[#d6a64e]')
     expect(guestPreview).toHaveClass('text-[#f0c675]')
@@ -61,5 +79,23 @@ describe('ExamPaper', () => {
     
     expect(screen.getByTestId('question-card-Q2')).toBeInTheDocument()
     expect(screen.getByText('Question 2')).toBeInTheDocument()
+  })
+
+  it('shows a locale switcher and defaults to Chinese for bilingual exams', () => {
+    render(<ExamPaper exam={bilingualFixture} />)
+
+    expect(screen.getByText('测试试卷')).toBeInTheDocument()
+    expect(screen.getByRole('button', { name: '中文' })).toHaveAttribute('aria-pressed', 'true')
+    expect(screen.getByRole('button', { name: 'EN' })).toHaveAttribute('aria-pressed', 'false')
+  })
+
+  it('switches back to English when the user presses EN', () => {
+    render(<ExamPaper exam={bilingualFixture} />)
+
+    fireEvent.click(screen.getByRole('button', { name: 'EN' }))
+
+    expect(screen.getByText('Test Paper')).toBeInTheDocument()
+    expect(screen.getByRole('button', { name: 'EN' })).toHaveAttribute('aria-pressed', 'true')
+    expect(window.localStorage.getItem('comp6080:pref:exam-language')).toBe('en')
   })
 })

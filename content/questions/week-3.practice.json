@@ -57,6 +57,180 @@
       "codeBlocks": [],
       "images": [],
       "createdAt": "2026-10-08"
+    },
+    {
+      "id": "JS-Q1",
+      "topic": "javascript",
+      "weeks": [
+        "week-3"
+      ],
+      "difficulty": "medium",
+      "tags": [
+        "JavaScript",
+        "类型",
+        "隐式转换"
+      ],
+      "question": "```javascript\nconsole.log(typeof null);\nconsole.log(0.1 + 0.2 === 0.3);\nconsole.log('5' + 1, '5' - 1);\n```\n(a) Why does `typeof null` return 'object'?\n(b) Why is `0.1 + 0.2 === 0.3` false?\n(c) What are the results of `'5' + 1` and `'5' - 1`, and why do they differ?",
+      "knowledgePoint": "JavaScript 语言特性与语法",
+      "answerExplanation": "(a) It is a long-standing bug in the language: null was given the 'object' type tag in the very first implementation and it was kept for backwards compatibility.\n(b) JavaScript numbers are 64-bit floating point, so 0.1 and 0.2 cannot be stored exactly. Their sum is slightly more than 0.3 and the strict comparison fails. Compare with a tolerance, or work in integers.\n(c) `'5' + 1` is '51' because + triggers string concatenation when one side is a string; `'5' - 1` is 4 because - has no string meaning, so '5' is converted to a number first.",
+      "codeBlocks": [],
+      "images": [],
+      "createdAt": "2026-10-25"
+    },
+    {
+      "id": "JS-Q2",
+      "topic": "javascript",
+      "weeks": [
+        "week-3"
+      ],
+      "difficulty": "medium",
+      "tags": [
+        "闭包",
+        "高阶函数",
+        "作用域"
+      ],
+      "question": "```javascript\nfunction counter() {\n  let count = 0;\n  return () => ++count;\n}\nconst next = counter();\nconsole.log(next(), next(), next());\n```\n(a) What is printed, and why?\n(b) Why can the returned function still read `count` after `counter` has finished running?\n(c) What is a closure, in one sentence?",
+      "knowledgePoint": "高级函数与闭包",
+      "answerExplanation": "(a) It prints `1 2 3`. Each call to `next` increments the same `count` and returns the new value.\n(b) The inner arrow function keeps a reference to the scope in which it was created, so `count` stays alive as long as that function exists, even though `counter` has returned.\n(c) A closure is a function together with the variables from the scope where it was defined, so it can keep using those variables after that scope has ended.",
+      "codeBlocks": [],
+      "images": [],
+      "createdAt": "2026-10-25"
+    },
+    {
+      "id": "JS-Q3",
+      "topic": "javascript",
+      "weeks": [
+        "week-3"
+      ],
+      "difficulty": "easy",
+      "tags": [
+        "npm",
+        "Node",
+        "package.json"
+      ],
+      "question": "(a) What problem does npm solve for a JavaScript project?\n(b) What is the difference between `dependencies` and `devDependencies` in `package.json`?\n(c) Why is the lockfile (e.g. `package-lock.json`) committed to the repository?",
+      "knowledgePoint": "JavaScript 生态、Node 与 npm",
+      "answerExplanation": "(a) npm is the package manager for the JavaScript ecosystem: it installs, updates and records third-party libraries (and your own scripts) so you do not have to copy code by hand.\n(b) `dependencies` are needed for the app to run in production; `devDependencies` are only needed while developing or testing (linters, test runners, build tools).\n(c) The lockfile pins the exact versions that were installed, so every developer and CI machine gets identical, reproducible installs instead of whatever happens to satisfy the version ranges.",
+      "codeBlocks": [],
+      "images": [],
+      "createdAt": "2026-10-25"
+    },
+    {
+      "id": "JS-Q5",
+      "topic": "javascript",
+      "weeks": [
+        "week-3"
+      ],
+      "difficulty": "medium",
+      "tags": [
+        "DOM",
+        "查询",
+        "classList"
+      ],
+      "question": "```javascript\nconst items = document.querySelectorAll('.item');\nitems.forEach((el) => el.classList.add('active'));\n```\n(a) What is the difference between `querySelector` and `querySelectorAll`?\n(b) What does `classList.add` do, and how is it different from assigning `el.className`?\n(c) How would you safely read and update the text of an element?",
+      "knowledgePoint": "DOM 查询与操作",
+      "answerExplanation": "(a) `querySelector` returns the first matching element (or null); `querySelectorAll` returns a static NodeList of all matches, which you can iterate with forEach.\n(b) `classList.add` adds a single class without touching the existing ones and ignores duplicates. Assigning `className` replaces the whole class attribute, which can wipe out other classes.\n(c) Read with `el.textContent` (the plain text) and update it with `el.textContent = 'new text'`. Use `textContent` rather than `innerHTML` for user-provided content so it is inserted as text and not parsed as HTML.",
+      "codeBlocks": [],
+      "images": [],
+      "createdAt": "2026-10-25"
+    },
+    {
+      "id": "JS-Q7",
+      "topic": "javascript",
+      "weeks": [
+        "week-3"
+      ],
+      "difficulty": "medium",
+      "tags": [
+        "事件委托",
+        "事件冒泡",
+        "currentTarget"
+      ],
+      "question": "```javascript\ndocument.querySelector('ul').addEventListener('click', (event) => {\n  if (event.target.tagName === 'LI') {\n    console.log(event.target.textContent);\n  }\n});\n```\n(a) Why do events bubble, and how does that let one listener handle items that are added later?\n(b) What is event delegation and why is it useful for a long list?\n(c) What is the difference between `event.target` and `event.currentTarget`?",
+      "knowledgePoint": "事件与事件委托",
+      "answerExplanation": "(a) After an event fires on the innermost element it travels up through its ancestors (bubbling). Because the listener is on the parent `ul`, it still receives clicks from any current or future `<li>`, so new items work with no extra listeners.\n(b) Event delegation means attaching a single listener to a common ancestor and using `event.target` to work out which child triggered it. It is cheaper than attaching a listener to every item and keeps working when the list changes.\n(c) `event.target` is the element the user actually interacted with; `event.currentTarget` is the element the listener is attached to (here the `ul`).",
+      "codeBlocks": [],
+      "images": [],
+      "createdAt": "2026-10-25"
+    },
+    {
+      "id": "QUIZ2-W3-Q1",
+      "topic": "javascript",
+      "weeks": [
+        "week-3"
+      ],
+      "difficulty": "medium",
+      "tags": [
+        "Quiz2",
+        "引用",
+        "浅拷贝",
+        "Screenshot sample"
+      ],
+      "question": "A settings editor uses `let draft = settings;`, then later changes to `let draft = { ...settings };`. What does the summary panel show after `draft.count = draft.count + 1`, and why can changing `draft.colours.accent` still leak back into the saved settings?",
+      "knowledgePoint": "Shared object state",
+      "answerExplanation": "With `draft = settings`, both names point at the same object, so changing `draft.count` changes `settings.count` and the summary shows the new value. With `{ ...settings }`, the top level is copied, so changing `draft.count` no longer affects the original. But it is only a shallow copy: nested objects like `colours` are still shared, so changing `draft.colours.accent` still changes what the summary reads.",
+      "codeBlocks": [],
+      "images": [],
+      "createdAt": "2026-10-25"
+    },
+    {
+      "id": "QUIZ2-W3-Q2",
+      "topic": "javascript",
+      "weeks": [
+        "week-3"
+      ],
+      "difficulty": "medium",
+      "tags": [
+        "Quiz2",
+        "event.target",
+        "currentTarget",
+        "Screenshot sample"
+      ],
+      "question": "A Save button wraps its label in a span, and the click handler reads `event.target.dataset.action`. Why does clicking the words fail, how can `currentTarget` fix it, and what happens if a second listener is also added directly to the span?",
+      "knowledgePoint": "Event origin and listener context",
+      "answerExplanation": "Clicking the words makes `event.target` the inner span, not the button, so the span has no `data-action` and the handler reads `undefined`. Using `event.currentTarget.dataset.action` or `event.target.closest('button')` fixes that by reading the button's data. If a second listener is added to the span, clicking the words can call `runAction` twice: once from the span, then again when the event bubbles to the button.",
+      "codeBlocks": [],
+      "images": [],
+      "createdAt": "2026-10-25"
+    },
+    {
+      "id": "QUIZ2-W3-Q3",
+      "topic": "javascript",
+      "weeks": [
+        "week-3"
+      ],
+      "difficulty": "medium",
+      "tags": [
+        "Quiz2",
+        "表单",
+        "localStorage"
+      ],
+      "question": "```html\n<form id=\"note-form\">\n  <input id=\"note\" type=\"text\" required>\n  <button type=\"submit\">Save note</button>\n</form>\n<p id=\"status\"></p>\n```\n```javascript\nform.addEventListener('submit', (event) => {\n  const value = document.getElementById('note').value;\n  localStorage.setItem('quiz2-note', value);\n  status.textContent = 'Saved!';\n});\n```\n为什么 `Saved!` 可能只是一闪而过？`required` 在这里又扮演什么角色？",
+      "knowledgePoint": "表单默认行为与本地持久化",
+      "answerExplanation": "因为表单提交有默认刷新行为，若没有 `event.preventDefault()`，页面会立刻提交并重载，把刚写进去的状态消息冲掉。`required` 则提供浏览器原生校验，属于“事前约束”：输入为空时浏览器会先阻止提交并提示用户填写。",
+      "codeBlocks": [],
+      "images": [],
+      "createdAt": "2026-10-25"
+    },
+    {
+      "id": "QUIZ2-W3-Q4",
+      "topic": "javascript",
+      "weeks": [
+        "week-3"
+      ],
+      "difficulty": "medium",
+      "tags": [
+        "Quiz2",
+        "form",
+        "preventDefault",
+        "Screenshot sample"
+      ],
+      "question": "A profile form shows a message on Save, but it flashes and the page reloads. Later, the code reads `input.value` before the listener is attached, and a `Clear` button without an explicit `type` is added inside the form. Explain the three resulting problems.",
+      "knowledgePoint": "Form submission and DOM state",
+      "answerExplanation": "Without `event.preventDefault()`, the form submits normally and reloads the page, so the message and typed text disappear. Reading `input.value` at load time captures the old empty string instead of the value the student types later. A button inside a form defaults to `type=\"submit\"`, so clicking Clear empties the box and then also submits the form, which makes the handler read an empty value and show `Name required`.",
+      "codeBlocks": [],
+      "images": [],
+      "createdAt": "2026-10-25"
     }
   ]
 }

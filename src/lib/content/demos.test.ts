@@ -3,6 +3,60 @@ import { describe, expect, it } from 'vitest'
 import { getDemoBySlug } from './demos'
 
 describe('demos content layer', () => {
+  it('resolves week 1 document skeleton demo by slug', () => {
+    const demo = getDemoBySlug(['week-1', 'html', 'document-skeleton'])
+
+    expect(demo).not.toBeNull()
+    expect(demo?.title).toBe('HTML 文档骨架观察器')
+    expect(demo?.lessonId).toBe('structure')
+    expect(demo?.sourceHtmlPath).toBe('/course-demos/week1/01a-document-skeleton-demo.html')
+  })
+
+  it('resolves week 1 lists/tables/code demo by slug', () => {
+    const demo = getDemoBySlug(['week-1', 'html', 'lists-tables-code'])
+
+    expect(demo).not.toBeNull()
+    expect(demo?.title).toBe('列表、表格与代码标签实验')
+    expect(demo?.lessonId).toBe('lists-tables')
+    expect(demo?.sourceHtmlPath).toBe('/course-demos/week1/01d-lists-tables-code-demo.html')
+  })
+
+  it('resolves week 2 cascade inspector demo by slug', () => {
+    const demo = getDemoBySlug(['week-2', 'css', 'cascade-inspector'])
+
+    expect(demo).not.toBeNull()
+    expect(demo?.title).toBe('选择器与层叠检视器')
+    expect(demo?.lessonId).toBe('selectors-cascade')
+    expect(demo?.sourceHtmlPath).toBe('/course-demos/week2/02a-cascade-inspector-demo.html')
+  })
+
+  it('resolves week 2 responsive breakpoint demo by slug', () => {
+    const demo = getDemoBySlug(['week-2', 'css', 'responsive-breakpoints'])
+
+    expect(demo).not.toBeNull()
+    expect(demo?.title).toBe('响应式断点实验')
+    expect(demo?.lessonId).toBe('responsive-viewport')
+    expect(demo?.sourceHtmlPath).toBe('/course-demos/week2/02e-responsive-breakpoints-demo.html')
+  })
+
+  it('resolves week 3 closure snapshot demo by slug', () => {
+    const demo = getDemoBySlug(['week-3', 'javascript', 'closure-snapshot'])
+
+    expect(demo).not.toBeNull()
+    expect(demo?.title).toBe('闭包快照实验')
+    expect(demo?.lessonId).toBe('functions-closures')
+    expect(demo?.sourceHtmlPath).toBe('/course-demos/week3/03a-closure-snapshot-demo.html')
+  })
+
+  it('resolves week 3 localstorage notes demo by slug', () => {
+    const demo = getDemoBySlug(['week-3', 'javascript', 'localstorage-notes'])
+
+    expect(demo).not.toBeNull()
+    expect(demo?.title).toBe('localStorage 笔记实验')
+    expect(demo?.lessonId).toBe('storage')
+    expect(demo?.sourceHtmlPath).toBe('/course-demos/week3/03e-localstorage-notes-demo.html')
+  })
+
   it('resolves week 4 stringify parse demo by slug', () => {
     const demo = getDemoBySlug(['week-4', 'json', 'stringify-parse'])
 

@@ -1,0 +1,38 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>02E · 响应式断点实验</title>
+  <meta name="description" content="COMP6080 Week 2：观察响应式断点与移动优先。" />
+  <link rel="icon" href="data:," />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="../week4/assets/demo.css" />
+  <style>
+    .page-head { display: none; }
+    .demo-page { min-height: auto; padding: 0; }
+    .demo-wrap { max-width: none; margin: 0; }
+  </style>
+</head>
+<body>
+  <main class="demo-page"><div class="demo-wrap"><section class="demo reveal"><div class="demo-head"><h3>演示 E · 响应式断点实验</h3><span class="pill">live</span></div><div class="demo-body"><p class="demo-sub">切换不同 viewport 宽度，观察断点命中后布局如何变化。</p><div class="row"><button class="btn primary sm" data-mode="mobile" type="button">375px</button><button class="btn sm" data-mode="tablet" type="button">768px</button><button class="btn sm" data-mode="desktop" type="button">1024px</button></div><div class="status-line" id="meta"></div><div class="out pre tall idle" id="out">点击按钮开始。</div></div></section></div></main>
+  <script src="../week4/assets/demo.js"></script>
+  <script>
+    const samples = {
+      mobile: { tone: 'ok', label: 'mobile first', text: 'viewport: 375px;\n.cards { grid-template-columns: 1fr; }\n\n先保证单列和可读性。' },
+      tablet: { tone: 'teal', label: 'tablet', text: 'viewport: 768px;\n\n还可以维持单列或进入更宽松的双列过渡。' },
+      desktop: { tone: 'warn', label: 'desktop breakpoint', text: '@media (min-width: 900px) {\n  .cards { grid-template-columns: repeat(2, minmax(0, 1fr)); }\n}\n\n宽屏时再扩成双列。' }
+    };
+    const out = document.querySelector('#out');
+    const meta = document.querySelector('#meta');
+    document.querySelectorAll('[data-mode]').forEach((btn) => btn.addEventListener('click', () => {
+      const sample = samples[btn.dataset.mode];
+      meta.innerHTML = '<span class="chip ' + sample.tone + '">' + sample.label + '</span>';
+      out.className = 'out pre tall ' + sample.tone;
+      out.textContent = sample.text;
+    }));
+  </script>
+</body>
+</html>

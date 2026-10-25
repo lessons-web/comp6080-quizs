@@ -1,0 +1,85 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>01C · 路径与图片实验</title>
+  <meta name="description" content="COMP6080 Week 1：观察路径和 alt 的差异。" />
+  <link rel="icon" href="data:," />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600&family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600&display=swap"
+    rel="stylesheet"
+  />
+  <link rel="stylesheet" href="../week4/assets/demo.css" />
+  <style>
+    .page-head { display: none; }
+    .demo-page { min-height: auto; padding: 0; }
+    .demo-wrap { max-width: none; margin: 0; }
+  </style>
+</head>
+<body>
+  <main class="demo-page">
+    <div class="demo-wrap">
+      <section class="demo reveal">
+        <div class="demo-head">
+          <h3>演示 C · 路径与图片实验</h3>
+          <span class="pill">live</span>
+        </div>
+        <div class="demo-body">
+          <p class="demo-sub">切换不同路径写法，直接看资源状态说明和 alt 兜底提示。</p>
+          <div class="row">
+            <button class="btn primary sm" data-mode="relative" type="button">相对路径</button>
+            <button class="btn sm" data-mode="root" type="button">站点根路径</button>
+            <button class="btn sm" data-mode="broken" type="button">错误路径</button>
+          </div>
+          <div class="status-line" id="meta"></div>
+          <div class="out pre tall idle" id="out">点击按钮后查看资源说明。</div>
+        </div>
+      </section>
+    </div>
+  </main>
+
+  <script src="../week4/assets/demo.js"></script>
+  <script>
+    const $ = W4.$;
+    const out = $('#out');
+    const meta = $('#meta');
+
+    const samples = {
+      relative: {
+        tone: 'ok',
+        label: '相对路径',
+        text: '相对路径跟着当前文件目录走，更适合课程静态页和 GitHub Pages 子路径环境。',
+        code: '<img src="./images/html-structure.png" alt="HTML 文档结构示意图" />'
+      },
+      root: {
+        tone: 'warn',
+        label: '站点根路径',
+        text: '站点根路径从根目录开始找，部署到子路径时最容易因为前缀不一致而 404。',
+        code: '<img src="/assets/html-structure.png" alt="站点根资源" />'
+      },
+      broken: {
+        tone: 'err',
+        label: '错误路径',
+        text: '路径一旦写错，图片本体拿不到，页面就只能靠 alt 文本继续说明“本来这里应该是什么”。',
+        code: '<img src="./images/missing.png" alt="HTML 文档结构示意图" />'
+      }
+    };
+
+    function render(mode) {
+      const sample = samples[mode];
+      meta.innerHTML = '<span class="chip ' + sample.tone + '">' + sample.label + '</span>';
+      out.className = 'out pre tall ' + sample.tone;
+      out.textContent = sample.text + '\n\n' + sample.code;
+    }
+
+    W4.$$('[data-mode]').forEach(function (btn) {
+      btn.addEventListener('click', function () {
+        render(btn.dataset.mode);
+      });
+    });
+  </script>
+</body>
+</html>
