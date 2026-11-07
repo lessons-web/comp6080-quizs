@@ -231,6 +231,26 @@
       "codeBlocks": [],
       "images": [],
       "createdAt": "2026-10-25"
+    },
+    {
+      "id": "QUIZ3-W3-Q1",
+      "topic": "javascript",
+      "weeks": [
+        "week-3"
+      ],
+      "difficulty": "medium",
+      "tags": [
+        "Quiz3",
+        "DOM",
+        "Node",
+        "执行时机"
+      ],
+      "question": "register 页有两个 helper：`parseReply`（把服务器 JSON 转成标题列表）与 `showError`（把信息写进页面的 error popup）。想用 Node、不开浏览器就调用它们做自动测试，哪一个测不了、为什么？另外 `helpers.js` 在 head 中、位于 `#error-container` 之上，若在文件底部直接调用 `showError('Welcome back')` 会怎样？放到表单 submit 处理器里调用又会怎样？",
+      "knowledgePoint": "Helpers for the register page",
+      "answerExplanation": "`showError` 测不了。`parseReply` 只用 `JSON.parse` 和 `map`，属于 JavaScript 语言本身，任何运行时（含 Node）都有；`showError` 用了 `document`，这是浏览器提供的，Node 里不存在，调用会报 \"document is not defined\"。若在 head 脚本里立即调用 `showError`，此时 body 还没构建，`getElementById('error-container')` 返回 `null`，会报 \"Cannot set properties of null\"，信息不会出现。改到表单 submit 处理器里调用就没问题：处理器只在用户提交表单时运行，那时页面早已加载完成，`error-container` 已经存在——脚本标签的位置只对\"文件加载时立即执行\"的代码有影响。",
+      "codeBlocks": [],
+      "images": [],
+      "createdAt": "2026-11-07"
     }
   ]
 }

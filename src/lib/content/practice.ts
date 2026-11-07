@@ -27,6 +27,10 @@ const questionLoaders: Record<string, () => Promise<PracticeQuestionCollection>>
     import('@/content/questions/week-5.practice.json').then(
       (m) => m.default as unknown as PracticeQuestionCollection,
     ),
+  'week-7.practice': () =>
+    import('@/content/questions/week-7.practice.json').then(
+      (m) => m.default as unknown as PracticeQuestionCollection,
+    ),
   'database': () =>
     import('@/content/questions/database.json').then(
       (m) => m.default as unknown as PracticeQuestionCollection,

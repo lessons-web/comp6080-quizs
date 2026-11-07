@@ -1,0 +1,804 @@
+{
+  "topic": "react",
+  "exams": [
+    {
+      "id": "2026T3-QUIZ3",
+      "title": "2026 Term 3 Quiz 3 模拟卷",
+      "description": "按老师 clarification 与 Quiz 3 样本重构：覆盖 Weeks 1-8 lectures 与 Weeks 1-9 tutorials，并包含 assignment 4，重点为 Weeks 7-8 的 React 内容。",
+      "tags": [
+        "Quiz 3",
+        "样本复刻",
+        "React",
+        "Weeks7-8"
+      ],
+      "totalMarks": 69,
+      "time": "2026-11-08 21:00",
+      "questions": [
+        {
+          "id": "Q1.1",
+          "title": "Delete beside Edit",
+          "marks": 3,
+          "contentMdx": "On the Qanda discussion site, the creator of a thread sees three buttons under it, as in the screenshot `thread.png`. Edit lets the creator change the thread. Delete removes the thread straight away and sends the user back to the dashboard. Like adds a like. Mei is the creator of this thread and wants to edit it.",
+          "subQuestions": [
+            {
+              "id": "Q1.1-a",
+              "label": "(a)",
+              "marks": 1,
+              "questionMdx": "What about the design of these three buttons makes it easy for Mei to press Delete by mistake?",
+              "answerMdx": "All three buttons look the same (same colour, size and style) and sit right next to each other with almost no gap, so nothing sets Delete apart from Edit and Like, and a slightly off click lands on the wrong one.",
+              "markingMdx": "1 mark for the identical styling and/or the tiny gap that gives no visual separation between Edit and Delete.",
+              "questionMdxZh": "这三个按钮的设计有什么问题，会让 Mei 很容易误点到 Delete？",
+              "answerMdxZh": "三个按钮外观完全一样（同样的颜色、尺寸和样式），而且彼此紧挨着、几乎没有间隙，所以 Delete 和 Edit、Like 之间没有任何视觉区分，手稍微偏一点就会落到错误的按钮上。",
+              "markingMdxZh": "1 分：指出三个按钮样式完全相同，和/或间距过小，导致 Edit 与 Delete 之间没有视觉区分。"
+            },
+            {
+              "id": "Q1.1-b",
+              "label": "(b)",
+              "marks": 2,
+              "questionMdx": "Describe one change that makes an accidental delete less likely, and one different change that makes it less costly when it still happens.",
+              "answerMdx": "Less likely: ask \"Delete this thread?\" and wait for a confirmation before deleting; style Delete differently from the other buttons (for example red or outlined); or move or space Delete away from Edit and Like. Less costly: let the user undo the delete straight afterwards, or keep deleted threads somewhere they can be restored from.",
+              "markingMdx": "1 mark for a change that reduces the chance of the mistake (confirmation step, different styling, or moving / spacing Delete away).\n1 mark for a different change that reduces the cost after the mistake (undo, or a place deleted threads can be restored from).",
+              "questionMdxZh": "请分别给出一个改法：一个让误删更不容易发生，另一个让误删即使发生代价也更小。",
+              "answerMdxZh": "降低发生概率：删除前弹出 \"Delete this thread?\" 等待确认；把 Delete 与其他按钮做成不同样式（例如红色或描边）；或把 Delete 移开、拉开距离。降低代价：删除后立刻提供 undo，或者把已删除的帖子放到可以恢复的地方。",
+              "markingMdxZh": "1 分：给出一种降低误删概率的改法（二次确认、不同样式、把 Delete 移开或拉开间距）。\n1 分：给出另一种降低误删代价的改法（undo，或可恢复删除内容的地方）。"
+            }
+          ],
+          "displayNumber": "Q1.1",
+          "categoryLabel": "UI Design Principles and User Experience Reasoning",
+          "displayStyle": "quiz-sample",
+          "mockup": {
+            "files": [
+              {
+                "name": "thread.png",
+                "active": true
+              }
+            ],
+            "html": "<div class=\"exam-ui-shell\"><div class=\"exam-ui-topbar\"><span>Qanda</span><span>Assignment 3 help</span></div><div class=\"exam-ui-body\"><div class=\"exam-ui-card\" style=\"max-width:420px;\"><p class=\"exam-ui-value\" style=\"font-weight:700;\">Assignment 3 help</p><p class=\"exam-ui-label\">Posted by Mei Tan · 2 days ago</p><p class=\"exam-ui-value\">I can't get the thread list to load more than five threads. Does anyone know what the More button should do once the last page has been reached?</p><div class=\"exam-ui-button-row\" style=\"margin-top:.75rem;gap:.15rem;\"><button class=\"exam-ui-button-secondary\" style=\"min-width:80px;\">Edit</button><button class=\"exam-ui-button-secondary\" style=\"min-width:80px;\">Delete</button><button class=\"exam-ui-button-secondary\" style=\"min-width:80px;\">Like</button></div><p class=\"exam-ui-stat\" style=\"margin-top:.5rem;\">12 likes</p></div></div></div>",
+            "htmlZh": "<div class=\"exam-ui-shell\"><div class=\"exam-ui-topbar\"><span>Qanda</span><span>Assignment 3 求助</span></div><div class=\"exam-ui-body\"><div class=\"exam-ui-card\" style=\"max-width:420px;\"><p class=\"exam-ui-value\" style=\"font-weight:700;\">Assignment 3 求助</p><p class=\"exam-ui-label\">由 Mei Tan 发布 · 2 天前</p><p class=\"exam-ui-value\">我怎么都没法让帖子列表加载超过五条。有人知道当到达最后一页时，More 按钮应该做什么吗？</p><div class=\"exam-ui-button-row\" style=\"margin-top:.75rem;gap:.15rem;\"><button class=\"exam-ui-button-secondary\" style=\"min-width:80px;\">Edit</button><button class=\"exam-ui-button-secondary\" style=\"min-width:80px;\">Delete</button><button class=\"exam-ui-button-secondary\" style=\"min-width:80px;\">Like</button></div><p class=\"exam-ui-stat\" style=\"margin-top:.5rem;\">12 个赞</p></div></div></div>"
+          },
+          "titleZh": "紧挨着 Edit 的 Delete",
+          "contentMdxZh": "在 Qanda 讨论站点上，帖子作者会在这条帖子下方看到三个按钮，如截图 `thread.png` 所示。Edit 让作者修改帖子；Delete 会立即删除帖子并把用户送回 dashboard；Like 用来点赞。Mei 是这条帖子的作者，她想修改这条帖子。"
+        },
+        {
+          "id": "Q1.2",
+          "title": "An empty dashboard",
+          "marks": 3,
+          "contentMdx": "`dashboard.png` shows the Qanda dashboard for a user who has just registered and has no threads yet. The only way to create a thread is the \"+\" in the header. In a usability test, 8 new users were asked to start a discussion. 5 said the page \"was still loading\" or \"looked broken\". The other 3 found the \"+\", but only after more than a minute.",
+          "subQuestions": [
+            {
+              "id": "Q1.2-a",
+              "label": "(a)",
+              "marks": 1,
+              "questionMdx": "Every tester's dashboard was working correctly, but they did not realise it. Why not, and what might they have expected to see that would show the page was working?",
+              "answerMdx": "The blank area below \"Dashboard\" looks the same whether the threads are loading, failed to load, or there are no threads. Nothing on the page tells these apart, so testers assumed the list had not arrived yet or had failed. They would have expected the page to say what state it is in: a message such as \"You have no threads yet\" once the list has loaded empty (or a \"Loading...\" indicator while it is still loading).",
+              "markingMdx": "1 mark for explaining that the blank area is indistinguishable from loading or failed, and for naming an explicit state message (an empty-state message, or a loading indicator).",
+              "questionMdxZh": "每位测试者的 dashboard 其实都工作正常，但他们没意识到。为什么？他们本期望看到什么，才能表明页面是正常的？",
+              "answerMdxZh": "因为 \"Dashboard\" 下方那片空白，在帖子正在加载、加载失败和确实没有帖子这三种情况下看起来一模一样，页面没有任何东西能区分它们，所以测试者以为列表还没到或加载失败了。他们本期望页面明确写出自己处于什么状态：当列表加载完但为空时显示类似 \"You have no threads yet\" 的文案（加载中时则显示 \"Loading...\" 指示）。",
+              "markingMdxZh": "1 分：解释空白区域与加载中 / 加载失败无法区分，并指出需要一个明确的状态文案（空状态提示，或加载指示）。"
+            },
+            {
+              "id": "Q1.2-b",
+              "label": "(b)",
+              "marks": 2,
+              "questionMdx": "Describe how the \"+\" for creating a thread could be shown instead so that new users find it easily, and give an example HTML element, with CSS, for your idea. Inline CSS is accepted.",
+              "answerMdx": "Replace the small icon-only \"+\" with a clearly labelled button, such as \"Create your first thread\", placed in the empty area below \"Dashboard\" where new users are already looking. Style it as the main action on the page: larger, with padding and a filled background in the site's colour, so it stands out. The text label says what it does, so users do not have to guess what \"+\" means. For example: `<button style=\"padding: 12px 24px; font-size: 18px; background: #2b3a67; color: white; border: none; border-radius: 6px;\">+ Create your first thread</button>`.",
+              "markingMdx": "1 mark for a labelled, prominent primary button placed in the empty area (not just an icon).\n1 mark for example markup / CSS that makes it the main action (padding, filled background, a readable label).",
+              "questionMdxZh": "请描述一种改法：把创建帖子的 \"+\" 换一种展示方式，让新用户容易找到，并给出一个示例 HTML 元素和 CSS（允许内联 CSS）。",
+              "answerMdxZh": "把只有小图标的 \"+\" 换成一个带清晰文字标签的按钮，例如 \"Create your first thread\"，放在 \"Dashboard\" 下方那块新用户本来就在看的空白区域里。把它做成页面上的主行动作：更大、有 padding、用站点主色的填充背景，让它跳出来。文字标签直接说明它能做什么，用户就不用猜 \"+\" 是什么意思。例如：`<button style=\"padding: 12px 24px; font-size: 18px; background: #2b3a67; color: white; border: none; border-radius: 6px;\">+ Create your first thread</button>`。",
+              "markingMdxZh": "1 分：给出一个带文字标签、醒目、且放在空白区域内的主按钮（不能只是一个图标）。\n1 分：示例 markup / CSS 体现了它作为主行动作（有 padding、填充背景、可读的文字标签）。"
+            }
+          ],
+          "displayNumber": "Q1.2",
+          "categoryLabel": "UI Design Principles and User Experience Reasoning",
+          "displayStyle": "quiz-sample",
+          "mockup": {
+            "files": [
+              {
+                "name": "dashboard.png",
+                "active": true
+              }
+            ],
+            "html": "<div class=\"exam-ui-shell\"><div class=\"exam-ui-topbar\"><span>Qanda</span><span>+</span></div><div class=\"exam-ui-body\"><p class=\"exam-ui-page-title\">Dashboard</p><div class=\"exam-ui-stage\" style=\"min-height:220px;display:flex;align-items:center;justify-content:center;\"><span class=\"exam-ui-muted\" style=\"font-size:.72rem;\">&nbsp;</span></div></div></div>",
+            "htmlZh": "<div class=\"exam-ui-shell\"><div class=\"exam-ui-topbar\"><span>Qanda</span><span>+</span></div><div class=\"exam-ui-body\"><p class=\"exam-ui-page-title\">Dashboard</p><div class=\"exam-ui-stage\" style=\"min-height:220px;display:flex;align-items:center;justify-content:center;\"><span class=\"exam-ui-muted\" style=\"font-size:.72rem;\">&nbsp;</span></div></div></div>"
+          },
+          "titleZh": "空荡荡的 dashboard",
+          "contentMdxZh": "`dashboard.png` 展示的是一个刚注册、还没有任何帖子的用户看到的 Qanda dashboard。创建帖子的唯一入口是顶栏里的 \"+\"。在一次可用性测试中，8 位新用户被要求发起一次讨论：5 人说页面 \"还在加载\" 或 \"看起来坏了\"；另外 3 人虽然找到了 \"+\"，但也花了一分多钟。"
+        },
+        {
+          "id": "Q2.1",
+          "title": "A token that runs out of its comment",
+          "marks": 3,
+          "contentMdx": "On the Qanda thread page each comment is shown in a box. Ben pastes a long login token into his comment. The markup and styles are in `index.html` and `style.css`, and `comments.png` is a screenshot of the page.",
+          "subQuestions": [
+            {
+              "id": "Q2.1-a",
+              "label": "(a)",
+              "marks": 1,
+              "questionMdx": "Ben's sentence wraps onto new lines inside the box, but the token runs straight out of it. Why does the token not wrap too?",
+              "answerMdx": "The browser only breaks lines at places where it is allowed to, such as spaces (and hyphens). The token is one very long \"word\" with no spaces in it, so there is nowhere to break it. It is wider than the 360px box, and because the box has a fixed width it cannot grow, so the token overflows past its edge.",
+              "markingMdx": "1 mark for explaining that line breaks only happen at allowed break points (spaces / hyphens) and the token has none, so it overflows the fixed-width box.",
+              "questionMdxZh": "Ben 的那句话能在框内自动换行，但 token 却直接冲出了框。为什么 token 不会换行？",
+              "answerMdxZh": "因为浏览器只会在允许换行的位置断行，例如空格（以及连字符）。而这个 token 是一个不含空格的超长 \"单词\"，没有任何可以断行的位置。它比 360px 的框还宽，而框又是固定宽度、不会变大，所以 token 就从框的边缘溢了出去。",
+              "markingMdxZh": "1 分：解释浏览器只在允许的断行点（空格 / 连字符）换行，而 token 没有任何断行点，因此溢出固定宽度的框。"
+            },
+            {
+              "id": "Q2.1-b",
+              "label": "(b)",
+              "marks": 2,
+              "questionMdx": "A teammate suggests adding `overflow: hidden` to `.comment`. Describe what Ben's comment would look like then, and give a better CSS fix with the reason it is better.",
+              "answerMdx": "With `overflow: hidden`, the overflow is removed, but the end of the token would be cut off at the right edge. Other users will not see or copy the whole token. A better fix is `overflow-wrap: anywhere` (or `overflow-wrap: break-word`, or `word-break: break-all`) on the comment text. It allows the browser to break inside a word when the word cannot fit on a line, so the token wraps onto several lines inside the box.",
+              "markingMdx": "1 mark for describing that `overflow: hidden` clips / cuts off the end of the token.\n1 mark for a correct wrapping fix (`overflow-wrap: anywhere` / `break-word`, or `word-break: break-all`) with the reason that it lets the browser break inside the long word.",
+              "questionMdxZh": "队友建议给 `.comment` 加上 `overflow: hidden`。请描述那时 Ben 的评论会变成什么样，并给出一个更好的 CSS 修法以及它更好的原因。",
+              "answerMdxZh": "加了 `overflow: hidden` 之后，溢出虽然消失了，但 token 的尾部会在右侧被裁掉，其他用户既看不到、也无法复制完整的 token。更好的修法是在评论文本上加 `overflow-wrap: anywhere`（或 `overflow-wrap: break-word`，或 `word-break: break-all`）。它允许浏览器在这个单词一行放不下时从单词内部断开，于是 token 会在框内折成好几行。",
+              "markingMdxZh": "1 分：描述 `overflow: hidden` 会把 token 的尾部裁掉。\n1 分：给出正确的换行修法（`overflow-wrap: anywhere` / `break-word`，或 `word-break: break-all`），并说明它允许浏览器在长单词内部断行。"
+            }
+          ],
+          "displayNumber": "Q2.1",
+          "categoryLabel": "HTML/CSS Layout and Responsive Behaviour",
+          "displayStyle": "quiz-sample",
+          "mockup": {
+            "files": [
+              {
+                "name": "comments.png",
+                "active": true
+              },
+              {
+                "name": "index.html",
+                "code": "<div class=\"comment\">\n  <p class=\"author\">Ben</p>\n  <p class=\"text\">My requests keep failing. This is the token I am sending. eyJhbGciOiJIUzI1NiJ9eyJ1c2VySWQiOjQyLCJpYXQiOjE3MDk5OTk5OTl9c2lnbmF0dXJlZ29lc2hlcmU</p>\n</div>",
+                "codeZh": "<div class=\"comment\">\n  <p class=\"author\">Ben</p>\n  <p class=\"text\">我的请求一直失败。这是我正在发送的 token。eyJhbGciOiJIUzI1NiJ9eyJ1c2VySWQiOjQyLCJpYXQiOjE3MDk5OTk5OTl9c2lnbmF0dXJlZ29lc2hlcmU</p>\n</div>"
+              },
+              {
+                "name": "style.css",
+                "code": ".comment {\n  width: 360px;\n  border: 1px solid #d1d5db;\n  padding: 12px;\n}",
+                "codeZh": ".comment {\n  width: 360px;\n  border: 1px solid #d1d5db;\n  padding: 12px;\n}"
+              }
+            ],
+            "html": "<div class=\"exam-ui-shell\"><div class=\"exam-ui-topbar\"><span>Qanda</span><span>Thread</span></div><div class=\"exam-ui-body\"><div class=\"exam-ui-card\" style=\"width:360px;max-width:100%;\"><p class=\"exam-ui-label\">Ben</p><p class=\"exam-ui-value\">My requests keep failing. This is the token I am sending.</p><p class=\"exam-ui-value\" style=\"font-family:monospace;font-size:.66rem;margin-top:.3rem;\">eyJhbGciOiJIUzI1NiJ9eyJ1c2VySWQiOjQyLCJpYXQiOjE3MDk5OTk5OTl9c2lnbmF0dXJlZ29lc2hlcmU</p></div><div class=\"exam-ui-card\" style=\"width:360px;max-width:100%;\"><p class=\"exam-ui-label\">Mei</p><p class=\"exam-ui-value\">Is the due date Friday?</p></div></div></div>",
+            "htmlZh": "<div class=\"exam-ui-shell\"><div class=\"exam-ui-topbar\"><span>Qanda</span><span>帖子</span></div><div class=\"exam-ui-body\"><div class=\"exam-ui-card\" style=\"width:360px;max-width:100%;\"><p class=\"exam-ui-label\">Ben</p><p class=\"exam-ui-value\">我的请求一直失败。这是我正在发送的 token。</p><p class=\"exam-ui-value\" style=\"font-family:monospace;font-size:.66rem;margin-top:.3rem;\">eyJhbGciOiJIUzI1NiJ9eyJ1c2VySWQiOjQyLCJpYXQiOjE3MDk5OTk5OTl9c2lnbmF0dXJlZ29lc2hlcmU</p></div><div class=\"exam-ui-card\" style=\"width:360px;max-width:100%;\"><p class=\"exam-ui-label\">Mei</p><p class=\"exam-ui-value\">截止日期是周五吗？</p></div></div></div>"
+          },
+          "titleZh": "冲出评论框的 token",
+          "contentMdxZh": "在 Qanda 的帖子页面上，每条评论都显示在一个框里。Ben 把一个很长的登录 token 粘贴进了他的评论。相关 markup 和样式在 `index.html` 与 `style.css` 中，`comments.png` 是页面截图。"
+        },
+        {
+          "id": "Q2.2",
+          "title": "Buttons that jump",
+          "marks": 3,
+          "contentMdx": "A Qanda post contains a 600 by 300 pixel sketch, with Reply and Like buttons underneath. The markup and styles are in `index.html` and `style.css`. Mei is on slow Wi-Fi. `loading.png` shows the page just after it appears, and `loaded.png` shows it about two seconds later, after the sketch has downloaded. Mei went to click Reply as soon as the page appeared, but her click landed on the sketch.",
+          "subQuestions": [
+            {
+              "id": "Q2.2-a",
+              "label": "(a)",
+              "marks": 1,
+              "questionMdx": "Why do the Reply and Like buttons move down when the sketch finishes downloading?",
+              "answerMdx": "The `<img>` tag does not define the picture's size, so the browser does not know its size until the file is downloaded. Until then it gives the image no space, and the buttons just sit under the text. When the 600 by 300 picture arrives, the browser makes room for it and pushes everything below it down by about 300px.",
+              "markingMdx": "1 mark for explaining that the `<img>` has no declared dimensions, so no space is reserved until the download finishes and the later layout shift pushes the buttons down.",
+              "questionMdxZh": "为什么草图下载完成时，Reply 和 Like 按钮会向下移动？",
+              "answerMdxZh": "因为 `<img>` 标签没有定义图片尺寸，浏览器在文件下载完成前并不知道它有多大。在这之前，图片不占任何空间，按钮就紧贴在文字下面。当这张 600 × 300 的图片到达后，浏览器为它腾出空间，把下方所有内容整体往下推了大约 300px。",
+              "markingMdxZh": "1 分：解释 `<img>` 没有声明尺寸，下载完成前没有预留空间，之后的布局位移把按钮推了下去。"
+            },
+            {
+              "id": "Q2.2-b",
+              "label": "(b)",
+              "marks": 2,
+              "questionMdx": "Describe a change to the page that stops the buttons from moving, and explain why it works.",
+              "answerMdx": "Add the picture's size to the tag: `<img src=\"sketch.png\" width=\"600\" height=\"300\" alt=\"...\">`. The browser then knows how big the image will be before the file arrives, so it reserves a 600 by 300 box straight away. The buttons start in their final position and nothing moves when the picture appears.",
+              "markingMdx": "1 mark for setting explicit `width` and `height` (or `aspect-ratio`) on the `<img>`.\n1 mark for explaining that the browser can then reserve the space before the image loads, so nothing shifts.",
+              "questionMdxZh": "请描述一种能让按钮不再移动的页面改法，并解释它为什么有效。",
+              "answerMdxZh": "把图片尺寸写进标签：`<img src=\"sketch.png\" width=\"600\" height=\"300\" alt=\"...\">`。这样浏览器在文件到达之前就知道图片会有多大，于是立刻预留出一个 600 × 300 的盒子。按钮一开始就处在最终位置上，图片出现时也不会再有东西移动。",
+              "markingMdxZh": "1 分：在 `<img>` 上显式设置 `width` 和 `height`（或 `aspect-ratio`）。\n1 分：解释这样浏览器能在图片加载前就预留空间，因此不会发生位移。"
+            }
+          ],
+          "displayNumber": "Q2.2",
+          "categoryLabel": "HTML/CSS Layout and Responsive Behaviour",
+          "displayStyle": "quiz-sample",
+          "mockup": {
+            "files": [
+              {
+                "name": "index.html",
+                "code": "<!doctype html>\n<html lang=\"en\">\n<head>\n  <meta charset=\"utf-8\">\n  <title>Qanda</title>\n  <link rel=\"stylesheet\" href=\"style.css\">\n</head>\n<body>\n  <h2>How should the dashboard look?</h2>\n  <p>Here is my sketch:</p>\n  <img src=\"sketch.png\" alt=\"Sketch of the dashboard\">\n  <div>\n    <button>Reply</button>\n    <button>Like</button>\n  </div>\n</body>\n</html>",
+                "codeZh": "<!doctype html>\n<html lang=\"en\">\n<head>\n  <meta charset=\"utf-8\">\n  <title>Qanda</title>\n  <link rel=\"stylesheet\" href=\"style.css\">\n</head>\n<body>\n  <h2>dashboard 应该长什么样？</h2>\n  <p>这是我的草图：</p>\n  <img src=\"sketch.png\" alt=\"dashboard 草图\">\n  <div>\n    <button>Reply</button>\n    <button>Like</button>\n  </div>\n</body>\n</html>"
+              },
+              {
+                "name": "loading.png",
+                "active": true
+              },
+              {
+                "name": "loaded.png"
+              },
+              {
+                "name": "sketch.png"
+              },
+              {
+                "name": "style.css",
+                "code": "img {\n  /* no width or height is set here */\n}\n\nbutton {\n  padding: 6px 12px;\n}",
+                "codeZh": "img {\n  /* 这里没有设置 width 或 height */\n}\n\nbutton {\n  padding: 6px 12px;\n}"
+              }
+            ],
+            "html": "<div class=\"exam-ui-stack\" style=\"gap:1rem;\"><div><p class=\"exam-ui-kicker\">Just after the page appears</p><div class=\"exam-ui-card\" style=\"max-width:340px;\"><p class=\"exam-ui-value\" style=\"font-weight:700;\">How should the dashboard look?</p><p class=\"exam-ui-value\">Here is my sketch:</p><div class=\"exam-ui-button-row\" style=\"margin-top:.2rem;\"><button class=\"exam-ui-button-secondary\">Reply</button><button class=\"exam-ui-button-secondary\">Like</button></div></div></div><div><p class=\"exam-ui-kicker\">About two seconds later</p><div class=\"exam-ui-card\" style=\"max-width:340px;\"><p class=\"exam-ui-value\" style=\"font-weight:700;\">How should the dashboard look?</p><p class=\"exam-ui-value\">Here is my sketch:</p><div class=\"exam-ui-outline\" style=\"height:110px;display:flex;align-items:center;justify-content:center;color:#9ca3af;font-size:.7rem;margin:.4rem 0;\">sketch.png (600 × 300)</div><div class=\"exam-ui-button-row\"><button class=\"exam-ui-button-secondary\">Reply</button><button class=\"exam-ui-button-secondary\">Like</button></div></div></div></div>",
+            "htmlZh": "<div class=\"exam-ui-stack\" style=\"gap:1rem;\"><div><p class=\"exam-ui-kicker\">页面刚出现时</p><div class=\"exam-ui-card\" style=\"max-width:340px;\"><p class=\"exam-ui-value\" style=\"font-weight:700;\">dashboard 应该长什么样？</p><p class=\"exam-ui-value\">这是我的草图：</p><div class=\"exam-ui-button-row\" style=\"margin-top:.2rem;\"><button class=\"exam-ui-button-secondary\">Reply</button><button class=\"exam-ui-button-secondary\">Like</button></div></div></div><div><p class=\"exam-ui-kicker\">大约两秒之后</p><div class=\"exam-ui-card\" style=\"max-width:340px;\"><p class=\"exam-ui-value\" style=\"font-weight:700;\">dashboard 应该长什么样？</p><p class=\"exam-ui-value\">这是我的草图：</p><div class=\"exam-ui-outline\" style=\"height:110px;display:flex;align-items:center;justify-content:center;color:#9ca3af;font-size:.7rem;margin:.4rem 0;\">sketch.png（600 × 300）</div><div class=\"exam-ui-button-row\"><button class=\"exam-ui-button-secondary\">Reply</button><button class=\"exam-ui-button-secondary\">Like</button></div></div></div></div>"
+          },
+          "titleZh": "会跳动的按钮",
+          "contentMdxZh": "一条 Qanda 帖子里有一张 600 × 300 像素的草图，下方是 Reply 和 Like 按钮。相关 markup 和样式在 `index.html` 与 `style.css` 中。Mei 的网络很慢：`loading.png` 是页面刚出现时的样子，`loaded.png` 是约两秒后草图下载完成时的样子。Mei 在页面一出现就想点 Reply，但她的点击落到了草图上。"
+        },
+        {
+          "id": "Q3.1",
+          "title": "Helpers for the register page",
+          "marks": 3,
+          "contentMdx": "The Qanda team keeps two helper functions for the register page in `helpers.js`. `parseReply` turns the server's JSON reply into a list of thread titles. `showError` puts a message into the page's error popup. In the page, `helpers.js` is loaded with a script tag in the `head`, above the `div` with the id `error-container`. `runtime-order.svg` shows the Node test calls and the browser's document order.",
+          "subQuestions": [
+            {
+              "id": "Q3.1-a",
+              "label": "(a)",
+              "marks": 1,
+              "questionMdx": "The team wants to check these functions automatically with Node, without opening a browser, by calling each one with test input. One function can be checked this way and the other cannot. Which one cannot, and why?",
+              "answerMdx": "`showError` cannot. `parseReply` only uses `JSON.parse` and `map`, which are part of the JavaScript language and so work in any runtime, including Node. `showError` uses `document`, which is added by the browser and does not exist in Node, so calling it stops with \"document is not defined\".",
+              "markingMdx": "1 mark for naming `showError` and explaining it uses the browser-only `document` object, which Node does not provide.",
+              "questionMdxZh": "团队想用 Node 自动测试这两个函数（不开浏览器，直接传入测试输入调用）。其中一个可以这样测，另一个不行。哪一个不行？为什么？",
+              "answerMdxZh": "`showError` 不行。`parseReply` 只用到 `JSON.parse` 和 `map`，它们属于 JavaScript 语言本身，在任何运行时（包括 Node）里都能工作。而 `showError` 用到了 `document`，这是由浏览器提供的对象，Node 里并不存在，所以调用它会以 \"document is not defined\" 报错中断。",
+              "markingMdxZh": "1 分：指出是 `showError`，并解释它使用了 Node 不具备的浏览器专属对象 `document`。"
+            },
+            {
+              "id": "Q3.1-b",
+              "label": "(b)",
+              "marks": 1,
+              "questionMdx": "On the register page, a teammate adds the line `showError('Welcome back')` at the bottom of `helpers.js` so that it runs as soon as the file loads. What happens on the page, and why?",
+              "answerMdx": "The call fails with an error (\"Cannot set properties of null\") and no message appears. The script is in the head, so it runs before the browser has built the page body. The `error-container` div does not exist yet, so `getElementById` returns `null` and there is nothing to put the text into.",
+              "markingMdx": "1 mark for explaining that `getElementById` returns null because the head script runs before the `error-container` div exists, so the call throws.",
+              "questionMdxZh": "在注册页上，队友在 `helpers.js` 底部加了一行 `showError('Welcome back')`，让它在文件一加载时就执行。页面上会发生什么？为什么？",
+              "answerMdxZh": "这次调用会以 \"Cannot set properties of null\" 报错，且页面上不会出现任何消息。因为脚本在 head 中，会在浏览器构建出页面 body 之前就执行，此时 `error-container` 这个 div 还不存在，所以 `getElementById` 返回 `null`，没有任何元素可以写入文本。",
+              "markingMdxZh": "1 分：解释由于 head 中的脚本在 `error-container` 这个 div 存在之前运行，`getElementById` 返回 null，因此调用报错。"
+            },
+            {
+              "id": "Q3.1-c",
+              "label": "(c)",
+              "marks": 1,
+              "questionMdx": "Instead, the teammate leaves the script tag in the head and calls `showError('Passwords do not match.')` from the register form's submit handler. A user submits mismatched passwords. Does the message appear, and why?",
+              "answerMdx": "Yes, the message appears. The handler only runs when the user submits the form, long after the page has loaded, so by then the `error-container` div exists. Where the script tag sits matters only for code that runs immediately when the file loads.",
+              "markingMdx": "1 mark for explaining the message appears because the submit handler runs after the page has loaded, when `error-container` exists.",
+              "questionMdxZh": "另一种做法：队友把 script 标签留在 head 中，改从注册表单的 submit 处理器里调用 `showError('Passwords do not match.')`。用户提交了两次不一致的密码。消息会出现吗？为什么？",
+              "answerMdxZh": "会出现。因为该处理器只有在用户提交表单时才会运行，那时页面早已加载完成，`error-container` 这个 div 已经存在。script 标签放在哪里，只对文件加载时立即执行的代码有影响。",
+              "markingMdxZh": "1 分：解释消息会出现，因为 submit 处理器在页面加载完成后才运行，那时 `error-container` 已存在。"
+            }
+          ],
+          "displayNumber": "Q3.1",
+          "categoryLabel": "JavaScript and the DOM",
+          "displayStyle": "quiz-sample",
+          "mockup": {
+            "files": [
+              {
+                "name": "helpers.js",
+                "active": true,
+                "code": "function parseReply(text) {\n  const reply = JSON.parse(text);\n  return reply.threads.map((thread) => thread.title);\n}\n\nfunction showError(message) {\n  document.getElementById('error-container').textContent = message;\n}",
+                "codeZh": "function parseReply(text) {\n  const reply = JSON.parse(text);\n  return reply.threads.map((thread) => thread.title);\n}\n\nfunction showError(message) {\n  document.getElementById('error-container').textContent = message;\n}\n\n// 该脚本在 head 中引入，位置在 #error-container 上方"
+              },
+              {
+                "name": "runtime-order.svg"
+              }
+            ],
+            "html": "<div class=\"exam-ui-shell\"><div class=\"exam-ui-topbar\"><span>Qanda</span><span>Register</span></div><div class=\"exam-ui-body\"><div class=\"exam-ui-card\" style=\"max-width:380px;\"><p class=\"exam-ui-value\" style=\"font-weight:700;\">Create your account</p><div class=\"exam-ui-stack\" style=\"margin-top:.75rem;\"><div><p class=\"exam-ui-label\">Email</p><div class=\"exam-ui-input\">member@example.com</div></div><div><p class=\"exam-ui-label\">Password</p><div class=\"exam-ui-input\">••••••••</div></div><div><p class=\"exam-ui-label\">Confirm password</p><div class=\"exam-ui-input\">••••••</div></div></div><div class=\"exam-ui-button-row\" style=\"margin-top:.75rem;\"><button class=\"exam-ui-button\">Register</button></div><div id=\"error-container\" class=\"exam-ui-help\" style=\"margin-top:.5rem;\">(error container)</div></div></div></div>",
+            "htmlZh": "<div class=\"exam-ui-shell\"><div class=\"exam-ui-topbar\"><span>Qanda</span><span>注册</span></div><div class=\"exam-ui-body\"><div class=\"exam-ui-card\" style=\"max-width:380px;\"><p class=\"exam-ui-value\" style=\"font-weight:700;\">创建你的账户</p><div class=\"exam-ui-stack\" style=\"margin-top:.75rem;\"><div><p class=\"exam-ui-label\">邮箱</p><div class=\"exam-ui-input\">member@example.com</div></div><div><p class=\"exam-ui-label\">密码</p><div class=\"exam-ui-input\">••••••••</div></div><div><p class=\"exam-ui-label\">确认密码</p><div class=\"exam-ui-input\">••••••</div></div></div><div class=\"exam-ui-button-row\" style=\"margin-top:.75rem;\"><button class=\"exam-ui-button\">Register</button></div><div id=\"error-container\" class=\"exam-ui-help\" style=\"margin-top:.5rem;\">(error container)</div></div></div></div>"
+          },
+          "titleZh": "注册页的辅助函数",
+          "contentMdxZh": "Qanda 团队把注册页的两个辅助函数放在 `helpers.js` 里。`parseReply` 把服务器的 JSON 响应转成一组帖子标题；`showError` 把一条消息写进页面的错误弹窗。在页面里，`helpers.js` 通过 `head` 中的 script 标签引入，位置在 id 为 `error-container` 的 `div` 上方。`runtime-order.svg` 展示了 Node 测试调用与浏览器文档顺序。"
+        },
+        {
+          "id": "Q4.1",
+          "title": "Super like",
+          "marks": 6,
+          "contentMdx": "Each Qanda thread shows its like count with two buttons. \"Super like\" is meant to add 2 likes. `page.png` shows the buttons for a thread with 12 likes. `LikeButtons.jsx` contains the code.",
+          "subQuestions": [
+            {
+              "id": "Q4.1-a",
+              "label": "(a)",
+              "marks": 2,
+              "questionMdx": "The thread has 12 likes. The user clicks \"Super like\" once. What number is displayed, and why?",
+              "answerMdx": "13. During this render `likes` is the constant 12. Both calls to `like` run `setLikes(likes + 1)` with that same 12, so both ask React to set the value to 13. The second call does not see the first call's result.",
+              "markingMdx": "1 mark for stating 13.\n1 mark for explaining both calls read the same 12 and both request 13, so the second does not add on top of the first.",
+              "questionMdxZh": "这条帖子有 12 个赞。用户点一次 \"Super like\"。显示的数字是多少？为什么？",
+              "answerMdxZh": "显示 13。在这次渲染中，`likes` 是一个值为 12 的常量。两次 `like` 调用执行的都是 `setLikes(likes + 1)`，用的都是同一个 12，所以两次都在请求 React 把值设成 13。第二次调用看不到第一次调用的结果。",
+              "markingMdxZh": "1 分：答出 13。\n1 分：解释两次调用读到的都是同一个 12、都请求设为 13，所以第二次不会在第一次基础上叠加。"
+            },
+            {
+              "id": "Q4.1-b",
+              "label": "(b)",
+              "marks": 2,
+              "questionMdx": "A teammate adds `console.log(likes)` as the last line of `superLike`. What does it print on that click, and why?",
+              "answerMdx": "12. Calling `setLikes` does not change the `likes` variable inside the function that is already running; it asks React to render again with the new value. Only the next render's `likes` is 13.",
+              "markingMdx": "1 mark for stating 12.\n1 mark for explaining that `setLikes` schedules a re-render rather than changing the current `likes` variable.",
+              "questionMdxZh": "队友在 `superLike` 的最后一行加上 `console.log(likes)`。这一次点击时它会打印什么？为什么？",
+              "answerMdxZh": "打印 12。调用 `setLikes` 不会改变当前这个正在运行的函数里的 `likes` 变量，它只是请求 React 用新值重新渲染。只有下一次渲染时 `likes` 才是 13。",
+              "markingMdxZh": "1 分：答出 12。\n1 分：解释 `setLikes` 只是安排一次重新渲染，并不会改变当前 `likes` 变量的值。"
+            },
+            {
+              "id": "Q4.1-c",
+              "label": "(c)",
+              "marks": 2,
+              "questionMdx": "Describe a change so that both buttons work as described, and explain why it works.",
+              "answerMdx": "Change `like` to use the updater form: `setLikes(prev => prev + 1)`. React runs queued updaters one after another, passing each one the result of the previous one, so two calls give 12 → 13 → 14. Also accepted: `superLike` calls `setLikes(likes + 2)` directly, with the explanation that a single update from the current value is correct.",
+              "markingMdx": "1 mark for the updater form `setLikes(prev => prev + 1)` (or `setLikes(likes + 2)` in `superLike`).\n1 mark for explaining that the updater form chains the calls so the second sees the first's result.",
+              "questionMdxZh": "请描述一种改法，让两个按钮都能按预期工作，并解释它为什么有效。",
+              "answerMdxZh": "把 `like` 改成使用 updater 形式：`setLikes(prev => prev + 1)`。React 会把排队的 updater 依次执行，并把上一个的结果传给下一个，所以两次调用得到 12 → 13 → 14。也可接受：`superLike` 直接调用 `setLikes(likes + 2)`，并说明基于当前值做一次更新是正确的。",
+              "markingMdxZh": "1 分：给出 updater 形式 `setLikes(prev => prev + 1)`（或在 `superLike` 中用 `setLikes(likes + 2)`）。\n1 分：解释 updater 形式把多次调用串联起来，使第二次能看到第一次的结果。"
+            }
+          ],
+          "displayNumber": "Q4.1",
+          "categoryLabel": "React State and Rendering",
+          "displayStyle": "quiz-sample",
+          "mockup": {
+            "files": [
+              {
+                "name": "LikeButtons.jsx",
+                "active": true,
+                "code": "import { useState } from 'react';\n\nconst LikeButtons = ({ initialLikes }) => {\n  const [likes, setLikes] = useState(initialLikes);\n\n  const like = () => {\n    setLikes(likes + 1);\n  };\n\n  const superLike = () => {\n    like();\n    like();\n  };\n\n  return (\n    <div>\n      <p>{likes} likes</p>\n      <button onClick={like}>Like</button>\n      <button onClick={superLike}>Super like</button>\n    </div>\n  );\n};",
+                "codeZh": "import { useState } from 'react';\n\n// Qanda 帖子的点赞按钮\nconst LikeButtons = ({ initialLikes }) => {\n  const [likes, setLikes] = useState(initialLikes);\n\n  const like = () => {\n    setLikes(likes + 1);\n  };\n\n  const superLike = () => {\n    // 期望一次加 2 个赞\n    like();\n    like();\n  };\n\n  return (\n    <div>\n      <p>{likes} likes</p>\n      <button onClick={like}>Like</button>\n      <button onClick={superLike}>Super like</button>\n    </div>\n  );\n};"
+              },
+              {
+                "name": "page.png"
+              }
+            ],
+            "html": "<div class=\"exam-ui-shell\"><div class=\"exam-ui-topbar\"><span>Qanda</span><span>Thread</span></div><div class=\"exam-ui-body\"><div class=\"exam-ui-card\" style=\"max-width:340px;\"><p class=\"exam-ui-value\" style=\"font-weight:700;\">Assignment 3 help</p><p class=\"exam-ui-value\" style=\"margin-top:.3rem;\">12 likes</p><div class=\"exam-ui-button-row\" style=\"margin-top:.5rem;\"><button class=\"exam-ui-button-secondary\">Like</button><button class=\"exam-ui-button-secondary\">Super like</button></div></div></div></div>",
+            "htmlZh": "<div class=\"exam-ui-shell\"><div class=\"exam-ui-topbar\"><span>Qanda</span><span>帖子</span></div><div class=\"exam-ui-body\"><div class=\"exam-ui-card\" style=\"max-width:340px;\"><p class=\"exam-ui-value\" style=\"font-weight:700;\">Assignment 3 求助</p><p class=\"exam-ui-value\" style=\"margin-top:.3rem;\">12 个赞</p><div class=\"exam-ui-button-row\" style=\"margin-top:.5rem;\"><button class=\"exam-ui-button-secondary\">Like</button><button class=\"exam-ui-button-secondary\">Super like</button></div></div></div></div>"
+          },
+          "titleZh": "Super like",
+          "contentMdxZh": "每条 Qanda 帖子都用两个按钮展示它的点赞数。\"Super like\" 本意是一次加 2 个赞。`page.png` 展示了一条有 12 个赞的帖子上的按钮，`LikeButtons.jsx` 是对应代码。"
+        },
+        {
+          "id": "Q4.2",
+          "title": "Vote totals in two components",
+          "marks": 6,
+          "contentMdx": "A live poll shows two totals on the same page. `vote-result.svg` shows the values after a vote. `PollPage.jsx` contains the relevant parent and button.",
+          "subQuestions": [
+            {
+              "id": "Q4.2-a",
+              "label": "(a)",
+              "marks": 2,
+              "questionMdx": "After a vote succeeds in `PollPage.jsx`, the button changes to \"Vote (13)\" but the summary above it stays at 12. Which value does each component read, and why do the totals differ?",
+              "answerMdx": "`VoteButton` increments its own local `votes` state from 12 to 13. `ResultSummary` still receives `poll.votes` from the unchanged parent prop, so it continues to display 12.",
+              "markingMdx": "1 mark for identifying that `VoteButton` updates its own local state while `ResultSummary` reads the parent's `poll.votes`.\n1 mark for explaining the two totals differ because they come from two separate sources of truth.",
+              "questionMdxZh": "在 `PollPage.jsx` 中一次投票成功后，按钮变成了 \"Vote (13)\"，但它上方的汇总仍停在 12。两个组件各自读的是哪个值？为什么总数会不一样？",
+              "answerMdxZh": "`VoteButton` 把属于它自己的本地 `votes` state 从 12 加到 13；而 `ResultSummary` 收到的仍然是父组件那个没有变化的 prop `poll.votes`，所以它继续显示 12。",
+              "markingMdxZh": "1 分：指出 `VoteButton` 更新的是自己的本地 state，而 `ResultSummary` 读的是父组件的 `poll.votes`。\n1 分：解释两个总数不同，是因为它们来自两个彼此独立的真值来源（source of truth）。"
+            },
+            {
+              "id": "Q4.2-b",
+              "label": "(b)",
+              "marks": 2,
+              "questionMdx": "Where should the total state and vote action live so the button and summary cannot drift apart?",
+              "answerMdx": "The nearest common parent, `PollPage`, should own the current poll or total and pass that value to both children. `VoteButton` should receive an action callback instead of creating a second copy of the total.",
+              "markingMdx": "1 mark for moving the total state up to the common parent (`PollPage`).\n1 mark for passing the value down to both children and giving `VoteButton` a callback instead of its own copy.",
+              "questionMdxZh": "为了让按钮和汇总不会各走各的，总数状态和投票动作应该放在哪里？",
+              "answerMdxZh": "应该放在它们最近的共同父组件 `PollPage` 里，由它持有当前的 poll 或总数，并把这个值传给两个子组件。`VoteButton` 应该收到一个动作回调，而不是自己再创建一份总数的副本。",
+              "markingMdxZh": "1 分：把总数状态上移到共同父组件（`PollPage`）。\n1 分：把该值下传给两个子组件，并让 `VoteButton` 使用回调而不是自己持有副本。"
+            },
+            {
+              "id": "Q4.2-c",
+              "label": "(c)",
+              "marks": 2,
+              "questionMdx": "Suppose the server rejects the next vote. What should remain on screen, and what feedback would allow another attempt without inventing an unconfirmed total?",
+              "answerMdx": "The parent should keep or restore the last confirmed total rather than permanently counting the rejected vote. It should show a visible recoverable error and allow another attempt; a temporary optimistic value is acceptable only if it is rolled back on failure.",
+              "markingMdx": "1 mark for keeping or restoring the last confirmed total instead of counting a rejected vote.\n1 mark for showing a recoverable error and allowing retry (optimistic updates only if rolled back).",
+              "questionMdxZh": "假设服务器拒绝了下一次投票。屏幕上应该保留什么？需要给出怎样的反馈，才能让用户重试，同时又不虚构一个未被确认的总数？",
+              "answerMdxZh": "父组件应当保留、或把总数恢复成上一次已确认的值，而不是把被拒绝的那一票永久算进去。它应该显示一个清晰、可恢复的错误提示并允许重试；只有在失败时会被回滚的前提下，才可以使用临时的乐观值。",
+              "markingMdxZh": "1 分：保留或恢复上一次已确认的总数，而不是把被拒绝的票算进去。\n1 分：显示可恢复的错误并允许重试（乐观更新只有在失败回滚时才可接受）。"
+            }
+          ],
+          "displayNumber": "Q4.2",
+          "categoryLabel": "React State and Rendering",
+          "displayStyle": "quiz-sample",
+          "mockup": {
+            "files": [
+              {
+                "name": "PollPage.jsx",
+                "active": true,
+                "code": "const PollPage = ({ poll }) => (\n  <>\n    <ResultSummary votes={poll.votes} />\n    <VoteButton startingVotes={poll.votes} pollId={poll.id} />\n  </>\n);\n\nconst VoteButton = ({ startingVotes, pollId }) => {\n  const [votes, setVotes] = useState(startingVotes);\n\n  const vote = async () => {\n    await sendVote(pollId);\n    setVotes(votes + 1);\n  };\n\n  return <button onClick={vote}>Vote ({votes})</button>;\n};",
+                "codeZh": "const PollPage = ({ poll }) => (\n  <>\n    <ResultSummary votes={poll.votes} />\n    <VoteButton startingVotes={poll.votes} pollId={poll.id} />\n  </>\n);\n\nconst VoteButton = ({ startingVotes, pollId }) => {\n  const [votes, setVotes] = useState(startingVotes);\n\n  const vote = async () => {\n    await sendVote(pollId);\n    setVotes(votes + 1);\n  };\n\n  return <button onClick={vote}>Vote ({votes})</button>;\n};"
+              },
+              {
+                "name": "vote-result.svg"
+              }
+            ],
+            "html": "<div class=\"exam-ui-shell\"><div class=\"exam-ui-topbar\"><span>Live poll</span><span>Room 12</span></div><div class=\"exam-ui-body\"><div class=\"exam-ui-card\" style=\"max-width:340px;\"><p class=\"exam-ui-kicker\">Result summary</p><p class=\"exam-ui-value\" style=\"font-weight:700;\">12 votes</p><div class=\"exam-ui-divider\"></div><button class=\"exam-ui-button-secondary\">Vote (13)</button></div></div></div>",
+            "htmlZh": "<div class=\"exam-ui-shell\"><div class=\"exam-ui-topbar\"><span>实时投票</span><span>Room 12</span></div><div class=\"exam-ui-body\"><div class=\"exam-ui-card\" style=\"max-width:340px;\"><p class=\"exam-ui-kicker\">结果汇总</p><p class=\"exam-ui-value\" style=\"font-weight:700;\">12 票</p><div class=\"exam-ui-divider\"></div><button class=\"exam-ui-button-secondary\">Vote (13)</button></div></div></div>"
+          },
+          "titleZh": "两个组件里的投票总数",
+          "contentMdxZh": "一个实时投票页在同一个页面上显示两个总数。`vote-result.svg` 展示了一次投票之后的值，`PollPage.jsx` 包含相关的父组件和按钮。"
+        },
+        {
+          "id": "Q4.3",
+          "title": "Two cart item counts",
+          "marks": 6,
+          "contentMdx": "The cart header and checkout show different item counts. `cart-result.svg` shows the page after an item is removed. `CartApp.jsx` shows where each branch creates its state.",
+          "subQuestions": [
+            {
+              "id": "Q4.3-a",
+              "label": "(a)",
+              "marks": 2,
+              "questionMdx": "A checkout action removes an item, so its count becomes 2, but the header badge still says 3. Why did the matching initial values in `CartApp.jsx` not stay linked?",
+              "answerMdx": "`HeaderCart` and `Checkout` each created a separate state value from `initialCart`. Updating `Checkout`'s copy does not update `HeaderCart`'s independent copy, even though both started from the same data.",
+              "markingMdx": "1 mark for identifying that the two components each created their own independent state from `initialCart`.\n1 mark for explaining that changing one copy does not affect the other.",
+              "questionMdxZh": "结算区的一次操作移除了一件商品，于是它的数量变成 2，但顶栏的角标仍然显示 3。为什么 `CartApp.jsx` 里那两份相同的初始值没有保持联动？",
+              "answerMdxZh": "因为 `HeaderCart` 和 `Checkout` 各自从 `initialCart` 创建了一份独立的 state。修改 `Checkout` 的那份副本，并不会影响 `HeaderCart` 那份独立的副本，哪怕它们最初来自同一份数据。",
+              "markingMdxZh": "1 分：指出这两个组件各自从 `initialCart` 创建了独立的一份 state。\n1 分：解释修改其中一份不会影响另一份。"
+            },
+            {
+              "id": "Q4.3-b",
+              "label": "(b)",
+              "marks": 2,
+              "questionMdx": "Where should the cart state live, and how can the header and checkout receive it when they sit in different branches of the component tree?",
+              "answerMdx": "The cart should be owned above both branches, such as in their common application parent. It can be passed through props or supplied through context at that level when prop passing is impractical.",
+              "markingMdx": "1 mark for lifting the cart state to a common ancestor.\n1 mark for distributing it via props or context to both branches.",
+              "questionMdxZh": "购物车状态应该放在哪里？当顶栏和结算区位于组件树的不同分支时，它们又该如何拿到这份状态？",
+              "answerMdxZh": "购物车状态应该由这两条分支之上的某个共同祖先持有，例如它们的共同应用父组件。可以通过 props 往下传，或者在 props 传递不现实时，在这一层用 context 提供给两侧。",
+              "markingMdxZh": "1 分：把购物车状态上移到共同祖先。\n1 分：通过 props 或 context 下发给两条分支。"
+            },
+            {
+              "id": "Q4.3-c",
+              "label": "(c)",
+              "marks": 2,
+              "questionMdx": "After the quantity endpoint confirms a change, how should the owner update the cart so both displays agree without mutating old state?",
+              "answerMdx": "It should replace the changed item inside a new cart array, or replace the whole cart with the server's confirmed result. Both the badge and checkout must derive from that one new state value.",
+              "markingMdx": "1 mark for updating via a new array / the server-confirmed result instead of mutating the old state.\n1 mark for both displays deriving from that single shared state.",
+              "questionMdxZh": "当数量接口确认了一次改动后，持有者应该怎样更新购物车，才能让两处显示保持一致、同时又不修改旧状态？",
+              "answerMdxZh": "它应该在一个新的购物车数组里替换掉被改动的那一项，或者用服务器确认的结果整体替换购物车；角标和结算区都必须从这同一个新 state 值派生出来。",
+              "markingMdxZh": "1 分：通过新数组 / 服务器确认的结果来更新，而不是直接修改旧状态。\n1 分：两处显示都从这唯一的共享 state 派生。"
+            }
+          ],
+          "displayNumber": "Q4.3",
+          "categoryLabel": "React State and Rendering",
+          "displayStyle": "quiz-sample",
+          "mockup": {
+            "files": [
+              {
+                "name": "cart-result.svg"
+              },
+              {
+                "name": "CartApp.jsx",
+                "active": true,
+                "code": "const CartApp = ({ initialCart }) => (\n  <>\n    <HeaderCart initialCart={initialCart} />\n    <Checkout initialCart={initialCart} />\n  </>\n);\n\nconst HeaderCart = ({ initialCart }) => {\n  const [cart, setCart] = useState(initialCart);\n  return <span>Cart ({cart.length})</span>;\n};\n\nconst Checkout = ({ initialCart }) => {\n  const [cart, setCart] = useState(initialCart);\n\n  const removeItem = () => {\n    setCart(cart.slice(1));\n  };\n\n  return <button onClick={removeItem}>Remove</button>;\n};",
+                "codeZh": "const CartApp = ({ initialCart }) => (\n  <>\n    <HeaderCart initialCart={initialCart} />\n    <Checkout initialCart={initialCart} />\n  </>\n);\n\nconst HeaderCart = ({ initialCart }) => {\n  const [cart, setCart] = useState(initialCart);\n  return <span>Cart ({cart.length})</span>;\n};\n\nconst Checkout = ({ initialCart }) => {\n  const [cart, setCart] = useState(initialCart);\n\n  const removeItem = () => {\n    setCart(cart.slice(1));\n  };\n\n  return <button onClick={removeItem}>Remove</button>;\n};"
+              }
+            ],
+            "html": "<div class=\"exam-ui-shell\"><div class=\"exam-ui-topbar\"><span>Northstar Shop</span><span>Cart (3)</span></div><div class=\"exam-ui-body\"><div class=\"exam-ui-card\" style=\"max-width:340px;\"><p class=\"exam-ui-value\" style=\"font-weight:700;\">Checkout</p><div class=\"exam-ui-list\" style=\"margin-top:.5rem;\"><div class=\"exam-ui-list-row\"><span>Notebook</span><span>$8</span></div><div class=\"exam-ui-list-row\"><span>Mug</span><span>$14</span></div></div><p class=\"exam-ui-stat\" style=\"margin-top:.5rem;\">2 items</p></div></div></div>",
+            "htmlZh": "<div class=\"exam-ui-shell\"><div class=\"exam-ui-topbar\"><span>Northstar 商店</span><span>购物车 (3)</span></div><div class=\"exam-ui-body\"><div class=\"exam-ui-card\" style=\"max-width:340px;\"><p class=\"exam-ui-value\" style=\"font-weight:700;\">结算</p><div class=\"exam-ui-list\" style=\"margin-top:.5rem;\"><div class=\"exam-ui-list-row\"><span>笔记本</span><span>$8</span></div><div class=\"exam-ui-list-row\"><span>马克杯</span><span>$14</span></div></div><p class=\"exam-ui-stat\" style=\"margin-top:.5rem;\">2 件商品</p></div></div></div>"
+          },
+          "titleZh": "两个购物车数量",
+          "contentMdxZh": "购物车顶栏和结算区显示的商品数量不一致。`cart-result.svg` 展示的是移除一件商品之后的页面，`CartApp.jsx` 展示了每条分支各自是在哪里创建自己的 state 的。"
+        },
+        {
+          "id": "Q5.1",
+          "title": "Account redirect effect",
+          "marks": 6,
+          "contentMdx": "`SignInPage` stores the authenticated user in state. The page is displayed when the user is on the URL `/signin`. The page should move to `/account` after a successful sign-in and should not show the account page to a logged-out user. `SignInPage.jsx` contains the component, and `signin-start.svg` shows the page before the form is submitted.",
+          "subQuestions": [
+            {
+              "id": "Q5.1-a",
+              "label": "(a)",
+              "marks": 3,
+              "questionMdx": "After the sign-in request succeeds and `setUser` runs, what does the user see and what URL are they still on? Explain why this happens.",
+              "answerMdx": "The user remains on the sign-in page at `/signin`; the account page is not shown. The effect ran after the initial render, when `user` was `null`, and its empty dependency array means it does not run again after `setUser(result.user)` updates the state. The navigation is therefore never performed.",
+              "markingMdx": "1 mark for stating the user stays on `/signin`.\n1 mark for identifying the empty dependency array (the effect runs only after the initial render).\n1 mark for explaining the effect ran while `user` was null and does not re-run after `setUser`.",
+              "questionMdxZh": "登录请求成功、`setUser` 执行之后，用户看到的是什么？他们仍然停留在哪个 URL？请解释为什么会这样。",
+              "answerMdxZh": "用户仍然停留在 `/signin` 这个登录页，账户页不会显示。因为这个 effect 只在首次渲染之后运行过一次，那时 `user` 还是 `null`；而它的依赖数组是空的，意味着在 `setUser(result.user)` 更新 state 之后它不会再运行。因此那次跳转永远不会被执行。",
+              "markingMdxZh": "1 分：答出用户仍停留在 `/signin`。\n1 分：指出空依赖数组（effect 只在首次渲染后运行一次）。\n1 分：解释 effect 运行时 `user` 还是 null，且 `setUser` 之后它不会再次运行。"
+            },
+            {
+              "id": "Q5.1-b",
+              "label": "(b)",
+              "marks": 3,
+              "questionMdx": "Describe the change that makes the redirect happen whenever the authenticated user becomes available, and describe what should happen when the user logs out.",
+              "answerMdx": "The effect should depend on `user`, so it runs after the user state changes. When `user` is non-null it should navigate to `/account`. Logout should clear `user`; protected routing should then redirect the unauthenticated user to `/signin` rather than leaving the account page accessible.",
+              "markingMdx": "1 mark for adding `user` to the effect's dependency array.\n1 mark for navigating to `/account` when `user` is non-null.\n1 mark for clearing `user` on logout and redirecting unauthenticated users away from `/account`.",
+              "questionMdxZh": "请描述一种改法，让已认证用户一旦可用就发生跳转，并描述用户登出时应该发生什么。",
+              "answerMdxZh": "effect 应该依赖 `user`，这样当用户 state 变化后它就会运行。当 `user` 非空时跳转到 `/account`。登出时应清空 `user`；受保护的路由则应把未认证用户重定向到 `/signin`，而不是让账户页继续可访问。",
+              "markingMdxZh": "1 分：把 `user` 加入 effect 的依赖数组。\n1 分：当 `user` 非空时跳转到 `/account`。\n1 分：登出时清空 `user`，并把未认证用户从 `/account` 重定向走。"
+            }
+          ],
+          "displayNumber": "Q5.1",
+          "categoryLabel": "React Effects and Data Flow",
+          "displayStyle": "quiz-sample",
+          "mockup": {
+            "files": [
+              {
+                "name": "signin-start.svg"
+              },
+              {
+                "name": "SignInPage.jsx",
+                "active": true,
+                "code": "import { useState, useEffect } from 'react';\nimport { useNavigate } from 'react-router-dom';\n\nconst SignInPage = () => {\n  const [user, setUser] = useState(null);\n  const navigate = useNavigate();\n\n  useEffect(() => {\n    if (user) {\n      navigate('/account');\n    }\n  }, []);\n\n  const signIn = async () => {\n    const result = await signInRequest();\n    setUser(result.user);\n  };\n\n  return <SignInForm onSubmit={signIn} />;\n};",
+                "codeZh": "import { useState, useEffect } from 'react';\nimport { useNavigate } from 'react-router-dom';\n\nconst SignInPage = () => {\n  const [user, setUser] = useState(null);\n  const navigate = useNavigate();\n\n  useEffect(() => {\n    if (user) {\n      navigate('/account');\n    }\n  }, []); // 空的依赖数组\n\n  const signIn = async () => {\n    const result = await signInRequest();\n    setUser(result.user);\n  };\n\n  return <SignInForm onSubmit={signIn} />;\n};"
+              }
+            ],
+            "html": "<div class=\"exam-ui-shell\"><div class=\"exam-ui-topbar\"><span>Member portal</span><span>/signin</span></div><div class=\"exam-ui-body\"><div class=\"exam-ui-card\" style=\"max-width:360px;\"><p class=\"exam-ui-kicker\">Member portal</p><p class=\"exam-ui-value\" style=\"font-weight:700;\">Account access</p><p class=\"exam-ui-muted\" style=\"font-size:.7rem;\">Sign in to view saved applications</p><div class=\"exam-ui-stack\" style=\"margin-top:.75rem;\"><div><p class=\"exam-ui-label\">Email</p><div class=\"exam-ui-input\">member@example.com</div></div><div><p class=\"exam-ui-label\">Password</p><div class=\"exam-ui-input\">••••••••</div></div></div><button class=\"exam-ui-button\" style=\"margin-top:.75rem;\">Log in</button></div></div></div>",
+            "htmlZh": "<div class=\"exam-ui-shell\"><div class=\"exam-ui-topbar\"><span>会员门户</span><span>/signin</span></div><div class=\"exam-ui-body\"><div class=\"exam-ui-card\" style=\"max-width:360px;\"><p class=\"exam-ui-kicker\">会员门户</p><p class=\"exam-ui-value\" style=\"font-weight:700;\">账户登录</p><p class=\"exam-ui-muted\" style=\"font-size:.7rem;\">登录后可查看已保存的申请</p><div class=\"exam-ui-stack\" style=\"margin-top:.75rem;\"><div><p class=\"exam-ui-label\">邮箱</p><div class=\"exam-ui-input\">member@example.com</div></div><div><p class=\"exam-ui-label\">密码</p><div class=\"exam-ui-input\">••••••••</div></div></div><button class=\"exam-ui-button\" style=\"margin-top:.75rem;\">Log in</button></div></div></div>"
+          },
+          "titleZh": "账户跳转的 effect",
+          "contentMdxZh": "`SignInPage` 把已认证的用户存在 state 里。当用户处于 URL `/signin` 时会显示这个页面。登录成功后页面应跳转到 `/account`，且不应把账户页展示给未登录用户。`SignInPage.jsx` 包含该组件，`signin-start.svg` 展示了表单提交前的页面。"
+        },
+        {
+          "id": "Q5.2",
+          "title": "Interval with stale state",
+          "marks": 6,
+          "contentMdx": "`Timer.jsx` displays a focus timer. It reaches 1 second and then stops changing even though the browser keeps running the interval. The app is running without React Strict Mode.",
+          "subQuestions": [
+            {
+              "id": "Q5.2-a",
+              "label": "(a)",
+              "marks": 3,
+              "questionMdx": "Timer's interval keeps running, but the displayed count stops at 1. Which value of `count` does the interval function keep, and what value does it ask React to set on every tick?",
+              "answerMdx": "React creates the interval function during the first render, when `count` is 0. That function keeps using 0, so every tick calls `setCount(0 + 1)`. The first tick displays 1, and later ticks keep setting the same value.",
+              "markingMdx": "1 mark for stating the interval keeps the value 0 (from the first render).\n1 mark for saying every tick calls `setCount(0 + 1)`.\n1 mark for explaining the value never changes after the first tick.",
+              "questionMdxZh": "Timer 的 interval 一直在运行，但显示的数字停在了 1。这个 interval 函数持有的 `count` 是哪个值？它每次 tick 又请求 React 把它设成什么值？",
+              "answerMdxZh": "React 在首次渲染时创建了这个 interval 函数，那时 `count` 是 0。这个函数一直用着这个 0，所以每次 tick 都调用 `setCount(0 + 1)`。第一次 tick 显示 1，之后每次 tick 都设成同一个值。",
+              "markingMdxZh": "1 分：答出 interval 持有的是 0（来自首次渲染）。\n1 分：说明每次 tick 都调用 `setCount(0 + 1)`。\n1 分：解释第一次 tick 之后这个值就再也没变过。"
+            },
+            {
+              "id": "Q5.2-b",
+              "label": "(b)",
+              "marks": 3,
+              "questionMdx": "Timer should create one interval while it is on screen and stop it when the user leaves. How can each tick update from the latest count without recreating the interval, and what must cleanup do?",
+              "answerMdx": "Use the setter form that receives the latest previous value, such as `setCount(previous => previous + 1)`. React supplies the current count to that function on each tick. The effect should keep the interval identifier and return cleanup that passes it to `clearInterval` when Timer leaves the screen.",
+              "markingMdx": "1 mark for the updater form `setCount(prev => prev + 1)`.\n1 mark for keeping the interval id in the effect.\n1 mark for returning a cleanup that calls `clearInterval` on unmount.",
+              "questionMdxZh": "Timer 应在上屏期间只创建一个 interval，并在用户离开时把它停掉。怎样让每次 tick 都基于最新的 count 更新、又不重建 interval？cleanup 又必须做什么？",
+              "answerMdxZh": "使用能接收最新旧值的 setter 形式，例如 `setCount(previous => previous + 1)`，React 会在每次 tick 时把当前的 count 传给这个函数。effect 应保存 interval 的标识符，并返回一个 cleanup：当 Timer 从屏幕上移除时，把它交给 `clearInterval`。",
+              "markingMdxZh": "1 分：使用 updater 形式 `setCount(prev => prev + 1)`。\n1 分：在 effect 中保存 interval 的 id。\n1 分：返回 cleanup，在卸载时调用 `clearInterval`。"
+            }
+          ],
+          "displayNumber": "Q5.2",
+          "categoryLabel": "React Effects and Data Flow",
+          "displayStyle": "quiz-sample",
+          "mockup": {
+            "files": [
+              {
+                "name": "timer-result.svg"
+              },
+              {
+                "name": "Timer.jsx",
+                "active": true,
+                "code": "import { useState, useEffect } from 'react';\n\nconst Timer = () => {\n  const [count, setCount] = useState(0);\n\n  useEffect(() => {\n    const id = setInterval(() => {\n      setCount(count + 1);\n    }, 1000);\n\n    return () => clearInterval(id);\n  }, []);\n\n  return <p>{count}</p>;\n};",
+                "codeZh": "import { useState, useEffect } from 'react';\n\nconst Timer = () => {\n  const [count, setCount] = useState(0);\n\n  useEffect(() => {\n    const id = setInterval(() => {\n      setCount(count + 1);\n    }, 1000);\n\n    return () => clearInterval(id);\n  }, []);\n\n  return <p>{count}</p>;\n};"
+              }
+            ],
+            "html": "<div class=\"exam-ui-shell\"><div class=\"exam-ui-topbar\"><span>Focus session</span><span>Timer</span></div><div class=\"exam-ui-body\"><div class=\"exam-ui-card\" style=\"max-width:320px;text-align:center;\"><p class=\"exam-ui-kicker\">Focus session</p><p style=\"font-size:2rem;font-weight:700;margin:.4rem 0;\">00:01</p><p class=\"exam-ui-muted\" style=\"font-size:.7rem;\">Timer still running</p><p class=\"exam-ui-danger\" style=\"font-size:.7rem;\">The displayed count has stopped changing</p><p class=\"exam-ui-stat\" style=\"margin-top:.4rem;\">Interval activity: ticks continue</p></div></div></div>",
+            "htmlZh": "<div class=\"exam-ui-shell\"><div class=\"exam-ui-topbar\"><span>专注计时</span><span>Timer</span></div><div class=\"exam-ui-body\"><div class=\"exam-ui-card\" style=\"max-width:320px;text-align:center;\"><p class=\"exam-ui-kicker\">专注计时</p><p style=\"font-size:2rem;font-weight:700;margin:.4rem 0;\">00:01</p><p class=\"exam-ui-muted\" style=\"font-size:.7rem;\">计时器仍在运行</p><p class=\"exam-ui-danger\" style=\"font-size:.7rem;\">显示的数字已经不再变化</p><p class=\"exam-ui-stat\" style=\"margin-top:.4rem;\">interval 活动：tick 仍在继续</p></div></div></div>"
+          },
+          "titleZh": "闭包过期状态下的 interval",
+          "contentMdxZh": "`Timer.jsx` 显示一个专注计时器。它数到 1 秒后就不再变化，尽管浏览器仍在持续运行这个 interval。该应用没有开启 React Strict Mode。"
+        },
+        {
+          "id": "Q5.3",
+          "title": "An async effect callback",
+          "marks": 6,
+          "contentMdx": "`OrderPanel.jsx` loads an order summary. React prints a warning when the effect runs, and a failed request leaves the loading message on screen.",
+          "subQuestions": [
+            {
+              "id": "Q5.3-a",
+              "label": "(a)",
+              "marks": 3,
+              "questionMdx": "OrderPanel has two symptoms: React warns about the function passed to `useEffect`, and a failed request leaves \"Loading order...\" on screen. What separate cause produces each symptom?",
+              "answerMdx": "An `async` function returns a Promise, so the function passed to `useEffect` returns a Promise. React expects that function to return nothing or a cleanup function. Separately, a failed fetch or JSON parse jumps past `setLoading(false)`. The code has no failure handling, so loading remains true.",
+              "markingMdx": "1 mark for explaining that the `async` callback returns a Promise instead of nothing / cleanup.\n1 mark for explaining that a failed request skips `setLoading(false)`.\n1 mark for linking the missing failure handling to the loading message staying on screen.",
+              "questionMdxZh": "OrderPanel 有两个症状：React 对传给 `useEffect` 的函数发出警告；并且请求失败后 \"Loading order...\" 会一直留在屏幕上。这两个症状各自由什么原因造成？",
+              "answerMdxZh": "`async` 函数会返回一个 Promise，所以传给 `useEffect` 的函数返回了 Promise，而 React 期望这个函数不返回任何东西、或只返回一个 cleanup 函数。另一方面，fetch 或 JSON 解析失败会让代码跳过 `setLoading(false)`；代码里没有任何失败处理，于是 loading 一直为 true。",
+              "markingMdxZh": "1 分：解释 `async` 回调返回的是 Promise，而不是空值 / cleanup。\n1 分：解释请求失败会跳过 `setLoading(false)`。\n1 分：把“缺少失败处理”和“加载提示一直留在屏幕上”联系起来。"
+            },
+            {
+              "id": "Q5.3-b",
+              "label": "(b)",
+              "marks": 3,
+              "questionMdx": "How should the effect be reorganised so it can keep the `await` style, turn loading off after success or failure, and stop an older order request from updating the panel?",
+              "answerMdx": "Pass a regular function to `useEffect`, then define and call an async function inside it. That inner function can use `try` for the request, `catch` to store an error, and `finally` to turn loading off. The effect's cleanup should abort the older request or mark it as unable to update state. The async function should change `order`, `error`, or `loading` only for the current `orderId`.",
+              "markingMdx": "1 mark for a non-async effect that defines and calls an async function inside.\n1 mark for `try` / `catch` / `finally` that always clears loading.\n1 mark for cleanup that aborts or ignores a stale request (guarding on `orderId`).",
+              "questionMdxZh": "应如何重新组织这个 effect：既能保留 `await` 写法，又能在成功或失败后关掉 loading，还能阻止较早的订单请求去更新面板？",
+              "answerMdxZh": "给 `useEffect` 传一个普通函数，再在它内部定义并调用一个 async 函数。这个内部函数可以用 `try` 发起请求、用 `catch` 记录错误、用 `finally` 关掉 loading。effect 的 cleanup 应该中止较早的请求，或把它标记为不能再更新 state；async 函数也只应针对当前的 `orderId` 去修改 `order`、`error` 或 `loading`。",
+              "markingMdxZh": "1 分：让 effect 本身不是 async，而是在内部定义并调用一个 async 函数。\n1 分：使用 `try` / `catch` / `finally`，确保任何情况下都关掉 loading。\n1 分：cleanup 会中止或忽略过期的请求（用 `orderId` 做判断）。"
+            }
+          ],
+          "displayNumber": "Q5.3",
+          "categoryLabel": "React Effects and Data Flow",
+          "displayStyle": "quiz-sample",
+          "mockup": {
+            "files": [
+              {
+                "name": "effect-warning.svg"
+              },
+              {
+                "name": "OrderPanel.jsx",
+                "active": true,
+                "code": "import { useState, useEffect } from 'react';\n\nconst OrderPanel = ({ orderId }) => {\n  const [order, setOrder] = useState(null);\n  const [loading, setLoading] = useState(true);\n\n  useEffect(async () => {\n    const response = await fetch(`/api/orders/${orderId}`);\n    const data = await response.json();\n    setOrder(data);\n    setLoading(false);\n  }, [orderId]);\n\n  if (loading) {\n    return <p>Loading order...</p>;\n  }\n\n  return <OrderSummary order={order} />;\n};",
+                "codeZh": "import { useState, useEffect } from 'react';\n\nconst OrderPanel = ({ orderId }) => {\n  const [order, setOrder] = useState(null);\n  const [loading, setLoading] = useState(true);\n\n  // useEffect 的回调被写成了 async\n  useEffect(async () => {\n    const response = await fetch(`/api/orders/${orderId}`);\n    const data = await response.json();\n    setOrder(data);\n    setLoading(false);\n  }, [orderId]);\n\n  if (loading) {\n    return <p>Loading order...</p>;\n  }\n\n  return <OrderSummary order={order} />;\n};"
+              }
+            ],
+            "html": "<div class=\"exam-ui-shell\"><div class=\"exam-ui-topbar\"><span>Orders / 1042</span><span>Order summary</span></div><div class=\"exam-ui-body\"><div class=\"exam-ui-card\" style=\"max-width:360px;\"><p class=\"exam-ui-value\" style=\"font-weight:700;\">Order summary</p><p class=\"exam-ui-muted\" style=\"font-size:.72rem;margin-top:.4rem;\">● Loading order...</p></div><div class=\"exam-ui-note\" style=\"max-width:360px;margin-top:.75rem;\"><p class=\"exam-ui-kicker\">React console</p><p style=\"font-size:.68rem;\">Warning: useEffect must not return anything besides a function which is used for clean-up.</p><p class=\"exam-ui-danger\" style=\"font-size:.68rem;\">GET /api/orders/1042 • failed</p></div></div></div>",
+            "htmlZh": "<div class=\"exam-ui-shell\"><div class=\"exam-ui-topbar\"><span>订单 / 1042</span><span>订单摘要</span></div><div class=\"exam-ui-body\"><div class=\"exam-ui-card\" style=\"max-width:360px;\"><p class=\"exam-ui-value\" style=\"font-weight:700;\">订单摘要</p><p class=\"exam-ui-muted\" style=\"font-size:.72rem;margin-top:.4rem;\">● Loading order...</p></div><div class=\"exam-ui-note\" style=\"max-width:360px;margin-top:.75rem;\"><p class=\"exam-ui-kicker\">React console</p><p style=\"font-size:.68rem;\">Warning: useEffect must not return anything besides a function which is used for clean-up.</p><p class=\"exam-ui-danger\" style=\"font-size:.68rem;\">GET /api/orders/1042 • failed</p></div></div></div>"
+          },
+          "titleZh": "写成 async 的 effect 回调",
+          "contentMdxZh": "`OrderPanel.jsx` 用于加载订单摘要。effect 运行时 React 会打印一条警告，而且请求失败后加载提示会一直留在屏幕上。"
+        },
+        {
+          "id": "Q6.1",
+          "title": "Hotel route parameters",
+          "marks": 6,
+          "contentMdx": "The travel browser uses React Router so a hotel and its selected room can be opened directly or restored after a refresh, by using the URL. `room-page.svg` shows the page at `/travel/42/room/3`. `TravelBrowser.jsx` contains the route and the component.",
+          "subQuestions": [
+            {
+              "id": "Q6.1-a",
+              "label": "(a)",
+              "marks": 2,
+              "questionMdx": "A user refreshes `/travel/42/room/3`. What room does the component render, and what information is missing from its current route setup?",
+              "answerMdx": "It renders room 1, because the component always initialises `roomNumber` to 1. The route declares a `:roomNumber` parameter, but the component does not read that parameter and use it as its initial or controlled room number.",
+              "markingMdx": "1 mark for stating it renders room 1.\n1 mark for explaining the component ignores the route's `:roomNumber` parameter.",
+              "questionMdxZh": "用户刷新 `/travel/42/room/3`。组件渲染的是哪个房间？当前的路由设置缺少了什么信息？",
+              "answerMdxZh": "它渲染的是 room 1，因为组件总是把 `roomNumber` 初始化为 1。路由里虽然声明了 `:roomNumber` 参数，但组件并没有去读取这个参数、也没有把它作为初始或受控的房间号。",
+              "markingMdxZh": "1 分：答出渲染的是 room 1。\n1 分：解释组件忽略了路由里的 `:roomNumber` 参数。"
+            },
+            {
+              "id": "Q6.1-b",
+              "label": "(b)",
+              "marks": 2,
+              "questionMdx": "The user clicks \"Next\" on room 3. Why is changing only React state not enough for the desired behaviour of the app?",
+              "answerMdx": "The visible room may change, but the URL still says room 3. A refresh or a copied link will therefore lose the user's position, because the route is the source of the room number for a directly addressable page.",
+              "markingMdx": "1 mark for noting the URL still shows room 3.\n1 mark for explaining a refresh / copied link loses the position because the route is the source of truth.",
+              "questionMdxZh": "用户在 room 3 上点了 \"Next\"。为什么只修改 React state 不足以实现这个应用想要的行为？",
+              "answerMdxZh": "可见的房间也许变了，但 URL 里仍然写着 room 3。因此刷新页面或把一个复制出去的链接发给别人，都会丢失用户当前的位置，因为对于一个可直接寻址的页面来说，路由才是房间号的来源。",
+              "markingMdxZh": "1 分：指出 URL 仍然显示 room 3。\n1 分：解释刷新 / 复制链接会丢失位置，因为路由才是真值来源。"
+            },
+            {
+              "id": "Q6.1-c",
+              "label": "(c)",
+              "marks": 2,
+              "questionMdx": "Describe how the component should use the route when it loads and when \"Next\" is clicked. Do not write code.",
+              "answerMdx": "Read both `hotelId` and `roomNumber` from the matched route and render the room identified by those values. On a button click, navigate to the same hotel with the next room number in the URL; the route change then causes the displayed room to update.",
+              "markingMdx": "1 mark for reading `hotelId` and `roomNumber` from the route to render the room.\n1 mark for navigating to a new URL (the next room) on click rather than only setting state.",
+              "questionMdxZh": "请描述：组件在加载时以及点击 \"Next\" 时，应如何使用路由？不要写代码。",
+              "answerMdxZh": "从匹配到的路由里同时读取 `hotelId` 和 `roomNumber`，并渲染由这两个值确定的房间。点击按钮时，导航到同一家酒店、但房间号加一的 URL；随后路由的变化会带动所显示房间的更新。",
+              "markingMdxZh": "1 分：从路由读取 `hotelId` 和 `roomNumber` 来渲染房间。\n1 分：点击时导航到一个新 URL（下一个房间），而不是只修改 state。"
+            }
+          ],
+          "displayNumber": "Q6.1",
+          "categoryLabel": "React Router and URL State",
+          "displayStyle": "quiz-sample",
+          "mockup": {
+            "files": [
+              {
+                "name": "room-page.svg"
+              },
+              {
+                "name": "TravelBrowser.jsx",
+                "active": true,
+                "code": "import { useState } from 'react';\nimport { Routes, Route } from 'react-router-dom';\n\nconst TravelBrowser = () => {\n  const [roomNumber, setRoomNumber] = useState(1);\n\n  return (\n    <Routes>\n      <Route\n        path=\"/travel/:hotelId/room/:roomNumber\"\n        element={\n          <>\n            <h1>Harbour View Hotel</h1>\n            <p>Showing room {roomNumber}</p>\n            <button onClick={() => setRoomNumber(roomNumber + 1)}>Next</button>\n          </>\n        }\n      />\n    </Routes>\n  );\n};",
+                "codeZh": "import { useState } from 'react';\nimport { Routes, Route } from 'react-router-dom';\n\nconst TravelBrowser = () => {\n  const [roomNumber, setRoomNumber] = useState(1);\n\n  return (\n    <Routes>\n      <Route\n        path=\"/travel/:hotelId/room/:roomNumber\"\n        element={\n          <>\n            <h1>Harbour View Hotel</h1>\n            <p>Showing room {roomNumber}</p>\n            <button onClick={() => setRoomNumber(roomNumber + 1)}>Next</button>\n          </>\n        }\n      />\n    </Routes>\n  );\n};"
+              }
+            ],
+            "html": "<div class=\"exam-ui-shell\"><div class=\"exam-ui-topbar\"><span>Travel</span><span>/travel/42/room/3</span></div><div class=\"exam-ui-body\"><div class=\"exam-ui-card\" style=\"max-width:340px;\"><p class=\"exam-ui-value\" style=\"font-weight:700;\">Harbour View Hotel</p><p class=\"exam-ui-muted\" style=\"font-size:.7rem;\">Hotel 42</p><p class=\"exam-ui-value\" style=\"margin-top:.4rem;\">Showing room 3</p><span class=\"exam-ui-chip\" style=\"margin-top:.4rem;\">sea view</span><div class=\"exam-ui-form-actions\"><button class=\"exam-ui-button-secondary\">Next</button></div></div></div></div>",
+            "htmlZh": "<div class=\"exam-ui-shell\"><div class=\"exam-ui-topbar\"><span>旅行</span><span>/travel/42/room/3</span></div><div class=\"exam-ui-body\"><div class=\"exam-ui-card\" style=\"max-width:340px;\"><p class=\"exam-ui-value\" style=\"font-weight:700;\">Harbour View Hotel</p><p class=\"exam-ui-muted\" style=\"font-size:.7rem;\">Hotel 42</p><p class=\"exam-ui-value\" style=\"margin-top:.4rem;\">Showing room 3</p><span class=\"exam-ui-chip\" style=\"margin-top:.4rem;\">海景房</span><div class=\"exam-ui-form-actions\"><button class=\"exam-ui-button-secondary\">Next</button></div></div></div></div>"
+          },
+          "titleZh": "酒店路由参数",
+          "contentMdxZh": "这个旅行浏览器使用 React Router，让用户可以通过 URL 直接打开某个酒店及其选中的房间，或在刷新后恢复该页面。`room-page.svg` 展示了 `/travel/42/room/3` 时的页面，`TravelBrowser.jsx` 包含路由和组件。"
+        },
+        {
+          "id": "Q6.2",
+          "title": "Navbar links",
+          "marks": 6,
+          "contentMdx": "A Qanda-style app keeps the logged-in user's token in React state. The login page calls `setToken` after a successful login and navigates to `/dashboard`. `qanda-pages.svg` shows the dashboard and profile pages with the navbar. `App.jsx` contains the code.",
+          "subQuestions": [
+            {
+              "id": "Q6.2-a",
+              "label": "(a)",
+              "marks": 2,
+              "questionMdx": "Mei logs in and lands on `/dashboard`. She clicks \"Profile\" in the navbar and is sent to `/login` instead of her profile. Explain what the browser does when she clicks the link, and why that logs her out.",
+              "answerMdx": "An `<a href>` makes the browser do a full page load: it requests `/profile` from the server and starts the whole app again from scratch. All React state is thrown away, so `token` is back to `null`, and the `/profile` route sends her to `/login`.",
+              "markingMdx": "1 mark for explaining `<a href>` triggers a full page load / app restart.\n1 mark for linking that to the loss of `token` state and the redirect to `/login`.",
+              "questionMdxZh": "Mei 登录后落在 `/dashboard`。她点击导航栏里的 \"Profile\"，却被送到了 `/login`，而不是她的个人主页。请解释她点击这个链接时浏览器做了什么，以及为什么这会把她登出。",
+              "answerMdxZh": "`<a href>` 会让浏览器做一次整页加载：它向服务器请求 `/profile`，并从头把整个应用重新启动一遍。所有 React state 都被丢弃，于是 `token` 又变回 `null`，`/profile` 路由便把她送去了 `/login`。",
+              "markingMdxZh": "1 分：解释 `<a href>` 会触发整页加载 / 应用重启。\n1 分：把这一点与 `token` state 丢失、并被重定向到 `/login` 联系起来。"
+            },
+            {
+              "id": "Q6.2-b",
+              "label": "(b)",
+              "marks": 2,
+              "questionMdx": "Describe a change to the navbar that keeps Mei logged in when she clicks between pages, and explain what is different about how it navigates.",
+              "answerMdx": "Use React Router's `<Link to=\"/profile\">` (and `<Link to=\"/dashboard\">`) instead of `<a href>`. `Link` stops the browser's normal page load, updates the URL, and lets the router render the matching route inside the same running app. `App` is never restarted, so `token` survives.",
+              "markingMdx": "1 mark for replacing `<a href>` with React Router's `<Link to>`.\n1 mark for explaining `Link` prevents the full page load so the app (and `token`) keeps running.",
+              "questionMdxZh": "请描述一种对导航栏的改法，让 Mei 在页面之间点击时保持登录状态，并说明它的导航方式有什么不同。",
+              "answerMdxZh": "把 `<a href>` 换成 React Router 的 `<Link to=\"/profile\">`（以及 `<Link to=\"/dashboard\">`）。`Link` 会阻止浏览器进行常规的整页加载，只更新 URL，并让路由在同一个仍在运行的应用内渲染匹配的路由。`App` 永远不会被重启，所以 `token` 得以保留。",
+              "markingMdxZh": "1 分：把 `<a href>` 换成 React Router 的 `<Link to>`。\n1 分：解释 `Link` 阻止了整页加载，因此应用（及 `token`）持续运行。"
+            },
+            {
+              "id": "Q6.2-c",
+              "label": "(c)",
+              "marks": 2,
+              "questionMdx": "Even with that fix, Mei is still sent to `/login` whenever she presses the browser's refresh button. Why is a refresh different from clicking a `Link`, and what else needs to change?",
+              "answerMdx": "Refreshing always does a full page load, which `Link` avoids, so the React state, including `token`, is lost again no matter how she navigated. The token has to be stored somewhere that survives a reload, such as `localStorage`, and read back when the app starts (for example as the initial value of the state).",
+              "markingMdx": "1 mark for explaining a refresh is always a full page load, so state is lost.\n1 mark for persisting the token (e.g. `localStorage`) and restoring it on start.",
+              "questionMdxZh": "即使做了这个修改，只要 Mei 按下浏览器的刷新按钮，她还是会被送到 `/login`。为什么刷新与点击 `Link` 不同？还应该改什么？",
+              "answerMdxZh": "因为刷新总会做一次整页加载，而这正是 `Link` 所避免的，所以无论她是怎么导航过来的，包括 `token` 在内的 React state 都会再次丢失。必须把 token 存到能在刷新后存活的地方，例如 `localStorage`，并在应用启动时读回来（比如作为 state 的初始值）。",
+              "markingMdxZh": "1 分：解释刷新总是一次整页加载，所以 state 会丢失。\n1 分：把 token 持久化（如 `localStorage`）并在启动时恢复。"
+            }
+          ],
+          "displayNumber": "Q6.2",
+          "categoryLabel": "React Router and URL State",
+          "displayStyle": "quiz-sample",
+          "mockup": {
+            "files": [
+              {
+                "name": "App.jsx",
+                "active": true,
+                "code": "import { useState } from 'react';\nimport { BrowserRouter, Routes, Route } from 'react-router-dom';\n\nconst App = () => {\n  const [token, setToken] = useState(null);\n\n  return (\n    <BrowserRouter>\n      <nav>\n        <a href=\"/dashboard\">Dashboard</a>\n        <a href=\"/profile\">Profile</a>\n      </nav>\n      <Routes>\n        <Route path=\"/login\" element={<Login onLogin={setToken} />} />\n        <Route\n          path=\"/dashboard\"\n          element={token ? <Dashboard /> : <Login onLogin={setToken} />}\n        />\n        <Route\n          path=\"/profile\"\n          element={token ? <Profile /> : <Login onLogin={setToken} />}\n        />\n      </Routes>\n    </BrowserRouter>\n  );\n};",
+                "codeZh": "import { useState } from 'react';\nimport { BrowserRouter, Routes, Route } from 'react-router-dom';\n\nconst App = () => {\n  const [token, setToken] = useState(null);\n\n  return (\n    <BrowserRouter>\n      <nav>\n        <a href=\"/dashboard\">Dashboard</a>\n        <a href=\"/profile\">Profile</a>\n      </nav>\n      <Routes>\n        <Route path=\"/login\" element={<Login onLogin={setToken} />} />\n        <Route\n          path=\"/dashboard\"\n          element={token ? <Dashboard /> : <Login onLogin={setToken} />}\n        />\n        <Route\n          path=\"/profile\"\n          element={token ? <Profile /> : <Login onLogin={setToken} />}\n        />\n      </Routes>\n    </BrowserRouter>\n  );\n};"
+              },
+              {
+                "name": "qanda-pages.svg"
+              }
+            ],
+            "html": "<div class=\"exam-ui-shell\"><div class=\"exam-ui-topbar\"><span>Qanda</span><span>Dashboard</span></div><div class=\"exam-ui-body\"><div class=\"exam-ui-card\" style=\"max-width:380px;\"><div class=\"exam-ui-button-row\" style=\"margin-bottom:.6rem;\"><span class=\"exam-ui-link\">Dashboard</span><span class=\"exam-ui-link\">Profile</span></div><p class=\"exam-ui-value\" style=\"font-weight:700;\">Dashboard</p><p class=\"exam-ui-value\">Recent threads</p><div class=\"exam-ui-list\" style=\"margin-top:.5rem;\"><div class=\"exam-ui-list-row\"><span>Is the due date Friday?</span><span class=\"exam-ui-chip\">1 reply</span></div><div class=\"exam-ui-list-row\"><span>Can we use Bootstrap?</span><span class=\"exam-ui-chip\">3 replies</span></div></div></div></div></div>",
+            "htmlZh": "<div class=\"exam-ui-shell\"><div class=\"exam-ui-topbar\"><span>Qanda</span><span>Dashboard</span></div><div class=\"exam-ui-body\"><div class=\"exam-ui-card\" style=\"max-width:380px;\"><div class=\"exam-ui-button-row\" style=\"margin-bottom:.6rem;\"><span class=\"exam-ui-link\">Dashboard</span><span class=\"exam-ui-link\">Profile</span></div><p class=\"exam-ui-value\" style=\"font-weight:700;\">Dashboard</p><p class=\"exam-ui-value\">最近的帖子</p><div class=\"exam-ui-list\" style=\"margin-top:.5rem;\"><div class=\"exam-ui-list-row\"><span>截止日期是周五吗？</span><span class=\"exam-ui-chip\">1 条回复</span></div><div class=\"exam-ui-list-row\"><span>我们可以用 Bootstrap 吗？</span><span class=\"exam-ui-chip\">3 条回复</span></div></div></div></div></div>"
+          },
+          "titleZh": "导航栏链接",
+          "contentMdxZh": "一个类似 Qanda 的应用把已登录用户的 token 存在 React state 里。登录页在登录成功后会调用 `setToken` 并跳转到 `/dashboard`。`qanda-pages.svg` 展示了带导航栏的 dashboard 页与 profile 页，`App.jsx` 是对应代码。"
+        },
+        {
+          "id": "Q6.3",
+          "title": "Profile pages",
+          "marks": 6,
+          "contentMdx": "The Qanda app has profile pages. `/profile/:name` shows that user's profile, and the \"My profile\" link in the navbar goes to `/profile`. `profile-pages.svg` shows the dashboard navbar and the profile page layout. `Profile.jsx` contains the code.",
+          "subQuestions": [
+            {
+              "id": "Q6.3-a",
+              "label": "(a)",
+              "marks": 2,
+              "questionMdx": "The user opens `/profile/emily`. What does the page show, and how does `Profile` know which name to show?",
+              "answerMdx": "\"EMILY's profile\". `/profile/:name` matches it: the `:name` part is a wildcard that matches any value in that position. `useParams` returns an object of the wildcard values from the URL, here `{ name: 'emily' }`, so `name` is \"emily\".",
+              "markingMdx": "1 mark for stating it shows \"EMILY's profile\".\n1 mark for explaining `:name` is a wildcard and `useParams` supplies it.",
+              "questionMdxZh": "用户打开 `/profile/emily`。页面显示什么？`Profile` 又是怎么知道该显示哪个名字的？",
+              "answerMdxZh": "显示 \"EMILY's profile\"。`/profile/:name` 会匹配它：其中 `:name` 段是一个通配符，能匹配该位置上的任意值。`useParams` 会返回一个由 URL 中通配符值组成的对象，这里是 `{ name: 'emily' }`，所以 `name` 就是 \"emily\"。",
+              "markingMdxZh": "1 分：答出显示 \"EMILY's profile\"。\n1 分：解释 `:name` 是通配符，并由 `useParams` 提供。"
+            },
+            {
+              "id": "Q6.3-b",
+              "label": "(b)",
+              "marks": 2,
+              "questionMdx": "The user clicks \"My profile\", which goes to `/profile`. What happens, and why?",
+              "answerMdx": "The page goes blank and the console shows an error like \"Cannot read properties of undefined (reading 'toUpperCase')\". `/profile` matches the route that renders the same `Profile` component, but that route has no `:name` wildcard, so `useParams()` returns an empty object and `name` is `undefined`. Calling `toUpperCase` on `undefined` throws while rendering, and React removes the page.",
+              "markingMdx": "1 mark for stating the page goes blank / an error is thrown.\n1 mark for explaining `name` is `undefined` because the `/profile` route has no `:name`, so `toUpperCase` throws.",
+              "questionMdxZh": "用户点击 \"My profile\"，它指向 `/profile`。会发生什么？为什么？",
+              "answerMdxZh": "页面会变成空白，控制台会出现类似 \"Cannot read properties of undefined (reading 'toUpperCase')\" 的报错。`/profile` 匹配到的路由会渲染同一个 `Profile` 组件，但那条路由没有 `:name` 通配符，所以 `useParams()` 返回一个空对象，`name` 为 `undefined`。在 `undefined` 上调用 `toUpperCase` 会在渲染过程中抛错，React 随即把这个页面移除。",
+              "markingMdxZh": "1 分：答出页面变空白 / 抛出了错误。\n1 分：解释因为 `/profile` 路由没有 `:name`，所以 `name` 是 `undefined`，于是 `toUpperCase` 抛错。"
+            },
+            {
+              "id": "Q6.3-c",
+              "label": "(c)",
+              "marks": 2,
+              "questionMdx": "A teammate's fix is to delete the `/profile` route. What does `/profile` show now, and why? Then describe a better fix.",
+              "answerMdx": "Nothing from the routes (only the navbar is displayed). React Router matches a route's whole path, and `/profile` does not match `/profile/:name`, which needs a value after `/profile/`. No route matches, so nothing is rendered for the page. A better fix is to keep both routes and have `Profile` check whether `name` exists: if it does not, render something else, such as \"Please enter a name\" with a search box, or the logged-in user's own profile.",
+              "markingMdx": "1 mark for stating nothing is rendered because no route matches `/profile`.\n1 mark for a better fix that keeps both routes and has `Profile` handle a missing `name`.",
+              "questionMdxZh": "队友的修法是删掉 `/profile` 这条路由。现在访问 `/profile` 会显示什么？为什么？然后请描述一个更好的修法。",
+              "answerMdxZh": "不会有任何来自路由的内容（只显示导航栏）。React Router 会匹配路由的完整路径，而 `/profile` 并不匹配 `/profile/:name`，后者要求在 `/profile/` 之后必须有一个值。既然没有路由匹配，页面就什么都不渲染。更好的修法是保留两条路由，并让 `Profile` 检查 `name` 是否存在：如果不存在，就渲染别的内容，例如带搜索框的 \"Please enter a name\"，或当前登录用户自己的主页。",
+              "markingMdxZh": "1 分：答出因为没有任何路由匹配 `/profile`，所以什么都不渲染。\n1 分：给出更好的修法——保留两条路由，并让 `Profile` 处理 `name` 缺失的情况。"
+            }
+          ],
+          "displayNumber": "Q6.3",
+          "categoryLabel": "React Router and URL State",
+          "displayStyle": "quiz-sample",
+          "mockup": {
+            "files": [
+              {
+                "name": "profile-pages.svg"
+              },
+              {
+                "name": "Profile.jsx",
+                "active": true,
+                "code": "import { useParams } from 'react-router-dom';\n\nconst Profile = () => {\n  const { name } = useParams();\n\n  return <h1>{name.toUpperCase()}'s profile</h1>;\n};",
+                "codeZh": "import { useParams } from 'react-router-dom';\n\nconst Profile = () => {\n  const { name } = useParams();\n\n  return <h1>{name.toUpperCase()}'s profile</h1>;\n};"
+              }
+            ],
+            "html": "<div class=\"exam-ui-shell\"><div class=\"exam-ui-topbar\"><span>Qanda</span><span>/profile/emily</span></div><div class=\"exam-ui-body\"><div class=\"exam-ui-card\" style=\"max-width:380px;\"><div class=\"exam-ui-button-row\" style=\"margin-bottom:.6rem;\"><span class=\"exam-ui-link\">Dashboard</span><span class=\"exam-ui-link\">My profile</span></div><p class=\"exam-ui-value\" style=\"font-weight:700;\">EMILY's profile</p></div></div></div>",
+            "htmlZh": "<div class=\"exam-ui-shell\"><div class=\"exam-ui-topbar\"><span>Qanda</span><span>/profile/emily</span></div><div class=\"exam-ui-body\"><div class=\"exam-ui-card\" style=\"max-width:380px;\"><div class=\"exam-ui-button-row\" style=\"margin-bottom:.6rem;\"><span class=\"exam-ui-link\">Dashboard</span><span class=\"exam-ui-link\">My profile</span></div><p class=\"exam-ui-value\" style=\"font-weight:700;\">EMILY's profile</p></div></div></div>"
+          },
+          "titleZh": "个人主页",
+          "contentMdxZh": "Qanda 应用有个人主页功能。`/profile/:name` 显示对应用户的主页，而导航栏里的 \"My profile\" 链接指向 `/profile`。`profile-pages.svg` 展示了 dashboard 的导航栏与个人主页布局，`Profile.jsx` 是对应代码。"
+        }
+      ],
+      "descriptionZh": "本卷按老师 clarification 与 Quiz 3 样本重构：覆盖 Weeks 1-8 lectures 与 Weeks 1-9 tutorials，并包含 assignment 4，重点为 Weeks 7-8 的 React 内容。"
+    }
+  ]
+}

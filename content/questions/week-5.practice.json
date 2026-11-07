@@ -455,6 +455,46 @@
       "codeBlocks": [],
       "images": [],
       "createdAt": "2026-10-25"
+    },
+    {
+      "id": "QUIZ3-W5-Q1",
+      "topic": "ui-ux",
+      "weeks": [
+        "week-5"
+      ],
+      "difficulty": "medium",
+      "tags": [
+        "Quiz3",
+        "Safety",
+        "Destructive action",
+        "Affordance"
+      ],
+      "question": "Qanda 帖子下方并排显示 Edit / Delete / Like 三个按钮，三者样式完全一样、几乎没有间距。作者 Mei 想修改帖子，为什么很容易误点到 Delete？高层上怎样降低误删概率，以及误删发生后怎样降低代价？",
+      "knowledgePoint": "Delete beside Edit",
+      "answerExplanation": "三个按钮外观一样又紧挨着，Delete 与 Edit、Like 之间没有任何视觉区分，手稍微偏一点就会落到错误的按钮上。降低概率：删除前弹出 \"Delete this thread?\" 二次确认；把 Delete 做成危险样式（红色或描边）或挪远、加大间距。降低代价：删除后立刻提供 undo，或把删除的帖子放进可以恢复的位置。",
+      "codeBlocks": [],
+      "images": [],
+      "createdAt": "2026-11-07"
+    },
+    {
+      "id": "QUIZ3-W5-Q2",
+      "topic": "ui-ux",
+      "weeks": [
+        "week-5"
+      ],
+      "difficulty": "medium",
+      "tags": [
+        "Quiz3",
+        "Empty state",
+        "Feedback",
+        "Visibility"
+      ],
+      "question": "刚注册的用户看到的 dashboard 一片空白，创建帖子的唯一入口是顶栏一个小小的 \"+\"。可用性测试中 8 个新用户里有 5 个以为页面\"还在加载\"或\"坏了\"，另外 3 个也要一分钟后才找到 \"+\"。为什么大家会误解页面状态？空状态和创建入口应该怎样呈现？",
+      "knowledgePoint": "An empty dashboard",
+      "answerExplanation": "空白区域在\"正在加载\"\"加载失败\"\"确实没有内容\"三种情况下长得一模一样，页面没有区分它们，用户就以为列表没加载出来或坏了。做法：列表加载完但为空时明确显示 \"You have no threads yet\" 这类空状态文案（加载中则显示 loading 指示）。创建入口不要用小图标 \"+\"，改成带文字的醒目主按钮，例如把 \"Create your first thread\" 放在 \"Dashboard\" 下方的空白处，用更大字号、内边距和填充色做主操作，文字标签直接说明它会做什么。",
+      "codeBlocks": [],
+      "images": [],
+      "createdAt": "2026-11-07"
     }
   ]
 }

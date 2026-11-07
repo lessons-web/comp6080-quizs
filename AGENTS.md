@@ -139,6 +139,15 @@
   - **明确排除 `Week 5 React lectures`**
 - Week 5 的 `UI/UX` 非 React 内容仍在范围内，可以正常出题。
 
+### 14. Quiz 3 范围规则
+
+- 当生成当前项目里的 `Quiz 3` 模拟题时（老师 clarification）：
+  - 覆盖 `Weeks 1-8 lectures` 与 `Weeks 1-9 tutorials`
+  - 同时包含 `assignment 4` 内容
+  - 重点为 `Weeks 7-8` 的 `React` 内容（state / effects / router）
+- 与 Quiz 2 不同，Quiz 3 需要覆盖 React（state、effects、router），不要再按“排除 React”处理。
+- React 题要落到 `content/questions/week-7.practice.json`（`week-7` 题库）；Week 5 题库只保留 UI/UX 内容。
+
 ## 实施建议
 
 当 Agent 处理类似任务时，推荐执行顺序：

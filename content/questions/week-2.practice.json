@@ -195,6 +195,46 @@
       "codeBlocks": [],
       "images": [],
       "createdAt": "2026-10-25"
+    },
+    {
+      "id": "QUIZ3-W2-Q1",
+      "topic": "css",
+      "weeks": [
+        "week-2"
+      ],
+      "difficulty": "medium",
+      "tags": [
+        "Quiz3",
+        "CSS",
+        "overflow-wrap",
+        "长单词"
+      ],
+      "question": "Ben 把一串没有空格的长 token 粘进评论框，句子会正常换行，但 token 却直直冲出盒子。为什么会这样？队友建议加 `overflow: hidden`，会变成什么样？更好的 CSS 修法是什么？",
+      "knowledgePoint": "A token that runs out of its comment",
+      "answerExplanation": "浏览器只在允许的位置断行，例如空格和连字符。token 是一个没有空格的长单词，无处可断；它比固定 360px 的盒子还宽，盒子又无法被撑大，于是 token 溢出到盒子外。加 `overflow: hidden` 会把超出部分裁掉，token 末尾被截断，其他用户既看不到也复制不到完整内容。更好的做法是给评论文字加 `overflow-wrap: anywhere`（或 `overflow-wrap: break-word`、`word-break: break-all`），允许浏览器在单词内部断行，让 token 在盒子内换到多行。",
+      "codeBlocks": [],
+      "images": [],
+      "createdAt": "2026-11-07"
+    },
+    {
+      "id": "QUIZ3-W2-Q2",
+      "topic": "css",
+      "weeks": [
+        "week-2"
+      ],
+      "difficulty": "medium",
+      "tags": [
+        "Quiz3",
+        "CSS",
+        "Layout shift",
+        "CLS"
+      ],
+      "question": "帖子里有一张 600×300 的手绘图，下方跟着 Reply / Like 按钮。Mei 在慢速 Wi-Fi 下，页面刚出现时想点 Reply 却点到了图上；约两秒后图片下载完成，按钮又整体往下跳。为什么按钮会移动？如何让按钮不再移动？",
+      "knowledgePoint": "Buttons that jump",
+      "answerExplanation": "`<img>` 没有写尺寸，浏览器在文件下载完成前不知道图片大小，就先不给它留空间，按钮紧贴在文字下方。当 600×300 的图片到达时，浏览器为它腾出约 300px 的高度，把下面内容整体下推，所以按钮移动。修法是给标签写上尺寸：`<img src=\"sketch.png\" width=\"600\" height=\"300\" alt=\"...\">`，浏览器提前预留 600×300 的空间，按钮一开始就在最终位置，图片出现时不再移动。",
+      "codeBlocks": [],
+      "images": [],
+      "createdAt": "2026-11-07"
     }
   ]
 }

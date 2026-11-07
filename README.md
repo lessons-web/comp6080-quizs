@@ -47,7 +47,15 @@
   - **明确排除 `Week 5 React lectures`**
 - `Week 5 UI/UX` 的非 React 内容仍然在范围内，可以正常出题。
 
-### 0.5 推荐工作顺序
+### 0.5 Quiz 3 当前专项规则
+
+- 生成当前项目中的 `Quiz 3` 模拟题时（老师 clarification）：
+  - 覆盖 `Weeks 1-8 lectures` 与 `Weeks 1-9 tutorials`
+  - 同时包含 `assignment 4` 内容
+  - 重点为 `Weeks 7-8` 的 `React` 内容（state / effects / router）
+- React 题落到 `content/questions/week-7.practice.json`（`week-7` 题库），Week 5 题库只保留 UI/UX。
+
+### 0.6 推荐工作顺序
 
 1. 先更新或新增 `content/exams/*.json`
 2. 再同步 `content/questions/week-*.practice.json`
@@ -55,7 +63,7 @@
 4. 再同步 `quizs/*.md`
 5. 最后更新测试并运行验证
 
-### 0.6 常见禁止事项
+### 0.7 常见禁止事项
 
 - 不要只更新整卷，不更新 practice bank
 - 不要只补 markdown 阅读版，不更新站内数据
@@ -63,7 +71,7 @@
 - 不要把交互 demo 塞进题面 mockup
 - 不要把 `Week 5 React lectures` 混进当前 Quiz 2 模拟卷
 
-### 0.7 快速开始
+### 0.8 快速开始
 
 本地开发常用命令：
 
@@ -288,17 +296,20 @@ content/
     week-3.practice.json
     week-4.practice.json
     week-5.practice.json
+    week-7.practice.json
   exams/
     week-1.mock-exams.json
     week-2.mock-exams.json
     week-3.mock-exams.json
     week-4.mock-exams.json
     quiz-2.mock-exams.json
+    quiz-3.mock-exams.json
     ...
 
 quizs/
   2026T3-QUIZ1.md
   2026T3-QUIZ2.md
+  2026T3-QUIZ3.md
   ...
 ```
 

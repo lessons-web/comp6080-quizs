@@ -1,0 +1,193 @@
+{
+  "topic": "react",
+  "questions": [
+    {
+      "id": "QUIZ3-W7-Q1",
+      "topic": "react",
+      "weeks": [
+        "week-7"
+      ],
+      "difficulty": "hard",
+      "tags": [
+        "Quiz3",
+        "React",
+        "useState",
+        "Batch",
+        "Stale state"
+      ],
+      "question": "帖子有 12 个赞，点一次 \"Super like\"（本应 +2）后显示多少？为什么？如果在 `superLike` 最后加 `console.log(likes)`，这次点击会打印什么？怎样改才能让两个按钮都按预期工作？",
+      "knowledgePoint": "Super like",
+      "answerExplanation": "显示 13。这次渲染里 `likes` 是常量 12，两次 `setLikes(likes + 1)` 都基于同一个 12，都请求把值设为 13，第二个调用看不到第一个的结果。`console.log(likes)` 会打印 12：`setLikes` 不会改变当前正在运行的函数里的 `likes`，它只是请求 React 用新值重新渲染，只有下一次渲染的 `likes` 才是 13。修法：改用 updater 形式 `setLikes(prev => prev + 1)`，React 会把上一个结果依次传给下一个 updater，两次调用得到 12 → 13 → 14；也可让 `superLike` 直接 `setLikes(likes + 2)`，因为单次基于当前值更新是正确的。",
+      "codeBlocks": [],
+      "images": [],
+      "createdAt": "2026-11-07"
+    },
+    {
+      "id": "QUIZ3-W7-Q2",
+      "topic": "react",
+      "weeks": [
+        "week-7"
+      ],
+      "difficulty": "hard",
+      "tags": [
+        "Quiz3",
+        "React",
+        "Lifting state",
+        "Single source of truth"
+      ],
+      "question": "投票成功后按钮变成 \"Vote (13)\"，但上方 summary 仍是 12。两个组件各自读的是什么值，为什么总数会不一致？总数状态和投票动作应该放在哪里？如果服务器拒绝了这次投票，屏幕上应保留什么？",
+      "knowledgePoint": "Vote totals in two components",
+      "answerExplanation": "`VoteButton` 把自身局部 `votes` 从 12 加到 13；`ResultSummary` 仍然拿父组件传来的、未变化的 `poll.votes`，所以显示 12。总数状态和投票动作应放在最近的共同父组件 `PollPage`，把值传给两个子组件，`VoteButton` 只接收一个回调，而不是自建第二份总数。若服务器拒绝投票，父组件应保留或恢复上一次已确认的总数，而不是永久计入被拒绝的那一票；同时给出可见、可恢复的错误提示让人重试，乐观值只有在失败时回滚才是可接受的。",
+      "codeBlocks": [],
+      "images": [],
+      "createdAt": "2026-11-07"
+    },
+    {
+      "id": "QUIZ3-W7-Q3",
+      "topic": "react",
+      "weeks": [
+        "week-7"
+      ],
+      "difficulty": "hard",
+      "tags": [
+        "Quiz3",
+        "React",
+        "Lifting state",
+        "Context",
+        "Immutable update"
+      ],
+      "question": "头部购物车徽标和 checkout 显示的数量不一致：checkout 移除一件后变成 2，头部徽标却还是 3。为什么从同一个 `initialCart` 出发却没有保持联动？购物车状态应该放在哪里、两个不同分支怎么拿到它？确认数量变化后应如何更新？",
+      "knowledgePoint": "Two cart item counts",
+      "answerExplanation": "`HeaderCart` 和 `Checkout` 各自用 `initialCart` 创建了一份独立 state，改 `Checkout` 那份不会影响 `HeaderCart` 那份，哪怕初始值相同。购物车状态应放在两个分支之上的共同父级（例如应用的公共父组件），用 props 传下去；当层层透传不现实时，可以在该层级用 context 提供。数量端点确认后，owner 应在一个新数组里替换被改动的 item（或整份替换为服务器确认的结果），徽标和 checkout 都必须从这同一个新 state 派生，不能直接 mutation 旧 state。",
+      "codeBlocks": [],
+      "images": [],
+      "createdAt": "2026-11-07"
+    },
+    {
+      "id": "QUIZ3-W7-Q4",
+      "topic": "react",
+      "weeks": [
+        "week-7"
+      ],
+      "difficulty": "hard",
+      "tags": [
+        "Quiz3",
+        "React",
+        "useEffect",
+        "deps",
+        "Redirect"
+      ],
+      "question": "`SignInPage` 在 URL `/signin` 上，登录成功后应跳到 `/account`。现在 `setUser` 之后用户仍停在登录页。他看到什么、URL 是什么、为什么？怎样改才能让\"用户变为已登录\"时跳转？登出时又该发生什么？",
+      "knowledgePoint": "Account redirect effect",
+      "answerExplanation": "用户仍停在 `/signin`，看不到 account 页。effect 在首次渲染后运行，那时 `user` 是 `null`，而空依赖数组让它不会在 `setUser(result.user)` 更新状态后再次运行，跳转从未发生。改法：让 effect 依赖 `user`，这样 user 变化后 effect 会重新运行，user 非空时 `navigate('/account')`。登出应清空 `user`，并由受保护路由把未登录用户重定向回 `/signin`，而不是让 account 页继续可访问。",
+      "codeBlocks": [],
+      "images": [],
+      "createdAt": "2026-11-07"
+    },
+    {
+      "id": "QUIZ3-W7-Q5",
+      "topic": "react",
+      "weeks": [
+        "week-7"
+      ],
+      "difficulty": "hard",
+      "tags": [
+        "Quiz3",
+        "React",
+        "useEffect",
+        "Closure",
+        "setInterval",
+        "Cleanup"
+      ],
+      "question": "`Timer` 的 interval 一直在运行，但显示的数字停在 1 不再变化（未开启 Strict Mode）。interval 函数用的是哪个 `count`？每次 tick 请求 React 设成多少？怎样既不重建 interval 又能让每 tick 基于最新值？cleanup 要做什么？",
+      "knowledgePoint": "Interval with stale state",
+      "answerExplanation": "React 在首次渲染时创建了这个 interval 函数，那时 `count` 是 0；该函数一直使用 0，所以每个 tick 都调用 `setCount(0 + 1)`，第一次显示 1，之后一直设成同一个值，画面不再变化。改法：用接收最新值的 setter 形式 `setCount(previous => previous + 1)`，React 每次 tick 会把当前 count 传进去。effect 应保存 interval id，并返回 cleanup，在 Timer 离开屏幕时用 `clearInterval` 清掉它，从而只保留一个 interval。",
+      "codeBlocks": [],
+      "images": [],
+      "createdAt": "2026-11-07"
+    },
+    {
+      "id": "QUIZ3-W7-Q6",
+      "topic": "react",
+      "weeks": [
+        "week-7"
+      ],
+      "difficulty": "hard",
+      "tags": [
+        "Quiz3",
+        "React",
+        "useEffect",
+        "async",
+        "Cleanup",
+        "Race"
+      ],
+      "question": "`OrderPanel` 加载订单摘要时 React 打印 warning，且请求失败后 \"Loading order...\" 一直留在屏幕上。这两个症状各由什么原因造成？怎样重写 effect 才能保留 `await`、在成功或失败后都关掉 loading，并避免旧请求覆盖面板？",
+      "knowledgePoint": "An async effect callback",
+      "answerExplanation": "`async` 函数返回 Promise，因此传给 `useEffect` 的函数也返回 Promise，而 React 期望它返回空或一个 cleanup 函数，这就是 warning 的来源。另一症状是 fetch 或 `JSON.parse` 失败时直接跳过了 `setLoading(false)`，代码没有失败处理，loading 永远为 true。改法：给 `useEffect` 传一个普通函数，在其内部定义并调用 async 函数；内部用 `try` 发请求、`catch` 记录错误、`finally` 关闭 loading。cleanup 应 abort 旧请求或标记它不能再更新 state，且 async 函数只应在当前 `orderId` 下修改 `order`/`error`/`loading`。",
+      "codeBlocks": [],
+      "images": [],
+      "createdAt": "2026-11-07"
+    },
+    {
+      "id": "QUIZ3-W7-Q7",
+      "topic": "react",
+      "weeks": [
+        "week-7"
+      ],
+      "difficulty": "hard",
+      "tags": [
+        "Quiz3",
+        "React Router",
+        "useParams",
+        "URL state"
+      ],
+      "question": "刷新 `/travel/42/room/3` 后组件渲染的是哪间房？当前路由设置缺了什么？在 room 3 上点 \"Next\" 只改 React state 为什么不够？组件应如何用路由？（不用写代码）",
+      "knowledgePoint": "Hotel route parameters",
+      "answerExplanation": "渲染的是 room 1，因为组件总是把 `roomNumber` 初始化为 1；路由虽然声明了 `:roomNumber` 参数，组件却没读它、也没拿它作为初始值或受控值。只改 state 会让画面变化，但 URL 仍写着 room 3，刷新或复制链接后用户位置就会丢失，因为对这种可直接寻址的页面来说，路由才是房号的来源。正确做法：从匹配到的路由里读取 `hotelId` 和 `roomNumber` 并据此渲染；点 \"Next\" 时导航到同一 hotel 下下一间房的 URL，路由变化再带动显示更新。",
+      "codeBlocks": [],
+      "images": [],
+      "createdAt": "2026-11-07"
+    },
+    {
+      "id": "QUIZ3-W7-Q8",
+      "topic": "react",
+      "weeks": [
+        "week-7"
+      ],
+      "difficulty": "hard",
+      "tags": [
+        "Quiz3",
+        "React Router",
+        "Link",
+        "localStorage",
+        "Auth"
+      ],
+      "question": "Mei 登录后落在 `/dashboard`，点导航栏 \"Profile\" 却被送回 `/login`。点击这种链接时浏览器做了什么、为什么会\"登出\"？怎样改导航才能保持登录？为什么改成 `Link` 后按刷新仍会掉登录？",
+      "knowledgePoint": "Navbar links",
+      "answerExplanation": "`<a href>` 会触发整页加载：浏览器向服务器请求 `/profile`，整个应用从头启动，所有 React state 被丢弃，`token` 回到 `null`，于是 `/profile` 把她送回 `/login`。改用 React Router 的 `<Link to=\"/profile\">`（而非 `<a href>`）会阻止浏览器的默认加载、只更新 URL，并让 router 在同一个仍在运行的应用里渲染对应路由，`App` 不会重启，`token` 得以保留。但刷新永远会整页加载（`Link` 避免不了），state 仍会丢失；需要把 token 存到能跨刷新存活的地方，例如 `localStorage`，并在应用启动时读回来作为 state 初始值。",
+      "codeBlocks": [],
+      "images": [],
+      "createdAt": "2026-11-07"
+    },
+    {
+      "id": "QUIZ3-W7-Q9",
+      "topic": "react",
+      "weeks": [
+        "week-7"
+      ],
+      "difficulty": "hard",
+      "tags": [
+        "Quiz3",
+        "React Router",
+        "useParams",
+        "Dynamic route"
+      ],
+      "question": "打开 `/profile/emily` 会显示什么、`Profile` 怎么知道要显示谁？点 \"My profile\"（指向 `/profile`）会发生什么、为什么？若把 `/profile` 路由删掉，`/profile` 又会显示什么？更好的修法是什么？",
+      "knowledgePoint": "Profile pages",
+      "answerExplanation": "显示 \"EMILY's profile\"。`/profile/:name` 能匹配它，`:name` 是通配符，可匹配该位置的任意值；`useParams` 返回一个由通配符值组成的对象，这里是 `{ name: 'emily' }`，所以 `name` 是 \"emily\"。点 \"My profile\" 会白屏并报错 \"Cannot read properties of undefined (reading 'toUpperCase')\"：`/profile` 匹配到渲染同一个 `Profile` 组件的路由，但那条路由没有 `:name`，`useParams()` 返回空对象，`name` 为 `undefined`，对 `undefined` 调用 `toUpperCase` 在渲染中抛错，React 移除页面。若删掉 `/profile` 路由，则没有任何路由匹配 `/profile`（`/profile/:name` 要求 `/profile/` 之后必须有值），页面什么都不渲染、只剩导航栏。更好的修法是保留两条路由，让 `Profile` 判断 `name` 是否存在：不存在时渲染别的内容，例如带搜索框的 \"Please enter a name\"，或当前登录用户自己的主页。",
+      "codeBlocks": [],
+      "images": [],
+      "createdAt": "2026-11-07"
+    }
+  ]
+}

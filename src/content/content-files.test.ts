@@ -279,4 +279,97 @@ describe('content files', () => {
     expect(week5).toContain('Delete beside Save')
     expect(week5).toContain('A crowded signup form')
   })
+
+  it('stores a quiz 3 paper focused on weeks 7-8 React content', () => {
+    const quiz3 = readJson('content/exams/quiz-3.mock-exams.json')
+    const exam = (
+      quiz3.exams as Array<{
+        id: string
+        totalMarks: number
+        questions: Array<{
+          id: string
+          title: string
+          titleZh?: string
+          displayNumber?: string
+          categoryLabel?: string
+          displayStyle?: string
+          mockup?: {
+            files: Array<{ name: string; code?: string; codeZh?: string }>
+            html?: string
+            htmlZh?: string
+            caption?: string
+            captionZh?: string
+          }
+        }>
+      }>
+    )[0]
+    const week2 = JSON.stringify(readJson('content/questions/week-2.practice.json'))
+    const week3 = JSON.stringify(readJson('content/questions/week-3.practice.json'))
+    const week5 = JSON.stringify(readJson('content/questions/week-5.practice.json'))
+    const week7 = JSON.stringify(readJson('content/questions/week-7.practice.json'))
+    const quizText = JSON.stringify(quiz3)
+
+    expect(exam.id).toBe('2026T3-QUIZ3')
+    expect(exam.totalMarks).toBe(69)
+    expect(exam.questions).toHaveLength(14)
+    expect(quizText).toContain('React State and Rendering')
+    expect(quizText).toContain('React Effects and Data Flow')
+    expect(quizText).toContain('React Router and URL State')
+    expect(quizText).toContain('useState')
+    expect(quizText).toContain('useEffect')
+    expect(quizText).toContain('useParams')
+    expect(quizText).toContain('Delete beside Edit')
+    expect(quizText).toContain('An empty dashboard')
+    expect(quizText).toContain('A token that runs out of its comment')
+    expect(quizText).toContain('Buttons that jump')
+    expect(quizText).toContain('Helpers for the register page')
+    expect(quizText).toContain('Super like')
+    expect(quizText).toContain('Vote totals in two components')
+    expect(quizText).toContain('Two cart item counts')
+    expect(quizText).toContain('Account redirect effect')
+    expect(quizText).toContain('Interval with stale state')
+    expect(quizText).toContain('An async effect callback')
+    expect(quizText).toContain('Hotel route parameters')
+    expect(quizText).toContain('Navbar links')
+    expect(quizText).toContain('Profile pages')
+
+    expect(exam.questions.every((question) => question.displayStyle === 'quiz-sample')).toBe(true)
+    expect(exam.questions.every((question) => Boolean(question.displayNumber))).toBe(true)
+    expect(exam.questions.every((question) => Boolean(question.categoryLabel))).toBe(true)
+    expect(exam.questions.every((question) => (question.mockup?.files?.length ?? 0) > 0)).toBe(true)
+    expect(
+      exam.questions.every((question) => (
+        question.mockup?.files.every((file) => (
+          /\.(html|css|js)$/i.test(file.name)
+            ? Boolean(file.code && file.codeZh)
+            : true
+        )) ?? true
+      )),
+    ).toBe(true)
+    expect(
+      exam.questions
+        .filter((question) => Boolean(question.titleZh) && question.mockup)
+        .every((question) => Boolean(question.mockup?.htmlZh)),
+    ).toBe(true)
+    expect(
+      exam.questions
+        .filter((question) => Boolean(question.mockup?.caption))
+        .every((question) => Boolean(question.mockup?.captionZh)),
+    ).toBe(true)
+
+    expect(week2).toContain('A token that runs out of its comment')
+    expect(week2).toContain('Buttons that jump')
+    expect(week3).toContain('Helpers for the register page')
+    expect(week5).toContain('Delete beside Edit')
+    expect(week5).toContain('An empty dashboard')
+    expect(week7).toContain('Super like')
+    expect(week7).toContain('Vote totals in two components')
+    expect(week7).toContain('Two cart item counts')
+    expect(week7).toContain('Account redirect effect')
+    expect(week7).toContain('Interval with stale state')
+    expect(week7).toContain('An async effect callback')
+    expect(week7).toContain('Hotel route parameters')
+    expect(week7).toContain('Navbar links')
+    expect(week7).toContain('Profile pages')
+  })
 })

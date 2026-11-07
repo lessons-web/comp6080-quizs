@@ -16,6 +16,9 @@ const CATEGORY_LABEL_ZH: Record<string, string> = {
   'Requests: Fetch, Combining and Recovery': '请求：fetch、组合与恢复',
   'Application State: Async UI, Auth and Storage': '应用状态：异步 UI、鉴权与存储',
   'UI Design Principles and User Experience Reasoning': 'UI 设计原则与用户体验推理',
+  'React State and Rendering': 'React 状态与渲染',
+  'React Effects and Data Flow': 'React 副作用与数据流',
+  'React Router and URL State': 'React Router 与 URL 状态',
 }
 
 export function getExamText(exam: ExamPaper, locale: ExamLocale) {
