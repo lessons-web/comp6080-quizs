@@ -495,6 +495,253 @@
       "codeBlocks": [],
       "images": [],
       "createdAt": "2026-11-07"
+    },
+    {
+      "id": "QUIZ3-W5-Q3",
+      "topic": "ui-ux",
+      "weeks": [
+        "week-5"
+      ],
+      "difficulty": "medium",
+      "tags": [
+        "Quiz3",
+        "反馈 Feedback",
+        "约束 Constraints",
+        "防重复提交"
+      ],
+      "question": "用户在一个 “Create thread” 表单里点了提交。请求大约需要 2 秒。这两秒里页面没有任何变化，按钮也依然可以点。结果用户又连点了两次，最后创建出了 3 条一模一样的帖子。页面在哪两件事上失职？应该怎样改？",
+      "knowledgePoint": "A submit button that gives no feedback",
+      "answerExplanation": "两个问题：① 缺少**反馈（Feedback）**——提交后 2 秒内界面毫无变化，用户无法判断点击是否生效；② 缺少**系统状态可见性（Visibility）**与**约束（Constraints）**——请求进行中按钮仍可点击，等于放任用户重复提交。改法：一点击就进入 submitting 状态，把按钮禁用（disabled）并显示进度（如 “Creating…” 或转圈），既告诉用户操作已被接收，也在物理上挡住第二次点击；成功或失败后再恢复按钮并给出结果提示。经验值：超过约 **1.5 秒**的操作都应显示 loading，任何会触发副作用的按钮在 pending 期间都应禁用。",
+      "codeBlocks": [],
+      "images": [],
+      "createdAt": "2026-11-08"
+    },
+    {
+      "id": "QUIZ3-W5-Q4",
+      "topic": "ui-ux",
+      "weeks": [
+        "week-5"
+      ],
+      "difficulty": "medium",
+      "tags": [
+        "Quiz3",
+        "表单",
+        "label",
+        "识别优于回忆",
+        "可见性"
+      ],
+      "question": "一个注册表单的每个输入框都只写了 placeholder（如 “Email”“Password”“Confirm password”），没有单独的 label。用户填到一半就分不清每个框该填什么；提交后收到 “Passwords do not match”，但页面上再也看不到哪个框对应哪个字段。这样设计的问题是什么？应该怎样改？",
+      "knowledgePoint": "Labels that vanish into placeholders",
+      "answerExplanation": "placeholder 在用户开始输入后就消失了，问题在于**把标签当成了临时提示**。后果：① 用户输入时失去字段名称的**识别线索（recognition over recall）**，只能靠记忆，认知负担上升，长表单尤其明显；② 出错时 “Passwords do not match” 无法与具体字段对照，用户只能靠猜。改法：给每个输入框配一个**始终可见的 label**（放在输入框上方或左侧）；placeholder 只用来补充示例（如 “you@example.com”），不能承担标签职责。这对应设计检查清单里的**一致性**与**可见性**：字段身份必须随时可见。",
+      "codeBlocks": [],
+      "images": [],
+      "createdAt": "2026-11-08"
+    },
+    {
+      "id": "QUIZ3-W5-Q5",
+      "topic": "ui-ux",
+      "weeks": [
+        "week-5"
+      ],
+      "difficulty": "medium",
+      "tags": [
+        "Quiz3",
+        "错误预防",
+        "约束 Constraints",
+        "即时校验"
+      ],
+      "question": "注册表单要求密码至少 8 位并含一个数字，但这条规则只在用户**提交之后**才用红色错误提示告知。用户因此反复提交、反复被拒。这个设计在可用性上的问题是什么？更好的做法是什么？",
+      "knowledgePoint": "Password rules revealed only after submit",
+      "answerExplanation": "这违反了**错误预防（Error Prevention）**：更可用的做法是用**约束（Constraints）**在事前就限制用户犯错，而不是事后才报错。规则对用户不可见时，用户只能靠试错，反复失败会带来挫败感。改法：① 在密码框旁**始终展示**规则（如 “At least 8 characters, including a number”）；② 让规则随输入**实时**逐条点亮，做到即时校验；③ 仍不满足时再禁用提交按钮，把错误挡在提交之前。核心原则：能事前约束的，就不要留给事后报错；而错误信息本身也要**可读、可操作**。",
+      "codeBlocks": [],
+      "images": [],
+      "createdAt": "2026-11-08"
+    },
+    {
+      "id": "QUIZ3-W5-Q6",
+      "topic": "ui-ux",
+      "weeks": [
+        "week-5"
+      ],
+      "difficulty": "medium",
+      "tags": [
+        "Quiz3",
+        "对比度",
+        "无障碍 Accessibility",
+        "可读性"
+      ],
+      "question": "表单下方有一行浅灰色小字，写着 “We will never share your email”。用户反映在户外用手机时几乎看不清这行字，甚至有人以为那里没有内容。从可用性与无障碍角度看，问题出在哪？应该怎样改？",
+      "knowledgePoint": "Helper text too faint to read",
+      "answerExplanation": "问题在于**对比度（Contrast）不足**。文字颜色与背景太接近，内容虽然存在却不可读——在强光、低质量屏幕或视力不佳的用户身上尤其严重。这既是可用性问题，也是无障碍（accessibility）问题：WCAG 建议**正文文字对比度达到 4.5:1**（大号文字至少 3:1）。改法：把提示文字换成满足对比度的颜色（深灰而非浅灰）；不要单纯为了“降低视觉层级”就把它压到看不清——次要信息可以用**大小和位置**来降级，但**可读性下限不能突破**。改完用对比度检查工具验证实际比值。",
+      "codeBlocks": [],
+      "images": [],
+      "createdAt": "2026-11-08"
+    },
+    {
+      "id": "QUIZ3-W5-Q7",
+      "topic": "ui-ux",
+      "weeks": [
+        "week-5"
+      ],
+      "difficulty": "medium",
+      "tags": [
+        "Quiz3",
+        "触摸目标",
+        "误操作",
+        "可访问性",
+        "破坏性操作"
+      ],
+      "question": "移动端列表每行右侧有两个纯图标按钮（编辑、删除），图标约 16px，两个按钮之间只有 4px 间距。可用性测试里用户频繁点到错误的按钮，删除操作尤其高发。从交互设计角度看问题是什么？应该怎样改？",
+      "knowledgePoint": "Icon buttons too small to tap",
+      "answerExplanation": "问题在于**触摸目标（touch target）过小、间距不足**。手指接触面积远大于 16px，图标又紧挨在一起，用户很难精确命中，误点概率很高；删除这种**破坏性操作**被误触，代价尤其大。触摸目标有通用下限经验值：可点击区域至少约 **44×44px（iOS）/ 48×48px（Android）**，相邻目标之间也要留够间距。改法：把图标的**可点击区域**撑到 ≥44px（图标本身可以仍然小，用 padding 补足），并拉开两个按钮的间距；删除这类操作再加二次确认或 undo。要点：**可点击区域 ≠ 图标视觉大小**。",
+      "codeBlocks": [],
+      "images": [],
+      "createdAt": "2026-11-08"
+    },
+    {
+      "id": "QUIZ3-W5-Q8",
+      "topic": "ui-ux",
+      "weeks": [
+        "week-5"
+      ],
+      "difficulty": "medium",
+      "tags": [
+        "Quiz3",
+        "错误信息",
+        "反馈 Feedback",
+        "可恢复"
+      ],
+      "question": "用户提交表单失败后，页面顶部出现一行红字：“Error 422”。用户完全不知道发生了什么、也不知道该怎么办，只能反复重试。这条错误提示的问题是什么？应该怎样重写？",
+      "knowledgePoint": "An error message nobody can act on",
+      "answerExplanation": "这条提示同时违反了**可见性**与**反馈**：① 它用了用户看不懂的**内部错误码（422）**，没有说明出了什么事；② 它没有告诉用户**下一步该做什么**，用户无法据此行动。好的错误信息应回答三件事：**发生了什么、为什么、怎么解决**，并且放在**出错字段的旁边**，而不是只堆在页面顶部。改法：把 “Error 422” 换成面向用户的语言，例如 “We couldn't save your changes because this email is already registered. Try logging in instead.”；同时把错误定位到对应字段、保留用户已填内容，让人能**恢复（recover）**后重试。原则：错误提示要**可读、具体、可操作**。",
+      "codeBlocks": [],
+      "images": [],
+      "createdAt": "2026-11-08"
+    },
+    {
+      "id": "QUIZ3-W5-Q9",
+      "topic": "ui-ux",
+      "weeks": [
+        "week-5"
+      ],
+      "difficulty": "medium",
+      "tags": [
+        "Quiz3",
+        "视觉层级",
+        "破坏性操作",
+        "主按钮",
+        "误操作"
+      ],
+      "question": "设置页底部有 “Save changes” 和 “Reset all settings” 两个按钮。“Reset all settings” 被做成了醒目的大号实心主按钮，“Save changes” 反而是浅灰的文字链接。上线后不少用户误点重置、丢失配置（虽然有确认弹窗，但大家已习惯性一路点确定）。从视觉层级和设计原则看，问题在哪？应该怎样调整？",
+      "knowledgePoint": "The dangerous action is the loudest button",
+      "answerExplanation": "视觉层级应当**服务于重要性和安全性**，这里正好反了：实心、大号的主按钮是全页最强的视觉信号，等于在暗示“这是推荐操作”，把**破坏性操作（reset）**错误地升级成默认选择；真正常用的 “Save” 却被降级成几乎看不见的文字链接。用户靠视觉层级快速决策，就会顺着最强信号点击，再叠加被“习惯性确定”的确认弹窗，误操作代价被放大。改法：① 一屏内**只保留一个主按钮**，且给**安全、常用**的动作（这里应是 “Save changes”）；② 破坏性操作要**降级**——用次要/描边/危险色样式，并放在不显眼处，不要和主操作抢注意力；③ 除了二次确认，最好再提供 **undo**。原则：视觉层级越强 = 越在引导用户点它，所以危险动作要主动降级。",
+      "codeBlocks": [],
+      "images": [],
+      "createdAt": "2026-11-08"
+    },
+    {
+      "id": "QUIZ3-W5-Q10",
+      "topic": "ui-ux",
+      "weeks": [
+        "week-5"
+      ],
+      "difficulty": "medium",
+      "tags": [
+        "Quiz3",
+        "无障碍 Accessibility",
+        "颜色语义",
+        "色盲",
+        "可见性"
+      ],
+      "question": "一个表单只用**边框颜色**区分校验结果：正确是绿框、错误是红框，没有任何图标或文字；在线状态也只用一个小绿点表示。色觉障碍用户（红绿色盲约占男性 8%）反馈完全分不清哪些字段有问题，绿点也读不出含义。问题是什么？应该怎样改？",
+      "knowledgePoint": "Colour is the only signal",
+      "answerExplanation": "问题在于**把颜色当成唯一的信息载体**。红绿色盲用户无法区分红/绿边框，绿色小圆点也读不出“在线”的含义；一旦看不到颜色（色盲、灰度屏、强光），信息就完全丢失。改法：颜色只能作为**辅助**，必须配合**第二种通道**：① 校验结果除了颜色，加**图标**（✓ / ✕）和**文字**（“This field is required”）；② 状态点旁加**文字标签**（“Online”）；③ 还可给错误字段加粗或改变边框样式。原则：**不要只用颜色传递信息**，要保证在灰度/色盲条件下依然可分辨——这既是一致性问题，也是无障碍要求。",
+      "codeBlocks": [],
+      "images": [],
+      "createdAt": "2026-11-08"
+    },
+    {
+      "id": "QUIZ3-W5-Q11",
+      "topic": "ui-ux",
+      "weeks": [
+        "week-5"
+      ],
+      "difficulty": "medium",
+      "tags": [
+        "Quiz3",
+        "导航",
+        "位置感 Wayfinding",
+        "面包屑",
+        "可见性"
+      ],
+      "question": "一个后台应用有多级导航（Settings → Team → Permissions）。用户切到 Permissions 后，左侧菜单里当前层级没有任何高亮，页面顶部也没有标题或面包屑，浏览器标签同样只写着应用名。用户频繁反馈“不知道自己现在在哪、怎么回去”。问题出在哪？应该怎样改？",
+      "knowledgePoint": "No indication of where you are",
+      "answerExplanation": "问题在于缺少**位置感（wayfinding）/ 系统状态可见性**：界面没有告诉用户“你现在在哪一层、从哪里来、怎么回去”。多级结构下用户只能靠记忆重建位置，认知负担高、容易迷路。改法：① 左侧导航**高亮当前项**，并**展开其父级**（Settings → Team 保持展开、Permissions 高亮）；② 顶部加**面包屑**（Settings / Team / Permissions）和**当前页标题**；③ 让浏览器 `document.title` 随页面更新。原则：让用户在页面的任何位置都能一眼回答“我在哪、我能去哪、怎么回上一级”。",
+      "codeBlocks": [],
+      "images": [],
+      "createdAt": "2026-11-08"
+    },
+    {
+      "id": "QUIZ3-W5-Q12",
+      "topic": "ui-ux",
+      "weeks": [
+        "week-5"
+      ],
+      "difficulty": "medium",
+      "tags": [
+        "Quiz3",
+        "图标",
+        "识别优于回忆",
+        "示能性",
+        "无障碍"
+      ],
+      "question": "一个卡片右上角有一排只有图标的按钮：一个星星、一个箭头、一个省略号，没有文字也没有 tooltip。可用性测试里用户猜不准哪个是“收藏”、哪个是“分享”，有人甚至不敢点。问题是什么？应该怎样改？",
+      "knowledgePoint": "Icon buttons with no label",
+      "answerExplanation": "问题在于**图标含义不自明**，而按钮又没有文字标签或提示。图标并非全世界通用（星标可能表示“收藏”也可能表示“评分”；箭头可能表示“分享”“下载”或“前往”），用户只能靠猜，违反**识别优于回忆**，也无法建立正确的**示能性（affordance）**。改法：① 空间允许就**图标 + 文字**一起给（“Save”“Share”）；② 空间不足时，至少提供 **tooltip / aria-label**，悬停或读屏时说明含义；③ 优先保留被广泛认知的图标（放大镜=搜索、垃圾桶=删除），含义模糊的（星标、箭头）一律配文字。原则：图标是辅助，含义必须能被用户无歧义地识别。",
+      "codeBlocks": [],
+      "images": [],
+      "createdAt": "2026-11-08"
+    },
+    {
+      "id": "QUIZ3-W5-Q13",
+      "topic": "ui-ux",
+      "weeks": [
+        "week-5"
+      ],
+      "difficulty": "medium",
+      "tags": [
+        "Quiz3",
+        "无障碍 Accessibility",
+        "焦点 focus",
+        "键盘可用性"
+      ],
+      "question": "设计师觉得浏览器默认的蓝色焦点框“不好看”，于是在 CSS 里全局写了 `outline: none`，却没提供替代方案。鼠标用户觉得很清爽，可键盘用户反馈：用 Tab 在表单里移动时完全看不出焦点在哪个输入框，只能盲敲。问题在哪？应该怎样改？",
+      "knowledgePoint": "Removing the focus outline",
+      "answerExplanation": "问题在于为了视觉美观**移除了键盘用户的定位线索**。焦点框（focus ring）是键盘和辅助技术用户判断“当前会作用于哪个元素”的唯一提示；`outline: none` 之后，Tab 到哪、回车会触发谁全都看不见，等于剥夺了键盘可操作性。改法：不要**直接删掉**焦点样式，而是**替换成更符合设计、但依然清晰可见**的样式，例如用 `:focus-visible` 自定义颜色和 `outline`/`box-shadow`，保证对比度足够（一般至少 3:1）。原则：可以美化焦点状态，但**不能取消它**——键盘可达性是硬性要求，不是可选项。",
+      "codeBlocks": [],
+      "images": [],
+      "createdAt": "2026-11-08"
+    },
+    {
+      "id": "QUIZ3-W5-Q14",
+      "topic": "ui-ux",
+      "weeks": [
+        "week-5"
+      ],
+      "difficulty": "medium",
+      "tags": [
+        "Quiz3",
+        "微文案 Microcopy",
+        "按钮文案",
+        "破坏性操作",
+        "一致性"
+      ],
+      "question": "两个界面都用同一个词 “Submit” 做按钮文案：一个是注册页，一个是删除确认弹窗里的按钮。用户经常在删除弹窗里下意识点了 “Submit”，事后才反应过来自己确认了删除。从微文案（microcopy）角度看，问题在哪？应该怎样改？",
+      "knowledgePoint": "A button that just says Submit",
+      "answerExplanation": "问题在于按钮文案**没有说清它会带来什么结果**，属于含糊的微文案。尤其把危险动作藏在一个泛泛的 “Submit” 里，用户无法在点击前预判后果，容易“惯性确认”。好的按钮文案应当**用动词描述结果**，并与页面/弹窗语境对上：① 注册按钮写 “Create account”，删除确认写 “Delete thread”（甚至用危险色）；② 保持术语一致——“Delete”/“Remove” 不要在不同地方混用指代同一个动作。原则：让用户在点击前就能从按钮文字读出**将要发生的动作和结果**，破坏性动作更要点名后果。",
+      "codeBlocks": [],
+      "images": [],
+      "createdAt": "2026-11-08"
     }
   ]
 }

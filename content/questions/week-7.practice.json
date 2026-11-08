@@ -188,6 +188,161 @@
       "codeBlocks": [],
       "images": [],
       "createdAt": "2026-11-07"
+    },
+    {
+      "id": "QUIZ3-W7-Q10",
+      "topic": "react",
+      "weeks": [
+        "week-7"
+      ],
+      "difficulty": "medium",
+      "tags": [
+        "Quiz3",
+        "React",
+        "useState",
+        "派生状态",
+        "受控表单"
+      ],
+      "question": "资料编辑页 `EditProfile` 接收 `user` prop（`{ id, name }`），并用 `useState(user.name)` 初始化输入框。管理员在同一页依次点击不同用户进行编辑：先打开 Alice（输入框显示 Alice），再点 Bob，输入框里仍然是 Alice，点保存后 Bob 的名字被改成了 Alice。为什么切换用户后输入框没有更新？最稳妥的修法是什么？",
+      "knowledgePoint": "Edit form keeps the previous user's data",
+      "answerExplanation": "输入框显示的是上一位用户，是因为 `useState(user.name)` 的初始值只在组件**首次挂载**时计算一次。之后即使 `user` prop 换成 Bob，`name` 这份 state 也不会重置，于是输入框仍保留 Alice 的名字，`save` 又把这份旧值写回 Bob，造成“改错了对象”。修法：① 最稳的是让输入框直接从 `user` prop 派生，本地 state 只用来放“尚未提交的改动”；② 或给组件一个随用户变化的 `key`（如 `<EditProfile key={user.id} user={user} />`），切换用户时 React 卸载重建组件，state 自然拿到新初始值；③ 用 `useEffect([user.id])` 手动 `setName(user.name)` 也行，但要小心它在渲染后运行、可能覆盖用户刚输入的内容。核心认知：**props 变化不会重跑 `useState` 的初始值**。",
+      "codeBlocks": [
+        {
+          "language": "jsx",
+          "code": "const EditProfile = ({ user }) => {\n  const [name, setName] = useState(user.name); // 只在首次渲染取值\n  const save = () => updateUser(user.id, { name });\n  return (\n    <form onSubmit={save}>\n      <input value={name} onChange={(e) => setName(e.target.value)} />\n      <button type=\"submit\">Save</button>\n    </form>\n  );\n};"
+        }
+      ],
+      "images": [],
+      "createdAt": "2026-11-08"
+    },
+    {
+      "id": "QUIZ3-W7-Q11",
+      "topic": "react",
+      "weeks": [
+        "week-7"
+      ],
+      "difficulty": "medium",
+      "tags": [
+        "Quiz3",
+        "React",
+        "派生状态",
+        "单一数据源"
+      ],
+      "question": "待办页有一个 “Hide completed” 开关，勾选后应隐藏已完成项。但用户发现不管怎么切换开关，列表都毫无变化。`todos` 本身是正常的。为什么这个开关看起来失效了？应该怎样改？",
+      "knowledgePoint": "Hide completed toggle does nothing",
+      "answerExplanation": "列表渲染用的是 `visible`，而 `visible` 只在首次渲染时被设成 `todos`，之后没有任何地方根据 `hideDone` 重新计算它——切换开关只改了 `hideDone`，却没改变 `visible`。这是“把本可派生的数据存进了 state”的典型问题：可见列表完全由 `todos` 和 `hideDone` 决定，却被整份复制成 state，于是两者脱节（`todos` 更新时 `visible` 同样不会跟着更新，这是第二个隐患）。修法：不要存过滤结果，渲染时直接派生：`const visible = hideDone ? todos.filter((t) => !t.done) : todos;`。只保留真正独立的 state（这里只有 `hideDone`），凡是能由现有 state/props 算出来的值都应当现算，避免出现两份真相。",
+      "codeBlocks": [
+        {
+          "language": "jsx",
+          "code": "const TodoList = ({ todos }) => {\n  const [hideDone, setHideDone] = useState(false);\n  const [visible, setVisible] = useState(todos); // 把过滤结果存成了 state\n\n  return (\n    <>\n      <label>\n        <input\n          type=\"checkbox\"\n          checked={hideDone}\n          onChange={(e) => setHideDone(e.target.checked)}\n        />\n        Hide completed\n      </label>\n      {visible.map((t) => (\n        <Row key={t.id} todo={t} />\n      ))}\n    </>\n  );\n};"
+        }
+      ],
+      "images": [],
+      "createdAt": "2026-11-08"
+    },
+    {
+      "id": "QUIZ3-W7-Q12",
+      "topic": "react",
+      "weeks": [
+        "week-7"
+      ],
+      "difficulty": "medium",
+      "tags": [
+        "Quiz3",
+        "React",
+        "key",
+        "列表渲染",
+        "diff"
+      ],
+      "question": "一个可编辑清单，每行是一个带输入框的条目，行内部用自己的本地 state 保存输入内容。用户给第二行打勾（或删掉第一行）后，发现输入框里的文字整体“串行”了：第一行显示的是原来第二行的内容。为什么一次勾选会让内容错位？怎么修？",
+      "knowledgePoint": "Editing one row shifts another row's input",
+      "answerExplanation": "问题出在 `key={index}`。React 用 key 判断“新旧两棵子树里哪些是同一个元素”。用**位置下标**做 key 时，删掉或重排后同一个下标可能对应到完全不同的数据，React 会复用同一个组件实例并保留它的本地 state（输入框里的 `text`），于是第 1 行的输入框继承了原本属于第 2 行组件的文字，看起来就是内容错位。修法：给每个元素一个稳定且唯一的 key，例如数据库里的 `item.id`：`key={item.id}`。这样删/改/重排时 React 能把每个组件实例与它对应的那一条正确匹配，本地 state 也跟着正确的数据走。原则：**key 要标识数据的身份，而不是它的位置**。",
+      "codeBlocks": [
+        {
+          "language": "jsx",
+          "code": "const Rows = ({ items }) => (\n  <ul>\n    {items.map((item, index) => (\n      <Row key={index} item={item} /> // 用下标当 key\n    ))}\n  </ul>\n);\n\n// Row 内部有本地输入状态\nconst Row = ({ item }) => {\n  const [text, setText] = useState(item.label);\n  return (\n    <li>\n      <input value={text} onChange={(e) => setText(e.target.value)} />\n    </li>\n  );\n};"
+        }
+      ],
+      "images": [],
+      "createdAt": "2026-11-08"
+    },
+    {
+      "id": "QUIZ3-W7-Q13",
+      "topic": "react",
+      "weeks": [
+        "week-7"
+      ],
+      "difficulty": "medium",
+      "tags": [
+        "Quiz3",
+        "React",
+        "useEffect",
+        "依赖数组"
+      ],
+      "question": "在任务列表底部的输入框里打字时，用户每敲一个字符，页面就跳回顶部、光标也丢了，根本没法正常输入。为什么打字会触发页面滚动？应该怎样修？",
+      "knowledgePoint": "Page scrolls to the top on every keystroke",
+      "answerExplanation": "缺少依赖数组时，effect 会在**每次渲染之后**都执行。输入框是受控组件，每敲一个字符都会 `setState` 触发一次渲染，于是 `window.scrollTo({ top: 0 })` 每按一键就跑一次，页面被不断拉回顶部，输入被打断。修法：给它一个依赖数组，只在真正需要时执行——例如切换列表时才滚动就用 `useEffect(() => { window.scrollTo({ top: 0 }); }, [listId])`；若确实只在挂载时跑一次就用空数组 `[]`。原则：**依赖数组决定 effect 什么时候重新执行**，漏写等价于每次渲染都执行，常表现为卡顿或者打断用户操作的副作用。",
+      "codeBlocks": [
+        {
+          "language": "js",
+          "code": "// 期望：只在切换到新列表时才滚回顶部\nuseEffect(() => {\n  window.scrollTo({ top: 0 });\n}); // BUG：没有依赖数组，每次渲染都执行"
+        }
+      ],
+      "images": [],
+      "createdAt": "2026-11-08"
+    },
+    {
+      "id": "QUIZ3-W7-Q14",
+      "topic": "react",
+      "weeks": [
+        "week-7"
+      ],
+      "difficulty": "hard",
+      "tags": [
+        "Quiz3",
+        "React",
+        "useEffect",
+        "竞态",
+        "AbortController",
+        "cleanup"
+      ],
+      "question": "搜索框每输入一个字符就立刻发一次请求。用户快速输入 `re` → `rea` → `react`，最终输入框停在 `react`，但列表显示的却是 `re` 的结果。为什么会出现“结果和关键词对不上”？怎样修才能保证显示的永远是最新一次输入的结果？",
+      "knowledgePoint": "Search results belong to an older query",
+      "answerExplanation": "三次请求几乎同时发出，返回顺序不确定：`re` 的响应可能最后才到达并调用 `setResults`，把已经正确的 `react` 结果又覆盖回 `re` 的结果——这就是竞态（race），旧请求没有“过时作废”的机制。修法：① 在 effect 的 cleanup 里让旧请求作废：用 `AbortController` 调 `abort()`，或用局部 `let cancelled = false`、在 cleanup 里置为 `true`，回调里先判断 `cancelled` 再 `setResults`；② 可选地加 debounce（如 300ms）减少请求数量。清理函数的职责就是把上一次还没完成的请求“取消/忽略”。核心：**异步结果只有在仍对应最新输入时才允许写入 state**。",
+      "codeBlocks": [
+        {
+          "language": "jsx",
+          "code": "useEffect(() => {\n  fetch(`/api/search?q=${query}`)\n    .then((r) => r.json())\n    .then((data) => setResults(data));\n}, [query]);\n\n// 修复方向：cleanup 里取消 / 忽略旧请求\n// const controller = new AbortController();\n// fetch(url, { signal: controller.signal }) ...\n// return () => controller.abort();"
+        }
+      ],
+      "images": [],
+      "createdAt": "2026-11-08"
+    },
+    {
+      "id": "QUIZ3-W7-Q15",
+      "topic": "react",
+      "weeks": [
+        "week-7"
+      ],
+      "difficulty": "hard",
+      "tags": [
+        "Quiz3",
+        "React",
+        "不可变更新",
+        "state 引用",
+        "bailout"
+      ],
+      "question": "商品列表有一个 “Sort by price” 按钮。用户点击后价格顺序完全没变，再点几次也一样。为什么这个排序按钮点了没反应？应该怎样修？",
+      "knowledgePoint": "Sort button does nothing",
+      "answerExplanation": "`Array.prototype.sort` 会**原地**修改数组，并返回同一个数组引用。`setItems(items)` 传回的引用和之前完全相同，React 用 `Object.is` 比较后认为状态没变，于是跳过重新渲染，画面自然不变（如果因为别的原因恰好重渲染了一次，顺序又会突然“自己”变对，看起来非常随机）。修法：用不可变更新，先复制再排序——`setItems([...items].sort((a, b) => a.price - b.price))`。React 只有拿到**新的引用**才认为状态变了并重新渲染。原则：永远不要直接修改 state 里的对象或数组，要返回新副本（展开运算符、`map`、`filter`、`slice`）。",
+      "codeBlocks": [
+        {
+          "language": "jsx",
+          "code": "const [items, setItems] = useState(initialItems);\n\nconst sortByPrice = () => {\n  items.sort((a, b) => a.price - b.price); // 原地排序，改了原数组\n  setItems(items);                          // 传回同一个引用，React 认为没变\n};"
+        }
+      ],
+      "images": [],
+      "createdAt": "2026-11-08"
     }
   ]
 }
