@@ -26,6 +26,26 @@ const fixture: PracticeQuestion = {
 }
 
 describe('QuestionCard', () => {
+  it('renders an optional mockup after the question content', () => {
+    const questionWithMockup: PracticeQuestion = {
+      ...fixture,
+      mockup: {
+        html: '<div class="exam-ui-page-title">Create thread</div>',
+        caption: 'The submit button has no pending state.',
+      },
+    }
+    const { container } = render(
+      <QuestionCard question={questionWithMockup} mode="question-only" />,
+    )
+
+    const prompt = screen.getByText(/在下面代码中/)
+    const caption = screen.getByText('The submit button has no pending state.')
+    expect(prompt.compareDocumentPosition(caption) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy()
+    expect(
+      container.querySelector('.exam-ui-root .exam-ui-page-title'),
+    ).toHaveTextContent('Create thread')
+  })
+
   it('reveals the answer only after the learner expands a question card', async () => {
     render(<QuestionCard question={fixture} />)
 

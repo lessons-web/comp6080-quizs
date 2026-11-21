@@ -528,3 +528,131 @@ body {
 .exam-ui-root .exam-ui-danger {
   color: #d14343;
 }
+
+.exam-ui-root .exam-ui-columns-12,
+.exam-ui-root .exam-ui-columns-10 {
+  display: grid;
+  gap: 0.2rem;
+}
+
+.exam-ui-root .exam-ui-columns-12 {
+  grid-template-columns: repeat(12, minmax(0, 1fr));
+}
+
+.exam-ui-root .exam-ui-columns-10 {
+  grid-template-columns: repeat(10, minmax(0, 1fr));
+}
+
+.exam-ui-root .exam-ui-grid-cell {
+  min-width: 0;
+  height: 1.4rem;
+  border-radius: 0.2rem;
+  background: #bfdbfe;
+}
+
+.exam-ui-root .exam-ui-grid-cell:nth-child(3n) {
+  background: #93c5fd;
+}
+
+.exam-ui-root .exam-ui-swatch {
+  min-height: 3rem;
+  border: 1px solid rgba(17, 24, 39, 0.12);
+  border-radius: 0.65rem;
+}
+
+.exam-ui-root .exam-ui-swatch-row {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(3.5rem, 1fr));
+  gap: 0.45rem;
+}
+
+.exam-ui-root .exam-ui-breadcrumbs {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.4rem;
+  color: #64748b;
+  font-size: 0.72rem;
+}
+
+.exam-ui-root .exam-ui-nav-item {
+  display: block;
+  border-radius: 0.45rem;
+  padding: 0.45rem 0.6rem;
+  color: #475569;
+  font-size: 0.75rem;
+}
+
+.exam-ui-root .exam-ui-nav-item-active {
+  background: #dbeafe;
+  color: #1d4ed8;
+  font-weight: 700;
+}
+
+.exam-ui-root .exam-ui-field-error {
+  margin-top: 0.25rem;
+  color: #b91c1c;
+  font-size: 0.68rem;
+  line-height: 1.45;
+}
+
+.exam-ui-root .exam-ui-focus-visible {
+  outline: 3px solid #2563eb;
+  outline-offset: 2px;
+  box-shadow: 0 0 0 5px rgba(37, 99, 235, 0.18);
+}
+
+.exam-ui-root .exam-ui-target {
+  display: inline-flex;
+  min-width: 44px;
+  min-height: 44px;
+  align-items: center;
+  justify-content: center;
+}
+
+.exam-ui-root .exam-ui-target-small {
+  display: inline-flex;
+  width: 16px;
+  height: 16px;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.65rem;
+}
+
+.exam-ui-root .exam-ui-columns-2 {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.625rem;
+}
+
+.exam-ui-root .exam-ui-typography-sample {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+
+.exam-ui-root .exam-ui-typography-chaotic .exam-ui-typography-line:nth-child(1) {
+  font-family: Georgia, serif;
+  font-size: 1.15rem;
+}
+
+.exam-ui-root .exam-ui-typography-chaotic .exam-ui-typography-line:nth-child(2) {
+  font-family: 'Courier New', monospace;
+  font-size: 0.68rem;
+}
+
+.exam-ui-root .exam-ui-typography-chaotic .exam-ui-typography-line:nth-child(3) {
+  font-family: 'Times New Roman', serif;
+  font-size: 0.92rem;
+  font-style: italic;
+}
+
+.exam-ui-root .exam-ui-typography-chaotic .exam-ui-typography-line:nth-child(4) {
+  font-family: 'Comic Sans MS', cursive;
+  font-size: 0.76rem;
+}
+
+.exam-ui-root .exam-ui-typography-line {
+  margin: 0;
+  color: #1f2937;
+}

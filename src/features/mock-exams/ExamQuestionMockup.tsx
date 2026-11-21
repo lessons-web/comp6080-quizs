@@ -3,6 +3,7 @@
 import { useMemo, useState } from 'react'
 import type { ExamQuestionMockup as ExamQuestionMockupType } from '../../types/content'
 import { EXAM_LOCALE_LABELS, type ExamLocale, getMockupText } from './examLocale'
+import { HtmlMockupPreview } from '../../components/HtmlMockupPreview'
 
 function getFileTypeMeta(fileName: string) {
   const extension = fileName.split('.').pop()?.toLowerCase()
@@ -125,11 +126,7 @@ export function ExamQuestionMockup({
               {showCodePanel ? (
                 renderCodePanel(selectedCode!)
               ) : (
-                <div
-                  className="exam-ui-root"
-                  aria-hidden="true"
-                  dangerouslySetInnerHTML={{ __html: html }}
-                />
+                <HtmlMockupPreview html={html} />
               )}
             </div>
           </div>

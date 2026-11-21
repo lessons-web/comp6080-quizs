@@ -35,7 +35,12 @@
       "answerExplanation": "因为 12 可以被 1、2、3、4、6 整除，能灵活拆成两栏、三栏、四栏、六栏等常见布局；而 10 只能被 1、2、5 整除，拆分能力弱。1200px 的内容区上限是为了控制每行文本长度、保证可读性，16px 是列之间的 gutter。另外要注意内容应对齐到列边缘，而不是进入 margin。",
       "codeBlocks": [],
       "images": [],
-      "createdAt": "2026-10-18"
+      "createdAt": "2026-10-18",
+      "mockup": {
+        "html": "<div class=\"exam-ui-shell\">\n  <div class=\"exam-ui-topbar\"><span>COMP6080</span><span>Account</span></div>\n  <div class=\"exam-ui-body\">\n    <h2 class=\"exam-ui-page-title\">Responsive content grid</h2>\n    <div class=\"exam-ui-columns-2\">\n  <section class=\"exam-ui-card\"><p class=\"exam-ui-kicker\">12 columns</p><div class=\"exam-ui-columns-12\"><span class=\"exam-ui-grid-cell\"></span><span class=\"exam-ui-grid-cell\"></span><span class=\"exam-ui-grid-cell\"></span><span class=\"exam-ui-grid-cell\"></span><span class=\"exam-ui-grid-cell\"></span><span class=\"exam-ui-grid-cell\"></span><span class=\"exam-ui-grid-cell\"></span><span class=\"exam-ui-grid-cell\"></span><span class=\"exam-ui-grid-cell\"></span><span class=\"exam-ui-grid-cell\"></span><span class=\"exam-ui-grid-cell\"></span><span class=\"exam-ui-grid-cell\"></span></div><p class=\"exam-ui-help\">Same-width columns, 16px gutters</p></section>\n  <section class=\"exam-ui-card\"><p class=\"exam-ui-kicker\">10 columns</p><div class=\"exam-ui-columns-10\"><span class=\"exam-ui-grid-cell\"></span><span class=\"exam-ui-grid-cell\"></span><span class=\"exam-ui-grid-cell\"></span><span class=\"exam-ui-grid-cell\"></span><span class=\"exam-ui-grid-cell\"></span><span class=\"exam-ui-grid-cell\"></span><span class=\"exam-ui-grid-cell\"></span><span class=\"exam-ui-grid-cell\"></span><span class=\"exam-ui-grid-cell\"></span><span class=\"exam-ui-grid-cell\"></span></div><p class=\"exam-ui-help\">Same-width columns, 16px gutters</p></section>\n</div>\n  </div>\n</div>",
+        "caption": "左侧为 12 列网格，右侧为 10 列网格，两者使用相同的列间距。",
+        "viewport": "desktop"
+      }
     },
     {
       "id": "UIUX-Q3",
@@ -53,7 +58,12 @@
       "answerExplanation": "字体种类过多会破坏一致性、增加认知负担，让界面显得杂乱。原则是 less is more，一个项目一般最多使用 2 个 font family（例如一个标题字体加一个正文字体），并预先建立 type scale 统一字号层级，而不是临时为每个元素挑字体。",
       "codeBlocks": [],
       "images": [],
-      "createdAt": "2026-10-18"
+      "createdAt": "2026-10-18",
+      "mockup": {
+        "html": "<div class=\"exam-ui-shell\">\n  <div class=\"exam-ui-topbar\"><span>COMP6080</span><span>Account</span></div>\n  <div class=\"exam-ui-body\">\n    <h2 class=\"exam-ui-page-title\">Course dashboard</h2>\n    <div class=\"exam-ui-columns-2\">\n  <section class=\"exam-ui-card\"><p class=\"exam-ui-kicker\">Five font families</p><div class=\"exam-ui-typography-sample exam-ui-typography-chaotic\"><p class=\"exam-ui-typography-line\">Dashboard overview</p><p class=\"exam-ui-typography-line\">Your courses</p><p class=\"exam-ui-typography-line\">Next lecture</p><p class=\"exam-ui-typography-line\">Continue learning</p></div></section>\n  <section class=\"exam-ui-card\"><p class=\"exam-ui-kicker\">Two font families</p><div class=\"exam-ui-typography-sample\"><p class=\"exam-ui-typography-line\" style=\"font-size:1.15rem;font-weight:700\">Dashboard overview</p><p class=\"exam-ui-typography-line\">Your courses</p><p class=\"exam-ui-typography-line\">Next lecture</p><p class=\"exam-ui-typography-line\">Continue learning</p></div></section>\n</div>\n  </div>\n</div>",
+        "caption": "两栏展示同一组课程文字；左侧字号和字形变化较多，右侧保持统一。",
+        "viewport": "desktop"
+      }
     },
     {
       "id": "UIUX-Q4",
@@ -71,7 +81,12 @@
       "answerExplanation": "A 组更和谐。和谐配色的核心判据是色相（HUE）相同，只改变亮度与饱和度：A 组的 H 都是 199，属于同一色相的不同变体；B 组的 H 分别是 277 和 230，色相不同，会显得杂乱并分散注意力。判断是否同色相时用 HSL 比 RGB 更直观，因为 HSL 把色相单独拆了出来。",
       "codeBlocks": [],
       "images": [],
-      "createdAt": "2026-10-18"
+      "createdAt": "2026-10-18",
+      "mockup": {
+        "html": "<div class=\"exam-ui-shell\">\n  <div class=\"exam-ui-topbar\"><span>COMP6080</span><span>Account</span></div>\n  <div class=\"exam-ui-body\">\n    <h2 class=\"exam-ui-page-title\">Choose a colour palette</h2>\n    <div class=\"exam-ui-columns-2\">\n  <section class=\"exam-ui-card\"><p class=\"exam-ui-kicker\">Palette A</p><div class=\"exam-ui-swatch-row\"><span class=\"exam-ui-swatch\" style=\"background:hsl(199 86% 51%)\"></span><span class=\"exam-ui-swatch\" style=\"background:hsl(199 100% 35%)\"></span><span class=\"exam-ui-swatch\" style=\"background:hsl(199 86% 90%)\"></span></div><p class=\"exam-ui-help\">199, 86, 51 · 199, 100, 35 · 199, 86, 90</p></section>\n  <section class=\"exam-ui-card\"><p class=\"exam-ui-kicker\">Palette B</p><div class=\"exam-ui-swatch-row\"><span class=\"exam-ui-swatch\" style=\"background:hsl(277 96% 47%)\"></span><span class=\"exam-ui-swatch\" style=\"background:hsl(230 100% 89%)\"></span></div><p class=\"exam-ui-help\">277, 96, 47 · 230, 100, 89</p></section>\n</div>\n  </div>\n</div>",
+        "caption": "两组色块分别对应题干中的 HSL 数值。",
+        "viewport": "desktop"
+      }
     },
     {
       "id": "UIUX-Q5",
@@ -89,7 +104,12 @@
       "answerExplanation": "视觉层级六要素：Size（越大越重要）、Color（越亮越重要）、Contrast（对比越强越吸睛）、Spacing（用大 margin 制造重要感）、Alignment（在整齐布局中刻意不对齐反而更跳）、Repetition（让其余元素重复成组，间接把它单独强调）。注意 Repetition 也可以反向使用，用来降低次要信息的层级，让它们更容易被忽略。",
       "codeBlocks": [],
       "images": [],
-      "createdAt": "2026-10-18"
+      "createdAt": "2026-10-18",
+      "mockup": {
+        "html": "<div class=\"exam-ui-shell\">\n  <div class=\"exam-ui-topbar\"><span>COMP6080</span><span>Account</span></div>\n  <div class=\"exam-ui-body\">\n    <h2 class=\"exam-ui-page-title\">Limited offer</h2>\n    <section class=\"exam-ui-card\"><p class=\"exam-ui-kicker\">SPECIAL OFFER</p><h3 style=\"font-size:1.5rem;font-weight:700;margin:.25rem 0\">Save 30% today</h3><p class=\"exam-ui-value\">Offer ends at midnight. Join now to access the course.</p><div class=\"exam-ui-form-actions\"><span class=\"exam-ui-button\">Join the course</span><span class=\"exam-ui-button exam-ui-button-secondary\">Learn more</span></div></section><div class=\"exam-ui-divider\"></div><p class=\"exam-ui-muted\" style=\"text-align:right\">Terms · Privacy · Contact</p>\n  </div>\n</div>",
+        "caption": "页面中同时出现标题、正文、按钮和页脚链接，视觉权重各不相同。",
+        "viewport": "desktop"
+      }
     },
     {
       "id": "UIUX-Q6",
@@ -107,7 +127,12 @@
       "answerExplanation": "三种类型：①Explicit 显式示能——明确告知交互方式，例如文字直接写着 Click here；②Pattern 模式示能——用约定俗成的模式暗示，例如蓝色带下划线的文字表示链接、汉堡图标表示菜单；③False 虚假示能——看起来能操作、实际没有功能。虚假示能必须避免，因为它会误导用户、造成困惑。还要注意示能是交互前的提示，不要与交互后的反馈（feedback）混淆。",
       "codeBlocks": [],
       "images": [],
-      "createdAt": "2026-10-18"
+      "createdAt": "2026-10-18",
+      "mockup": {
+        "html": "<div class=\"exam-ui-shell\">\n  <div class=\"exam-ui-topbar\"><span>COMP6080</span><span>Account</span></div>\n  <div class=\"exam-ui-body\">\n    <h2 class=\"exam-ui-page-title\">Three interaction cues</h2>\n    <div class=\"exam-ui-stack\"><section class=\"exam-ui-card\"><p class=\"exam-ui-kicker\">Example A</p><span class=\"exam-ui-button\">Click to continue</span></section><section class=\"exam-ui-card\"><p class=\"exam-ui-kicker\">Example B</p><span class=\"exam-ui-link\">View course outline</span></section><section class=\"exam-ui-card\"><p class=\"exam-ui-kicker\">Example C</p><span class=\"exam-ui-button\">Save changes</span><p class=\"exam-ui-help\">This control has no action.</p></section></div>\n  </div>\n</div>",
+        "caption": "三个静态控件分别展示文字提示、常见链接样式，以及看似可点击但没有动作的按钮。",
+        "viewport": "desktop"
+      }
     },
     {
       "id": "UIUX-Q7",
@@ -125,7 +150,12 @@
       "answerExplanation": "至少违反：①约束（Constraints）——空输入时应禁用提交，事前限制用户犯错；②反馈（Feedback）——操作后应有明确的成功或失败提示，超过 1.5s 的任务应显示 loading；③可见性（Visibility）——用户不知道当前处于什么状态、下一步该做什么；④一致性（Consistency）——状态与行为应符合用户已有预期。改进方向是：空输入时禁用按钮，并在提交后给出明确反馈。",
       "codeBlocks": [],
       "images": [],
-      "createdAt": "2026-10-18"
+      "createdAt": "2026-10-18",
+      "mockup": {
+        "html": "<div class=\"exam-ui-shell\">\n  <div class=\"exam-ui-topbar\"><span>COMP6080</span><span>Account</span></div>\n  <div class=\"exam-ui-body\">\n    <h2 class=\"exam-ui-page-title\">Create thread</h2>\n    <section class=\"exam-ui-card\"><p class=\"exam-ui-label\">Thread title</p><div class=\"exam-ui-input\"></div><p class=\"exam-ui-label\" style=\"margin-top:.75rem\">Message</p><div class=\"exam-ui-textarea\"></div><div class=\"exam-ui-form-actions\"><span class=\"exam-ui-button\">Create thread</span></div></section>\n  </div>\n</div>",
+        "caption": "表单为空；提交按钮仍可点击，页面没有 loading 或结果提示。",
+        "viewport": "desktop"
+      }
     },
     {
       "id": "UIUX-Q8",
@@ -143,7 +173,12 @@
       "answerExplanation": "前者对应约束（Constraints），是事前限制，目的是防止用户犯错；后者对应安全性（Safety），是事后保护，目的是让用户能从错误中恢复。二者容易混淆，是因为都跟防错相关，但发生的时间点不同：约束发生在操作之前，安全发生在操作之后（若操作不可撤销，至少应给出警告）。",
       "codeBlocks": [],
       "images": [],
-      "createdAt": "2026-10-18"
+      "createdAt": "2026-10-18",
+      "mockup": {
+        "html": "<div class=\"exam-ui-shell\">\n  <div class=\"exam-ui-topbar\"><span>COMP6080</span><span>Account</span></div>\n  <div class=\"exam-ui-body\">\n    <h2 class=\"exam-ui-page-title\">Two safety patterns</h2>\n    <div class=\"exam-ui-columns-2\">\n  <section class=\"exam-ui-card\"><p class=\"exam-ui-kicker\">Before submit</p><p class=\"exam-ui-value\">Email address</p><div class=\"exam-ui-input\"></div><div class=\"exam-ui-form-actions\"><span class=\"exam-ui-button exam-ui-button-secondary\">Submit</span></div><p class=\"exam-ui-help\">Button is disabled while the field is empty.</p></section>\n  <section class=\"exam-ui-card\"><p class=\"exam-ui-kicker\">After delete</p><p class=\"exam-ui-value\">Thread deleted</p><div class=\"exam-ui-toast\">Deleted · <span>Undo</span></div></section>\n</div>\n  </div>\n</div>",
+        "caption": "左侧为空字段和禁用的提交按钮；右侧显示删除后的撤销提示。",
+        "viewport": "desktop"
+      }
     },
     {
       "id": "UIUX-Q9",
@@ -161,7 +196,12 @@
       "answerExplanation": "认知负荷指用户处理界面信息时需要消耗的心智资源。配色和字体一旦失控，用户就要不断辨认这些颜色或字体是否代表不同含义，无谓地消耗注意力；而受限的调色板（同色相加灰阶）与最多 2 个字体能建立统一感（cohesion），把注意力留给真正重要的内容，从而降低认知负荷。Dark Mode 同理：它通过减少强对比的亮色刺激，在特定环境下降低视觉负担，但仍需保证对比度满足可读性。",
       "codeBlocks": [],
       "images": [],
-      "createdAt": "2026-10-18"
+      "createdAt": "2026-10-18",
+      "mockup": {
+        "html": "<div class=\"exam-ui-shell\">\n  <div class=\"exam-ui-topbar\"><span>COMP6080</span><span>Account</span></div>\n  <div class=\"exam-ui-body\">\n    <h2 class=\"exam-ui-page-title\">Course dashboard</h2>\n    <div class=\"exam-ui-columns-2\">\n  <section class=\"exam-ui-card\"><p class=\"exam-ui-kicker\">Current screen</p><div class=\"exam-ui-stack\"><div class=\"exam-ui-card\" style=\"background:#fee2e2\"><p style=\"font-size:1.2rem;color:#991b1b\">URGENT · New · Updated · 3 days left</p><p style=\"font-family:Georgia,serif\">Course progress 76%</p><span class=\"exam-ui-button\">Continue</span><span class=\"exam-ui-badge\">NEW</span></div><div class=\"exam-ui-card\" style=\"background:#fef3c7\"><p style=\"font-size:.6rem\">ANNOUNCEMENT</p><p>Deadline changed · New lecture · Reminder</p></div></div></section>\n  <section class=\"exam-ui-card\"><p class=\"exam-ui-kicker\">Refined screen</p><div class=\"exam-ui-stack\"><div class=\"exam-ui-card\"><p class=\"exam-ui-kicker\">YOUR COURSE</p><h3 style=\"margin:.25rem 0\">Web Foundations</h3><p class=\"exam-ui-value\">Progress 76%</p><span class=\"exam-ui-button\">Continue</span></div></div></section>\n</div>\n  </div>\n</div>",
+        "caption": "左右两栏展示同一课程任务，左侧同时突出多种信息，右侧只保留主要内容。",
+        "viewport": "desktop"
+      }
     },
     {
       "id": "QUIZ2-W5-Q1",
@@ -180,7 +220,12 @@
       "answerExplanation": "至少违反了约束（Constraints）和反馈（Feedback）。约束被违反，是因为系统没有在事前阻止无效输入提交；反馈被违反，是因为点击后长时间没有 loading、错误提示或结果说明，用户无法判断系统是否收到操作。最小改进可以是为空时禁用按钮，或提交后立即显示 loading / error message。",
       "codeBlocks": [],
       "images": [],
-      "createdAt": "2026-10-25"
+      "createdAt": "2026-10-25",
+      "mockup": {
+        "html": "<div class=\"exam-ui-shell\">\n  <div class=\"exam-ui-topbar\"><span>COMP6080</span><span>Account</span></div>\n  <div class=\"exam-ui-body\">\n    <h2 class=\"exam-ui-page-title\">Submit application</h2>\n    <section class=\"exam-ui-card\"><p class=\"exam-ui-label\">Student number</p><div class=\"exam-ui-input\"></div><p class=\"exam-ui-label\" style=\"margin-top:.75rem\">Course</p><div class=\"exam-ui-select\">Choose a course</div><div class=\"exam-ui-form-actions\"><span class=\"exam-ui-button\">Submit</span></div><p class=\"exam-ui-help\">Page remains unchanged after the click.</p></section>\n  </div>\n</div>",
+        "caption": "空表单下方有可点击的 Submit；点击后的页面没有状态或结果提示。",
+        "viewport": "desktop"
+      }
     },
     {
       "id": "REACT-Q1",
@@ -414,7 +459,12 @@
       "answerExplanation": "这会让学生找不到下一步，因为最重要的主行动作既不显眼，也不像按钮或主要 CTA；它违背了视觉层级、可见性和 affordance。相反，课程卡片中的 outline link 更像“下一步”，所以学生会被带偏。若点击 confirm 后页面几乎不变，则还缺少明确反馈，也就是 visibility of system status：系统没有清楚告诉用户“你已经 enrol 成功了”。",
       "codeBlocks": [],
       "images": [],
-      "createdAt": "2026-10-25"
+      "createdAt": "2026-10-25",
+      "mockup": {
+        "html": "<div class=\"exam-ui-shell\">\n  <div class=\"exam-ui-topbar\"><span>COMP6080</span><span>Account</span></div>\n  <div class=\"exam-ui-body\">\n    <h2 class=\"exam-ui-page-title\">Course enrolment</h2>\n    <section class=\"exam-ui-card\"><h3 style=\"margin:0\">COMP6080 Web Foundations</h3><p class=\"exam-ui-value\">Term 3 · 2026</p><span class=\"exam-ui-link\">View course outline</span><div class=\"exam-ui-footer-links\"><span>Help</span><span>Privacy</span><span class=\"exam-ui-muted\">Confirm enrolment</span></div></section>\n  </div>\n</div>",
+        "caption": "课程大纲链接位于卡片正文，Confirm enrolment 被放在页脚链接末尾。",
+        "viewport": "desktop"
+      }
     },
     {
       "id": "QUIZ2-W5-Q6",
@@ -434,7 +484,12 @@
       "answerExplanation": "它容易误删，是因为安全动作和破坏性动作外观太像、距离太近，而且删除又没有任何额外约束，用户在瞄准 Save 时很容易滑到 Delete。高层保护至少包括两类：一类是视觉与空间上的区分，例如把 Delete 挪远、做成危险样式；另一类是行为上的二次确认或 typed acknowledgement，让删除不可能被一次误触直接触发。",
       "codeBlocks": [],
       "images": [],
-      "createdAt": "2026-10-25"
+      "createdAt": "2026-10-25",
+      "mockup": {
+        "html": "<div class=\"exam-ui-shell\">\n  <div class=\"exam-ui-topbar\"><span>COMP6080</span><span>Account</span></div>\n  <div class=\"exam-ui-body\">\n    <h2 class=\"exam-ui-page-title\">Account settings</h2>\n    <section class=\"exam-ui-card\"><p class=\"exam-ui-label\">Display name</p><div class=\"exam-ui-input\">Mei Chen</div><div class=\"exam-ui-form-actions\"><span class=\"exam-ui-button\">Save changes</span><span class=\"exam-ui-button\">Delete account</span></div><p class=\"exam-ui-help\">Both actions use the same visual style and sit side by side.</p></section>\n  </div>\n</div>",
+        "caption": "Save changes 与 Delete account 并排，样式相同；页面没有额外保护提示。",
+        "viewport": "desktop"
+      }
     },
     {
       "id": "QUIZ2-W5-Q7",
@@ -454,7 +509,12 @@
       "answerExplanation": "因为页面一次性要求用户处理太多字段和说明，认知负担很高，而且 required / optional 没有清楚分层，整体看起来像一大堵墙。更好的错误提示应当是具体、可执行、礼貌的，例如 `Please enter a valid email address, such as name@student.example`，并紧贴在 email 字段旁边或下方出现，同时保留用户原本输入的其他内容。",
       "codeBlocks": [],
       "images": [],
-      "createdAt": "2026-10-25"
+      "createdAt": "2026-10-25",
+      "mockup": {
+        "html": "<div class=\"exam-ui-shell\">\n  <div class=\"exam-ui-topbar\"><span>COMP6080</span><span>Account</span></div>\n  <div class=\"exam-ui-body\">\n    <h2 class=\"exam-ui-page-title\">Create your account</h2>\n    <section class=\"exam-ui-card\"><div class=\"exam-ui-columns-2\"><div><p class=\"exam-ui-label\">First name</p><div class=\"exam-ui-input\"></div><p class=\"exam-ui-help\">Enter your legal first name as it appears on your student card.</p></div><div><p class=\"exam-ui-label\">Last name</p><div class=\"exam-ui-input\"></div><p class=\"exam-ui-help\">Enter your complete family name.</p></div><div><p class=\"exam-ui-label\">Email</p><div class=\"exam-ui-input\">mei@</div><p class=\"exam-ui-help\">Use your preferred contact address.</p></div><div><p class=\"exam-ui-label\">Password</p><div class=\"exam-ui-input\">••••••</div><p class=\"exam-ui-help\">Choose a secure password you can remember.</p></div></div><div class=\"exam-ui-form-actions\"><span class=\"exam-ui-button\">Create account</span></div></section>\n  </div>\n</div>",
+        "caption": "两列密集字段下方各有帮助文字，Email 错误也没有定位到具体字段。",
+        "viewport": "desktop"
+      }
     },
     {
       "id": "QUIZ3-W5-Q1",
@@ -474,7 +534,12 @@
       "answerExplanation": "三个按钮外观一样又紧挨着，Delete 与 Edit、Like 之间没有任何视觉区分，手稍微偏一点就会落到错误的按钮上。降低概率：删除前弹出 \"Delete this thread?\" 二次确认；把 Delete 做成危险样式（红色或描边）或挪远、加大间距。降低代价：删除后立刻提供 undo，或把删除的帖子放进可以恢复的位置。",
       "codeBlocks": [],
       "images": [],
-      "createdAt": "2026-11-07"
+      "createdAt": "2026-11-07",
+      "mockup": {
+        "html": "<div class=\"exam-ui-shell\">\n  <div class=\"exam-ui-topbar\"><span>COMP6080</span><span>Account</span></div>\n  <div class=\"exam-ui-body\">\n    <h2 class=\"exam-ui-page-title\">Qanda thread</h2>\n    <section class=\"exam-ui-card\"><p class=\"exam-ui-kicker\">MEI · 2 HOURS AGO</p><h3>How do I update my profile?</h3><p class=\"exam-ui-value\">I cannot find the profile settings page.</p><div class=\"exam-ui-form-actions\"><span class=\"exam-ui-button\">Edit</span><span class=\"exam-ui-button\">Delete</span><span class=\"exam-ui-button\">Like</span></div></section>\n  </div>\n</div>",
+        "caption": "帖子底部的 Edit、Delete 和 Like 按钮并排且视觉样式相同。",
+        "viewport": "desktop"
+      }
     },
     {
       "id": "QUIZ3-W5-Q2",
@@ -494,7 +559,12 @@
       "answerExplanation": "空白区域在\"正在加载\"\"加载失败\"\"确实没有内容\"三种情况下长得一模一样，页面没有区分它们，用户就以为列表没加载出来或坏了。做法：列表加载完但为空时明确显示 \"You have no threads yet\" 这类空状态文案（加载中则显示 loading 指示）。创建入口不要用小图标 \"+\"，改成带文字的醒目主按钮，例如把 \"Create your first thread\" 放在 \"Dashboard\" 下方的空白处，用更大字号、内边距和填充色做主操作，文字标签直接说明它会做什么。",
       "codeBlocks": [],
       "images": [],
-      "createdAt": "2026-11-07"
+      "createdAt": "2026-11-07",
+      "mockup": {
+        "html": "<div class=\"exam-ui-shell\">\n  <div class=\"exam-ui-topbar\"><span>QANDA</span><span>Account</span></div>\n  <div class=\"exam-ui-body\">\n    <h2 class=\"exam-ui-page-title\">Dashboard</h2>\n    <section class=\"exam-ui-card\" style=\"min-height:9rem\"><p class=\"exam-ui-muted\">No threads yet</p><p class=\"exam-ui-help\">The only create control is in the top bar.</p></section>\n  </div>\n</div>",
+        "caption": "Dashboard 主内容区域几乎为空，创建入口只在顶部小号加号位置。",
+        "viewport": "desktop"
+      }
     },
     {
       "id": "QUIZ3-W5-Q3",
@@ -514,7 +584,12 @@
       "answerExplanation": "两个问题：① 缺少**反馈（Feedback）**——提交后 2 秒内界面毫无变化，用户无法判断点击是否生效；② 缺少**系统状态可见性（Visibility）**与**约束（Constraints）**——请求进行中按钮仍可点击，等于放任用户重复提交。改法：一点击就进入 submitting 状态，把按钮禁用（disabled）并显示进度（如 “Creating…” 或转圈），既告诉用户操作已被接收，也在物理上挡住第二次点击；成功或失败后再恢复按钮并给出结果提示。经验值：超过约 **1.5 秒**的操作都应显示 loading，任何会触发副作用的按钮在 pending 期间都应禁用。",
       "codeBlocks": [],
       "images": [],
-      "createdAt": "2026-11-08"
+      "createdAt": "2026-11-08",
+      "mockup": {
+        "html": "<div class=\"exam-ui-shell\">\n  <div class=\"exam-ui-topbar\"><span>COMP6080</span><span>Account</span></div>\n  <div class=\"exam-ui-body\">\n    <h2 class=\"exam-ui-page-title\">Create thread</h2>\n    <section class=\"exam-ui-card\"><p class=\"exam-ui-label\">Title</p><div class=\"exam-ui-input\">Help with CSS grid</div><p class=\"exam-ui-label\" style=\"margin-top:.75rem\">Message</p><div class=\"exam-ui-textarea\">I am stuck on the layout...</div><div class=\"exam-ui-form-actions\"><span class=\"exam-ui-button\">Create thread</span></div><p class=\"exam-ui-help\">Request pending · No visible status</p></section>\n  </div>\n</div>",
+        "caption": "已填写表单处于等待状态，但按钮仍可点击且没有进度指示。",
+        "viewport": "desktop"
+      }
     },
     {
       "id": "QUIZ3-W5-Q4",
@@ -535,7 +610,12 @@
       "answerExplanation": "placeholder 在用户开始输入后就消失了，问题在于**把标签当成了临时提示**。后果：① 用户输入时失去字段名称的**识别线索（recognition over recall）**，只能靠记忆，认知负担上升，长表单尤其明显；② 出错时 “Passwords do not match” 无法与具体字段对照，用户只能靠猜。改法：给每个输入框配一个**始终可见的 label**（放在输入框上方或左侧）；placeholder 只用来补充示例（如 “you@example.com”），不能承担标签职责。这对应设计检查清单里的**一致性**与**可见性**：字段身份必须随时可见。",
       "codeBlocks": [],
       "images": [],
-      "createdAt": "2026-11-08"
+      "createdAt": "2026-11-08",
+      "mockup": {
+        "html": "<div class=\"exam-ui-shell\">\n  <div class=\"exam-ui-topbar\"><span>COMP6080</span><span>Account</span></div>\n  <div class=\"exam-ui-body\">\n    <h2 class=\"exam-ui-page-title\">Create your account</h2>\n    <div class=\"exam-ui-columns-2\">\n  <section class=\"exam-ui-card\"><p class=\"exam-ui-kicker\">Before typing</p><div class=\"exam-ui-stack\"><div class=\"exam-ui-input\">Email</div><div class=\"exam-ui-input\">Password</div><div class=\"exam-ui-input\">Confirm password</div></div></section>\n  <section class=\"exam-ui-card\"><p class=\"exam-ui-kicker\">After typing</p><div class=\"exam-ui-stack\"><div class=\"exam-ui-input\">mei@example.com</div><div class=\"exam-ui-input\">••••••••</div><div class=\"exam-ui-input\">••••••••</div></div></section>\n</div>\n  </div>\n</div>",
+        "caption": "左侧字段名只出现在 placeholder；右侧输入后只剩用户输入内容。",
+        "viewport": "desktop"
+      }
     },
     {
       "id": "QUIZ3-W5-Q5",
@@ -555,7 +635,12 @@
       "answerExplanation": "这违反了**错误预防（Error Prevention）**：更可用的做法是用**约束（Constraints）**在事前就限制用户犯错，而不是事后才报错。规则对用户不可见时，用户只能靠试错，反复失败会带来挫败感。改法：① 在密码框旁**始终展示**规则（如 “At least 8 characters, including a number”）；② 让规则随输入**实时**逐条点亮，做到即时校验；③ 仍不满足时再禁用提交按钮，把错误挡在提交之前。核心原则：能事前约束的，就不要留给事后报错；而错误信息本身也要**可读、可操作**。",
       "codeBlocks": [],
       "images": [],
-      "createdAt": "2026-11-08"
+      "createdAt": "2026-11-08",
+      "mockup": {
+        "html": "<div class=\"exam-ui-shell\">\n  <div class=\"exam-ui-topbar\"><span>COMP6080</span><span>Account</span></div>\n  <div class=\"exam-ui-body\">\n    <h2 class=\"exam-ui-page-title\">Create your account</h2>\n    <section class=\"exam-ui-card\"><p class=\"exam-ui-label\">Password</p><div class=\"exam-ui-input\">abc</div><div class=\"exam-ui-field-error\">Password must be at least 8 characters and include a number.</div><div class=\"exam-ui-form-actions\"><span class=\"exam-ui-button\">Create account</span></div></section>\n  </div>\n</div>",
+        "caption": "密码规则只在提交后以错误文字出现，输入框旁没有预先展示的规则说明。",
+        "viewport": "desktop"
+      }
     },
     {
       "id": "QUIZ3-W5-Q6",
@@ -575,7 +660,12 @@
       "answerExplanation": "问题在于**对比度（Contrast）不足**。文字颜色与背景太接近，内容虽然存在却不可读——在强光、低质量屏幕或视力不佳的用户身上尤其严重。这既是可用性问题，也是无障碍（accessibility）问题：WCAG 建议**正文文字对比度达到 4.5:1**（大号文字至少 3:1）。改法：把提示文字换成满足对比度的颜色（深灰而非浅灰）；不要单纯为了“降低视觉层级”就把它压到看不清——次要信息可以用**大小和位置**来降级，但**可读性下限不能突破**。改完用对比度检查工具验证实际比值。",
       "codeBlocks": [],
       "images": [],
-      "createdAt": "2026-11-08"
+      "createdAt": "2026-11-08",
+      "mockup": {
+        "html": "<div class=\"exam-ui-shell\">\n  <div class=\"exam-ui-topbar\"><span>COMP6080</span><span>Account</span></div>\n  <div class=\"exam-ui-body\">\n    <h2 class=\"exam-ui-page-title\">Create your account</h2>\n    <section class=\"exam-ui-card\"><p class=\"exam-ui-label\">Email</p><div class=\"exam-ui-input\">mei@example.com</div><p class=\"exam-ui-help\" style=\"color:#cbd5e1;font-size:.58rem\">We will never share your email.</p><div class=\"exam-ui-form-actions\"><span class=\"exam-ui-button\">Continue</span></div></section>\n  </div>\n</div>",
+        "caption": "表单下方的 helper text 使用很浅的灰色，并以小字号显示。",
+        "viewport": "mobile"
+      }
     },
     {
       "id": "QUIZ3-W5-Q7",
@@ -596,7 +686,12 @@
       "answerExplanation": "问题在于**触摸目标（touch target）过小、间距不足**。手指接触面积远大于 16px，图标又紧挨在一起，用户很难精确命中，误点概率很高；删除这种**破坏性操作**被误触，代价尤其大。触摸目标有通用下限经验值：可点击区域至少约 **44×44px（iOS）/ 48×48px（Android）**，相邻目标之间也要留够间距。改法：把图标的**可点击区域**撑到 ≥44px（图标本身可以仍然小，用 padding 补足），并拉开两个按钮的间距；删除这类操作再加二次确认或 undo。要点：**可点击区域 ≠ 图标视觉大小**。",
       "codeBlocks": [],
       "images": [],
-      "createdAt": "2026-11-08"
+      "createdAt": "2026-11-08",
+      "mockup": {
+        "html": "<div class=\"exam-ui-shell\">\n  <div class=\"exam-ui-topbar\"><span>COMP6080</span><span>Account</span></div>\n  <div class=\"exam-ui-body\">\n    <h2 class=\"exam-ui-page-title\">Thread actions</h2>\n    <div class=\"exam-ui-list\"><div class=\"exam-ui-list-row\"><span>How to use CSS grid?</span><span class=\"exam-ui-form-actions\" style=\"gap:4px\"><span class=\"exam-ui-target-small\">E</span><span class=\"exam-ui-target-small exam-ui-danger\">D</span></span></div><div class=\"exam-ui-list-row\"><span>React state question</span><span class=\"exam-ui-form-actions\" style=\"gap:4px\"><span class=\"exam-ui-target-small\">E</span><span class=\"exam-ui-target-small exam-ui-danger\">D</span></span></div></div>\n  </div>\n</div>",
+        "caption": "手机列表每行右侧的编辑和删除目标约 16px，间距很小。",
+        "viewport": "mobile"
+      }
     },
     {
       "id": "QUIZ3-W5-Q8",
@@ -616,7 +711,12 @@
       "answerExplanation": "这条提示同时违反了**可见性**与**反馈**：① 它用了用户看不懂的**内部错误码（422）**，没有说明出了什么事；② 它没有告诉用户**下一步该做什么**，用户无法据此行动。好的错误信息应回答三件事：**发生了什么、为什么、怎么解决**，并且放在**出错字段的旁边**，而不是只堆在页面顶部。改法：把 “Error 422” 换成面向用户的语言，例如 “We couldn't save your changes because this email is already registered. Try logging in instead.”；同时把错误定位到对应字段、保留用户已填内容，让人能**恢复（recover）**后重试。原则：错误提示要**可读、具体、可操作**。",
       "codeBlocks": [],
       "images": [],
-      "createdAt": "2026-11-08"
+      "createdAt": "2026-11-08",
+      "mockup": {
+        "html": "<div class=\"exam-ui-shell\">\n  <div class=\"exam-ui-topbar\"><span>COMP6080</span><span>Account</span></div>\n  <div class=\"exam-ui-body\">\n    <h2 class=\"exam-ui-page-title\">Update profile</h2>\n    <div class=\"exam-ui-note\" style=\"border-left:3px solid #dc2626;background:#fef2f2;color:#991b1b\">Error 422</div><section class=\"exam-ui-card\"><p class=\"exam-ui-label\">Email</p><div class=\"exam-ui-input\">mei@example.com</div><div class=\"exam-ui-form-actions\"><span class=\"exam-ui-button\">Save changes</span></div></section>\n  </div>\n</div>",
+        "caption": "表单顶部只显示内部错误码 Error 422，字段附近没有具体原因或下一步说明。",
+        "viewport": "desktop"
+      }
     },
     {
       "id": "QUIZ3-W5-Q9",
@@ -637,7 +737,12 @@
       "answerExplanation": "视觉层级应当**服务于重要性和安全性**，这里正好反了：实心、大号的主按钮是全页最强的视觉信号，等于在暗示“这是推荐操作”，把**破坏性操作（reset）**错误地升级成默认选择；真正常用的 “Save” 却被降级成几乎看不见的文字链接。用户靠视觉层级快速决策，就会顺着最强信号点击，再叠加被“习惯性确定”的确认弹窗，误操作代价被放大。改法：① 一屏内**只保留一个主按钮**，且给**安全、常用**的动作（这里应是 “Save changes”）；② 破坏性操作要**降级**——用次要/描边/危险色样式，并放在不显眼处，不要和主操作抢注意力；③ 除了二次确认，最好再提供 **undo**。原则：视觉层级越强 = 越在引导用户点它，所以危险动作要主动降级。",
       "codeBlocks": [],
       "images": [],
-      "createdAt": "2026-11-08"
+      "createdAt": "2026-11-08",
+      "mockup": {
+        "html": "<div class=\"exam-ui-shell\">\n  <div class=\"exam-ui-topbar\"><span>COMP6080</span><span>Account</span></div>\n  <div class=\"exam-ui-body\">\n    <h2 class=\"exam-ui-page-title\">Settings</h2>\n    <section class=\"exam-ui-card\"><p class=\"exam-ui-label\">Notification preferences</p><div class=\"exam-ui-input\">Weekly summary: On</div><div class=\"exam-ui-form-actions\"><span class=\"exam-ui-link\">Save changes</span><span class=\"exam-ui-button exam-ui-button-danger\" style=\"padding:.75rem 1.2rem;font-size:.95rem\">Reset all settings</span></div></section>\n  </div>\n</div>",
+        "caption": "Reset all settings 是大号实心按钮；Save changes 仅呈现为文字链接。",
+        "viewport": "desktop"
+      }
     },
     {
       "id": "QUIZ3-W5-Q10",
@@ -658,7 +763,12 @@
       "answerExplanation": "问题在于**把颜色当成唯一的信息载体**。红绿色盲用户无法区分红/绿边框，绿色小圆点也读不出“在线”的含义；一旦看不到颜色（色盲、灰度屏、强光），信息就完全丢失。改法：颜色只能作为**辅助**，必须配合**第二种通道**：① 校验结果除了颜色，加**图标**（✓ / ✕）和**文字**（“This field is required”）；② 状态点旁加**文字标签**（“Online”）；③ 还可给错误字段加粗或改变边框样式。原则：**不要只用颜色传递信息**，要保证在灰度/色盲条件下依然可分辨——这既是一致性问题，也是无障碍要求。",
       "codeBlocks": [],
       "images": [],
-      "createdAt": "2026-11-08"
+      "createdAt": "2026-11-08",
+      "mockup": {
+        "html": "<div class=\"exam-ui-shell\">\n  <div class=\"exam-ui-topbar\"><span>COMP6080</span><span>Account</span></div>\n  <div class=\"exam-ui-body\">\n    <h2 class=\"exam-ui-page-title\">Profile status</h2>\n    <section class=\"exam-ui-card\"><p class=\"exam-ui-label\">Email</p><div class=\"exam-ui-input\" style=\"border-color:#16a34a\">mei@example.com</div><p class=\"exam-ui-label\" style=\"margin-top:.75rem\">Username</p><div class=\"exam-ui-input\" style=\"border-color:#dc2626\">mei chen</div><div class=\"exam-ui-divider\"></div><p class=\"exam-ui-value\"><span style=\"color:#16a34a\">●</span> Account online</p></section>\n  </div>\n</div>",
+        "caption": "字段状态只通过绿/红边框表示；在线状态只显示一个绿色圆点。",
+        "viewport": "desktop"
+      }
     },
     {
       "id": "QUIZ3-W5-Q11",
@@ -679,7 +789,12 @@
       "answerExplanation": "问题在于缺少**位置感（wayfinding）/ 系统状态可见性**：界面没有告诉用户“你现在在哪一层、从哪里来、怎么回去”。多级结构下用户只能靠记忆重建位置，认知负担高、容易迷路。改法：① 左侧导航**高亮当前项**，并**展开其父级**（Settings → Team 保持展开、Permissions 高亮）；② 顶部加**面包屑**（Settings / Team / Permissions）和**当前页标题**；③ 让浏览器 `document.title` 随页面更新。原则：让用户在页面的任何位置都能一眼回答“我在哪、我能去哪、怎么回上一级”。",
       "codeBlocks": [],
       "images": [],
-      "createdAt": "2026-11-08"
+      "createdAt": "2026-11-08",
+      "mockup": {
+        "html": "<div class=\"exam-ui-shell\">\n  <div class=\"exam-ui-topbar\"><span>ADMIN</span><span>Account</span></div>\n  <div class=\"exam-ui-body\">\n    <h2 class=\"exam-ui-page-title\"> </h2>\n    <div class=\"exam-ui-columns-2\"><nav class=\"exam-ui-card\"><span class=\"exam-ui-nav-item\">Settings</span><span class=\"exam-ui-nav-item\">Team</span><span class=\"exam-ui-nav-item\">Permissions</span></nav><section class=\"exam-ui-card\"><p class=\"exam-ui-muted\">No page title</p><div class=\"exam-ui-divider\"></div><p class=\"exam-ui-value\">Permission settings content</p></section></div>\n  </div>\n</div>",
+        "caption": "左侧菜单没有当前项高亮，内容区没有标题，顶部没有面包屑。",
+        "viewport": "desktop"
+      }
     },
     {
       "id": "QUIZ3-W5-Q12",
@@ -700,7 +815,12 @@
       "answerExplanation": "问题在于**图标含义不自明**，而按钮又没有文字标签或提示。图标并非全世界通用（星标可能表示“收藏”也可能表示“评分”；箭头可能表示“分享”“下载”或“前往”），用户只能靠猜，违反**识别优于回忆**，也无法建立正确的**示能性（affordance）**。改法：① 空间允许就**图标 + 文字**一起给（“Save”“Share”）；② 空间不足时，至少提供 **tooltip / aria-label**，悬停或读屏时说明含义；③ 优先保留被广泛认知的图标（放大镜=搜索、垃圾桶=删除），含义模糊的（星标、箭头）一律配文字。原则：图标是辅助，含义必须能被用户无歧义地识别。",
       "codeBlocks": [],
       "images": [],
-      "createdAt": "2026-11-08"
+      "createdAt": "2026-11-08",
+      "mockup": {
+        "html": "<div class=\"exam-ui-shell\">\n  <div class=\"exam-ui-topbar\"><span>COMP6080</span><span>Account</span></div>\n  <div class=\"exam-ui-body\">\n    <h2 class=\"exam-ui-page-title\">Saved items</h2>\n    <section class=\"exam-ui-card\"><div class=\"exam-ui-space-between\"><div><p class=\"exam-ui-kicker\">POST</p><p class=\"exam-ui-value\">A guide to React state</p></div><div class=\"exam-ui-form-actions\"><span class=\"exam-ui-button exam-ui-button-secondary\">☆</span><span class=\"exam-ui-button exam-ui-button-secondary\">↗</span><span class=\"exam-ui-button exam-ui-button-secondary\">⋯</span></div></div></section>\n  </div>\n</div>",
+        "caption": "卡片右上角只有星星、箭头和省略号图标，没有文字说明。",
+        "viewport": "desktop"
+      }
     },
     {
       "id": "QUIZ3-W5-Q13",
@@ -720,7 +840,12 @@
       "answerExplanation": "问题在于为了视觉美观**移除了键盘用户的定位线索**。焦点框（focus ring）是键盘和辅助技术用户判断“当前会作用于哪个元素”的唯一提示；`outline: none` 之后，Tab 到哪、回车会触发谁全都看不见，等于剥夺了键盘可操作性。改法：不要**直接删掉**焦点样式，而是**替换成更符合设计、但依然清晰可见**的样式，例如用 `:focus-visible` 自定义颜色和 `outline`/`box-shadow`，保证对比度足够（一般至少 3:1）。原则：可以美化焦点状态，但**不能取消它**——键盘可达性是硬性要求，不是可选项。",
       "codeBlocks": [],
       "images": [],
-      "createdAt": "2026-11-08"
+      "createdAt": "2026-11-08",
+      "mockup": {
+        "html": "<div class=\"exam-ui-shell\">\n  <div class=\"exam-ui-topbar\"><span>COMP6080</span><span>Account</span></div>\n  <div class=\"exam-ui-body\">\n    <h2 class=\"exam-ui-page-title\">Keyboard navigation</h2>\n    <section class=\"exam-ui-card\"><p class=\"exam-ui-help\">Tab key pressed · Focus is on Email</p><p class=\"exam-ui-label\">Email</p><div class=\"exam-ui-input\">mei@example.com</div><p class=\"exam-ui-label\" style=\"margin-top:.75rem\">Password</p><div class=\"exam-ui-input\"></div><p class=\"exam-ui-help\">The focused field has no visible outline.</p></section>\n  </div>\n</div>",
+        "caption": "提示显示键盘焦点位于 Email，但输入框边缘与普通状态没有视觉差异。",
+        "viewport": "desktop"
+      }
     },
     {
       "id": "QUIZ3-W5-Q14",
@@ -741,7 +866,12 @@
       "answerExplanation": "问题在于按钮文案**没有说清它会带来什么结果**，属于含糊的微文案。尤其把危险动作藏在一个泛泛的 “Submit” 里，用户无法在点击前预判后果，容易“惯性确认”。好的按钮文案应当**用动词描述结果**，并与页面/弹窗语境对上：① 注册按钮写 “Create account”，删除确认写 “Delete thread”（甚至用危险色）；② 保持术语一致——“Delete”/“Remove” 不要在不同地方混用指代同一个动作。原则：让用户在点击前就能从按钮文字读出**将要发生的动作和结果**，破坏性动作更要点名后果。",
       "codeBlocks": [],
       "images": [],
-      "createdAt": "2026-11-08"
+      "createdAt": "2026-11-08",
+      "mockup": {
+        "html": "<div class=\"exam-ui-shell\">\n  <div class=\"exam-ui-topbar\"><span>COMP6080</span><span>Account</span></div>\n  <div class=\"exam-ui-body\">\n    <h2 class=\"exam-ui-page-title\">Confirm action</h2>\n    <div class=\"exam-ui-columns-2\">\n  <section class=\"exam-ui-card\"><p class=\"exam-ui-kicker\">Create account</p><section class=\"exam-ui-card\"><p class=\"exam-ui-value\">New learner registration</p><span class=\"exam-ui-button\">Submit</span></section></section>\n  <section class=\"exam-ui-card\"><p class=\"exam-ui-kicker\">Delete thread</p><section class=\"exam-ui-card\"><p class=\"exam-ui-value\">This action cannot be undone.</p><span class=\"exam-ui-button exam-ui-button-danger\">Submit</span></section></section>\n</div>\n  </div>\n</div>",
+        "caption": "注册与删除确认界面的按钮都使用同一个泛化文案 Submit。",
+        "viewport": "desktop"
+      }
     }
   ]
 }

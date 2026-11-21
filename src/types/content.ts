@@ -58,6 +58,12 @@ export interface ContentImage {
   alt: string
 }
 
+export interface PracticeQuestionMockup {
+  html: string
+  caption: string
+  viewport?: 'desktop' | 'mobile'
+}
+
 export interface KnowledgePointMeta {
   id: string
   title: string
@@ -81,6 +87,7 @@ export interface PracticeQuestion {
   answerExplanation: string
   codeBlocks: ContentCodeBlock[]
   images: ContentImage[]
+  mockup?: PracticeQuestionMockup
   createdAt: string
 }
 

@@ -17,6 +17,7 @@ hljs.registerLanguage('html', xml)
 hljs.registerLanguage('xml', xml)
 
 import type { PracticeQuestion } from '../../types/content'
+import { PracticeQuestionMockupCard } from './PracticeQuestionMockupCard'
 
 type QuestionCardProps = {
   question: PracticeQuestion
@@ -81,6 +82,10 @@ export function QuestionCard({
               )
             })}
           </div>
+        ) : null}
+
+        {mode === 'question-only' ? (
+          <PracticeQuestionMockupCard mockup={question.mockup} />
         ) : null}
 
         {mode === 'full' ? (

@@ -44,6 +44,42 @@ describe('content files', () => {
     })
   })
 
+  it('stores static mockups on UI/UX practice questions with visual evidence', () => {
+    const practice = readJson('content/questions/week-5.practice.json')
+    const questions = practice.questions as Array<{
+      id: string
+      topic: string
+      mockup?: {
+        html: string
+        caption: string
+        viewport?: string
+      }
+    }>
+    const questionsById = new Map(questions.map((question) => [question.id, question]))
+    const mockupIds = [
+      ...Array.from({ length: 8 }, (_, index) => `UIUX-Q${index + 2}`),
+      'QUIZ2-W5-Q1',
+      'QUIZ2-W5-Q5',
+      'QUIZ2-W5-Q6',
+      'QUIZ2-W5-Q7',
+      ...Array.from({ length: 14 }, (_, index) => `QUIZ3-W5-Q${index + 1}`),
+    ]
+
+    expect(mockupIds).toHaveLength(26)
+    for (const id of mockupIds) {
+      const question = questionsById.get(id)
+      expect(question, id).toBeDefined()
+      expect(question?.topic, id).toBe('ui-ux')
+      expect(question?.mockup?.html, id).toEqual(expect.any(String))
+      expect(question?.mockup?.html.trim(), id).not.toBe('')
+      expect(question?.mockup?.caption, id).toEqual(expect.any(String))
+      expect(question?.mockup?.caption.trim(), id).not.toBe('')
+      expect(['desktop', 'mobile']).toContain(question?.mockup?.viewport)
+    }
+
+    expect(questionsById.get('UIUX-Q1')?.mockup).toBeUndefined()
+  })
+
   it('stores week 1 mock exams with the required question fields', () => {
     const exams = readJson('content/exams/week-1.mock-exams.json')
     const week2Practice = readJson('content/questions/week-2.practice.json')
