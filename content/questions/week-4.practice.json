@@ -582,6 +582,190 @@
       "codeBlocks": [],
       "images": [],
       "createdAt": "2026-10-25"
+    },
+    {
+      "id": "TOPIC4-Q1",
+      "topic": "javascript",
+      "weeks": [
+        "week-4"
+      ],
+      "difficulty": "easy",
+      "tags": [
+        "专题卷4",
+        "JSON",
+        "序列化"
+      ],
+      "question": "咖啡店收银台读取的 `menu.json` 在被人手动编辑后无法解析，页面渲染出空菜单，而文件里最后一项后面多了一个逗号。为什么尾随逗号在 JavaScript 对象字面量里合法，放进 JSON 却会让 `JSON.parse` 直接抛错？",
+      "knowledgePoint": "A menu that will not parse",
+      "answerExplanation": "JavaScript 对象字面量允许在最后一个属性后留逗号，但 JSON 语法不允许——逗号后面必须始终跟着下一个值。于是这段文本不再满足 JSON 的语法，`JSON.parse` 会直接抛错，页面拿不到菜单数据，只能渲染空列表。更稳妥的做法是用 `try/catch` 包住解析，解析失败时给出错误提示，而不是静默渲染空内容。",
+      "codeBlocks": [
+        {
+          "language": "json",
+          "code": "{\n  \"items\": [\n    { \"name\": \"Flat White\", \"price\": 4.5 },\n  ]\n}"
+        }
+      ],
+      "images": [],
+      "createdAt": "2026-11-21"
+    },
+    {
+      "id": "TOPIC4-Q2",
+      "topic": "javascript",
+      "weeks": [
+        "week-4"
+      ],
+      "difficulty": "medium",
+      "tags": [
+        "专题卷4",
+        "XHR",
+        "错误处理"
+      ],
+      "question": "用 `XMLHttpRequest` 加载用户时，服务器对不存在的用户返回 `404`，而另一次请求因防火墙拦截而连接失败。代码只写了 `error` 处理器。为什么 `404` 不会触发 `error`？被拦截那次请求的 `xhr.status` 又是多少？",
+      "knowledgePoint": "Two kinds of failure",
+      "answerExplanation": "`404` 是一次真实的服务器响应，会触发 `load`，此时 `xhr.status` 为 `404`；`error` 只在网络层失败（请求根本没到达服务器）时触发。被拦截的请求属于网络失败，`xhr.status` 为 `0`，会触发 `error`。所以只在 `error` 里处理是不够的，还要在 `load` 里检查 `xhr.status` 是否落在 2xx 区间，才能把 404 也识别为失败。",
+      "codeBlocks": [],
+      "images": [],
+      "createdAt": "2026-11-21"
+    },
+    {
+      "id": "TOPIC4-Q3",
+      "topic": "javascript",
+      "weeks": [
+        "week-4"
+      ],
+      "difficulty": "medium",
+      "tags": [
+        "专题卷4",
+        "fetch",
+        "res.ok"
+      ],
+      "question": "订单页面用 `fetch('/api/orders')` 拿数据，接口配置错误并以 `404` 返回了 `{ \"error\": \"not found\" }`。代码从 `fetch` 直接走到 `res.json()` 再渲染，结果页面显示空列表、也没有报错。为什么会这样？",
+      "knowledgePoint": "An empty list that never errored",
+      "answerExplanation": "`fetch` 不会因为 HTTP `404` 而 reject，它只在网络失败时 reject；第一层结果是 `Response`，其 `ok` 为 `false`、`status` 为 404。代码没有检查 `res.ok`，直接把错误响应体 `{ error: 'not found' }` 解析并交给渲染器，而这个对象里没有订单数组，于是渲染出空列表，错误被隐藏了。修正方式是在 `res.json()` 之前检查 `res.ok`，非 2xx 时抛出错误并显示错误状态。",
+      "codeBlocks": [
+        {
+          "language": "js",
+          "code": "const res = await fetch('/api/orders')\nif (!res.ok) throw new Error('HTTP ' + res.status)\nconst orders = await res.json()"
+        }
+      ],
+      "images": [],
+      "createdAt": "2026-11-21"
+    },
+    {
+      "id": "TOPIC4-Q4",
+      "topic": "javascript",
+      "weeks": [
+        "week-4"
+      ],
+      "difficulty": "medium",
+      "tags": [
+        "专题卷4",
+        "Promise",
+        "allSettled"
+      ],
+      "question": "一个面板用 `Promise.all` 组合三个请求，其中一个失败时整个面板变空，尽管另外两个都成功返回。为什么 `Promise.all` 会导致这种情况？改用 `Promise.allSettled` 后拿到的结果结构有何不同？",
+      "knowledgePoint": "All or nothing",
+      "answerExplanation": "`Promise.all` 只要有一个输入 reject，就立即以该错误 reject，并丢弃其余结果，所以代码拿不到那两个成功的值，面板整块变空。`Promise.allSettled` 则不会因单个失败而 reject，等全部落定后 resolve 出一个与输入顺序一致的数组，每一项是 `{ status: 'fulfilled', value }` 或 `{ status: 'rejected', reason }`，因此可以保留两张成功卡片，并为失败项渲染一张错误卡片。",
+      "codeBlocks": [],
+      "images": [],
+      "createdAt": "2026-11-21"
+    },
+    {
+      "id": "TOPIC4-Q5",
+      "topic": "javascript",
+      "weeks": [
+        "week-4"
+      ],
+      "difficulty": "medium",
+      "tags": [
+        "专题卷4",
+        "async",
+        "并行"
+      ],
+      "question": "一个页面用连续三个 `await` 依次加载三个相互独立的资源，总耗时约等于三者之和。开发者把它改成 `urls.forEach(async (url) => { await load(url) })`，耗时却没有改善。为什么连续 `await` 是串行的？`forEach` 的写法又为什么不生效？",
+      "knowledgePoint": "Three waits in a row",
+      "answerExplanation": "连续 `await` 会等上一个请求 resolve 之后才发出下一个，因此是串行的，总耗时是三者之和。而 `forEach` 不会等待回调里的 promise——它只是对每一项调用回调后立即返回 `undefined`，外层代码不会等这些请求完成，所以既没变快，也无从得知何时全部结束。要并行应改用 `Promise.all(urls.map(load))`，总耗时约等于最长的那一个请求。",
+      "codeBlocks": [
+        {
+          "language": "js",
+          "code": "const [user, posts, likes] = await Promise.all([\n  load('/api/user'),\n  load('/api/posts'),\n  load('/api/likes'),\n])"
+        }
+      ],
+      "images": [],
+      "createdAt": "2026-11-21"
+    },
+    {
+      "id": "TOPIC4-Q6",
+      "topic": "javascript",
+      "weeks": [
+        "week-4"
+      ],
+      "difficulty": "medium",
+      "tags": [
+        "专题卷4",
+        "Express",
+        "路由"
+      ],
+      "question": "用户详情页请求 `GET /api/users/42`，而 Express 只定义了 `app.get('/api/users', ...)`，于是返回 `404`。为什么这个精确路径匹配不上？随后新增 `app.delete('/api/users/:id', ...)` 后，浏览器发出的 `GET /api/users/42` 为什么还是 `404`？",
+      "knowledgePoint": "The route that never matches",
+      "answerExplanation": "Express 同时按 HTTP 方法和路径模式来匹配。`'/api/users'` 是精确路径，只匹配路径恰为 `/api/users` 的请求，而 `/api/users/42` 多了一段，所以匹配不上。新增的 `DELETE` 路由虽然路径模式正确，但方法不匹配，`GET` 请求不会命中它，因此依然返回 404。正确做法是补一个 `app.get('/api/users/:id', ...)`，并从 `req.params.id` 读取 id。",
+      "codeBlocks": [
+        {
+          "language": "js",
+          "code": "app.get('/api/users/:id', (req, res) => {\n  const id = req.params.id\n  const user = findUser(id)\n  if (!user) return res.status(404).json({ error: 'not found' })\n  res.json(user)\n})"
+        }
+      ],
+      "images": [],
+      "createdAt": "2026-11-21"
+    },
+    {
+      "id": "SPRINT1-Q5",
+      "topic": "javascript",
+      "weeks": [
+        "week-4"
+      ],
+      "difficulty": "hard",
+      "tags": [
+        "冲刺卷",
+        "事件循环",
+        "Promise",
+        "微任务"
+      ],
+      "question": "下面这段代码在控制台里的打印顺序是什么？\n```js\nconsole.log('1')\nsetTimeout(() => console.log('2'), 0)\nPromise.resolve().then(() => console.log('3'))\nconsole.log('4')\n```\n多数人以为 `2` 会先于 `3`，为什么实际不是？",
+      "knowledgePoint": "事件循环：微任务与宏任务",
+      "answerExplanation": "当前同步脚本会先执行完：按源码顺序打印 `1`，再打印 `4`。promise 的 `.then` 回调进入微任务队列，`setTimeout` 回调进入宏任务队列，但两者都要等同步脚本结束才能运行。脚本结束后，事件循环会先把整个微任务队列清空（打印 `3`），之后才取下一个宏任务（打印 `2`）。因此真实顺序是 `1, 4, 3, 2`——打印顺序由回调所属的队列类型决定，而不是由注册的先后决定。",
+      "codeBlocks": [
+        {
+          "language": "js",
+          "code": "console.log('1')\nsetTimeout(() => console.log('2'), 0)\nPromise.resolve().then(() => console.log('3'))\nconsole.log('4')\n// 实际顺序：1, 4, 3, 2"
+        }
+      ],
+      "images": [],
+      "createdAt": "2026-11-21"
+    },
+    {
+      "id": "SPRINT1-Q6",
+      "topic": "javascript",
+      "weeks": [
+        "week-4"
+      ],
+      "difficulty": "hard",
+      "tags": [
+        "冲刺卷",
+        "fetch",
+        "res.ok",
+        "Promise.all"
+      ],
+      "question": "面板用 `Promise.all` 并行加载两个接口：\n```js\nconst [profile, stats] = await Promise.all([\n  fetch('/api/profile').then((r) => r.json()),\n  fetch('/api/stats').then((r) => r.json()),\n])\nrender(profile, stats.total)\n```\n`/api/stats` 以 `404` 返回 `{ \"error\": \"not found\" }`，页面却显示 `NaN` 而不是错误。为什么？应如何修复？",
+      "knowledgePoint": "fetch 的 res.ok 与 Promise.all 的错误处理",
+      "answerExplanation": "`fetch` 只在网络层失败时 reject；HTTP `404` 是一次完整往返，其 promise 会 fulfill 出 `ok` 为 `false` 的 `Response`。于是 `.then(r => r.json())` 也随之 fulfill，`stats` 变成被解析的错误对象 `{ error: 'not found' }`，它没有 `total`，`stats.total` 为 `undefined`，流入数值渲染就得到 `NaN`。由于没有任何输入 reject，`Promise.all` 正常 resolve，`catch` 从不执行。修复是在每个 `.then` 里、调用 `r.json()` 之前加 `if (!r.ok) throw new Error('HTTP ' + r.status)`，让非 2xx 触发 reject，从而进入错误路径、向用户显示明确错误。",
+      "codeBlocks": [
+        {
+          "language": "js",
+          "code": "fetch('/api/stats').then((r) => {\n  if (!r.ok) throw new Error('HTTP ' + r.status)\n  return r.json()\n})"
+        }
+      ],
+      "images": [],
+      "createdAt": "2026-11-21"
     }
   ]
 }

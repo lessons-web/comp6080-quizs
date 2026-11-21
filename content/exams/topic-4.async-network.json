@@ -1,0 +1,411 @@
+{
+  "topic": "javascript",
+  "exams": [
+    {
+      "id": "TOPIC4-ASYNC-NETWORK",
+      "title": "Async & Network — Topic Paper",
+      "titleZh": "异步与网络 · 专题卷",
+      "description": "Week 4 topic paper: JSON, XMLHttpRequest, fetch, Promise, async / await, and HTTP / Express. Six questions, three sub-questions each, with screenshot-style mockups.",
+      "descriptionZh": "Week 4 专题卷：JSON、XMLHttpRequest、fetch、Promise、async / await 与 HTTP / Express。共 6 道大题，每题 3 个子题，配套截图感 mockup。",
+      "totalMarks": 30,
+      "tags": ["专题卷", "Weeks4", "异步与网络", "Async", "Network"],
+      "questions": [
+        {
+          "id": "Q1",
+          "title": "A menu that will not parse",
+          "marks": 5,
+          "contentMdx": "`menu.json` is the file the cafe's till reads. After someone edited it, the till screen in `menu.png` shows an empty menu instead of today's items. The page fetches the file and passes it straight to `JSON.parse`, as shown in `app.js`.",
+          "subQuestions": [
+            {
+              "id": "Q1-a",
+              "label": "(a)",
+              "marks": 1,
+              "questionMdx": "`menu.json` will not parse. Which single character makes it invalid JSON, and why is it allowed in a JavaScript object literal but not in JSON?",
+              "answerMdx": "The trailing comma after the last item. JavaScript object literals allow a comma after the final property, but JSON does not — a comma must always be followed by another value, so that trailing comma makes the text invalid JSON and `JSON.parse` throws.",
+              "markingMdx": "1 mark for identifying the trailing comma (or that a comma must not be left after the last item) as the cause.",
+              "questionMdxZh": "`menu.json` 无法被解析。是哪一个字符让它变成了非法 JSON？为什么它在 JavaScript 对象字面量里合法，在 JSON 里却不合法？",
+              "answerMdxZh": "是最后一项后面的那个尾随逗号。JavaScript 对象字面量允许在最后一个属性后留逗号，但 JSON 不允许——逗号后面必须始终有下一个值，所以尾随逗号让这段文本成为非法 JSON，`JSON.parse` 会抛错。",
+              "markingMdxZh": "1 分：指出尾随逗号（或“最后一项后面不能多一个逗号”）是原因。"
+            },
+            {
+              "id": "Q1-b",
+              "label": "(b)",
+              "marks": 2,
+              "questionMdx": "The developer saved the menu with `JSON.stringify(menu)` and got back a shorter string than expected: the `onSale` function and an `undefined` note disappeared. Explain what `JSON.stringify` does with values that are not plain data.",
+              "answerMdx": "`JSON.stringify` only serialises JSON data types (objects, arrays, strings, numbers, booleans, null). A function is dropped from an object, so `onSale` vanishes; an `undefined` value is omitted too. Other values are coerced rather than kept as-is (for example a `Date` becomes a string). That is why the serialised text is shorter than the original object — JSON cannot represent functions or `undefined`.",
+              "markingMdx": "1 mark for stating that functions are omitted (and/or `undefined` values are dropped) when stringifying.\n1 mark for explaining that JSON only represents data types, so non-data values are lost or changed.",
+              "questionMdxZh": "开发者用 `JSON.stringify(menu)` 保存菜单，得到的字符串却比预期短：`onSale` 函数和某个 `undefined` 备注都不见了。请解释 `JSON.stringify` 会如何处理那些不是纯数据的值。",
+              "answerMdxZh": "`JSON.stringify` 只会序列化 JSON 的数据类型（对象、数组、字符串、数字、布尔、null）。函数会从对象里被丢弃，所以 `onSale` 消失；`undefined` 值也会被省略。其他值会被强制转换而不是原样保留（例如 `Date` 会变成字符串）。这就是序列化后的文本比原对象短的原因——JSON 无法表示函数或 `undefined`。",
+              "markingMdxZh": "1 分：说明 stringify 时会丢弃函数（和/或省略 `undefined` 值）。\n1 分：解释 JSON 只能表示数据类型，非数据值会丢失或被转换。"
+            },
+            {
+              "id": "Q1-c",
+              "label": "(c)",
+              "marks": 2,
+              "questionMdx": "Give a corrected `menu.json`, and change `app.js` so a future bad file shows an error message instead of silently rendering an empty menu.",
+              "answerMdx": "Remove the trailing comma so the array is valid JSON: `{ \"items\": [ { \"name\": \"Flat White\", \"price\": 4.5 }, { \"name\": \"Banana Bread\", \"price\": 6.0 } ] }`. In `app.js`, wrap the parse in `try/catch`: on success call `render(menu)`, and in `catch` show an error such as `showError('Menu could not be loaded')` instead of rendering an empty list.",
+              "markingMdx": "1 mark for a corrected `menu.json` with no trailing comma.\n1 mark for wrapping `JSON.parse` in `try/catch` (or validating first) and showing an error message on failure.",
+              "questionMdxZh": "请给出修正后的 `menu.json`，并修改 `app.js`，让以后遇到坏文件时显示错误提示，而不是悄无声息地渲染出一个空菜单。",
+              "answerMdxZh": "去掉尾随逗号，让数组成为合法 JSON：`{ \"items\": [ { \"name\": \"Flat White\", \"price\": 4.5 }, { \"name\": \"Banana Bread\", \"price\": 6.0 } ] }`。在 `app.js` 里用 `try/catch` 包住解析：成功时调用 `render(menu)`，失败时在 `catch` 里显示类似 `showError('Menu could not be loaded')` 的错误，而不是渲染空列表。",
+              "markingMdxZh": "1 分：给出没有尾随逗号的修正版 `menu.json`。\n1 分：用 `try/catch`（或先做校验）包住 `JSON.parse`，失败时显示错误提示。"
+            }
+          ],
+          "displayNumber": "Q1",
+          "categoryLabel": "Data Interchange and JSON",
+          "categoryLabelZh": "数据交换与 JSON",
+          "displayStyle": "quiz-sample",
+          "mockup": {
+            "files": [
+              {
+                "name": "app.js",
+                "code": "const res = await fetch('/api/menu')\nconst text = await res.text()\nconst menu = JSON.parse(text)\nrender(menu)",
+                "codeZh": "const res = await fetch('/api/menu')\nconst text = await res.text()\n// text 其实是非法 JSON\nconst menu = JSON.parse(text)\nrender(menu)"
+              },
+              {
+                "name": "menu.json",
+                "code": "{\n  \"items\": [\n    { \"name\": \"Flat White\", \"price\": 4.5 },\n    { \"name\": \"Banana Bread\", \"price\": 6.0 },\n  ]\n}",
+                "codeZh": "{\n  \"items\": [\n    { \"name\": \"Flat White\", \"price\": 4.5 },\n    { \"name\": \"Banana Bread\", \"price\": 6.0 },\n  ]\n}"
+              },
+              {
+                "name": "menu.png",
+                "active": true
+              }
+            ],
+            "viewport": "desktop",
+            "html": "<div class=\"exam-ui-shell\"><div class=\"exam-ui-topbar\"><span>Cafe Till</span><span>Menu</span></div><div class=\"exam-ui-body\"><p class=\"exam-ui-page-title\">Today's menu</p><div class=\"exam-ui-stage\" style=\"min-height:200px;display:flex;align-items:center;justify-content:center;\"><span class=\"exam-ui-muted\">No items on the menu</span></div></div></div>",
+            "htmlZh": "<div class=\"exam-ui-shell\"><div class=\"exam-ui-topbar\"><span>收银台</span><span>菜单</span></div><div class=\"exam-ui-body\"><p class=\"exam-ui-page-title\">今日菜单</p><div class=\"exam-ui-stage\" style=\"min-height:200px;display:flex;align-items:center;justify-content:center;\"><span class=\"exam-ui-muted\">菜单里没有任何商品</span></div></div></div>",
+            "caption": "The till screen after loading the broken menu file.",
+            "captionZh": "加载了损坏的菜单文件后，收银台的画面。"
+          },
+          "titleZh": "解析不了的价格表",
+          "contentMdxZh": "`menu.json` 是咖啡店收银台读取的文件。有人编辑过它之后，`menu.png` 里的收银画面显示的是空菜单，而不是今天的商品。页面会请求该文件并直接把它交给 `JSON.parse`，如 `app.js` 所示。"
+        },
+        {
+          "id": "Q2",
+          "title": "Two kinds of failure",
+          "marks": 5,
+          "contentMdx": "A dashboard loads users with `XMLHttpRequest`, using the code in `dashboard.js`. The live server answers `404` for a user that does not exist, and a firewall makes a second request fail to connect. `network.png` shows the request log. Only the `error` handler is wired up.",
+          "subQuestions": [
+            {
+              "id": "Q2-a",
+              "label": "(a)",
+              "marks": 1,
+              "questionMdx": "When the server answers `404`, which XHR event fires, and what is `xhr.status`? Why is the `error` handler not called?",
+              "answerMdx": "The `load` event fires and `xhr.status` is `404`. The `error` handler only fires for network-level failures (the request never reached the server), so a 404 — which is a real response from the server — does not trigger it. The response body may still be an error page, and the code would parse it as if it were data.",
+              "markingMdx": "1 mark for stating that `load` fires with `xhr.status` 404 (and that `error` is only for network-level failures).",
+              "questionMdxZh": "当服务器返回 `404` 时，会触发哪个 XHR 事件？此时 `xhr.status` 是多少？为什么 `error` 处理器没有被调用？",
+              "answerMdxZh": "会触发 `load` 事件，且 `xhr.status` 为 `404`。`error` 处理器只在网络层失败时触发（请求根本没到达服务器），而 404 是服务器返回的真实响应，所以不会触发它。响应体可能仍是一个错误页，而代码会把它当成数据去解析。",
+              "markingMdxZh": "1 分：说明此时触发的是 `load`、`xhr.status` 为 404（且 `error` 只在网络层失败时触发）。"
+            },
+            {
+              "id": "Q2-b",
+              "label": "(b)",
+              "marks": 2,
+              "questionMdx": "For the request the firewall blocks, what does `xhr.status` report, and which handler runs? Explain how this differs from the 404 case.",
+              "answerMdx": "`xhr.status` is `0`, and the `error` handler runs. This is a network-level failure: the request never reached a server, so there is no HTTP status to report and the browser uses `0` as a placeholder. The 404 case is different because the server did respond, so `load` fires with a real status of `404`.",
+              "markingMdx": "1 mark for stating `xhr.status` is `0` and the `error` handler runs.\n1 mark for explaining the difference: no server response (network failure) versus a real server response with a 4xx status.",
+              "questionMdxZh": "对于被防火墙拦截的那次请求，`xhr.status` 会是多少？会触发哪个处理器？请说明它与 404 那种情况的区别。",
+              "answerMdxZh": "`xhr.status` 为 `0`，触发 `error` 处理器。这是网络层失败：请求从未到达服务器，所以没有可上报的 HTTP 状态，浏览器用 `0` 作为占位。404 的情况则不同，因为服务器确实做出了响应，所以会触发 `load`，并带有真实的 `404` 状态。",
+              "markingMdxZh": "1 分：说明 `xhr.status` 为 `0`、触发 `error` 处理器。\n1 分：解释两者区别——没有服务器响应（网络失败）vs 服务器真实返回 4xx 状态。"
+            },
+            {
+              "id": "Q2-c",
+              "label": "(c)",
+              "marks": 2,
+              "questionMdx": "Rewrite `loadUsers` so a `404` is treated as a failure and both cases update the log with a clear message.",
+              "answerMdx": "In the `load` handler, check the status first: if `xhr.status >= 200 && xhr.status < 300`, parse and render the data; otherwise call the same failure path (for example `showError('HTTP ' + xhr.status)`). Keep the `error` handler for network failures, calling the same `showError` path. That way a 404 and a blocked request both surface a clear message instead of one silently rendering.",
+              "markingMdx": "1 mark for checking `xhr.status` (e.g. the 2xx range) inside the `load` handler and treating a non-2xx response as a failure.\n1 mark for routing both the HTTP error and the network `error` case to a clear, shared error message.",
+              "questionMdxZh": "请重写 `loadUsers`，让 `404` 被当成失败处理，并让两种情况都往日志里写入清晰的提示。",
+              "answerMdxZh": "在 `load` 处理器里先检查状态码：若 `xhr.status >= 200 && xhr.status < 300`，则解析并渲染数据；否则走同一条失败路径（例如 `showError('HTTP ' + xhr.status)`）。保留 `error` 处理器用于网络失败，并调用同一个 `showError` 路径。这样 404 和被拦截的请求都会给出清晰提示，而不是其中一种悄无声息地渲染。",
+              "markingMdxZh": "1 分：在 `load` 处理器里检查 `xhr.status`（例如 2xx 区间），把非 2xx 当作失败。\n1 分：让 HTTP 错误与网络 `error` 两种情况都汇入同一条清晰的错误提示路径。"
+            }
+          ],
+          "displayNumber": "Q2",
+          "categoryLabel": "Client-Server and XMLHttpRequest",
+          "categoryLabelZh": "客户端-服务器与 XMLHttpRequest",
+          "displayStyle": "quiz-sample",
+          "mockup": {
+            "files": [
+              {
+                "name": "dashboard.js",
+                "code": "function loadUsers(url) {\n  const xhr = new XMLHttpRequest()\n\n  xhr.addEventListener('load', function () {\n    render(JSON.parse(xhr.responseText))\n  })\n\n  xhr.addEventListener('error', function () {\n    showError('Request failed')\n  })\n\n  xhr.open('GET', url)\n  xhr.send()\n}",
+                "codeZh": "function loadUsers(url) {\n  const xhr = new XMLHttpRequest()\n\n  xhr.addEventListener('load', function () {\n    // 404 也会走到这里\n    render(JSON.parse(xhr.responseText))\n  })\n\n  xhr.addEventListener('error', function () {\n    showError('Request failed')\n  })\n\n  xhr.open('GET', url)\n  xhr.send()\n}"
+              },
+              {
+                "name": "network.png",
+                "active": true
+              }
+            ],
+            "viewport": "desktop",
+            "html": "<div class=\"exam-ui-shell\"><div class=\"exam-ui-topbar\"><span>Admin</span><span>Users</span></div><div class=\"exam-ui-body\"><p class=\"exam-ui-page-title\">Users</p><div class=\"exam-ui-card\"><p class=\"exam-ui-label\">Request log</p><ul class=\"exam-ui-list\"><li class=\"exam-ui-list-row\">GET /api/users/42 &rarr; 404</li><li class=\"exam-ui-list-row\">GET /api/users/99 &rarr; status 0 (failed)</li></ul></div><div class=\"exam-ui-card\"><span class=\"exam-ui-muted\">No users to show</span></div></div></div>",
+            "htmlZh": "<div class=\"exam-ui-shell\"><div class=\"exam-ui-topbar\"><span>后台</span><span>用户</span></div><div class=\"exam-ui-body\"><p class=\"exam-ui-page-title\">用户</p><div class=\"exam-ui-card\"><p class=\"exam-ui-label\">请求日志</p><ul class=\"exam-ui-list\"><li class=\"exam-ui-list-row\">GET /api/users/42 &rarr; 404</li><li class=\"exam-ui-list-row\">GET /api/users/99 &rarr; status 0（失败）</li></ul></div><div class=\"exam-ui-card\"><span class=\"exam-ui-muted\">暂无可显示的用户</span></div></div></div>",
+            "caption": "The user list and its request log.",
+            "captionZh": "用户列表与其请求日志。"
+          },
+          "titleZh": "两种“失败”不是一回事",
+          "contentMdxZh": "一个后台页面用 `XMLHttpRequest` 加载用户，代码见 `dashboard.js`。线上服务器对不存在的用户返回 `404`，而防火墙让第二次请求连接失败。`network.png` 展示了请求日志。当前只接了 `error` 处理器。"
+        },
+        {
+          "id": "Q3",
+          "title": "An empty list that never errored",
+          "marks": 5,
+          "contentMdx": "An orders page requests `/api/orders` with `fetch` (see `app.js`). The endpoint is misconfigured and answers `404` with a small JSON error body. `orders.png` shows the result: the list is empty and no error is shown. The code goes straight from `fetch` to `res.json()`.",
+          "subQuestions": [
+            {
+              "id": "Q3-a",
+              "label": "(a)",
+              "marks": 1,
+              "questionMdx": "What is the first value `await fetch('/api/orders')` produces, and why does a `404` not jump into the `catch` block?",
+              "answerMdx": "It produces a `Response` object, not the data. `fetch` only rejects on a network-level failure; an HTTP `404` is still a successful round-trip, so the promise fulfils with a `Response` whose `ok` is `false` and `status` is `404`. Because nothing rejects, the `catch` block never runs.",
+              "markingMdx": "1 mark for stating the first value is a `Response` object and that non-2xx HTTP responses do not reject `fetch`.",
+              "questionMdxZh": "`await fetch('/api/orders')` 得到的第一层结果是什么？为什么 `404` 不会跳进 `catch` 块？",
+              "answerMdxZh": "得到的是一个 `Response` 对象，而不是数据。`fetch` 只在网络层失败时 reject；HTTP `404` 仍然是成功完成的往返，所以 promise 会 fulfill 出一个 `Response`，其 `ok` 为 `false`、`status` 为 `404`。因为没有 reject，`catch` 块永远不会执行。",
+              "markingMdxZh": "1 分：说明第一层结果是 `Response` 对象，且非 2xx 的 HTTP 响应不会让 `fetch` reject。"
+            },
+            {
+              "id": "Q3-b",
+              "label": "(b)",
+              "marks": 2,
+              "questionMdx": "The server sent `{ \"error\": \"not found\" }` with status `404`. Why does the page end up showing an empty list rather than an error?",
+              "answerMdx": "The code never checks `res.ok`; it calls `res.json()` on the error response and hands `{ error: 'not found' }` to `render`. That object has no array of orders, so iterating or reading its length gives nothing and the page renders an empty list with no error. The failure is invisible because the error response is treated as if it were the success data.",
+              "markingMdx": "1 mark for explaining that the JSON error body is parsed and passed to the renderer as if it were data.\n1 mark for linking the missing `res.ok` / status check to the empty list and the absence of an error.",
+              "questionMdxZh": "服务器以 `404` 状态返回了 `{ \"error\": \"not found\" }`。为什么页面最终显示的是空列表，而不是错误？",
+              "answerMdxZh": "代码从未检查 `res.ok`，它对错误响应调用了 `res.json()`，并把 `{ error: 'not found' }` 交给了 `render`。这个对象里没有订单数组，所以遍历它或读取其长度都得不到任何内容，页面便渲染出空列表且没有错误。因为错误响应被当成了成功数据，这次失败就变得不可见。",
+              "markingMdxZh": "1 分：解释错误 JSON 响应体被解析并当作数据交给了渲染器。\n1 分：把缺失的 `res.ok` / 状态检查与“空列表且无错误”联系起来。"
+            },
+            {
+              "id": "Q3-c",
+              "label": "(c)",
+              "marks": 2,
+              "questionMdx": "Change `app.js` so a non-2xx status is treated as an error before the body is read, and describe what the user should then see.",
+              "answerMdx": "After the `await fetch`, add `if (!res.ok) { throw new Error('HTTP ' + res.status) }` before calling `res.json()`. Then the `catch` (or a status state) runs and the page shows an error state, for example \"Could not load your orders\", instead of an empty list. The `res.ok` check has to come before reading the body, otherwise the error payload is parsed as data.",
+              "markingMdx": "1 mark for checking `res.ok` (or the status) before `res.json()` and throwing / failing on non-2xx.\n1 mark for stating the user now sees an explicit error state rather than an empty list.",
+              "questionMdxZh": "请修改 `app.js`，让非 2xx 状态在读取响应体之前就被当作错误，并说明用户此后应该看到什么。",
+              "answerMdxZh": "在 `await fetch` 之后、调用 `res.json()` 之前加一句 `if (!res.ok) { throw new Error('HTTP ' + res.status) }`。这样 `catch`（或某个状态变量）会执行，页面显示错误状态，例如 “Could not load your orders”，而不是空列表。`res.ok` 检查必须在读取响应体之前，否则错误负载会被当成数据解析。",
+              "markingMdxZh": "1 分：在 `res.json()` 之前检查 `res.ok`（或状态码），非 2xx 时抛错 / 失败。\n1 分：说明用户此后看到的是明确的错误状态，而不是空列表。"
+            }
+          ],
+          "displayNumber": "Q3",
+          "categoryLabel": "Requests: Fetch and Response",
+          "categoryLabelZh": "请求：fetch 与 Response",
+          "displayStyle": "quiz-sample",
+          "mockup": {
+            "files": [
+              {
+                "name": "app.js",
+                "code": "async function loadOrders() {\n  const res = await fetch('/api/orders')\n  const orders = await res.json()\n  render(orders)\n}",
+                "codeZh": "async function loadOrders() {\n  const res = await fetch('/api/orders')\n  // res 是 Response，不是订单数组\n  const orders = await res.json()\n  render(orders)\n}"
+              },
+              {
+                "name": "orders.png",
+                "active": true
+              }
+            ],
+            "viewport": "desktop",
+            "html": "<div class=\"exam-ui-shell\"><div class=\"exam-ui-topbar\"><span>Shop</span><span>Orders</span></div><div class=\"exam-ui-body\"><p class=\"exam-ui-page-title\">Your orders</p><div class=\"exam-ui-stage\" style=\"min-height:200px;display:flex;align-items:center;justify-content:center;\"><span class=\"exam-ui-muted\">No orders</span></div></div></div>",
+            "htmlZh": "<div class=\"exam-ui-shell\"><div class=\"exam-ui-topbar\"><span>商城</span><span>订单</span></div><div class=\"exam-ui-body\"><p class=\"exam-ui-page-title\">我的订单</p><div class=\"exam-ui-stage\" style=\"min-height:200px;display:flex;align-items:center;justify-content:center;\"><span class=\"exam-ui-muted\">暂无订单</span></div></div></div>",
+            "caption": "The orders page after the 404 response is treated as data.",
+            "captionZh": "把 404 响应当成数据之后，订单页面的样子。"
+          },
+          "titleZh": "从不报错的空列表",
+          "contentMdxZh": "一个订单页面用 `fetch` 请求 `/api/orders`（见 `app.js`）。该接口配置错误，以 `404` 状态返回了一个很小的 JSON 错误体。`orders.png` 展示了结果：列表是空的，也没有显示错误。代码从 `fetch` 直接走到了 `res.json()`。"
+        },
+        {
+          "id": "Q4",
+          "title": "All or nothing",
+          "marks": 5,
+          "contentMdx": "A dashboard combines three requests with `Promise.all` (see `aggregate.js`). One of the three endpoints is currently failing. When it does, the whole panel in `panel.png` stays blank, even though the other two responses arrived fine.",
+          "subQuestions": [
+            {
+              "id": "Q4-a",
+              "label": "(a)",
+              "marks": 1,
+              "questionMdx": "With `Promise.all`, what happens to the combined promise when one of the three rejects?",
+              "answerMdx": "The combined promise rejects as soon as the first input rejects, with that input's error; the other results are discarded and the `await Promise.all(...)` throws. So even though two requests succeeded, the code never sees their values, and the panel is left blank.",
+              "markingMdx": "1 mark for stating `Promise.all` rejects as soon as one input rejects (and the successful results are discarded).",
+              "questionMdxZh": "使用 `Promise.all` 时，如果三个请求中有一个 reject，合并后的 promise 会怎样？",
+              "answerMdxZh": "只要第一个输入 reject，合并后的 promise 就会立即以该错误 reject；其他结果会被丢弃，`await Promise.all(...)` 会抛错。所以即便有两个请求成功了，代码也永远拿不到它们的值，面板就一直是空白。",
+              "markingMdxZh": "1 分：说明 `Promise.all` 在任一输入 reject 时立即 reject（并丢弃已成功的结果）。"
+            },
+            {
+              "id": "Q4-b",
+              "label": "(b)",
+              "marks": 2,
+              "questionMdx": "Describe how the result would differ if the same three requests were combined with `Promise.allSettled`, including the shape of the value you get back.",
+              "answerMdx": "`Promise.allSettled` never rejects because of an individual failure. It resolves once all three have settled, with an array in the same order as the inputs, where each entry is either `{ status: 'fulfilled', value }` or `{ status: 'rejected', reason }`. So this time you can read the two successful values and notice the one failed entry, then render two cards and a clear failed card.",
+              "markingMdx": "1 mark for stating `Promise.allSettled` resolves (does not reject) even when one input fails.\n1 mark for describing the result array of `{ status, value }` / `{ status, reason }` entries in input order.",
+              "questionMdxZh": "如果把同样三个请求改用 `Promise.allSettled` 组合，结果会有何不同？请描述你拿到的值的结构。",
+              "answerMdxZh": "`Promise.allSettled` 不会因为某个输入失败而 reject。等三个都落定后它会 resolve，返回一个与输入顺序一致的数组，其中每一项要么是 `{ status: 'fulfilled', value }`，要么是 `{ status: 'rejected', reason }`。因此这次你可以读到两个成功的值，也能发现那一个失败的项，进而渲染两张卡片和一张明确的失败卡片。",
+              "markingMdxZh": "1 分：说明即使某个输入失败，`Promise.allSettled` 也会 resolve（不 reject）。\n1 分：描述其结果为按输入顺序排列的 `{ status, value }` / `{ status, reason }` 数组。"
+            },
+            {
+              "id": "Q4-c",
+              "label": "(c)",
+              "marks": 2,
+              "questionMdx": "The dashboard should show the two successful cards and a clear failed card for the third. Describe a minimal change to `aggregate.js` and how the panel uses the result.",
+              "answerMdx": "Replace `Promise.all` with `Promise.allSettled`. Then map over the result array: for a `fulfilled` entry render the normal card with its `value`; for a `rejected` entry render an error card with its `reason`. Because the array keeps the input order, each card stays in its intended slot and the failed one shows an error instead of blanking the whole panel.",
+              "markingMdx": "1 mark for switching `Promise.all` to `Promise.allSettled`.\n1 mark for mapping each entry to a success or error card based on its `status`.",
+              "questionMdxZh": "这个面板应当显示两张成功的卡片，并为第三个失败项显示一张明确的失败卡片。请描述对 `aggregate.js` 的最小改动，以及面板如何使用该结果。",
+              "answerMdxZh": "把 `Promise.all` 换成 `Promise.allSettled`。然后遍历结果数组：对 `fulfilled` 的项用其 `value` 渲染正常卡片；对 `rejected` 的项用其 `reason` 渲染错误卡片。由于数组保持输入顺序，每张卡片都留在原本的位置上，失败的那张显示错误，而不是把整个面板变空。",
+              "markingMdxZh": "1 分：把 `Promise.all` 改为 `Promise.allSettled`。\n1 分：根据每项的 `status` 把它映射为成功卡片或错误卡片。"
+            }
+          ],
+          "displayNumber": "Q4",
+          "categoryLabel": "Async JavaScript: Promise Orchestration",
+          "categoryLabelZh": "异步 JavaScript：Promise 编排",
+          "displayStyle": "quiz-sample",
+          "mockup": {
+            "files": [
+              {
+                "name": "aggregate.js",
+                "code": "const results = await Promise.all([\n  fetchSales(),\n  fetchVisits(),\n  fetchRefunds(),\n])\nrender(results)",
+                "codeZh": "const results = await Promise.all([\n  fetchSales(),\n  fetchVisits(),\n  fetchRefunds(),\n])\n// 只要有一个 reject，这里就整体抛错\nrender(results)"
+              },
+              {
+                "name": "panel.png",
+                "active": true
+              }
+            ],
+            "viewport": "desktop",
+            "html": "<div class=\"exam-ui-shell\"><div class=\"exam-ui-topbar\"><span>Analytics</span><span>Overview</span></div><div class=\"exam-ui-body\"><p class=\"exam-ui-page-title\">Today</p><div class=\"exam-ui-grid-2\"><div class=\"exam-ui-card\"><span class=\"exam-ui-muted\">&mdash;</span></div><div class=\"exam-ui-card\"><span class=\"exam-ui-muted\">&mdash;</span></div><div class=\"exam-ui-card\"><span class=\"exam-ui-muted\">&mdash;</span></div></div></div></div>",
+            "htmlZh": "<div class=\"exam-ui-shell\"><div class=\"exam-ui-topbar\"><span>分析</span><span>概览</span></div><div class=\"exam-ui-body\"><p class=\"exam-ui-page-title\">今日</p><div class=\"exam-ui-grid-2\"><div class=\"exam-ui-card\"><span class=\"exam-ui-muted\">&mdash;</span></div><div class=\"exam-ui-card\"><span class=\"exam-ui-muted\">&mdash;</span></div><div class=\"exam-ui-card\"><span class=\"exam-ui-muted\">&mdash;</span></div></div></div></div>",
+            "caption": "Three empty cards because one request failed the whole group.",
+            "captionZh": "因为一个请求拖垮了整组，三张卡片全是空的。"
+          },
+          "titleZh": "要么全成，要么全败",
+          "contentMdxZh": "一个面板用 `Promise.all` 组合了三个请求（见 `aggregate.js`）。其中一个接口目前正在失败。它一失败，`panel.png` 里的整个面板就保持空白，尽管另外两个响应都正常到达了。"
+        },
+        {
+          "id": "Q5",
+          "title": "Three waits in a row",
+          "marks": 5,
+          "contentMdx": "A profile page loads three independent resources one after another with `await` (see `loader.js`). Each request takes about a second, so the page takes about three seconds to finish, as the timing in `timeline.png` shows. The developer also tries firing the requests inside a `forEach` with an `async` callback, and the timing does not change.",
+          "subQuestions": [
+            {
+              "id": "Q5-a",
+              "label": "(a)",
+              "marks": 1,
+              "questionMdx": "Why does awaiting the three requests in sequence take roughly the sum of the three times rather than the longest one?",
+              "answerMdx": "Each `await` pauses the function until that request has resolved, and the next request is only started after the previous `await` returns. So the work is serial: the total time is the sum of the three request times (about 3 seconds), not the longest single one.",
+              "markingMdx": "1 mark for explaining that each `await` waits for the previous request before the next one starts, making the requests serial.",
+              "questionMdxZh": "为什么依次 await 这三个请求，耗时约等于三次时间之和，而不是其中最长的那一个？",
+              "answerMdxZh": "每个 `await` 都会暂停函数，直到该请求 resolve，且下一个请求要等上一个 `await` 返回之后才会发出。因此这些工作是串行的：总耗时是三个请求时间之和（约 3 秒），而不是单个最长的时间。",
+              "markingMdxZh": "1 分：说明每个 `await` 都会等上一个请求完成后才发出下一个，因此请求是串行的。"
+            },
+            {
+              "id": "Q5-b",
+              "label": "(b)",
+              "marks": 2,
+              "questionMdx": "The developer replaces the loop with `urls.forEach(async (url) => { await load(url) })` expecting it to be faster. Explain what actually happens and why.",
+              "answerMdx": "`forEach` does not await the callback's promise — it just calls the callback for each item and returns `undefined` immediately. The `async` callbacks start their requests, but the code after the `forEach` does not wait for them; it continues while the loads are still in flight. So the timing does not improve in a useful way, and there is no way to know from the `forEach` itself when everything has finished.",
+              "markingMdx": "1 mark for explaining that `forEach` does not wait on the async callback (it returns immediately).\n1 mark for noting the requests are started but the surrounding code does not wait for them to finish.",
+              "questionMdxZh": "开发者把循环改成 `urls.forEach(async (url) => { await load(url) })`，以为会更快。请解释实际发生了什么，以及原因。",
+              "answerMdxZh": "`forEach` 不会等待回调里的 promise——它只是对每一项调用回调，然后立刻返回 `undefined`。这些 `async` 回调会各自发出请求，但 `forEach` 之后的代码并不会等它们；请求还在途中，外层代码就继续往下走了。所以耗时并没有得到有用的改善，而且单靠 `forEach` 也无法知道全部完成的时机。",
+              "markingMdxZh": "1 分：说明 `forEach` 不会等待 async 回调（会立即返回）。\n1 分：指出请求虽被发出，但外层代码不会等待它们完成。"
+            },
+            {
+              "id": "Q5-c",
+              "label": "(c)",
+              "marks": 2,
+              "questionMdx": "Give a change that reduces the total wait, and say what the new timing would be.",
+              "answerMdx": "Start all three requests before awaiting any of them, for example `const [user, posts, likes] = await Promise.all([load('/api/user'), load('/api/posts'), load('/api/likes')])`. The requests then run in parallel, so the total time drops to roughly the longest single request (about one second) instead of about three seconds.",
+              "markingMdx": "1 mark for launching the requests together (e.g. `Promise.all` over the three calls).\n1 mark for stating the new total is roughly the longest single request instead of the sum.",
+              "questionMdxZh": "请给出一种能减少总等待时间的改法，并说明改动后的新耗时会是多少。",
+              "answerMdxZh": "在 await 任何一个之前先把三个请求都发出去，例如 `const [user, posts, likes] = await Promise.all([load('/api/user'), load('/api/posts'), load('/api/likes')])`。这样请求会并行执行，总耗时降到约等于最长的那一个请求（约 1 秒），而不是大约 3 秒。",
+              "markingMdxZh": "1 分：让请求一起发出（例如对三个调用使用 `Promise.all`）。\n1 分：说明新的总耗时约为最长的那一个请求，而不是三者之和。"
+            }
+          ],
+          "displayNumber": "Q5",
+          "categoryLabel": "Async JavaScript: async / await",
+          "categoryLabelZh": "异步 JavaScript：async / await",
+          "displayStyle": "quiz-sample",
+          "mockup": {
+            "files": [
+              {
+                "name": "loader.js",
+                "code": "const user = await load('/api/user')\nconst posts = await load('/api/posts')\nconst likes = await load('/api/likes')",
+                "codeZh": "const user = await load('/api/user')\nconst posts = await load('/api/posts')\nconst likes = await load('/api/likes')\n// 三个请求一个接一个，总耗时约为三者之和"
+              },
+              {
+                "name": "timeline.png",
+                "active": true
+              }
+            ],
+            "viewport": "desktop",
+            "html": "<div class=\"exam-ui-shell\"><div class=\"exam-ui-topbar\"><span>Profile</span><span>Loading</span></div><div class=\"exam-ui-body\"><p class=\"exam-ui-page-title\">Loading profile</p><div class=\"exam-ui-stack\"><div class=\"exam-ui-chip\" style=\"width:33%;\">request 1 &middot; 1.0s</div><div class=\"exam-ui-chip\" style=\"width:66%;\">request 2 &middot; 2.0s</div><div class=\"exam-ui-chip\" style=\"width:100%;\">request 3 &middot; 3.0s</div></div><p class=\"exam-ui-muted\">Total about 3.0s — the requests run one after another</p></div></div>",
+            "htmlZh": "<div class=\"exam-ui-shell\"><div class=\"exam-ui-topbar\"><span>个人主页</span><span>加载中</span></div><div class=\"exam-ui-body\"><p class=\"exam-ui-page-title\">正在加载个人主页</p><div class=\"exam-ui-stack\"><div class=\"exam-ui-chip\" style=\"width:33%;\">请求 1 &middot; 1.0s</div><div class=\"exam-ui-chip\" style=\"width:66%;\">请求 2 &middot; 2.0s</div><div class=\"exam-ui-chip\" style=\"width:100%;\">请求 3 &middot; 3.0s</div></div><p class=\"exam-ui-muted\">总计约 3.0s —— 三个请求依次执行</p></div></div>",
+            "caption": "The loading timeline: three requests run one after another.",
+            "captionZh": "加载时间线：三个请求依次执行。"
+          },
+          "titleZh": "连续三次等待",
+          "contentMdxZh": "一个个人主页用 `await` 一个接一个地加载三个相互独立的资源（见 `loader.js`）。每个请求大约耗时一秒，所以页面大约要三秒才能完成，正如 `timeline.png` 中的时序所示。开发者还尝试在一个带 `async` 回调的 `forEach` 里发出这些请求，但耗时并没有变化。"
+        },
+        {
+          "id": "Q6",
+          "title": "The route that never matches",
+          "marks": 5,
+          "contentMdx": "A user detail page requests `GET /api/users/42` (see `users.png`). The Express server in `server.js` only defines `app.get('/api/users', ...)`, so the request comes back `404` and the page shows \"Not found\".",
+          "subQuestions": [
+            {
+              "id": "Q6-a",
+              "label": "(a)",
+              "marks": 1,
+              "questionMdx": "How does Express decide which route handles a request, and why does `GET /api/users/42` not match `app.get('/api/users', ...)`?",
+              "answerMdx": "Express matches on both the HTTP method and the path pattern, in the order the routes are declared. `'/api/users'` is an exact path, so it only matches a request whose path is exactly `/api/users`. The request path `/api/users/42` has an extra segment, so it does not match and Express falls through to a 404.",
+              "markingMdx": "1 mark for stating that Express matches method and path, and that `/api/users` is exact so the extra `/42` segment does not match.",
+              "questionMdxZh": "Express 如何决定由哪个路由来处理请求？为什么 `GET /api/users/42` 匹配不上 `app.get('/api/users', ...)`？",
+              "answerMdxZh": "Express 会同时按 HTTP 方法和路径模式来匹配，并按路由声明的顺序进行。`'/api/users'` 是精确路径，只匹配路径恰好为 `/api/users` 的请求。而请求路径 `/api/users/42` 多了一段，所以匹配不上，Express 便落到 404。",
+              "markingMdxZh": "1 分：说明 Express 按方法与路径匹配，且 `/api/users` 是精确路径，多出的 `/42` 段无法匹配。"
+            },
+            {
+              "id": "Q6-b",
+              "label": "(b)",
+              "marks": 2,
+              "questionMdx": "The developer adds `app.delete('/api/users/:id', ...)`. A browser `GET /api/users/42` still returns `404`. Explain why.",
+              "answerMdx": "Because the method has to match as well as the path. The new route only handles `DELETE` requests, and the browser sent a `GET`, so it still finds no route for `GET /api/users/:id` and returns 404. The `:id` pattern is right, but it is attached to the wrong method.",
+              "markingMdx": "1 mark for stating the method must also match.\n1 mark for concluding that a `GET` will not reach a `DELETE`-only route, so it is still 404.",
+              "questionMdxZh": "开发者新增了 `app.delete('/api/users/:id', ...)`。浏览器发出的 `GET /api/users/42` 却仍然返回 `404`。请解释原因。",
+              "answerMdxZh": "因为除了路径，方法也必须匹配。新路由只处理 `DELETE` 请求，而浏览器发出的是 `GET`，所以它依然找不到处理 `GET /api/users/:id` 的路由，于是返回 404。`:id` 模式本身是对的，只是挂在了错误的方法上。",
+              "markingMdxZh": "1 分：说明方法也必须匹配。\n1 分：得出“GET 无法命中只处理 DELETE 的路由，因此仍是 404”的结论。"
+            },
+            {
+              "id": "Q6-c",
+              "label": "(c)",
+              "marks": 2,
+              "questionMdx": "Add the missing route so the page loads user 42, and show how the handler reads the id.",
+              "answerMdx": "Add `app.get('/api/users/:id', (req, res) => { const id = req.params.id; const user = findUser(id); if (!user) return res.status(404).json({ error: 'not found' }); res.json(user) })`. The `:id` makes the path match `/api/users/42`, and `req.params.id` reads `'42'` out of the URL so the handler can look up and return that user.",
+              "markingMdx": "1 mark for adding a `GET` route with a `:id` parameter so `/api/users/42` matches.\n1 mark for reading the value via `req.params.id` (and returning the user / a 404 when missing).",
+              "questionMdxZh": "请补上缺失的路由，让页面能加载用户 42，并展示处理器如何读取这个 id。",
+              "answerMdxZh": "加上 `app.get('/api/users/:id', (req, res) => { const id = req.params.id; const user = findUser(id); if (!user) return res.status(404).json({ error: 'not found' }); res.json(user) })`。`:id` 让路径可以匹配 `/api/users/42`，而 `req.params.id` 会从 URL 中读出 `'42'`，处理器据此查到并返回该用户。",
+              "markingMdxZh": "1 分：新增一个带 `:id` 参数的 `GET` 路由，使 `/api/users/42` 能匹配。\n1 分：通过 `req.params.id` 读取该值（并在用户不存在时返回 404）。"
+            }
+          ],
+          "displayNumber": "Q6",
+          "categoryLabel": "HTTP, APIs and Express",
+          "categoryLabelZh": "HTTP、接口与 Express",
+          "displayStyle": "quiz-sample",
+          "mockup": {
+            "files": [
+              {
+                "name": "server.js",
+                "code": "const app = express()\n\napp.get('/api/users', listUsers)\n\napp.listen(3000)",
+                "codeZh": "const app = express()\n\n// 只有精确路径 /api/users\napp.get('/api/users', listUsers)\n\napp.listen(3000)"
+              },
+              {
+                "name": "users.png",
+                "active": true
+              }
+            ],
+            "viewport": "desktop",
+            "html": "<div class=\"exam-ui-shell\"><div class=\"exam-ui-topbar\"><span>Directory</span><span>User</span></div><div class=\"exam-ui-body\"><p class=\"exam-ui-page-title\">User 42</p><div class=\"exam-ui-card\"><span class=\"exam-ui-danger\">Not found</span></div></div></div>",
+            "htmlZh": "<div class=\"exam-ui-shell\"><div class=\"exam-ui-topbar\"><span>通讯录</span><span>用户</span></div><div class=\"exam-ui-body\"><p class=\"exam-ui-page-title\">用户 42</p><div class=\"exam-ui-card\"><span class=\"exam-ui-danger\">未找到</span></div></div></div>",
+            "caption": "The user detail page when the route does not match.",
+            "captionZh": "路由匹配不上时，用户详情页的样子。"
+          },
+          "titleZh": "永远匹配不上的路由",
+          "contentMdxZh": "一个用户详情页请求 `GET /api/users/42`（见 `users.png`）。`server.js` 里的 Express 服务只定义了 `app.get('/api/users', ...)`，所以请求返回 `404`，页面显示 “Not found”。"
+        }
+      ]
+    }
+  ]
+}

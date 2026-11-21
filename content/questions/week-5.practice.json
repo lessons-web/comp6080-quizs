@@ -872,6 +872,126 @@
         "caption": "注册与删除确认界面的按钮都使用同一个泛化文案 Submit。",
         "viewport": "desktop"
       }
+    },
+    {
+      "id": "TOPIC5-Q1",
+      "topic": "ui-ux",
+      "weeks": [
+        "week-5"
+      ],
+      "difficulty": "easy",
+      "tags": [
+        "专题卷5",
+        "UI与UX",
+        "可用性",
+        "视觉层级"
+      ],
+      "question": "一个结算页 `checkout.html` 布局整洁：页边距均匀、配色克制、字体清晰，通过了所有视觉检查；但用户测试中依然搞不清自己处在流程哪一步、也不知道怎样完成支付。请指出这个页面里哪些属于 UI、哪些属于 UX（各举一个场景中的例子），解释为什么 “看起来干净” 并不能保证好的 UX，并给出一个几乎不改变外观、却能改善 UX 的改动。",
+      "knowledgePoint": "UI 与 UX 的辨析",
+      "answerExplanation": "UI 是视觉层——均匀的页边距、克制的配色、清晰的字体；UX 是它为用户呈现的行为——步骤顺序是否符合用户理解、支付方式是否找得到。所以 “克制的配色” 是 UI，而 “用户不知道下一步是哪一步” 是 UX。UI 打磨与可用性是两条不同的轴：干净的视觉只消除了视觉噪音，并不会提供信息结构或行动召唤；这个页面既没有进度 / 步骤提示，也没有唯一且明确的主动作，用户无法建立 “自己在流程哪一步、接下来做什么” 的心智模型，于是犹豫，测试的结果正是可用性失败的直接证据，而不是样式问题。改善 UX 的改动：加上可见的步骤提示（如 “第 2 步 / 共 3 步”）并让主动作唯一且醒目（如 “立即支付”）；纯视觉改动（如调整品牌色或间距）只改善美观，单靠它不能解决困惑。",
+      "codeBlocks": [
+        {
+          "language": "html",
+          "code": "<form class=\"checkout\">\n  <input placeholder=\"收货地址\">\n  <input placeholder=\"卡号\">\n  <!-- 没有步骤提示，也没有显示订单总额 -->\n  <button>继续</button>\n</form>"
+        }
+      ],
+      "images": [],
+      "createdAt": "2026-11-21"
+    },
+    {
+      "id": "TOPIC5-Q2",
+      "topic": "ui-ux",
+      "weeks": [
+        "week-5"
+      ],
+      "difficulty": "medium",
+      "tags": [
+        "专题卷5",
+        "对齐",
+        "配色",
+        "视觉层级"
+      ],
+      "question": "账户设置表单 `settings.html` 以一个按钮行结束：\"Save changes\" 与 \"Cancel\" 样式完全相同——都用同一种强烈的品牌色填充；而上方的字段标签也没有从同一条左边缘开始。请解释为什么两个按钮视觉权重相同会降低可用性、视觉层级的修法为什么有效，以及标签与按钮行不对齐如何影响可读性，并各给出一种修法（含对齐修法的写法）。",
+      "knowledgePoint": "对齐、配色与视觉层级",
+      "answerExplanation": "两个按钮填充与颜色完全相同，视觉权重相等，哪一个都不像主行动作，眼睛得不到 “流程该走哪一个” 的提示，用户只能停下来把两个都读一遍，拖慢了决策，也更容易把本想保存的操作点成取消——因为颜色和填充是最强的对比信号。修法：把 Save 做成实心品牌色的主按钮、Cancel 做成描边或纯文字次按钮，视觉权重不同才能形成层级，把注意力引向主动作；层级靠的是按视觉权重排序，而不是位置。标签和按钮行从不同左边缘开始时，眼睛无法沿一条垂线阅读，表单显得凌乱、扫读更慢；对齐的作用正是让彼此独立的元素读起来像一个有序整体。修法：把字段和按钮行放进同一个网格并对齐到同一列边缘，例如 `display: grid; grid-template-columns: max-content 1fr;`，再把按钮行放进第二列，使所有内容共用同一条左边缘。",
+      "codeBlocks": [
+        {
+          "language": "html",
+          "code": "<form class=\"settings\">\n  <label>显示名称</label>\n  <input>\n  <label>邮箱</label>\n  <input>\n  <!-- 两个按钮都用了同样的 primary 样式 -->\n  <button class=\"primary\">Save changes</button>\n  <button class=\"primary\">Cancel</button>\n</form>"
+        }
+      ],
+      "images": [],
+      "createdAt": "2026-11-21"
+    },
+    {
+      "id": "TOPIC5-Q3",
+      "topic": "ui-ux",
+      "weeks": [
+        "week-5"
+      ],
+      "difficulty": "medium",
+      "tags": [
+        "专题卷5",
+        "示能",
+        "可用性",
+        "affordance"
+      ],
+      "question": "一个文件页面 `files.html` 用行列出已上传文档，每行末尾是 “Download” 一词，样式为普通灰色正文——没有下划线、不是按钮、也没有悬停样式；一位用户说 “找不到怎么下载文件”。请定义示能（affordance），说明普通的灰色文字为什么无法示能 “可以点击”，指出这个控件违反了哪些可用性检查项，并给出让该行操作可被发现的改法（含 markup）。",
+      "knowledgePoint": "示能与可用性检查清单",
+      "answerExplanation": "示能是一种视觉线索，告诉用户某个元素是做什么的、以及它可以被交互。链接蓝的下划线文字、按钮形状、悬停时的手型光标都在暗示 “这个可以点”；而普通的灰色正文不具备任何这些线索，所以它读起来像说明文字而不是操作，用户不会意识到它可以被点击，也就找不到完成任务的方法。它至少违反两项可用性检查：(1) 可发现性 / 操作可见性——控件无法被识别为操作；(2) 一致性——站点其他地方的链接和按钮看起来就是链接和按钮，一个光秃秃的灰词打破了这种模式，用户无法预测什么可交互（此外还缺少悬停 / 反馈状态，无法确认它可点击）。改法：把 “Download” 变成真正的按钮或链接并使用与其他操作一致的样式，加上描边或填充的形状、手型光标和悬停效果即可恢复示能，例如 `<a href=\"/files/report.pdf\" style=\"padding:8px 14px;border:1px solid #2563eb;border-radius:6px;color:#2563eb;text-decoration:none;\">Download</a>`，用户便能看出它就是这一行的操作。",
+      "codeBlocks": [
+        {
+          "language": "html",
+          "code": "<ul class=\"files\">\n  <!-- Download 只是普通文字，没有链接或按钮样式 -->\n  <li>report.pdf <span>Download</span></li>\n  <li>notes.docx <span>Download</span></li>\n</ul>"
+        }
+      ],
+      "images": [],
+      "createdAt": "2026-11-21"
+    },
+    {
+      "id": "SPRINT1-Q7",
+      "topic": "javascript",
+      "weeks": [
+        "week-5"
+      ],
+      "difficulty": "medium",
+      "tags": [
+        "冲刺卷",
+        "localStorage",
+        "状态持久化",
+        "JSON"
+      ],
+      "question": "设置表单保存显示名称，刷新后却总是回到默认值：\n```js\nfunction saveSettings(s) {\n  localStorage.setItem('settings', s.name)\n}\nfunction loadSettings() {\n  const raw = localStorage.getItem('settings')\n  return raw.name ? raw : { name: 'Guest' }\n}\n```\n为什么保存过的名字读不出来？应如何修复？",
+      "knowledgePoint": "localStorage 存储字符串与 JSON 序列化",
+      "answerExplanation": "localStorage 一律按字符串存储，`getItem` 返回的是存进去的纯文本（例如 `\"Alice\"`）。字符串没有 `name` 属性，所以 `raw.name` 永远为 `undefined`，三元条件为假，`loadSettings` 总是返回默认值 `{ name: 'Guest' }`。要让对象完成往返，写出时必须 `JSON.stringify`，读回时必须 `JSON.parse`，两侧必须对称：保存用 `localStorage.setItem('settings', JSON.stringify(s))`，读取用 `raw ? JSON.parse(raw) : { name: 'Guest' }`。",
+      "codeBlocks": [
+        {
+          "language": "js",
+          "code": "function saveSettings(s) {\n  localStorage.setItem('settings', JSON.stringify(s))\n}\nfunction loadSettings() {\n  const raw = localStorage.getItem('settings')\n  return raw ? JSON.parse(raw) : { name: 'Guest' }\n}"
+        }
+      ],
+      "images": [],
+      "createdAt": "2026-11-21"
+    },
+    {
+      "id": "SPRINT1-Q8",
+      "topic": "ui-ux",
+      "weeks": [
+        "week-5"
+      ],
+      "difficulty": "medium",
+      "tags": [
+        "冲刺卷",
+        "UI/UX",
+        "视觉层级",
+        "错误预防"
+      ],
+      "question": "账户设置面板里，主操作 \"Save\" 与破坏性操作 \"Delete account\" 使用相同的主色、相同尺寸，并排摆放。用户想保存时频繁误点到删除。这属于哪一类可用性问题？应如何改进？",
+      "knowledgePoint": "视觉层级、可供性与错误预防",
+      "answerExplanation": "危险操作被做得与主操作一模一样，视觉层级被拉平，用户无法凭外观区分二者，误点因此频繁——这违反了「错误预防（error prevention）」，并连带破坏了「一致性与标准」。改进方向：让 Delete 使用危险色（红）而非主色，降低强调并与 Save 区分；把它与 Save 分开摆放，使主操作一目了然；在真正执行前再加确认步骤，形成安全网。三者合起来重建了视觉层级，并把误点的代价降到最低。",
+      "codeBlocks": [],
+      "images": [],
+      "createdAt": "2026-11-21"
     }
   ]
 }

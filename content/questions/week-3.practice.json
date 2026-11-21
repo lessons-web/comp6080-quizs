@@ -251,6 +251,234 @@
       "codeBlocks": [],
       "images": [],
       "createdAt": "2026-11-07"
+    },
+    {
+      "id": "TOPIC3-Q1",
+      "topic": "javascript",
+      "weeks": [
+        "week-3"
+      ],
+      "difficulty": "medium",
+      "tags": [
+        "专题卷3",
+        "作用域",
+        "var",
+        "变量提升"
+      ],
+      "question": "结算函数里，折扣用 `var` 声明在一个 `if` 代码块内，合计却在块外计算：\n```javascript\nlet subtotal = 100\nif (user.isMember) {\n  var discount = 0.2\n}\nconst total = subtotal * (1 - discount)\n```\n`var` 与 `let`/`const` 在作用域上有什么区别？为什么非会员在块外访问 `discount` 不会报 `ReferenceError`？为什么这时 `total` 会变成 `NaN`？应如何修改？",
+      "knowledgePoint": "作用域与变量提升（var vs let/const）",
+      "answerExplanation": "`var` 是函数作用域（不是块作用域）：它的声明会被提升到所在函数顶部，在整个函数里只创建一个绑定，所以 `if` 块并不“拥有”它，块后面那一行读到的是同一个函数级绑定，因此不会 `ReferenceError`；而 `let`/`const` 是块作用域，若在 `if` 里用 `let discount`，它在块外不存在，读取会抛 `ReferenceError`。对非会员，`user.isMember` 为 false、块体不执行，被提升的 `var discount` 仍是 `undefined`；于是 `1 - undefined` 得到 `NaN`，`subtotal * NaN` 还是 `NaN`，所以合计显示 `NaN` 而不是小计。修法是在块之前给折扣一个数字默认值：`let discount = 0`，只在 `if` 内赋值（或 `const discount = user.isMember ? 0.2 : 0`）。这样 `discount` 始终是数字且作用域受限，非会员得到 `0`，`subtotal * (1 - 0)` 返回干净的小计，从根源上消除了“读取未初始化变量”这条路径。",
+      "codeBlocks": [
+        {
+          "language": "js",
+          "code": "let discount = 0\nif (user.isMember) {\n  discount = 0.2\n}\nconst total = subtotal * (1 - discount)"
+        }
+      ],
+      "images": [],
+      "createdAt": "2026-11-21"
+    },
+    {
+      "id": "TOPIC3-Q2",
+      "topic": "javascript",
+      "weeks": [
+        "week-3"
+      ],
+      "difficulty": "medium",
+      "tags": [
+        "专题卷3",
+        "闭包",
+        "循环",
+        "var"
+      ],
+      "question": "文档页在循环里给三个标签按钮绑定点击事件：\n```javascript\nconst tabs = document.querySelectorAll('.tab')\nfor (var i = 0; i < tabs.length; i++) {\n  tabs[i].addEventListener('click', () => {\n    console.log('Tab ' + i)\n  })\n}\n```\n无论点哪个标签，控制台打印的都是 `Tab 3`。请解释闭包与 `var` 如何造成这一现象；把 `var` 改成 `let` 为什么能修好？再给出一种保留 `var` 的改法并说明原理。",
+      "knowledgePoint": "闭包与循环变量捕获",
+      "answerExplanation": "`var i` 是唯一的函数级绑定，被每一次迭代共用，所以只有一个 `i`。循环里创建的三个箭头函数闭包捕获的是*同一个* `i`；而处理器要等点击时才运行，那时循环早已结束，`i === tabs.length`（3），因此每个处理器都读到最终值 3。把 `var` 改成 `let` 后，`for` 循环会为每次迭代创建一个全新的 `i` 绑定，各自由前一次初始化，于是每个闭包捕获属于自己那次迭代的绑定：第 1 个按钮保留 0、第 2 个保留 1、第 3 个保留 2，点击谁就打印谁。若想保留 `var`，可把 `i` 传进一个工厂函数或 IIFE，让每次调用拿到一份副本（如 `(function (n) { tabs[n].addEventListener('click', () => console.log('Tab ' + n)) })(i)`）：参数 `n` 在每次调用时新建绑定、且之后不再被修改，所以每个处理器都能保留正确值。",
+      "codeBlocks": [
+        {
+          "language": "js",
+          "code": "for (let i = 0; i < tabs.length; i++) {\n  tabs[i].addEventListener('click', () => {\n    console.log('Tab ' + i)\n  })\n}"
+        }
+      ],
+      "images": [],
+      "createdAt": "2026-11-21"
+    },
+    {
+      "id": "TOPIC3-Q3",
+      "topic": "javascript",
+      "weeks": [
+        "week-3"
+      ],
+      "difficulty": "hard",
+      "tags": [
+        "专题卷3",
+        "this",
+        "事件回调",
+        "bind"
+      ],
+      "question": "计数器组件把一个对象方法直接交给事件监听器：\n```javascript\nconst counter = {\n  count: 0,\n  increment: function () {\n    this.count += 1\n    render(this.count)\n  },\n}\ndocument.querySelector('#inc').addEventListener('click', counter.increment)\n```\n点击按钮时报错 `Cannot read properties of undefined (reading 'count')`。处理器执行时 `this` 是什么？为什么不是 `counter`？请说明 `addEventListener` 是如何调用处理器的，并给出修复方式。",
+      "knowledgePoint": "事件处理器中的 this 绑定",
+      "answerExplanation": "`this` 取决于函数*如何被调用*。`addEventListener` 把函数存下来，之后以 `handler(event)` 的普通调用形式执行——前面没有对象作为接收者，因此 `this` 是 `undefined`（模块/严格模式下；非严格模式下才是全局 `window`）。`counter.increment` 只是把函数引用复制过去，丢掉了“点号前是 `counter`”这层接收者关系，所以 `this` 不再是 `counter`，`this.count` 就抛错。对照之下，直接调用 `counter.increment()` 是方法调用，`this` 绑定到 `counter`，因此正常。修法一是包一层箭头函数：`addEventListener('click', () => counter.increment())`，使内部变成方法调用；修法二是 `counter.increment.bind(counter)`，返回一个永久绑定到 `counter` 的新函数，即便仍以普通回调调用，`this` 也等于 `counter`。两种方式都让 `this` 恢复为计数器对象。",
+      "codeBlocks": [
+        {
+          "language": "js",
+          "code": "document.querySelector('#inc').addEventListener('click', () => counter.increment())"
+        }
+      ],
+      "images": [],
+      "createdAt": "2026-11-21"
+    },
+    {
+      "id": "TOPIC3-Q4",
+      "topic": "javascript",
+      "weeks": [
+        "week-3"
+      ],
+      "difficulty": "medium",
+      "tags": [
+        "专题卷3",
+        "事件委托",
+        "target",
+        "currentTarget",
+        "closest"
+      ],
+      "question": "一个待办列表把唯一的监听器委托在 `ul` 上，用 `event.target.dataset.id` 判断要删除哪一行：\n```html\n<ul id=\"list\">\n  <li data-id=\"1\"><span>Milk</span> <button>Delete</button></li>\n</ul>\n```\n```javascript\ndocument.querySelector('#list').addEventListener('click', (event) => {\n  const id = event.target.dataset.id\n  removeItem(id)\n})\n```\n点击行的空白处能删对条目，点击文字（内层 `<span>`）却删不掉任何东西。为什么？`event.target` 与 `event.currentTarget` 有何区别？请给出稳妥的修复并说明事件委托的优点。",
+      "knowledgePoint": "事件委托与 target / currentTarget",
+      "answerExplanation": "`event.target` 是点击实际落在的最内层元素：点文字时是内层 `<span>`，它没有 `data-id`，于是 `dataset.id` 为 `undefined`，`removeItem(undefined)` 什么也不做；点空白处时落在 `<li>` 本身，它带有 `data-id`，所以正常。`event.currentTarget` 是监听器所依附的元素，在这里始终是 `ul`，读它的 `dataset.id` 只会得到 `ul` 的（不存在的）id，同样不可靠。稳妥的修法是从被点节点向上找最近的行：`const row = event.target.closest('li'); if (!row) return; removeItem(row.dataset.id)`。`closest('li')` 沿祖先链向上查找，无论用户点的是 span、按钮还是整行都能命中。把监听器留在父元素上（事件委托）还有额外好处：行可以随意增删并依然响应，不会出现“把监听器绑到已被删除的节点上”而失效的情况，也避免了为每一项各绑一个监听器的开销。",
+      "codeBlocks": [
+        {
+          "language": "js",
+          "code": "document.querySelector('#list').addEventListener('click', (event) => {\n  const row = event.target.closest('li')\n  if (!row) return\n  removeItem(row.dataset.id)\n})"
+        }
+      ],
+      "images": [],
+      "createdAt": "2026-11-21"
+    },
+    {
+      "id": "TOPIC3-Q5",
+      "topic": "javascript",
+      "weeks": [
+        "week-3"
+      ],
+      "difficulty": "easy",
+      "tags": [
+        "专题卷3",
+        "表单",
+        "preventDefault",
+        "校验"
+      ],
+      "question": "注册表单在提交时显示欢迎信息，但信息一闪就被清空：\n```html\n<form id=\"signup\">\n  <input id=\"name\" type=\"text\">\n  <button type=\"submit\">Sign up</button>\n</form>\n<p id=\"status\"></p>\n```\n```javascript\nform.addEventListener('submit', () => {\n  const name = input.value\n  status.textContent = 'Welcome, ' + name\n})\n```\n为什么 `Welcome` 会一闪而过？浏览器默认的提交行为是什么、`event.preventDefault()` 如何阻止它、用户输入的值又为何丢失？另外，若不写 JavaScript，如何阻止空字段提交？",
+      "knowledgePoint": "表单提交默认行为与原生校验",
+      "answerExplanation": "submit 事件有默认行为：浏览器先触发 `submit`，除非处理器调用 `event.preventDefault()`，否则它会序列化表单控件并导航到 `action` 指定的 URL（默认是当前页面），也就是重新加载文档。处理器虽然写入了信息，可它一返回，重载就把整个页面替换掉、信息被抹去，所以只看到一闪。输入的值之所以丢失，正是因为这次重载——新页面由服务器重新构建，输入框又是空的；只要阻止导航、让页面保持原样，值就留在实时 DOM 里。阻止重载：在处理器顶部加 `event.preventDefault()`，并让监听器接收 `event` 参数。若想用纯 HTML 阻止空字段提交，给字段加 `required`：`<input id=\"name\" type=\"text\" required>`；输入为空时，浏览器内置的约束校验会在 `submit` 处理器运行*之前*就拦下提交，并弹出类似 “Please fill out this field” 的提示，因此不会显示欢迎信息。",
+      "codeBlocks": [
+        {
+          "language": "js",
+          "code": "form.addEventListener('submit', (event) => {\n  event.preventDefault()\n  const name = input.value\n  status.textContent = 'Welcome, ' + name\n})"
+        }
+      ],
+      "images": [],
+      "createdAt": "2026-11-21"
+    },
+    {
+      "id": "TOPIC3-Q6",
+      "topic": "javascript",
+      "weeks": [
+        "week-3"
+      ],
+      "difficulty": "medium",
+      "tags": [
+        "专题卷3",
+        "localStorage",
+        "JSON",
+        "数组方法"
+      ],
+      "question": "笔记应用从本地存储读取后就地使用数组方法：\n```javascript\nconst notes = localStorage.getItem('notes')  // 字符串或 null\nrender(notes.map(n => n.text))\n\nfunction save(list) {\n  localStorage.setItem('notes', list)\n}\n```\n首次访问时列表崩溃并报 `notes.map is not a function`，保存的笔记也总是无法正确恢复。`getItem` 首次访问返回什么、为什么 `.map` 会抛错？直接 `setItem('notes', list)` 为什么破坏持久化？应如何用 `JSON.stringify` / `JSON.parse` 正确完成 读取→过滤→渲染→保存 的往返？",
+      "knowledgePoint": "本地持久化与数组方法（JSON 往返）",
+      "answerExplanation": "首次访问时没有任何数据，`localStorage.getItem('notes')` 返回 `null`（之后的访问返回所存的*字符串*）。`null` 和字符串都没有 `map` 方法，所以 `notes.map(...)` 抛 `TypeError: notes.map is not a function`——localStorage 从不返回数组，必须先把它还原成数组才能用数组方法。`localStorage` 只存字符串，直接 `setItem('notes', list)` 会让浏览器用 `toString()` 强制转换数组，得到类似 `\"[object Object],[object Object]\"` 的文本，字段全丢，无法恢复；正确做法是保存前 `JSON.stringify(list)`，把数组序列化成保留结构的 JSON 文本。往返应为：`const raw = localStorage.getItem('notes'); const notes = raw ? JSON.parse(raw) : [];` 然后用数组方法 `notes.filter(n => !n.done).map(n => n.text)` 渲染，保存时 `localStorage.setItem('notes', JSON.stringify(notes))`。顺序很关键：必须先解析成数组再调用 `.filter`/`.map`，必须在存储前 `JSON.stringify`；`raw ? ... : []` 这个守卫处理首次为空的情况，让应用从空数组开始而不是崩溃。",
+      "codeBlocks": [
+        {
+          "language": "js",
+          "code": "const raw = localStorage.getItem('notes')\nconst notes = raw ? JSON.parse(raw) : []\nrender(notes.filter(n => !n.done).map(n => n.text))\nlocalStorage.setItem('notes', JSON.stringify(notes))"
+        }
+      ],
+      "images": [],
+      "createdAt": "2026-11-21"
+    },
+    {
+      "id": "SPRINT1-Q3",
+      "topic": "javascript",
+      "weeks": [
+        "week-3"
+      ],
+      "difficulty": "medium",
+      "tags": [
+        "冲刺卷",
+        "JavaScript",
+        "闭包",
+        "作用域"
+      ],
+      "question": "取色器为每个颜色生成一个按钮：\n```js\nconst colours = ['Red', 'Green', 'Blue']\nfor (var i = 0; i < colours.length; i++) {\n  const btn = document.createElement('button')\n  btn.textContent = colours[i]\n  btn.addEventListener('click', () => console.log(i))\n  list.appendChild(btn)\n}\n```\n无论点哪个按钮，控制台记录的都是最后一个颜色。为什么？如何修复？",
+      "knowledgePoint": "var 函数作用域与闭包捕获",
+      "answerExplanation": "`var` 是函数作用域，整个循环及其内部创建的所有闭包共享同一个 `i` 绑定。三个监听器并不在循环中执行，而是在循环结束、`i` 已变成终止值之后才被点击调用，因此它们读取的都是同一个最终值，于是都记录最后一个颜色。把 `var` 换成 `let` 后，`for` 循环会为每次迭代创建新的块级绑定，每个闭包捕获自己的 `i`，从而分别记录正确的颜色；也可保留 `var`，在循环内用 `const colour = colours[i]` 在每个迭代固定值。",
+      "codeBlocks": [
+        {
+          "language": "js",
+          "code": "for (let i = 0; i < colours.length; i++) {\n  const btn = document.createElement('button')\n  btn.textContent = colours[i]\n  btn.addEventListener('click', () => console.log(i))\n  list.appendChild(btn)\n}"
+        }
+      ],
+      "images": [],
+      "createdAt": "2026-11-21"
+    },
+    {
+      "id": "SPRINT1-Q4",
+      "topic": "javascript",
+      "weeks": [
+        "week-3"
+      ],
+      "difficulty": "hard",
+      "tags": [
+        "冲刺卷",
+        "事件委托",
+        "DOM",
+        "target"
+      ],
+      "question": "待办列表用事件委托删除被点的项：\n```js\nlist.addEventListener('click', function (event) {\n  const id = event.target.dataset.id\n  removeItem(id)\n})\n```\n每个 `<li data-id=\"...\">` 内含一个 `<span>` 显示文字。点行的空白处能删除，点文字却毫无反应。为什么？应如何修复？",
+      "knowledgePoint": "事件委托与 target / currentTarget",
+      "answerExplanation": "`data-id` 只写在 `<li>` 上，内部 `<span>` 并没有。点行的空白处时，`event.target` 是 `<li>`，`dataset.id` 是正确的 id，删除成功；点文字时，`event.target` 是那个 `<span>`，其 `dataset.id` 为 `undefined`，`removeItem(undefined)` 匹配不到任何项，于是什么都不删。`event.currentTarget` 始终是绑定监听器的 `<ul>`，它本身并不携带行 id。稳健的做法是用 `event.target.closest('li')` 从点击处向上找到最近的 `<li>`，读取其 `data-id`，并对 `null` 结果（点击落在任何行之外）做守卫。",
+      "codeBlocks": [
+        {
+          "language": "js",
+          "code": "list.addEventListener('click', function (event) {\n  const li = event.target.closest('li')\n  if (li) removeItem(li.dataset.id)\n})"
+        }
+      ],
+      "images": [],
+      "createdAt": "2026-11-21"
+    },
+    {
+      "id": "SPRINT2-Q8",
+      "topic": "javascript",
+      "weeks": [
+        "week-3"
+      ],
+      "difficulty": "medium",
+      "tags": [
+        "冲刺卷",
+        "Quiz3",
+        "JavaScript",
+        "事件循环",
+        "微任务",
+        "宏任务"
+      ],
+      "question": "一段脚本混合了同步日志、零延迟定时器和已 resolve 的 promise：\n```js\nconsole.log('A')\nsetTimeout(() => console.log('B'), 0)\nPromise.resolve().then(() => console.log('C'))\nconsole.log('D')\n```\n输出的顺序不是源码顺序。请说明 (1) A、B、C、D 的实际打印顺序及原因；(2) 为什么 promise 回调先于零延迟定时器；(3) 描述一种能让 B 在 C 之前打印的改动。",
+      "knowledgePoint": "事件循环顺序：同步 → 微任务（promise）→ 宏任务（setTimeout）",
+      "answerExplanation": "同步语句先在调用栈上执行，打印 A 再打印 D（定时器和 promise 的回调只是被安排，还没运行）。调用栈清空后事件循环排空微任务队列，promise 的 `.then` 打印 C。只有所有微任务结束后才执行下一个宏任务，即定时器打印 B。所以顺序是 A、D、C、B。`setTimeout(fn, 0)` 并不会立即运行，它排队一个宏任务，必须等当前任务和所有待处理微任务都完成后才轮到；而 promise 通过 `.then` 安排的是微任务，事件循环总是先排空整个微任务队列再取下一个宏任务，因此零延迟定时器也排在 promise 之后。若要让 B 先于 C，可把 B 也做成微任务并排在 C 之前，例如用 `queueMicrotask(() => console.log('B'))` 放在 `.then` 之前，微任务按安排顺序执行，B 就会先被排空。",
+      "codeBlocks": [
+        {
+          "language": "js",
+          "code": "console.log('A')\nqueueMicrotask(() => console.log('B'))\nPromise.resolve().then(() => console.log('C'))\nconsole.log('D')\n// 输出: A D B C"
+        }
+      ],
+      "images": [],
+      "createdAt": "2026-11-21"
     }
   ]
 }

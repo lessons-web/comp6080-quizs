@@ -33,6 +33,34 @@ const examLoaders: Record<string, () => Promise<MockExamCollection>> = {
     import('@/content/exams/quiz-3.mock-exams.json').then(
       (m) => m.default as unknown as MockExamCollection,
     ),
+  'topic-1.html': () =>
+    import('@/content/exams/topic-1.html.json').then(
+      (m) => m.default as unknown as MockExamCollection,
+    ),
+  'topic-2.css': () =>
+    import('@/content/exams/topic-2.css.json').then(
+      (m) => m.default as unknown as MockExamCollection,
+    ),
+  'topic-3.js-dom': () =>
+    import('@/content/exams/topic-3.js-dom.json').then(
+      (m) => m.default as unknown as MockExamCollection,
+    ),
+  'topic-4.async-network': () =>
+    import('@/content/exams/topic-4.async-network.json').then(
+      (m) => m.default as unknown as MockExamCollection,
+    ),
+  'topic-5.uiux-react': () =>
+    import('@/content/exams/topic-5.uiux-react.json').then(
+      (m) => m.default as unknown as MockExamCollection,
+    ),
+  'sprint-1.quiz12': () =>
+    import('@/content/exams/sprint-1.quiz12.json').then(
+      (m) => m.default as unknown as MockExamCollection,
+    ),
+  'sprint-2.quiz3': () =>
+    import('@/content/exams/sprint-2.quiz3.json').then(
+      (m) => m.default as unknown as MockExamCollection,
+    ),
 }
 
 export async function getAllMockExams(): Promise<ExamPaper[]> {

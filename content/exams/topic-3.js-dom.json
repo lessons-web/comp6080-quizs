@@ -1,0 +1,406 @@
+{
+  "topic": "javascript",
+  "exams": [
+    {
+      "id": "TOPIC3-JS-DOM",
+      "title": "JavaScript & the DOM — Topic Paper",
+      "titleZh": "JavaScript 与 DOM · 专题卷",
+      "description": "Week 3 topic paper: `var` / `let` / `const` scope and hoisting, closures, `this` inside event handlers, DOM querying and event delegation, forms and validation, and localStorage / JSON persistence with array methods. Six questions, three sub-questions each, with screenshot-style mockups.",
+      "descriptionZh": "Week 3 专题卷：`var` / `let` / `const` 的作用域与变量提升、闭包、事件处理器里的 `this`、DOM 查询与事件委托、表单与校验，以及 localStorage / JSON 持久化与数组方法。共 6 道大题，每题 3 个子题，配套截图感 mockup。",
+      "totalMarks": 30,
+      "tags": ["专题卷", "Weeks3", "JavaScript", "DOM"],
+      "questions": [
+        {
+          "id": "Q1",
+          "title": "A discount that leaks out of its block",
+          "titleZh": "漏出代码块的折扣",
+          "marks": 5,
+          "contentMdx": "`checkout.js` computes a cart total. A `var discount` is declared inside an `if` block, and `total` is computed after the block, as `cart.png` shows. For a non-member the checkout shows `NaN` instead of the plain subtotal.",
+          "contentMdxZh": "`checkout.js` 负责计算购物车合计。`var discount` 声明在一个 `if` 代码块里，而 `total` 是在块外计算的，如 `cart.png` 所示。对非会员来说，结算页显示的是 `NaN`，而不是原本的小计金额。",
+          "subQuestions": [
+            {
+              "id": "Q1-a",
+              "label": "(a)",
+              "marks": 1,
+              "questionMdx": "In `checkout.js`, `discount` is declared with `var` inside the `if` block. Why is `discount` still visible (and not a `ReferenceError`) on the line after the block, whereas a `let` there would throw?",
+              "answerMdx": "`var` is function-scoped, not block-scoped: the declaration is hoisted to the top of the enclosing function and creates a single binding there, so the `if` block does not contain it — the line after the block reads the same function-level binding. `let` / `const` are block-scoped, so a `let discount` declared inside the `if` would only exist inside that block, and reading it outside would be a `ReferenceError`.",
+              "markingMdx": "1 mark for stating that `var` is function-scoped (hoisted to the function) while `let` / `const` are block-scoped.",
+              "questionMdxZh": "在 `checkout.js` 里，`discount` 用 `var` 声明在 `if` 代码块内。为什么在块后面那一行仍能访问 `discount`（而不是报 `ReferenceError`）？如果改用 `let` 又会怎样？",
+              "answerMdxZh": "`var` 是函数作用域，而不是块作用域：它的声明会被提升到所在函数的顶部，在整个函数里只创建一个绑定，所以这个 `if` 块并不“拥有”它——块后面那一行读的是同一个函数级绑定。而 `let` / `const` 是块作用域，若在 `if` 里用 `let discount`，它只存在于该块内，在块外读取会抛出 `ReferenceError`。",
+              "markingMdxZh": "1 分：说明 `var` 是函数作用域（提升到函数），而 `let` / `const` 是块作用域。"
+            },
+            {
+              "id": "Q1-b",
+              "label": "(b)",
+              "marks": 2,
+              "questionMdx": "A non-member has `user.isMember === false`, so the `if` body never runs. Why does `total` come back `NaN` instead of `subtotal`?",
+              "answerMdx": "Because `var discount` is hoisted: the *declaration* is lifted to the top of the function and initialised to `undefined`, but the *assignment* `= 0.2` stays inside the `if`. When the body does not run, `discount` is still `undefined`. Then `1 - undefined` evaluates to `NaN`, and `subtotal * NaN` is `NaN`, so the cart shows `NaN` rather than the untouched subtotal.",
+              "markingMdx": "1 mark for stating that the hoisted `var` is `undefined` when the `if` body does not run.\n1 mark for tracing `1 - undefined` → `NaN` → `subtotal * NaN` → `NaN`.",
+              "questionMdxZh": "非会员的 `user.isMember === false`，所以 `if` 的块体从不执行。为什么 `total` 得到的是 `NaN`，而不是 `subtotal`？",
+              "answerMdxZh": "因为 `var discount` 会被提升：它的“声明”被抬到函数顶部并初始化为 `undefined`，但赋值 `= 0.2` 仍留在 `if` 里面。当块体不执行时，`discount` 就一直是 `undefined`。于是 `1 - undefined` 得到 `NaN`，`subtotal * NaN` 还是 `NaN`，所以结算页显示 `NaN`，而不是原封不动的小计。",
+              "markingMdxZh": "1 分：说明 `if` 块体不执行时，被提升的 `var` 仍是 `undefined`。\n1 分：推导出 `1 - undefined` → `NaN` → `subtotal * NaN` → `NaN`。"
+            },
+            {
+              "id": "Q1-c",
+              "label": "(c)",
+              "marks": 2,
+              "questionMdx": "Rewrite the function so a non-member gets a plain subtotal with no leaked variable, and say why it removes the bug.",
+              "answerMdx": "Give the discount a numeric default before the block and only assign inside it: `let discount = 0` then `if (user.isMember) { discount = 0.2 }`. (Or `const discount = user.isMember ? 0.2 : 0`.) Now `discount` is always a number and is scoped so it cannot leak out of the concept; for a non-member it is `0`, so `subtotal * (1 - 0)` returns the plain subtotal instead of `NaN`. The fix works because the bug came from reading an uninitialised (`undefined`) variable, and a default value removes that path entirely.",
+              "markingMdx": "1 mark for a fix that gives the discount a numeric default (e.g. `let discount = 0`).\n1 mark for explaining that the number default removes the `undefined` / `NaN` path.",
+              "questionMdxZh": "请重写这个函数，让非会员得到干净的小计金额、不再有变量泄漏，并说明为什么这样就消除了 bug。",
+              "answerMdxZh": "在代码块之前给折扣一个数字默认值，只在块内赋值：`let discount = 0`，然后 `if (user.isMember) { discount = 0.2 }`。（也可写成 `const discount = user.isMember ? 0.2 : 0`。）这样 `discount` 始终是数字，而且作用域受限、不会泄漏；对非会员它是 `0`，`subtotal * (1 - 0)` 就返回干净的小计，而不是 `NaN`。改法有效的原因是：bug 来自读取了一个未初始化（`undefined`）的变量，而默认值直接消除了这条路径。",
+              "markingMdxZh": "1 分：给折扣一个数字默认值（例如 `let discount = 0`）的改法。\n1 分：说明数字默认值消除了 `undefined` / `NaN` 这条路径。"
+            }
+          ],
+          "displayNumber": "Q1",
+          "categoryLabel": "JavaScript and the DOM",
+          "categoryLabelZh": "JavaScript 与 DOM",
+          "displayStyle": "quiz-sample",
+          "mockup": {
+            "files": [
+              {
+                "name": "checkout.js",
+                "code": "function total(subtotal, user) {\n  if (user.isMember) {\n    var discount = 0.2\n  }\n  return subtotal * (1 - discount)\n}",
+                "codeZh": "function total(subtotal, user) {\n  if (user.isMember) {\n    var discount = 0.2\n  }\n  // 非会员时 if 没执行，discount 仍是 undefined\n  return subtotal * (1 - discount)\n}"
+              },
+              {
+                "name": "cart.png",
+                "active": true
+              }
+            ],
+            "viewport": "desktop",
+            "html": "<div class=\"exam-ui-shell\"><div class=\"exam-ui-topbar\"><span>Shop</span><span>Checkout</span></div><div class=\"exam-ui-body\"><p class=\"exam-ui-page-title\">Checkout</p><div class=\"exam-ui-card\"><p class=\"exam-ui-label\">Subtotal</p><p class=\"exam-ui-value\">$100.00</p></div><div class=\"exam-ui-card\"><p class=\"exam-ui-label\">Total</p><p class=\"exam-ui-value exam-ui-danger\">NaN</p></div></div></div>",
+            "htmlZh": "<div class=\"exam-ui-shell\"><div class=\"exam-ui-topbar\"><span>商城</span><span>结算</span></div><div class=\"exam-ui-body\"><p class=\"exam-ui-page-title\">结算</p><div class=\"exam-ui-card\"><p class=\"exam-ui-label\">小计</p><p class=\"exam-ui-value\">$100.00</p></div><div class=\"exam-ui-card\"><p class=\"exam-ui-label\">合计</p><p class=\"exam-ui-value exam-ui-danger\">NaN</p></div></div></div>",
+            "caption": "The checkout after the leaked discount becomes NaN.",
+            "captionZh": "折扣泄漏成 undefined 之后，结算页显示 NaN。"
+          }
+        },
+        {
+          "id": "Q2",
+          "title": "Every tab logs the last tab",
+          "titleZh": "每个标签页都打印出最后一个",
+          "marks": 5,
+          "contentMdx": "A docs page wires up tab buttons in a loop with `var` (see `tabs.js`). Whichever tab the user clicks, the console in `console.png` always prints `Tab 3`. The developer expected `Tab 1`, `Tab 2` and `Tab 3` for the three buttons.",
+          "contentMdxZh": "一个文档页用 `var` 在循环里给标签按钮绑定事件（见 `tabs.js`）。无论用户点哪个标签，`console.png` 里的控制台总是打印 `Tab 3`。开发者本希望三个按钮分别打印 `Tab 1`、`Tab 2`、`Tab 3`。",
+          "subQuestions": [
+            {
+              "id": "Q2-a",
+              "label": "(a)",
+              "marks": 1,
+              "questionMdx": "All three handlers print the same value `Tab 3`. Explain how the closure plus `var` produce this.",
+              "answerMdx": "There is only one `i`, because `var i` is a single function-scoped binding shared by every iteration. Each arrow function is created during the loop but closes over that *same* `i`. The handlers are not run until a click, and by then the loop has already finished with `i === tabs.length` (3). So every handler reads the final value `3`.",
+              "markingMdx": "1 mark for explaining that `var` creates one shared `i` and each handler closes over that same variable, which ends at 3 after the loop.",
+              "questionMdxZh": "三个处理器都打印同一个值 `Tab 3`。请解释闭包加上 `var` 是如何造成这种结果的。",
+              "answerMdxZh": "这里只有一个 `i`，因为 `var i` 是唯一的函数级绑定，被每一次循环共用。每个箭头函数虽然是在循环中创建的，但它们闭包捕获的是*同一个* `i`。处理器要等到点击时才运行，而那时循环早已结束，`i === tabs.length`（即 3）。所以每个处理器读到的都是最终值 `3`。",
+              "markingMdxZh": "1 分：说明 `var` 只创建一个共享的 `i`，每个处理器都闭包捕获这同一个变量，循环结束时它停在 3。"
+            },
+            {
+              "id": "Q2-b",
+              "label": "(b)",
+              "marks": 2,
+              "questionMdx": "Changing `var i` to `let i` fixes it. What exactly does `let` create for each iteration, and why does that give the right value per tab?",
+              "answerMdx": "`let` is block-scoped, and a `for` loop with `let` creates a *fresh binding of `i` for each iteration*, each initialised from the previous one. Each arrow function closes over its own iteration's binding. So the first button's handler keeps `i === 0`, the second keeps `1`, and the third keeps `2`. Clicking a tab now logs the value for that specific iteration.",
+              "markingMdx": "1 mark for stating that `let` creates a new per-iteration binding of `i`.\n1 mark for linking that to each closure capturing its own value (0, 1, 2) instead of one shared 3.",
+              "questionMdxZh": "把 `var i` 改成 `let i` 就能修好。`let` 到底为每次迭代创建了什么？为什么这样每个标签就能拿到正确的值？",
+              "answerMdxZh": "`let` 是块作用域，用 `let` 的 `for` 循环会*为每一次迭代创建一个全新的 `i` 绑定*，各自从前一次的值初始化。于是每个箭头函数闭包捕获的是属于自己那次迭代的绑定：第一个按钮的处理器保留 `i === 0`，第二个保留 `1`，第三个保留 `2`。现在点击某个标签，打印的就是那次迭代对应的值。",
+              "markingMdxZh": "1 分：说明 `let` 会为每次迭代创建新的 `i` 绑定。\n1 分：把它与“每个闭包捕获自己的值（0、1、2），而不是共享的 3”联系起来。"
+            },
+            {
+              "id": "Q2-c",
+              "label": "(c)",
+              "marks": 2,
+              "questionMdx": "Give another fix that keeps `var` (for example a factory or IIFE), and explain why it captures the right value.",
+              "answerMdx": "Keep `var` but pass `i` into a small function (a factory or an IIFE) so each call receives its own copy:\n`for (var i = 0; i < tabs.length; i++) {\n  (function (n) {\n    tabs[n].addEventListener('click', () => console.log('Tab ' + n))\n  })(i)\n}`\nThe parameter `n` is a new binding created on every call, so each handler closes over that call's `n` (0, 1, 2). Because `n` is a function parameter it is never mutated by later iterations, so the values stay correct.",
+              "markingMdx": "1 mark for a fix that wraps each iteration so the value is copied (factory / IIFE with a parameter, or `forEach` with the index parameter).\n1 mark for explaining that the per-call parameter is a fresh binding, so each handler keeps its own value.",
+              "questionMdxZh": "请给出另一种保留 `var` 的改法（例如工厂函数或 IIFE），并说明它为什么能捕获正确的值。",
+              "answerMdxZh": "保留 `var`，但把 `i` 传进一个小函数（工厂函数或 IIFE），让每次调用拿到自己的副本：\n`for (var i = 0; i < tabs.length; i++) {\n  (function (n) {\n    tabs[n].addEventListener('click', () => console.log('Tab ' + n))\n  })(i)\n}`\n参数 `n` 在每次调用时都会新建一个绑定，所以每个处理器闭包捕获的是那次调用的 `n`（0、1、2）。因为 `n` 是函数参数，不会再被后续迭代修改，所以值始终正确。",
+              "markingMdxZh": "1 分：给出把每次迭代的值复制下来的改法（带参数的工厂函数 / IIFE，或用带索引参数的 `forEach`）。\n1 分：说明每次调用新建的参数绑定让每个处理器保留自己的值。"
+            }
+          ],
+          "displayNumber": "Q2",
+          "categoryLabel": "JavaScript and the DOM",
+          "categoryLabelZh": "JavaScript 与 DOM",
+          "displayStyle": "quiz-sample",
+          "mockup": {
+            "files": [
+              {
+                "name": "tabs.js",
+                "code": "const tabs = document.querySelectorAll('.tab')\nfor (var i = 0; i < tabs.length; i++) {\n  tabs[i].addEventListener('click', () => {\n    console.log('Tab ' + i)\n  })\n}",
+                "codeZh": "const tabs = document.querySelectorAll('.tab')\n// var 只有一个 i，循环结束后 i 停在 3\nfor (var i = 0; i < tabs.length; i++) {\n  tabs[i].addEventListener('click', () => {\n    console.log('Tab ' + i)\n  })\n}"
+              },
+              {
+                "name": "console.png",
+                "active": true
+              }
+            ],
+            "viewport": "desktop",
+            "html": "<div class=\"exam-ui-shell\"><div class=\"exam-ui-topbar\"><span>Docs</span><span>Tabs</span></div><div class=\"exam-ui-body\"><p class=\"exam-ui-page-title\">Docs</p><div class=\"exam-ui-button-row\"><button class=\"exam-ui-button\">Tab 1</button><button class=\"exam-ui-button\">Tab 2</button><button class=\"exam-ui-button\">Tab 3</button></div><div class=\"exam-ui-card\"><p class=\"exam-ui-label\">Console</p><p class=\"exam-ui-code\">Tab 3</p><p class=\"exam-ui-code\">Tab 3</p><p class=\"exam-ui-code\">Tab 3</p></div></div></div>",
+            "htmlZh": "<div class=\"exam-ui-shell\"><div class=\"exam-ui-topbar\"><span>文档</span><span>标签页</span></div><div class=\"exam-ui-body\"><p class=\"exam-ui-page-title\">文档</p><div class=\"exam-ui-button-row\"><button class=\"exam-ui-button\">标签 1</button><button class=\"exam-ui-button\">标签 2</button><button class=\"exam-ui-button\">标签 3</button></div><div class=\"exam-ui-card\"><p class=\"exam-ui-label\">控制台</p><p class=\"exam-ui-code\">Tab 3</p><p class=\"exam-ui-code\">Tab 3</p><p class=\"exam-ui-code\">Tab 3</p></div></div></div>",
+            "caption": "All three tabs log the same final value (Tab 3) in the console.",
+            "captionZh": "三个标签页在控制台里都打印出同一个最终值（Tab 3）。"
+          }
+        },
+        {
+          "id": "Q3",
+          "title": "A method that forgets its object",
+          "titleZh": "认不出自己对象的方法",
+          "marks": 5,
+          "contentMdx": "A counter widget passes `counter.increment` straight into `addEventListener` (see `incrementer.js`). Clicking `+1` throws instead of counting, as `counter.png` shows: the count is `NaN` and an error about `undefined (reading 'count')` appears.",
+          "contentMdxZh": "一个计数器组件把 `counter.increment` 直接交给了 `addEventListener`（见 `incrementer.js`）。点击 `+1` 不会计数，而是抛错，如 `counter.png` 所示：计数显示 `NaN`，并弹出关于 `undefined (reading 'count')` 的错误。",
+          "subQuestions": [
+            {
+              "id": "Q3-a",
+              "label": "(a)",
+              "marks": 1,
+              "questionMdx": "When the event system calls `counter.increment`, what is `this` inside it, and why is it not the `counter` object?",
+              "answerMdx": "`this` is `undefined` (in a module or strict mode; otherwise it would be the global `window`). It is not `counter` because the function is invoked as a plain callback, not as a method of `counter`. `this` is decided by *how* a function is called, and here there is no object before the dot to act as the receiver.",
+              "markingMdx": "1 mark for stating that `this` is `undefined` (or `window`) and that it is not `counter` because the call has no receiver object.",
+              "questionMdxZh": "当事件系统调用 `counter.increment` 时，它内部的 `this` 是什么？为什么不是 `counter` 对象？",
+              "answerMdxZh": "`this` 是 `undefined`（在模块或严格模式下；否则会是全局的 `window`）。它不是 `counter`，因为这个函数是被当作普通回调调用的，而不是作为 `counter` 的方法调用。`this` 取决于函数*如何被调用*，而这里“点号前面”没有对象作为接收者。",
+              "markingMdxZh": "1 分：说明 `this` 是 `undefined`（或 `window`），且因为调用没有接收者对象，所以不是 `counter`。"
+            },
+            {
+              "id": "Q3-b",
+              "label": "(b)",
+              "marks": 2,
+              "questionMdx": "Explain how `addEventListener` later invokes the handler, and why passing `counter.increment` loses the object association while calling `counter.increment()` directly does not.",
+              "answerMdx": "`addEventListener` stores the function and later calls it as `handler(event)` — a plain call with no object in front. A plain call sets `this` to `undefined` (strict) no matter where the function was defined. Only a *method call* like `counter.increment()` binds `this` to the object before the dot. So passing the bare reference copies the function but drops the receiver; the click time call is plain, and `this` is `undefined`, so `this.count` throws.",
+              "markingMdx": "1 mark for explaining that the handler is invoked as a plain call `handler(event)`, with no receiver.\n1 mark for contrasting a plain call (unbound `this`) with a method call `counter.increment()` (binds `this` to `counter`).",
+              "questionMdxZh": "请解释 `addEventListener` 之后是如何调用处理器的？为什么直接把 `counter.increment` 传进去会丢掉对象关联，而直接调用 `counter.increment()` 却不会？",
+              "answerMdxZh": "`addEventListener` 会把函数存起来，之后以 `handler(event)` 的方式调用它——这是一次前面没有对象的普通调用。普通调用会把 `this` 设为 `undefined`（严格模式），无论这个函数原本定义在哪里。只有像 `counter.increment()` 这样的*方法调用*才会把 `this` 绑定到点号前面的对象。所以传入裸露的函数引用只复制了函数、丢掉了接收者；点击时的调用是普通调用，`this` 是 `undefined`，于是 `this.count` 抛错。",
+              "markingMdxZh": "1 分：说明处理器是以 `handler(event)` 的普通调用形式执行的，没有接收者。\n1 分：对比普通调用（`this` 不绑定）与方法调用 `counter.increment()`（把 `this` 绑定到 `counter`）。"
+            },
+            {
+              "id": "Q3-c",
+              "label": "(c)",
+              "marks": 2,
+              "questionMdx": "Give a fix (a wrapper or `bind`) and explain why it restores `this`.",
+              "answerMdx": "Wrap the call: `addEventListener('click', () => counter.increment())`, or bind it once: `addEventListener('click', counter.increment.bind(counter))`. The arrow wrapper runs `counter.increment()` as a method call, so the receiver is `counter` and `this.count` reads the object's property. `.bind(counter)` returns a new function permanently fixed to `counter`, so even the plain callback call runs with `this === counter`. Either way `this` is the counter, not `undefined`.",
+              "markingMdx": "1 mark for a fix using a wrapper arrow `() => counter.increment()` or `counter.increment.bind(counter)`.\n1 mark for explaining that the wrapper makes it a method call / `bind` fixes the receiver, so `this` is the counter.",
+              "questionMdxZh": "请给出一种改法（包一层或 `bind`），并解释它为什么能恢复 `this`。",
+              "answerMdxZh": "把调用包起来：`addEventListener('click', () => counter.increment())`；或绑定一次：`addEventListener('click', counter.increment.bind(counter))`。箭头包装以 `counter.increment()` 的方法调用形式执行，接收者就是 `counter`，因此 `this.count` 能读到对象属性。`.bind(counter)` 返回一个新函数、永久固定到 `counter`，所以哪怕还是普通回调调用，`this` 也等于 `counter`。两种写法都能让 `this` 是计数器，而不是 `undefined`。",
+              "markingMdxZh": "1 分：使用箭头包装 `() => counter.increment()` 或 `counter.increment.bind(counter)` 的改法。\n1 分：说明包装使其成为方法调用、或 `bind` 固定了接收者，因此 `this` 是计数器。"
+            }
+          ],
+          "displayNumber": "Q3",
+          "categoryLabel": "JavaScript and the DOM",
+          "categoryLabelZh": "JavaScript 与 DOM",
+          "displayStyle": "quiz-sample",
+          "mockup": {
+            "files": [
+              {
+                "name": "incrementer.js",
+                "code": "const counter = {\n  count: 0,\n  increment: function () {\n    this.count += 1\n    render(this.count)\n  },\n}\ndocument.querySelector('#inc').addEventListener('click', counter.increment)",
+                "codeZh": "const counter = {\n  count: 0,\n  increment: function () {\n    this.count += 1\n    // 作为回调被调用时，this 不再是 counter\n    render(this.count)\n  },\n}\ndocument.querySelector('#inc').addEventListener('click', counter.increment)"
+              },
+              {
+                "name": "counter.png",
+                "active": true
+              }
+            ],
+            "viewport": "desktop",
+            "html": "<div class=\"exam-ui-shell\"><div class=\"exam-ui-topbar\"><span>Widget</span><span>Counter</span></div><div class=\"exam-ui-body\"><p class=\"exam-ui-page-title\">Counter</p><div class=\"exam-ui-card\"><p class=\"exam-ui-label\">Count</p><p class=\"exam-ui-value exam-ui-danger\">NaN</p></div><div class=\"exam-ui-card\"><span class=\"exam-ui-danger\">Cannot read properties of undefined (reading 'count')</span></div><div class=\"exam-ui-button-row\"><button class=\"exam-ui-button\">+1</button></div></div></div>",
+            "htmlZh": "<div class=\"exam-ui-shell\"><div class=\"exam-ui-topbar\"><span>组件</span><span>计数器</span></div><div class=\"exam-ui-body\"><p class=\"exam-ui-page-title\">计数器</p><div class=\"exam-ui-card\"><p class=\"exam-ui-label\">计数</p><p class=\"exam-ui-value exam-ui-danger\">NaN</p></div><div class=\"exam-ui-card\"><span class=\"exam-ui-danger\">Cannot read properties of undefined（读取 'count'）</span></div><div class=\"exam-ui-button-row\"><button class=\"exam-ui-button\">+1</button></div></div></div>",
+            "caption": "Clicking +1 throws because `this` is no longer the counter object.",
+            "captionZh": "点击 +1 时报错，因为 `this` 不再是计数器对象。"
+          }
+        },
+        {
+          "id": "Q4",
+          "title": "The row click that misses the row",
+          "titleZh": "点不中整行的行点击",
+          "marks": 5,
+          "contentMdx": "A todo list attaches one delegated listener to the `ul` and reads `event.target.dataset.id` to decide which row to delete (see `list.js`), as `todo.png` shows. Clicking the row's padding deletes the right item, but clicking the words (the inner `<span>`) deletes nothing.",
+          "contentMdxZh": "一个待办列表把唯一的监听器委托在 `ul` 上，并读取 `event.target.dataset.id` 来决定删除哪一行（见 `list.js`），如 `todo.png` 所示。点击行的空白处能删对条目，但点击文字（内层 `<span>`）却删不掉任何东西。",
+          "subQuestions": [
+            {
+              "id": "Q4-a",
+              "label": "(a)",
+              "marks": 1,
+              "questionMdx": "Why does clicking directly on the text `Milk` make `event.target.dataset.id` undefined, while clicking the row's padding works?",
+              "answerMdx": "`event.target` is the innermost element the click actually landed on. Clicking the words lands on the inner `<span>`, which has no `data-id`, so `dataset.id` is `undefined` and `removeItem(undefined)` does nothing. Clicking the padding lands on the `<li>` itself, which does carry `data-id`, so the id is read correctly.",
+              "markingMdx": "1 mark for stating that `event.target` is the innermost clicked element (the span), which has no `data-id`, so the id is `undefined`.",
+              "questionMdxZh": "为什么直接点在文字 `Milk` 上会让 `event.target.dataset.id` 变成 `undefined`，而点行的空白处却正常？",
+              "answerMdxZh": "`event.target` 是点击实际落在的最内层元素。点文字时落在内层 `<span>` 上，它没有 `data-id`，所以 `dataset.id` 是 `undefined`，`removeItem(undefined)` 什么都不做。点空白处时落在 `<li>` 本身，它带有 `data-id`，所以能正确读到 id。",
+              "markingMdxZh": "1 分：说明 `event.target` 是实际被点击的最内层元素（span），它没有 `data-id`，于是 id 为 `undefined`。"
+            },
+            {
+              "id": "Q4-b",
+              "label": "(b)",
+              "marks": 2,
+              "questionMdx": "What is the difference between `event.target` and `event.currentTarget` in this listener, and what would each one give if you used its `dataset.id`?",
+              "answerMdx": "`event.target` is the element the user actually interacted with — it changes depending on which child was clicked (the `<li>`, the `<span>`, or the button). `event.currentTarget` is the element the listener is attached to, which here is always the `ul`. So `currentTarget.dataset.id` would read the `ul`'s (absent) id and give `undefined`, while `target.dataset.id` works only when the click happens to land on the `<li>` itself. Neither reliably gives the row, which is why you need to climb from the target to the row.",
+              "markingMdx": "1 mark for defining `target` (actually-clicked element) versus `currentTarget` (element the listener is on, the `ul`).\n1 mark for noting that `currentTarget.dataset.id` would be the `ul`'s id (undefined) and `target.dataset.id` only works when the `<li>` itself is clicked.",
+              "questionMdxZh": "在这个监听器里，`event.target` 和 `event.currentTarget` 有什么区别？如果分别读取它们的 `dataset.id` 会得到什么？",
+              "answerMdxZh": "`event.target` 是用户实际交互的元素——它取决于点到了哪个子元素（`<li>`、`<span>` 还是按钮）。`event.currentTarget` 是监听器所依附的元素，在这里始终是 `ul`。所以 `currentTarget.dataset.id` 读的是 `ul`（没有）的 id，得到 `undefined`；而 `target.dataset.id` 只在点击恰好落在 `<li>` 本身上时才有效。两者都不能可靠地给出那一行，这正是需要从 target 向上找到行的原因。",
+              "markingMdxZh": "1 分：定义 `target`（实际被点的元素）与 `currentTarget`（监听器所在元素，这里是 `ul`）。\n1 分：指出 `currentTarget.dataset.id` 是 `ul` 的 id（undefined），而 `target.dataset.id` 只在点到 `<li>` 本身时有效。"
+            },
+            {
+              "id": "Q4-c",
+              "label": "(c)",
+              "marks": 2,
+              "questionMdx": "Give a robust fix, and explain why keeping the listener on the parent also survives rows being added or removed.",
+              "answerMdx": "Climb from the clicked node to the row: `const row = event.target.closest('li'); if (!row) return; removeItem(row.dataset.id)`. `closest('li')` walks up the ancestors until it finds the nearest `<li>`, so it works whether the user clicked the span, the button, or the row itself. Because the listener lives on the `ul` (delegation), rows can be added or deleted freely and still respond — there is no per-row listener that gets orphaned when a row is removed, which is exactly the failure mode of attaching listeners directly to nodes that are later replaced.",
+              "markingMdx": "1 mark for using `event.target.closest('li')` (or equivalent) to find the row and reading its `data-id`.\n1 mark for explaining that delegation keeps working as rows are added/removed, unlike per-row listeners that are lost with the node.",
+              "questionMdxZh": "请给出一个稳妥的改法，并说明为什么把监听器留在父元素上也能应对行的增删。",
+              "answerMdxZh": "从被点的节点向上找到整行：`const row = event.target.closest('li'); if (!row) return; removeItem(row.dataset.id)`。`closest('li')` 会沿祖先链向上查找最近的 `<li>`，所以无论用户点的是 span、按钮还是整行本身都能命中。由于监听器在 `ul` 上（委托），行可以随意增删并依然响应——不存在随行被删除而失效的“单行监听器”，而这正是把监听器直接绑到随后被替换的节点上时的失效模式。",
+              "markingMdxZh": "1 分：用 `event.target.closest('li')`（或等价写法）找到整行并读取其 `data-id`。\n1 分：说明委托在行增删时依然有效，而不像逐行监听器那样随节点一起丢失。"
+            }
+          ],
+          "displayNumber": "Q4",
+          "categoryLabel": "JavaScript and the DOM",
+          "categoryLabelZh": "JavaScript 与 DOM",
+          "displayStyle": "quiz-sample",
+          "mockup": {
+            "files": [
+              {
+                "name": "list.js",
+                "code": "document.querySelector('#list').addEventListener('click', (event) => {\n  const id = event.target.dataset.id\n  removeItem(id)\n})",
+                "codeZh": "document.querySelector('#list').addEventListener('click', (event) => {\n  // 点到内层 span 时，target 不是 li\n  const id = event.target.dataset.id\n  removeItem(id)\n})"
+              },
+              {
+                "name": "todo.png",
+                "active": true
+              }
+            ],
+            "viewport": "desktop",
+            "html": "<div class=\"exam-ui-shell\"><div class=\"exam-ui-topbar\"><span>Todos</span><span>Today</span></div><div class=\"exam-ui-body\"><p class=\"exam-ui-page-title\">Today</p><ul class=\"exam-ui-list\"><li class=\"exam-ui-list-row\" data-id=\"1\"><span>Milk</span> <button class=\"exam-ui-button-secondary\">Delete</button></li><li class=\"exam-ui-list-row\" data-id=\"2\"><span>Bread</span> <button class=\"exam-ui-button-secondary\">Delete</button></li></ul><p class=\"exam-ui-muted\">Clicking the words does not delete the row</p></div></div>",
+            "htmlZh": "<div class=\"exam-ui-shell\"><div class=\"exam-ui-topbar\"><span>待办</span><span>今天</span></div><div class=\"exam-ui-body\"><p class=\"exam-ui-page-title\">今天</p><ul class=\"exam-ui-list\"><li class=\"exam-ui-list-row\" data-id=\"1\"><span>牛奶</span> <button class=\"exam-ui-button-secondary\">删除</button></li><li class=\"exam-ui-list-row\" data-id=\"2\"><span>面包</span> <button class=\"exam-ui-button-secondary\">删除</button></li></ul><p class=\"exam-ui-muted\">点击文字无法删除该行</p></div></div>",
+            "caption": "Clicking the word (the inner span) fails to find the row's id.",
+            "captionZh": "点击文字（内层 span）时找不到该行的 id。"
+          }
+        },
+        {
+          "id": "Q5",
+          "title": "A welcome message that flashes",
+          "titleZh": "一闪而过的欢迎信息",
+          "marks": 5,
+          "contentMdx": "A sign-up form shows a welcome message when submitted, but it only flashes before the page reloads and clears it (see `signup.js`). The form's name field also has no validation, and `form.png` shows the field with the name typed in.",
+          "contentMdxZh": "一个注册表单在提交时显示欢迎信息，但信息只一闪就被重载清空了（见 `signup.js`）。表单的姓名字段也没有任何校验，`form.png` 展示了已经填好名字的输入框。",
+          "subQuestions": [
+            {
+              "id": "Q5-a",
+              "label": "(a)",
+              "marks": 1,
+              "questionMdx": "Why does the `Welcome, Sam` message flash and then disappear when the form is submitted?",
+              "answerMdx": "The submit event has a default action: the browser sends the form and navigates — by default back to the same page — which reloads the document. The handler runs and writes the message, but as soon as it returns the reload replaces the whole page, wiping the message. The user only ever sees a flicker.",
+              "markingMdx": "1 mark for stating that the form's default submit action reloads the page, which wipes the just-written message.",
+              "questionMdxZh": "为什么表单提交时 `Welcome, Sam` 会一闪后就消失？",
+              "answerMdxZh": "submit 事件有默认行为：浏览器会提交表单并导航——默认回到同一页面——从而重新加载文档。处理器确实运行并写入了信息，但它一返回，重载就把整个页面替换掉、把信息抹去。用户只会看到一闪。",
+              "markingMdxZh": "1 分：说明表单默认的提交行为会重载页面，从而清掉刚写入的信息。"
+            },
+            {
+              "id": "Q5-b",
+              "label": "(b)",
+              "marks": 2,
+              "questionMdx": "Explain the browser's default submit behaviour and how `event.preventDefault()` stops it, including what happens to the value the user typed.",
+              "answerMdx": "When a `type=\"submit\"` button is clicked (or Enter is pressed in a field), the browser first fires `submit`; unless a handler calls `event.preventDefault()`, it then performs the default: it serialises the form's controls and navigates to the `action` URL (defaulting to the current page), reloading it. `preventDefault()` cancels that navigation, so the page stays as it is and the message remains. The typed value is lost only *because* of the reload — the fresh page is built from the server, so the input starts empty again. Keeping the page avoids that, and the value stays in the live DOM.",
+              "markingMdx": "1 mark for explaining the default submit: the browser serialises the form and navigates/reloads unless prevented.\n1 mark for explaining that `preventDefault()` cancels the navigation so the message persists, and that the typed value is only lost because of the reload.",
+              "questionMdxZh": "请解释浏览器默认的提交行为，以及 `event.preventDefault()` 如何阻止它，并说明用户输入的值会怎样。",
+              "answerMdxZh": "当 `type=\"submit\"` 按钮被点击（或在字段里按回车）时，浏览器先触发 `submit`；除非某个处理器调用 `event.preventDefault()`，否则它会执行默认行为：序列化表单控件并导航到 `action` 指定的 URL（默认是当前页面），从而重新加载。`preventDefault()` 会取消这次导航，于是页面保持原样、信息得以保留。输入的值之所以丢失，正是因为这次重载——新页面由服务器重新构建，输入框自然又是空的。让页面不重载就能避免这一点，值也留在实时 DOM 中。",
+              "markingMdxZh": "1 分：解释默认提交——浏览器会序列化表单并导航 / 重载，除非被阻止。\n1 分：说明 `preventDefault()` 取消导航使信息得以保留，且输入值只因重载而丢失。"
+            },
+            {
+              "id": "Q5-c",
+              "label": "(c)",
+              "marks": 2,
+              "questionMdx": "The developer wants an empty field to be blocked with no JavaScript. What HTML attribute does that, and what does the user see when they submit with the box empty? Then add the `preventDefault` fix to the handler.",
+              "answerMdx": "Add the `required` attribute to the field: `<input id=\"name\" type=\"text\" required>`. With the box empty, the browser's built-in constraint validation blocks the submission *before* the `submit` handler runs and shows a bubble such as \"Please fill out this field\", so no welcome message appears. To keep the message from being wiped on a valid submit, add `event.preventDefault()` at the top of the handler (and make the listener take the `event` parameter), so the page no longer reloads.",
+              "markingMdx": "1 mark for adding `required` (or an equivalent native constraint) and stating that the browser blocks submission and shows a validation message.\n1 mark for adding `event.preventDefault()` in the handler so a valid submit no longer reloads the page.",
+              "questionMdxZh": "开发者希望在不写 JavaScript 的情况下阻止空字段提交。应该加哪个 HTML 属性？当输入框为空时用户提交会看到什么？再给处理器补上 `preventDefault` 的修复。",
+              "answerMdxZh": "给字段加 `required` 属性：`<input id=\"name\" type=\"text\" required>`。当输入框为空时，浏览器内置的约束校验会在 `submit` 处理器执行*之前*就阻止提交，并弹出类似 “Please fill out this field” 的提示，因此不会出现欢迎信息。为了让合法提交时信息不再被抹掉，在处理器顶部加上 `event.preventDefault()`（并让监听器接收 `event` 参数），页面就不再重载了。",
+              "markingMdxZh": "1 分：加上 `required`（或等价的原生约束），并说明浏览器会阻止提交、显示校验提示。\n1 分：在处理器里加上 `event.preventDefault()`，让合法提交不再重载页面。"
+            }
+          ],
+          "displayNumber": "Q5",
+          "categoryLabel": "JavaScript and the DOM",
+          "categoryLabelZh": "JavaScript 与 DOM",
+          "displayStyle": "quiz-sample",
+          "mockup": {
+            "files": [
+              {
+                "name": "signup.js",
+                "code": "form.addEventListener('submit', () => {\n  const name = input.value\n  status.textContent = 'Welcome, ' + name\n})",
+                "codeZh": "// 缺少 event.preventDefault()\nform.addEventListener('submit', () => {\n  const name = input.value\n  status.textContent = 'Welcome, ' + name\n})"
+              },
+              {
+                "name": "form.png",
+                "active": true
+              }
+            ],
+            "viewport": "desktop",
+            "html": "<div class=\"exam-ui-shell\"><div class=\"exam-ui-topbar\"><span>App</span><span>Sign up</span></div><div class=\"exam-ui-body\"><p class=\"exam-ui-page-title\">Sign up</p><div class=\"exam-ui-card\"><div class=\"exam-ui-stack\"><label class=\"exam-ui-label\">Name</label><input class=\"exam-ui-input\" value=\"Sam\"><div class=\"exam-ui-form-actions\"><button class=\"exam-ui-button\">Sign up</button></div></div></div><p class=\"exam-ui-muted\">Welcome, Sam</p></div></div>",
+            "htmlZh": "<div class=\"exam-ui-shell\"><div class=\"exam-ui-topbar\"><span>应用</span><span>注册</span></div><div class=\"exam-ui-body\"><p class=\"exam-ui-page-title\">注册</p><div class=\"exam-ui-card\"><div class=\"exam-ui-stack\"><label class=\"exam-ui-label\">姓名</label><input class=\"exam-ui-input\" value=\"Sam\"><div class=\"exam-ui-form-actions\"><button class=\"exam-ui-button\">注册</button></div></div></div><p class=\"exam-ui-muted\">Welcome, Sam</p></div></div>",
+            "caption": "The welcome message flashes, then the page reloads and clears it.",
+            "captionZh": "欢迎信息一闪而过，随后页面重载把它清空。"
+          }
+        },
+        {
+          "id": "Q6",
+          "title": "Notes that do not survive a reload",
+          "titleZh": "撑不过刷新的笔记",
+          "marks": 5,
+          "contentMdx": "A notes app reads `localStorage.getItem('notes')` and immediately calls `.map` / `.filter` on it (see `store.js`). On the first visit the list crashes, and saved notes never come back correctly, as `notes.png` shows a `notes.map is not a function` error.",
+          "contentMdxZh": "一个笔记应用读取 `localStorage.getItem('notes')` 后立刻对它调用 `.map` / `.filter`（见 `store.js`）。首次访问时列表就崩溃，已保存的笔记也总是无法正确恢复，如 `notes.png` 所示，报出 `notes.map is not a function` 错误。",
+          "subQuestions": [
+            {
+              "id": "Q6-a",
+              "label": "(a)",
+              "marks": 1,
+              "questionMdx": "On the very first visit, what does `localStorage.getItem('notes')` return, and why does calling `.map` on it throw?",
+              "answerMdx": "It returns `null`, because nothing has been stored under that key yet (on later visits it returns the stored *string*). `null` has no `map` method — and neither does a string — so `null.map(...)` throws `TypeError: notes.map is not a function`. `localStorage` never hands back an array, so array methods must be applied only after the text is turned back into an array.",
+              "markingMdx": "1 mark for stating that `getItem` returns `null` on the first visit (a string afterwards) and that neither has a `map` method, so it throws.",
+              "questionMdxZh": "在首次访问时，`localStorage.getItem('notes')` 返回什么？为什么对它调用 `.map` 会抛错？",
+              "answerMdxZh": "它返回 `null`，因为此前没有任何东西存到这个键下（之后的访问会返回所存的*字符串*）。`null` 没有 `map` 方法——字符串也没有——所以 `null.map(...)` 抛出 `TypeError: notes.map is not a function`。`localStorage` 从不会返回数组，因此必须先把这个文本变回数组，才能对它用数组方法。",
+              "markingMdxZh": "1 分：说明首次访问时 `getItem` 返回 `null`（之后返回字符串），二者都没有 `map` 方法，所以会抛错。"
+            },
+            {
+              "id": "Q6-b",
+              "label": "(b)",
+              "marks": 2,
+              "questionMdx": "The app saves with `localStorage.setItem('notes', list)`, passing the array directly. Why does that break persistence, and how do `JSON.stringify` / `JSON.parse` fix it?",
+              "answerMdx": "`localStorage` stores *strings only*, so passing an array makes the browser coerce it with `toString()`. For an array of objects you get `\"[object Object],[object Object]\"`, which has lost every field — the notes are unrecoverable. `JSON.stringify(list)` instead serialises the array into real JSON text that preserves the structure, and on load `JSON.parse(localStorage.getItem('notes'))` turns that text back into an array of objects. The pair works because JSON is a text format that round-trips objects, while `toString()` is lossy.",
+              "markingMdx": "1 mark for explaining that `setItem` coerces non-strings with `toString()`, destroying the array's structure (`[object Object]`).\n1 mark for explaining that `JSON.stringify` stores structured text and `JSON.parse` restores the array so it can be used again.",
+              "questionMdxZh": "应用用 `localStorage.setItem('notes', list)` 保存，直接把数组传了进去。为什么这会破坏持久化？`JSON.stringify` / `JSON.parse` 又如何修复它？",
+              "answerMdxZh": "`localStorage` *只存字符串*，所以传入数组会让浏览器用 `toString()` 强制转换。对于对象数组你会得到 `\"[object Object],[object Object]\"`，每个字段都丢了——笔记无法恢复。而 `JSON.stringify(list)` 会把数组序列化成真正的 JSON 文本、保留结构；加载时 `JSON.parse(localStorage.getItem('notes'))` 再把这文本还原成对象数组。二者能奏效，是因为 JSON 是一种能完整往返对象的文本格式，而 `toString()` 是有损的。",
+              "markingMdxZh": "1 分：说明 `setItem` 会用 `toString()` 强制转换非字符串，破坏数组结构（变成 `[object Object]`）。\n1 分：说明 `JSON.stringify` 存结构化文本、`JSON.parse` 还原数组以便再次使用。"
+            },
+            {
+              "id": "Q6-c",
+              "label": "(c)",
+              "marks": 2,
+              "questionMdx": "Write a correct load → filter → render → save round-trip using array methods, and explain why the order and the guard matter.",
+              "answerMdx": "Load with a guard, then use array methods, then serialise on save:\n`const raw = localStorage.getItem('notes');`\n`const notes = raw ? JSON.parse(raw) : [];`\n`render(notes.filter(n => !n.done).map(n => n.text));`\n`save: localStorage.setItem('notes', JSON.stringify(notes));`\nThe order matters because you must *parse the stored text into an array before* calling `.filter` / `.map` (otherwise you are calling array methods on `null` / a string), and you must `JSON.stringify` an array *before* storing it (otherwise it is coerced lossily). The `raw ? ... : []` guard handles the empty first-visit case, so the app starts with an empty array instead of crashing.",
+              "markingMdx": "1 mark for a correct round-trip: parse with a default (`raw ? JSON.parse(raw) : []`), then use `.filter` / `.map`, and `JSON.stringify` on save.\n1 mark for explaining why parse must come before the array methods and stringify before storing, and why the guard avoids the `null` crash.",
+              "questionMdxZh": "请用数组方法写出一段正确的 读取 → 过滤 → 渲染 → 保存 往返流程，并说明顺序和守卫为什么重要。",
+              "answerMdxZh": "带守卫地读取，随后使用数组方法，保存时再序列化：\n`const raw = localStorage.getItem('notes');`\n`const notes = raw ? JSON.parse(raw) : [];`\n`render(notes.filter(n => !n.done).map(n => n.text));`\n`保存：localStorage.setItem('notes', JSON.stringify(notes));`\n顺序之所以重要，是因为必须先*把存储的文本解析成数组、再*调用 `.filter` / `.map`（否则就是在对 `null` / 字符串调用数组方法），并且必须在存储*之前*把数组 `JSON.stringify`（否则会被有损地强制转换）。`raw ? ... : []` 这个守卫处理了首次访问为空的情况，让应用从空数组开始，而不是崩溃。",
+              "markingMdxZh": "1 分：写出正确的往返流程——带默认值地解析（`raw ? JSON.parse(raw) : []`），再用 `.filter` / `.map`，保存时 `JSON.stringify`。\n1 分：说明解析必须在数组方法之前、序列化必须在存储之前，以及守卫如何避免 `null` 崩溃。"
+            }
+          ],
+          "displayNumber": "Q6",
+          "categoryLabel": "JavaScript and the DOM",
+          "categoryLabelZh": "JavaScript 与 DOM",
+          "displayStyle": "quiz-sample",
+          "mockup": {
+            "files": [
+              {
+                "name": "store.js",
+                "code": "const notes = localStorage.getItem('notes')  // a string, or null\nrender(notes.map(n => n.text))               // TypeError\n\nfunction save(list) {\n  localStorage.setItem('notes', list)        // array coerced to a string\n}",
+                "codeZh": "const notes = localStorage.getItem('notes')  // 字符串或 null，不是数组\nrender(notes.map(n => n.text))               // TypeError: map is not a function\n\nfunction save(list) {\n  localStorage.setItem('notes', list)        // 数组被强转成字符串\n}"
+              },
+              {
+                "name": "notes.png",
+                "active": true
+              }
+            ],
+            "viewport": "desktop",
+            "html": "<div class=\"exam-ui-shell\"><div class=\"exam-ui-topbar\"><span>Notes</span><span>All</span></div><div class=\"exam-ui-body\"><p class=\"exam-ui-page-title\">Notes</p><div class=\"exam-ui-card\"><span class=\"exam-ui-danger\">notes.map is not a function</span></div><p class=\"exam-ui-muted\">No notes could be loaded from storage</p></div></div>",
+            "htmlZh": "<div class=\"exam-ui-shell\"><div class=\"exam-ui-topbar\"><span>笔记</span><span>全部</span></div><div class=\"exam-ui-body\"><p class=\"exam-ui-page-title\">笔记</p><div class=\"exam-ui-card\"><span class=\"exam-ui-danger\">notes.map is not a function</span></div><p class=\"exam-ui-muted\">无法从存储中加载任何笔记</p></div></div>",
+            "caption": "The list crashes on reload because the stored value is read as a string.",
+            "captionZh": "重新加载时列表崩溃，因为读到的存储值是一个字符串。"
+          }
+        }
+      ]
+    }
+  ]
+}

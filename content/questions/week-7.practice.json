@@ -343,6 +343,265 @@
       ],
       "images": [],
       "createdAt": "2026-11-08"
+    },
+    {
+      "id": "TOPIC5-Q4",
+      "topic": "react",
+      "weeks": [
+        "week-7"
+      ],
+      "difficulty": "medium",
+      "tags": [
+        "专题卷5",
+        "React",
+        "JSX",
+        "声明式渲染"
+      ],
+      "question": "一张帖子卡片的点赞按钮，第一版（`App.js`）的处理函数用 `document.querySelector('.likes')` 直接操作 DOM 并改写 `textContent`，重渲染后计数又会 “弹回原样”。请说明浏览器渲染像 `<button className=\"like\">{likes}</button>` 这样的 JSX 时实际运行的是什么、命令式直接写 DOM 为什么会与 React 冲突，并把点赞按钮改写成能与 React 协作的声明式写法（展示 state 与处理函数）。",
+      "knowledgePoint": "声明式渲染与 JSX",
+      "answerExplanation": "浏览器并不认识 JSX，构建步骤会把它编译成普通的函数调用，例如 `React.createElement('button', { className: 'like' }, likes)`，返回一个普通的 JavaScript 对象，React 之后用这个对象构建真正的 DOM——所以 JSX 只是元素对象的可读简写，而不是 HTML。冲突的根源是 React 拥有 DOM：每次渲染它都从 state 推导出新的元素树，并假设自己是唯一的写入者；直接修改 `textContent` 是在 React 背后动 DOM，于是 React 的模型与真实 DOM 不再一致，下一次渲染 React 会把它认为正确的值重新写回去，覆盖掉手动改动，按钮看起来就 “弹回原样”——两个写入者（命令式代码与声明式重渲染）改同一个节点正是冲突之源。声明式改法：把计数放进 state，让渲染从中派生文本，`const [likes, setLikes] = useState(12); const like = () => setLikes(likes + 1); return <button className=\"like\" onClick={like}>{likes}</button>`；点击调用处理函数，React 更新 state 并带着新数字重渲染按钮，没有任何直接操作 DOM 的地方，state 成为唯一数据源，不会与显示漂移。",
+      "codeBlocks": [
+        {
+          "language": "jsx",
+          "code": "function LikeButton() {\n  const [likes, setLikes] = useState(12)\n  const like = () => setLikes(likes + 1)\n  return (\n    <button className=\"like\" onClick={like}>\n      {likes}\n    </button>\n  )\n}"
+        }
+      ],
+      "images": [],
+      "createdAt": "2026-11-21"
+    },
+    {
+      "id": "TOPIC5-Q5",
+      "topic": "react",
+      "weeks": [
+        "week-7"
+      ],
+      "difficulty": "hard",
+      "tags": [
+        "专题卷5",
+        "React",
+        "useState",
+        "列表 key"
+      ],
+      "question": "一个页面上有两个互相独立的计数器，各自带一个按钮（`App.js`），但按下任意一个按钮，两个计数器下面显示的数字都会变；下方还有一个待办列表，行会重新排序，某一行移动后，用户在该行输入框里打的字会留在错误的那一行。请分别解释这两个现象的成因，并给出两个 bug 的修法。",
+      "knowledgePoint": "React 状态与渲染",
+      "answerExplanation": "两个计数器渲染的是同一份 state：计数只声明了一次（一个 `const [count, setCount] = useState(0)` 被两处显示同时读取），所以只有一个值，`setCount` 更新这唯一的 state，凡是读它的地方都会带着新值重渲染——它们并不独立，因为没有各自拥有自己的 state。修法：让每个计数器拥有自己的 state，写两个独立的 `useState`，或（更好）抽出一个自包含的 `<Counter />` 组件持有自己的 `const [count, setCount] = useState(0)`。列表错位的成因是 `key={index}`：React 用 key 判断新旧子树里哪些是同一个组件实例，以便复用并保留其本地 state；用位置下标做 key 跟踪的是位置而不是条目，移动后下标 0 指向了另一个条目，但 React 仍把那个位置当成同一个实例，保留了输入框的本地文字，于是数据移动而文字留在旧位置，看起来就是 “错位”。修法：给每一行一个来自数据的稳定唯一 key，用 `key={item.id}` 取代 `key={index}`，这样移动后的行仍能匹配到同一条数据，输入框也保留正确的文字。",
+      "codeBlocks": [
+        {
+          "language": "jsx",
+          "code": "function App() {\n  // 两个计数器读同一份 count\n  const [count, setCount] = useState(0)\n  return (\n    <div>\n      <button onClick={() => setCount(count + 1)}>Plus A</button>\n      <button onClick={() => setCount(count + 1)}>Plus B</button>\n      <p>Count: {count}</p>\n      <ul>\n        {items.map((item, index) => (\n          <Row key={index} item={item} /> // 用下标当 key\n        ))}\n      </ul>\n    </div>\n  )\n}"
+        }
+      ],
+      "images": [],
+      "createdAt": "2026-11-21"
+    },
+    {
+      "id": "TOPIC5-Q6",
+      "topic": "react",
+      "weeks": [
+        "week-7"
+      ],
+      "difficulty": "hard",
+      "tags": [
+        "专题卷5",
+        "React",
+        "useEffect",
+        "清理",
+        "setInterval"
+      ],
+      "question": "一个计时器组件在 `useEffect` 里用 `setInterval` 设置定时器（`App.js`），该 effect 没有清理函数，而回调读取的是 effect 运行那一次渲染里的 `count`。结果时钟的数字每次跳变都大于 1，而且组件被移除后定时器还在继续运行。请解释数字跳变大于 1 的成因、回调使用的值为什么可能是过期的，并给出改法，使只有一个定时器、在卸载时停止、且每次 tick 都基于最新值。",
+      "knowledgePoint": "React 副作用与数据流",
+      "answerExplanation": "跳变大于 1，是因为 effect 每次重新运行都会新建一个定时器，而旧的定时器因为缺少清理函数从未被清除；同一时间有多个定时器存活，每个仍在调用 `setCount`，一次 tick 可能由其中多个同时触发，数字就跳 2 甚至更多，而不是加 1。回调的值会过期，是因为 effect 运行时注册了一个回调，这个闭包捕获了那一次渲染的 `count`；由于该 effect 不依赖 `count`（空依赖数组），回调不会被重新创建，于是一直读取最初捕获的那个值，而不是最新的 state，每次 tick 都基于过时的 `count` 计算。改法：返回一个清理函数并改用函数式更新——`useEffect(() => { const id = setInterval(() => setCount(prev => prev + 1), 1000); return () => clearInterval(id); }, [])`。返回 `() => clearInterval(id)` 会在组件卸载时停掉这唯一的定时器；函数式更新 `setCount(prev => prev + 1)` 让每次 tick 都基于最新值计算，不再需要读取可能过期的值。",
+      "codeBlocks": [
+        {
+          "language": "jsx",
+          "code": "function Timer() {\n  const [count, setCount] = useState(0)\n  useEffect(() => {\n    // 没有清理函数；回调捕获了初始的 count\n    setInterval(() => setCount(count + 1), 1000)\n  }, [])\n  return <p>{count}</p>\n}"
+        }
+      ],
+      "images": [],
+      "createdAt": "2026-11-21"
+    },
+    {
+      "id": "SPRINT2-Q1",
+      "topic": "react",
+      "weeks": [
+        "week-7"
+      ],
+      "difficulty": "medium",
+      "tags": [
+        "冲刺卷",
+        "Quiz3",
+        "React",
+        "声明式渲染",
+        "JSX"
+      ],
+      "question": "购物车页面显示实时总价。第一版的处理函数这样写：\n```jsx\nfunction Cart() {\n  const [total, setTotal] = useState(15)\n  function addItem(price) {\n    setTotal(total + price)\n    const el = document.querySelector('.total')\n    el.textContent = '$' + (total + price)\n  }\n  return <span className=\"total\">{total}</span>\n}\n```\n点按钮后总价会短暂变化，但随后一次重渲染又把它弹回旧值。请说明 (1) 像 `<span className=\"total\">{total}</span>` 这样的 JSX 实际会变成什么、为什么它不是 HTML；(2) 为什么直接写 DOM 会与 React 冲突；(3) 请把总价改成完全声明式的写法。",
+      "knowledgePoint": "声明式渲染与 JSX：React 拥有 DOM，命令式写 DOM 会被重渲染覆盖",
+      "answerExplanation": "JSX 不是 HTML，构建步骤会把它编译成函数调用（如 `React.createElement('span', { className: 'total' }, total)`），返回一个普通对象，React 再用它生成并更新真实 DOM。React 每次渲染都从 state 推导出元素树，并默认自己是 DOM 的唯一写入者；处理器既调用 setTotal 又手动写 textContent，手动写绕过了 React，使模型与真实 DOM 失同步，下一次渲染又把它认为正确的值写回去，于是数字“弹回”。正确做法是让 state 成为唯一数据源：`const [total, setTotal] = useState(15)`，处理器只调用 `setTotal(total + price)`，渲染时用 `{total}`，全程不碰 DOM。",
+      "codeBlocks": [
+        {
+          "language": "jsx",
+          "code": "function Cart() {\n  const [total, setTotal] = useState(15)\n  function addItem(price) {\n    setTotal(total + price)\n  }\n  return <span className=\"total\">{total}</span>\n}"
+        }
+      ],
+      "images": [],
+      "createdAt": "2026-11-21"
+    },
+    {
+      "id": "SPRINT2-Q2",
+      "topic": "react",
+      "weeks": [
+        "week-7"
+      ],
+      "difficulty": "medium",
+      "tags": [
+        "冲刺卷",
+        "Quiz3",
+        "React",
+        "列表",
+        "key"
+      ],
+      "question": "评论列表每一行都有自己的输入框，列表用 `key={index}` 渲染：\n```jsx\n{comments.map((comment, index) => (\n  <Comment key={index} comment={comment} />\n))}\n```\n删除第一条评论后，剩余输入框里的文字整体往下错了一行。请说明 (1) `key` 的作用、React 在重渲染时用它决定什么；(2) 为什么用下标 `index` 做 key 会导致文字错位；(3) 给出修法。",
+      "knowledgePoint": "React 列表 key：key 标识条目身份，用来复用组件实例并保留本地 state",
+      "answerExplanation": "`key` 是 React 为每个列表项附加的稳定身份，用来在协调时把新旧子节点一一对应，从而决定哪些是“同一个”可以复用并保留其本地 state（如输入框文字）。下标 key 标识的是位置而不是条目：删除第一条后，每个下标对应的数据都变了，但 key 仍是 0、1、2……，React 认为每个位置的实例没变，就沿用了旧实例（连同其中已输入的文字），于是文字看起来往下错位。修法是改用来自数据的稳定唯一 key，例如 `key={comment.id}`，让输入框跟着条目走。",
+      "codeBlocks": [
+        {
+          "language": "jsx",
+          "code": "{comments.map((comment) => (\n  <Comment key={comment.id} comment={comment} />\n))}"
+        }
+      ],
+      "images": [],
+      "createdAt": "2026-11-21"
+    },
+    {
+      "id": "SPRINT2-Q3",
+      "topic": "react",
+      "weeks": [
+        "week-7"
+      ],
+      "difficulty": "medium",
+      "tags": [
+        "冲刺卷",
+        "Quiz3",
+        "React",
+        "useState",
+        "批处理"
+      ],
+      "question": "一个标着 “+3” 的按钮，处理器连续三次调用 setCount：\n```jsx\nfunction addThree() {\n  setCount(count + 1)\n  setCount(count + 1)\n  setCount(count + 1)\n}\n```\n点一次却只加了 1。请说明 (1) 为什么三次调用没有加三；(2) React 的批处理机制、以及为什么后面的调用看不到前面的调用；(3) 给出让点一次真加三的改法。",
+      "knowledgePoint": "useState 与批处理：state 是每次渲染的常量，函数式更新才能串联",
+      "answerExplanation": "`count` 是本次渲染运行时捕获的常量，三次调用读到的都是同一个 `count`，每次都算出同一个新值（`count + 1`），所以结果只加了一次。React 会把同一个事件处理器内的所有更新批处理、最后只重渲染一次；而 setCount 只是“安排”一个新值，不会改变当前渲染里的 count 变量，因此后面的调用根本看不到前面调用产生的值。改用函数式更新 `setCount(c => c + 1)`，React 会把三个更新函数排队并依次应用，每个都拿到上一个的结果，点一次就从 0 → 1 → 2 → 3。",
+      "codeBlocks": [
+        {
+          "language": "jsx",
+          "code": "function addThree() {\n  setCount(c => c + 1)\n  setCount(c => c + 1)\n  setCount(c => c + 1)\n}"
+        }
+      ],
+      "images": [],
+      "createdAt": "2026-11-21"
+    },
+    {
+      "id": "SPRINT2-Q4",
+      "topic": "react",
+      "weeks": [
+        "week-7"
+      ],
+      "difficulty": "hard",
+      "tags": [
+        "冲刺卷",
+        "Quiz3",
+        "React",
+        "useEffect",
+        "依赖数组"
+      ],
+      "question": "个人主页在 URL 的 id 变化时想重新获取用户，但 effect 用了空依赖数组：\n```jsx\nconst { id } = useParams()\nuseEffect(() => {\n  fetch('/api/users/' + id).then(r => r.json()).then(setUser)\n}, [])\n```\n先打开 /users/1 再打开 /users/2，一直显示用户 1。后来有人把一个每次渲染都新建的选项对象放进依赖数组，请求又开始无限触发。请说明 (1) 为什么空依赖数组会让数据过期；(2) 为什么内联对象依赖会导致无限循环；(3) 给出正确的依赖列表。",
+      "knowledgePoint": "useEffect 依赖数组：空数组只跑一次；对象依赖按引用比较会每次都被判为变化",
+      "answerExplanation": "空依赖数组表示该 effect 没有输入，只在首次渲染后运行一次，fetch 捕获的是第一个 id，路由换成用户 2 时组件虽重渲染，但依赖没变，effect 不重新运行，state 仍是用户 1 的数据，于是过期。React 按引用（Object.is）比较依赖：内联对象字面量每次渲染都是新对象，引用永远不同，effect 每次都重跑，若其中调用 setter 就触发重渲染，重渲染又生成新对象，如此循环。正确做法是依赖真正会变化的原始值 `[id]`；若确实需要对象，则列出其原始字段或使用 useMemo 稳定引用。",
+      "codeBlocks": [
+        {
+          "language": "jsx",
+          "code": "useEffect(() => {\n  fetch('/api/users/' + id).then(r => r.json()).then(setUser)\n}, [id])"
+        }
+      ],
+      "images": [],
+      "createdAt": "2026-11-21"
+    },
+    {
+      "id": "SPRINT2-Q5",
+      "topic": "react",
+      "weeks": [
+        "week-7"
+      ],
+      "difficulty": "medium",
+      "tags": [
+        "冲刺卷",
+        "Quiz3",
+        "React",
+        "useEffect",
+        "清理函数"
+      ],
+      "question": "工具栏在 effect 里监听窗口缩放，但没有返回清理函数：\n```jsx\nuseEffect(() => {\n  const onResize = () => setWidth(window.innerWidth)\n  window.addEventListener('resize', onResize)\n}, [])\n```\n访问页面几次后，一次缩放会把宽度打印好几遍，并出现“在已卸载组件上更新 state”的警告。请说明 (1) effect 不返回清理函数会发生什么；(2) 为什么一次缩放会打印好几遍；(3) 给出修法（含代码）。",
+      "knowledgePoint": "useEffect 清理函数：建立监听 / 定时器后必须返回清理函数来拆除",
+      "answerExplanation": "effect 没有返回清理函数时，它建立的任何东西（事件监听、定时器、订阅、连接）都不会被撤销，会在页面余下的生命周期里一直存活，即便组件卸载或 effect 重新运行也一样。effect 每次运行都会再 addEventListener 挂一个监听器，旧监听器从未被移除，运行 N 次就有 N 个监听器，一次缩放事件会触发全部，于是宽度被打印 N 遍；卸载后回调仍调用 setWidth，就触发那条警告。修法是返回清理函数：`return () => window.removeEventListener('resize', onResize)`，React 会在下次运行前和卸载时调用它，保证始终只有一个监听器。",
+      "codeBlocks": [
+        {
+          "language": "jsx",
+          "code": "useEffect(() => {\n  const onResize = () => setWidth(window.innerWidth)\n  window.addEventListener('resize', onResize)\n  return () => window.removeEventListener('resize', onResize)\n}, [])"
+        }
+      ],
+      "images": [],
+      "createdAt": "2026-11-21"
+    },
+    {
+      "id": "SPRINT2-Q6",
+      "topic": "react",
+      "weeks": [
+        "week-7"
+      ],
+      "difficulty": "medium",
+      "tags": [
+        "冲刺卷",
+        "Quiz3",
+        "React",
+        "React Router",
+        "useParams"
+      ],
+      "question": "路由声明为 `/users/:id`，但组件读取参数时用了另一个名字：\n```jsx\nconst { userId } = useParams()\nfetch('/api/users/' + userId)   // 得到 /api/users/undefined\n```\n页面总是请求 /api/users/undefined 并显示“未找到”。请说明 (1) useParams() 返回什么、为什么 userId 是 undefined；(2) 为什么请求会变成 /api/users/undefined 并 404；(3) 给出修法。",
+      "knowledgePoint": "React Router 路由参数：useParams 的键名必须与路径中 :段名 一致",
+      "answerExplanation": "useParams() 返回一个对象，包含匹配到的 URL 里的动态段，键名就是路由路径中 `:` 后面的段名。这里路径是 `/users/:id`，所以对象是 `{ id: '42' }`，键为 `id`；而解构 `userId` 读的是一个不存在的键，得到 undefined。于是模板字符串拼出 `/api/users/undefined`，服务器没有这个用户就返回 404，页面渲染“未找到”。真实的 id 一直在 `params.id` 里，只是组件读错了键。修法是解构正确的键 `const { id } = useParams()`（或把路由段改名为 `:userId`），并在请求里使用它。",
+      "codeBlocks": [
+        {
+          "language": "jsx",
+          "code": "const { id } = useParams()\nfetch('/api/users/' + id).then(r => r.json()).then(setUser)"
+        }
+      ],
+      "images": [],
+      "createdAt": "2026-11-21"
+    },
+    {
+      "id": "SPRINT2-Q7",
+      "topic": "react",
+      "weeks": [
+        "week-7"
+      ],
+      "difficulty": "medium",
+      "tags": [
+        "冲刺卷",
+        "Quiz3",
+        "React",
+        "React Router",
+        "嵌套路由",
+        "Link"
+      ],
+      "question": "设置页用嵌套路由，标签却是普通链接，父布局也没有渲染子路由出口：\n```jsx\nfunction SettingsLayout() {\n  return (\n    <div>\n      <nav>\n        <a href=\"/settings/profile\">Profile</a>\n        <a href=\"/settings/billing\">Billing</a>\n      </nav>\n      {/* 缺少 <Outlet /> */}\n    </div>\n  )\n}\n```\n点击标签会刷新整个应用，子级内容也不显示。请说明 (1) `<a href>` 与 `<Link to>` 的区别；(2) 这带来的两个问题（丢失状态、子路由不显示）；(3) 给出修法（含代码）。",
+      "knowledgePoint": "React Router：<Link> 做客户端导航；嵌套子路由通过父布局的 <Outlet /> 渲染",
+      "answerExplanation": "`<a href>` 是普通浏览器导航，会让浏览器整份重载页面，单页应用从头重启；`<Link to>` 拦截点击、用 history API 在客户端换 URL，让路由器就地更换匹配路由，不刷新。整页刷新会丢弃所有内存状态：React 卸载一切、重新下载打包、重跑 effect 与请求，用户丢失位置且要再等一次。另外嵌套路由只有父布局包含 `<Outlet />`（挂载匹配子元素的占位符）时才会渲染子级，否则子内容无处渲染，标签区域为空。修法是把 `<a>` 换成 `<Link to>`，并在布局里渲染 `<Outlet />`。",
+      "codeBlocks": [
+        {
+          "language": "jsx",
+          "code": "import { Link, Outlet } from 'react-router-dom'\n\nfunction SettingsLayout() {\n  return (\n    <div>\n      <nav>\n        <Link to=\"/settings/profile\">Profile</Link>\n        <Link to=\"/settings/billing\">Billing</Link>\n      </nav>\n      <Outlet />\n    </div>\n  )\n}"
+        }
+      ],
+      "images": [],
+      "createdAt": "2026-11-21"
     }
   ]
 }

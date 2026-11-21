@@ -408,4 +408,234 @@ describe('content files', () => {
     expect(week7).toContain('Navbar links')
     expect(week7).toContain('Profile pages')
   })
+
+  it('stores the async & network topic paper with mockups and a synced practice bank', () => {
+    const topic = readJson('content/exams/topic-4.async-network.json')
+    const week4 = JSON.stringify(readJson('content/questions/week-4.practice.json'))
+    const exam = (
+      topic.exams as Array<{
+        id: string
+        totalMarks: number
+        questions: Array<{
+          id: string
+          title: string
+          titleZh?: string
+          marks: number
+          displayNumber?: string
+          categoryLabel?: string
+          categoryLabelZh?: string
+          contentMdxZh?: string
+          displayStyle?: string
+          subQuestions: Array<{ id: string; label: string; marks: number }>
+          mockup?: {
+            files: Array<{ name: string; code?: string; codeZh?: string; active?: boolean }>
+            html?: string
+            htmlZh?: string
+            caption?: string
+            captionZh?: string
+            viewport?: string
+          }
+        }>
+      }>
+    )[0]
+    const topicText = JSON.stringify(topic)
+
+    expect(exam.id).toBe('TOPIC4-ASYNC-NETWORK')
+    expect(exam.totalMarks).toBe(30)
+    expect(exam.questions).toHaveLength(6)
+    expect(exam.questions.every((question) => question.subQuestions.length === 3)).toBe(true)
+    expect(exam.questions.every((question) => question.displayStyle === 'quiz-sample')).toBe(true)
+    expect(exam.questions.every((question) => Boolean(question.displayNumber))).toBe(true)
+    expect(exam.questions.every((question) => Boolean(question.categoryLabel))).toBe(true)
+    expect(exam.questions.every((question) => Boolean(question.categoryLabelZh))).toBe(true)
+    expect(exam.questions.every((question) => Boolean(question.titleZh))).toBe(true)
+    expect(exam.questions.every((question) => Boolean(question.contentMdxZh))).toBe(true)
+    expect(exam.questions.every((question) => (question.mockup?.files?.length ?? 0) > 0)).toBe(true)
+    expect(
+      exam.questions.every((question) => (
+        question.mockup?.files.some((file) => file.active) ?? false
+      )),
+    ).toBe(true)
+    expect(
+      exam.questions.every((question) => (
+        question.mockup?.files.every((file) => (
+          /\.(html|css|js)$/i.test(file.name)
+            ? Boolean(file.code && file.codeZh)
+            : true
+        )) ?? true
+      )),
+    ).toBe(true)
+    expect(
+      exam.questions.every((question) => Boolean(question.mockup?.html && question.mockup?.htmlZh)),
+    ).toBe(true)
+    expect(
+      exam.questions.every((question) => Boolean(question.mockup?.caption && question.mockup?.captionZh)),
+    ).toBe(true)
+    expect(
+      exam.questions.reduce((sum, question) => sum + question.marks, 0),
+    ).toBe(exam.totalMarks)
+    expect(
+      exam.questions.every((question) => (
+        question.subQuestions.reduce((sum, subQuestion) => sum + subQuestion.marks, 0)
+          === question.marks
+      )),
+    ).toBe(true)
+
+    for (const keyword of ['JSON', 'XMLHttpRequest', 'fetch', 'Promise', 'await', 'Express']) {
+      expect(topicText).toContain(keyword)
+    }
+
+    for (let index = 1; index <= 6; index += 1) {
+      expect(week4).toContain(`TOPIC4-Q${index}`)
+    }
+  })
+
+  it('stores the full topic & sprint paper set with quiz-sample mockups and a synced practice bank', () => {
+    type PaperQuestion = {
+      id: string
+      title: string
+      titleZh?: string
+      marks: number
+      contentMdx: string
+      contentMdxZh?: string
+      displayNumber?: string
+      categoryLabel?: string
+      categoryLabelZh?: string
+      displayStyle?: string
+      subQuestions: Array<{
+        id: string
+        label: string
+        marks: number
+        questionMdx: string
+        answerMdx: string
+        markingMdx: string
+        questionMdxZh?: string
+        answerMdxZh?: string
+        markingMdxZh?: string
+      }>
+      mockup?: {
+        files: Array<{ name: string; code?: string; codeZh?: string; active?: boolean }>
+        html?: string
+        htmlZh?: string
+        caption?: string
+        captionZh?: string
+        viewport?: string
+      }
+    }
+    type Paper = {
+      id: string
+      title: string
+      titleZh?: string
+      description?: string
+      descriptionZh?: string
+      totalMarks: number
+      questions: PaperQuestion[]
+    }
+
+    const papers: Array<{ file: string; id: string; totalMarks: number; questions: number }> = [
+      { file: 'content/exams/topic-1.html.json', id: 'TOPIC1-HTML', totalMarks: 20, questions: 4 },
+      { file: 'content/exams/topic-2.css.json', id: 'TOPIC2-CSS', totalMarks: 30, questions: 6 },
+      { file: 'content/exams/topic-3.js-dom.json', id: 'TOPIC3-JS-DOM', totalMarks: 30, questions: 6 },
+      { file: 'content/exams/topic-4.async-network.json', id: 'TOPIC4-ASYNC-NETWORK', totalMarks: 30, questions: 6 },
+      { file: 'content/exams/topic-5.uiux-react.json', id: 'TOPIC5-UIUX-REACT', totalMarks: 30, questions: 6 },
+      { file: 'content/exams/sprint-1.quiz12.json', id: 'SPRINT1-QUIZ12', totalMarks: 60, questions: 8 },
+      { file: 'content/exams/sprint-2.quiz3.json', id: 'SPRINT2-QUIZ3', totalMarks: 64, questions: 8 },
+    ]
+
+    const sync: Record<string, Array<{ week: string; ids: string[] }>> = {
+      'TOPIC1-HTML': [{ week: 'week-1', ids: ['TOPIC1-Q1', 'TOPIC1-Q2', 'TOPIC1-Q3', 'TOPIC1-Q4'] }],
+      'TOPIC2-CSS': [{ week: 'week-2', ids: Array.from({ length: 6 }, (_, index) => `TOPIC2-Q${index + 1}`) }],
+      'TOPIC3-JS-DOM': [{ week: 'week-3', ids: Array.from({ length: 6 }, (_, index) => `TOPIC3-Q${index + 1}`) }],
+      'TOPIC4-ASYNC-NETWORK': [{ week: 'week-4', ids: Array.from({ length: 6 }, (_, index) => `TOPIC4-Q${index + 1}`) }],
+      'TOPIC5-UIUX-REACT': [
+        { week: 'week-5', ids: ['TOPIC5-Q1', 'TOPIC5-Q2', 'TOPIC5-Q3'] },
+        { week: 'week-7', ids: ['TOPIC5-Q4', 'TOPIC5-Q5', 'TOPIC5-Q6'] },
+      ],
+      'SPRINT1-QUIZ12': [
+        { week: 'week-1', ids: ['SPRINT1-Q1'] },
+        { week: 'week-2', ids: ['SPRINT1-Q2'] },
+        { week: 'week-3', ids: ['SPRINT1-Q3', 'SPRINT1-Q4'] },
+        { week: 'week-4', ids: ['SPRINT1-Q5', 'SPRINT1-Q6'] },
+        { week: 'week-5', ids: ['SPRINT1-Q7', 'SPRINT1-Q8'] },
+      ],
+      'SPRINT2-QUIZ3': [
+        { week: 'week-7', ids: Array.from({ length: 7 }, (_, index) => `SPRINT2-Q${index + 1}`) },
+        { week: 'week-3', ids: ['SPRINT2-Q8'] },
+      ],
+    }
+
+    const weekCache = new Map<string, string>()
+
+    for (const meta of papers) {
+      const exam = (readJson(meta.file).exams as Paper[])[0]
+
+      expect(exam.id).toBe(meta.id)
+      expect(exam.totalMarks).toBe(meta.totalMarks)
+      expect(Boolean(exam.titleZh && exam.descriptionZh)).toBe(true)
+      expect(exam.questions).toHaveLength(meta.questions)
+      expect(exam.questions.every((question) => question.subQuestions.length === 3)).toBe(true)
+      expect(exam.questions.every((question) => question.displayStyle === 'quiz-sample')).toBe(true)
+      expect(exam.questions.every((question) => Boolean(question.displayNumber))).toBe(true)
+      expect(
+        exam.questions.every((question) => Boolean(question.categoryLabel && question.categoryLabelZh)),
+      ).toBe(true)
+      expect(exam.questions.every((question) => Boolean(question.titleZh && question.contentMdxZh))).toBe(true)
+      expect(
+        exam.questions.every((question) => (
+          question.subQuestions.every((subQuestion) => (
+            Boolean(
+              subQuestion.questionMdx
+              && subQuestion.answerMdx
+              && subQuestion.markingMdx
+              && subQuestion.questionMdxZh
+              && subQuestion.answerMdxZh
+              && subQuestion.markingMdxZh,
+            )
+          ))
+        )),
+      ).toBe(true)
+      expect(exam.questions.every((question) => (question.mockup?.files.length ?? 0) >= 2)).toBe(true)
+      expect(
+        exam.questions.every((question) => (
+          question.mockup?.files.filter((file) => file.active).length === 1
+        )),
+      ).toBe(true)
+      expect(
+        exam.questions.every((question) => (
+          question.mockup?.files.every((file) => (
+            /\.(html|css|js)$/i.test(file.name) ? Boolean(file.code && file.codeZh) : true
+          )) ?? true
+        )),
+      ).toBe(true)
+      expect(
+        exam.questions.every((question) => Boolean(
+          question.mockup?.html
+          && question.mockup?.htmlZh
+          && question.mockup?.caption
+          && question.mockup?.captionZh
+          && question.mockup?.viewport,
+        )),
+      ).toBe(true)
+      expect(exam.questions.reduce((sum, question) => sum + question.marks, 0)).toBe(exam.totalMarks)
+      expect(
+        exam.questions.every((question) => (
+          question.subQuestions.reduce((sum, subQuestion) => sum + subQuestion.marks, 0)
+            === question.marks
+        )),
+      ).toBe(true)
+
+      for (const target of sync[meta.id]) {
+        if (!weekCache.has(target.week)) {
+          weekCache.set(
+            target.week,
+            JSON.stringify(readJson(`content/questions/${target.week}.practice.json`)),
+          )
+        }
+        const bank = weekCache.get(target.week) as string
+        for (const id of target.ids) {
+          expect(bank).toContain(id)
+        }
+      }
+    }
+  })
 })

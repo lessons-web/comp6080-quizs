@@ -1,0 +1,406 @@
+{
+  "topic": "react",
+  "exams": [
+    {
+      "id": "TOPIC5-UIUX-REACT",
+      "title": "UI/UX & React — Topic Paper",
+      "titleZh": "UI/UX 与 React · 专题卷",
+      "description": "Weeks 5-7 topic paper: UI vs UX, alignment, colour and visual hierarchy, affordance and usability, then React declarative rendering / JSX, useState and list keys, and useEffect dependencies and cleanup. Six questions, three sub-questions each, with screenshot-style mockups.",
+      "descriptionZh": "Weeks 5-7 专题卷：UI 与 UX、对齐 / 配色 / 视觉层级、示能与可用性，再到 React 的声明式渲染 / JSX、useState 与列表 key，以及 useEffect 依赖与清理。共 6 道大题，每题 3 个子题，配套截图感 mockup。",
+      "totalMarks": 30,
+      "tags": ["专题卷", "Weeks5-7", "UI", "UX", "React"],
+      "questions": [
+        {
+          "id": "Q1",
+          "title": "Clean, but confusing to use",
+          "titleZh": "好看，却不好用",
+          "marks": 5,
+          "contentMdx": "A checkout page (`checkout.html`) ships with a tidy layout: even margins, a calm colour palette and crisp type. `checkout.png` is the screenshot. In testing, users still could not tell which step came next or how to finish paying.",
+          "contentMdxZh": "一个结算页（`checkout.html`）上线时布局整洁：页边距均匀、配色克制、字体清晰。`checkout.png` 是它的截图。但在测试中，用户依然搞不清下一步是哪一步，也不知道怎样完成支付。",
+          "subQuestions": [
+            {
+              "id": "Q1-a",
+              "label": "(a)",
+              "marks": 1,
+              "questionMdx": "The page passes every visual check, yet users are confused. Which parts of this page are UI, and which are UX? Give one example of each from the scenario.",
+              "answerMdx": "UI is the visual layer: the even margins, the colour palette, the type. UX is how it behaves for the user: whether the steps are in an order the user understands and whether the way to pay is findable. So \"the calm palette\" is UI, while \"users cannot tell which step is next\" is UX.",
+              "markingMdx": "1 mark for classifying a visual property as UI and a behavioural / usability problem (such as not knowing the next step) as UX.",
+              "questionMdxZh": "这个页面通过了所有的视觉检查，用户却依然困惑。这个页面里哪些部分属于 UI，哪些属于 UX？请各举一个场景中的例子。",
+              "answerMdxZh": "UI 是视觉层：均匀的页边距、配色、字体。UX 是它为用户呈现的行为：步骤顺序是否符合用户的理解、支付方式是否找得到。所以 “克制的配色” 是 UI，而 “用户不知道下一步是哪一步” 是 UX。",
+              "markingMdxZh": "1 分：把一个视觉属性归为 UI，把一个行为 / 可用性问题（例如不知道下一步）归为 UX。"
+            },
+            {
+              "id": "Q1-b",
+              "label": "(b)",
+              "marks": 2,
+              "questionMdx": "The team argues the page is fine because it looks clean. Explain why looking clean does not guarantee good UX, and what the test result shows.",
+              "answerMdx": "UI polish and usability are two separate axes, so a page can be visually perfect yet still fail UX. Here there is no progress / step cue and no unmistakable primary action, so users cannot build a mental model of where they are in the flow or what to do next; they hesitate. Clean visuals only remove visual noise — they do not supply the information structure or the calls to action the user needs. The test result (\"users could not tell which step came next\") is direct evidence of a usability failure, not a styling failure.",
+              "markingMdx": "1 mark for stating that visual polish and usability are different axes, so one does not imply the other.\n1 mark for linking the missing step cue / unclear primary action to the users' confusion.",
+              "questionMdxZh": "团队辩解说这个页面看起来干净，所以没问题。请解释为什么 “看起来干净” 并不能保证好的 UX，并说明测试结果说明了什么。",
+              "answerMdxZh": "UI 打磨与可用性是两个不同的维度，所以页面可以在视觉上无可挑剔，却在 UX 上失败。这里没有进度 / 步骤提示，也没有明确的主行动作，用户无法建立 “自己处于流程哪一步、接下来该做什么” 的心智模型，于是犹豫。干净的视觉只消除了视觉噪音，并不会提供用户需要的信息结构或行动召唤。测试结果（“用户不知道下一步是哪一步”）正是可用性失败的直接证据，而不是样式问题。",
+              "markingMdxZh": "1 分：说明视觉打磨与可用性是两个不同维度，一方好不代表另一方好。\n1 分：把缺失的步骤提示 / 不清晰的主行动作与用户的困惑联系起来。"
+            },
+            {
+              "id": "Q1-c",
+              "label": "(c)",
+              "marks": 2,
+              "questionMdx": "Give one change that improves UX without changing the visuals much, and one different change that is purely visual.",
+              "answerMdx": "A UX change: add a visible step indicator (\"Step 2 of 3\") and make one obvious primary action (\"Pay now\"), so users have a mental model and a clear next step. A purely visual change: adjust the brand colour or spacing to make the page prettier — this improves aesthetics only and would not, on its own, fix the confusion the testers reported.",
+              "markingMdx": "1 mark for a UX change (a progress / step cue or a single clear primary action).\n1 mark for identifying a purely visual change and noting that it alone would not fix the usability problem.",
+              "questionMdxZh": "请给出一个几乎不改变外观、却能改善 UX 的改动，再给出一个纯粹视觉上的改动。",
+              "answerMdxZh": "UX 改动：加上可见的步骤提示（“第 2 步 / 共 3 步”），并让主行动作唯一且醒目（“立即支付”），这样用户就有心智模型和明确的下一步。纯视觉改动：调整品牌色或间距让页面更漂亮——它只改善美观，单靠它并不能解决测试者反映的困惑。",
+              "markingMdxZh": "1 分：给出一个 UX 改动（进度 / 步骤提示，或唯一清晰的主行动作）。\n1 分：指出一个纯视觉改动，并说明单靠它无法解决可用性问题。"
+            }
+          ],
+          "displayNumber": "Q1",
+          "categoryLabel": "UI vs UX Reasoning",
+          "categoryLabelZh": "UI 与 UX 辨析",
+          "displayStyle": "quiz-sample",
+          "mockup": {
+            "files": [
+              {
+                "name": "checkout.html",
+                "code": "<form class=\"checkout\">\n  <input placeholder=\"Delivery address\">\n  <input placeholder=\"Card number\">\n  <button>Continue</button>\n</form>",
+                "codeZh": "<form class=\"checkout\">\n  <input placeholder=\"Delivery address\">\n  <input placeholder=\"Card number\">\n  <!-- 没有步骤提示，也没有显示总价 -->\n  <button>Continue</button>\n</form>"
+              },
+              {
+                "name": "checkout.png",
+                "active": true
+              }
+            ],
+            "viewport": "desktop",
+            "html": "<div class=\"exam-ui-shell\"><div class=\"exam-ui-topbar\"><span>Shop</span><span>Checkout</span></div><div class=\"exam-ui-body\"><p class=\"exam-ui-page-title\">Checkout</p><div class=\"exam-ui-card\"><div class=\"exam-ui-grid-2\"><div><p class=\"exam-ui-label\">Delivery address</p><div class=\"exam-ui-input\">12 Example St</div></div><div><p class=\"exam-ui-label\">Card</p><div class=\"exam-ui-input\">&middot;&middot;&middot;&middot; 4242</div></div></div><div class=\"exam-ui-form-actions\"><button class=\"exam-ui-button\">Continue</button></div><p class=\"exam-ui-help\">No step indicator &middot; no order total shown</p></div></div></div>",
+            "htmlZh": "<div class=\"exam-ui-shell\"><div class=\"exam-ui-topbar\"><span>商城</span><span>结算</span></div><div class=\"exam-ui-body\"><p class=\"exam-ui-page-title\">结算</p><div class=\"exam-ui-card\"><div class=\"exam-ui-grid-2\"><div><p class=\"exam-ui-label\">收货地址</p><div class=\"exam-ui-input\">示例街 12 号</div></div><div><p class=\"exam-ui-label\">银行卡</p><div class=\"exam-ui-input\">&middot;&middot;&middot;&middot; 4242</div></div></div><div class=\"exam-ui-form-actions\"><button class=\"exam-ui-button\">继续</button></div><p class=\"exam-ui-help\">没有步骤提示 &middot; 也没有显示订单总额</p></div></div></div>",
+            "caption": "The checkout page: visually tidy, but with no step cue and no clear end of the flow.",
+            "captionZh": "结算页：视觉上很整洁，但既没有步骤提示，也没有清晰的流程终点。"
+          }
+        },
+        {
+          "id": "Q2",
+          "title": "Two buttons fighting for attention",
+          "titleZh": "两个争宠的按钮",
+          "marks": 5,
+          "contentMdx": "An account settings form (`settings.html`) ends with a button row. `settings.png` shows \"Save changes\" and \"Cancel\" styled identically — both filled with the same strong brand colour — and the field labels above do not start at a shared left edge.",
+          "contentMdxZh": "一个账户设置表单（`settings.html`）以一个按钮行结束。`settings.png` 里 “Save changes” 与 “Cancel” 样式完全相同——都用同一种强烈的品牌色填充；而上方的字段标签也没有从同一条左边缘开始。",
+          "subQuestions": [
+            {
+              "id": "Q2-a",
+              "label": "(a)",
+              "marks": 1,
+              "questionMdx": "Why does giving Save and Cancel the same strong styling make the form harder to use?",
+              "answerMdx": "When both buttons carry equal visual weight (same fill, same colour), neither reads as the primary action. The eye gets no cue about which one the flow is meant to take, so the user has to stop and read both — that slows the decision and raises the chance of cancelling when they meant to save.",
+              "markingMdx": "1 mark for stating that equal visual weight removes the cue for the primary action / where the flow leads.",
+              "questionMdxZh": "把 Save 和 Cancel 做成同样强烈的样式，为什么会降低这个表单的可用性？",
+              "answerMdxZh": "当两个按钮的视觉权重相同（同样的填充、同样的颜色）时，哪个都不像主行动作。眼睛得不到 “流程该走哪一个” 的提示，用户只能停下来把两个都读一遍，这就拖慢了决策，也更容易把本想保存的操作点成了取消。",
+              "markingMdxZh": "1 分：说明视觉权重相同会抹掉主行动作 / 流程去向的提示。"
+            },
+            {
+              "id": "Q2-b",
+              "label": "(b)",
+              "marks": 2,
+              "questionMdx": "Describe the visual-hierarchy fix for the buttons and explain why it works.",
+              "answerMdx": "Make Save the primary button (solid brand fill) and Cancel secondary (outline or plain text style). Colour and fill are the strongest contrast signals, so the solid button draws the eye first, restoring a clear single primary action and a clear way out. This works because hierarchy is about ordering by visual weight — the eye can rank elements only when their weight differs — not about position.",
+              "markingMdx": "1 mark for making Save primary and Cancel secondary (different emphasis).\n1 mark for explaining that differing visual weight creates the hierarchy and directs attention to the primary action.",
+              "questionMdxZh": "请描述这个按钮行的视觉层级修法，并解释它为什么有效。",
+              "answerMdxZh": "把 Save 做成主按钮（实心品牌色填充），把 Cancel 做成次按钮（描边或纯文字样式）。颜色和填充是最强的对比信号，实心按钮会最先抓住视线，从而恢复 “唯一主行动作 + 明确出口” 的结构。它之所以有效，是因为视觉层级靠的是按视觉权重排序——只有权重不同，眼睛才能把元素排出先后——而不是靠位置。",
+              "markingMdxZh": "1 分：把 Save 设为主按钮、Cancel 设为次按钮（强调程度不同）。\n1 分：解释视觉权重不同才能形成层级、把注意力引向主行动作。"
+            },
+            {
+              "id": "Q2-c",
+              "label": "(c)",
+              "marks": 2,
+              "questionMdx": "The field labels and the button row do not line up to the same edge. Explain how alignment affects the page's readability, and give one change that fixes it.",
+              "answerMdx": "When labels and the button row start at different left edges, the eye cannot follow a single vertical line, so the form feels messy and takes longer to scan; alignment is what makes separate elements read as one ordered unit. Fix: put the fields and the button row inside the same grid and align them to the same column edge, for example `display: grid; grid-template-columns: max-content 1fr;` with the action row placed in the second column, so everything shares one left edge.",
+              "markingMdx": "1 mark for explaining that a shared alignment edge makes the layout scannable and reads as one unit.\n1 mark for a fix that aligns the labels and the button row to the same edge (a shared grid / container alignment).",
+              "questionMdxZh": "字段标签和按钮行没有对齐到同一条边缘。请解释对齐如何影响页面的可读性，并给出一种修正方式。",
+              "answerMdxZh": "当标签和按钮行从不同的左边缘开始时，眼睛无法沿一条垂线阅读，表单就显得凌乱、扫读更慢；对齐的作用正是让彼此独立的元素读起来像一个有序整体。修法：把字段和按钮行放进同一个网格，并对齐到同一列边缘，例如 `display: grid; grid-template-columns: max-content 1fr;`，再把按钮行放进第二列，这样所有内容共用同一条左边缘。",
+              "markingMdxZh": "1 分：解释共享的对齐边缘让布局更易扫读、读起来像一个整体。\n1 分：给出把标签与按钮行对齐到同一边缘的修法（共用网格 / 容器对齐）。"
+            }
+          ],
+          "displayNumber": "Q2",
+          "categoryLabel": "Alignment, Colour and Visual Hierarchy",
+          "categoryLabelZh": "对齐、配色与视觉层级",
+          "displayStyle": "quiz-sample",
+          "mockup": {
+            "files": [
+              {
+                "name": "settings.html",
+                "code": "<form class=\"settings\">\n  <label>Display name</label>\n  <input>\n  <label>Email</label>\n  <input>\n  <button class=\"primary\">Save changes</button>\n  <button class=\"primary\">Cancel</button>\n</form>",
+                "codeZh": "<form class=\"settings\">\n  <label>Display name</label>\n  <input>\n  <label>Email</label>\n  <input>\n  <!-- 两个按钮都用了 primary 样式 -->\n  <button class=\"primary\">Save changes</button>\n  <button class=\"primary\">Cancel</button>\n</form>"
+              },
+              {
+                "name": "settings.png",
+                "active": true
+              }
+            ],
+            "viewport": "desktop",
+            "html": "<div class=\"exam-ui-shell\"><div class=\"exam-ui-topbar\"><span>Account</span><span>Settings</span></div><div class=\"exam-ui-body\"><p class=\"exam-ui-page-title\">Account settings</p><div class=\"exam-ui-card\"><div><p class=\"exam-ui-label\">Display name</p><div class=\"exam-ui-input\">Mei Tan</div></div><div style=\"margin-left:16px;margin-top:.6rem;\"><p class=\"exam-ui-label\">Email</p><div class=\"exam-ui-input\">mei@example.com</div></div><div class=\"exam-ui-button-row\" style=\"margin-top:.8rem;\"><button class=\"exam-ui-button\">Save changes</button><button class=\"exam-ui-button\">Cancel</button></div></div></div></div>",
+            "htmlZh": "<div class=\"exam-ui-shell\"><div class=\"exam-ui-topbar\"><span>账户</span><span>设置</span></div><div class=\"exam-ui-body\"><p class=\"exam-ui-page-title\">账户设置</p><div class=\"exam-ui-card\"><div><p class=\"exam-ui-label\">显示名称</p><div class=\"exam-ui-input\">Mei Tan</div></div><div style=\"margin-left:16px;margin-top:.6rem;\"><p class=\"exam-ui-label\">邮箱</p><div class=\"exam-ui-input\">mei@example.com</div></div><div class=\"exam-ui-button-row\" style=\"margin-top:.8rem;\"><button class=\"exam-ui-button\">保存修改</button><button class=\"exam-ui-button\">取消</button></div></div></div></div>",
+            "caption": "Two identical buttons with no hierarchy, above labels that do not share a left edge.",
+            "captionZh": "两个样式完全相同、没有层级的按钮，上方标签也没有对齐到同一条左边缘。"
+          }
+        },
+        {
+          "id": "Q3",
+          "title": "The action that does not look clickable",
+          "titleZh": "看起来不能点的操作",
+          "marks": 5,
+          "contentMdx": "A files page lists uploaded documents in rows (`files.html`). Each row ends with the word \"Download\" set as plain grey body text — no underline, no button, no hover style. `files.png` is the screenshot, and a user says they \"could not see how to get the file\".",
+          "contentMdxZh": "一个文件页面用行列出已上传的文档（`files.html`）。每行末尾是 “Download” 这个词，样式为普通的灰色正文文字——没有下划线、不是按钮、也没有悬停样式。`files.png` 是截图，一位用户说他们 “找不到怎么下载文件”。",
+          "subQuestions": [
+            {
+              "id": "Q3-a",
+              "label": "(a)",
+              "marks": 1,
+              "questionMdx": "What is an affordance, and why does plain grey text fail to afford clicking here?",
+              "answerMdx": "An affordance is a visual cue that tells the user what an element does and that it can be interacted with. Link-blue underlined text, a button shape and a pointer cursor on hover all signal \"you can click this\". Plain grey body text carries none of those cues, so it reads as a caption rather than an action, and the user does not realise it can be clicked.",
+              "markingMdx": "1 mark for defining affordance as a cue of interactivity and stating that plain text gives no such cue.",
+              "questionMdxZh": "什么是示能（affordance）？为什么普通的灰色文字在这里无法示能 “可以点击”？",
+              "answerMdxZh": "示能是一种视觉线索，告诉用户某个元素是做什么的、以及它可以被交互。链接蓝的下划线文字、按钮形状、悬停时的手型光标，都在暗示 “这个可以点”。而普通的灰色正文文字不具备任何这些线索，所以它读起来像说明文字而不是操作，用户不会意识到它可以被点击。",
+              "markingMdxZh": "1 分：把示能定义为 “可交互的线索”，并说明普通文字不提供这种线索。"
+            },
+            {
+              "id": "Q3-b",
+              "label": "(b)",
+              "marks": 2,
+              "questionMdx": "Give two checklist items from a usability review that this Download control violates, and say why each matters.",
+              "answerMdx": "1) Discoverability / visibility of the action: the control is not recognisable as an action, so users cannot find how to complete the task. 2) Consistency: elsewhere on the site links and buttons look like links and buttons, so a bare grey word breaks the pattern and the user cannot predict what is interactive. (A hover / feedback state is also missing, so there is no confirmation that it is clickable.) Each matters because usability depends on users both finding an action and being able to predict its behaviour.",
+              "markingMdx": "1 mark for a findability / discoverability violation (the control is not recognisable as an action).\n1 mark for a consistency / recognisability violation (it should match how interactive elements look elsewhere).",
+              "questionMdxZh": "请从可用性检查清单里给出两条这个 Download 控件违反的项，并说明每一条为什么重要。",
+              "answerMdxZh": "1）可发现性 / 操作的可见性：这个控件无法被识别为操作，用户找不到完成任务的方法。2）一致性：站点其他地方的链接和按钮看起来就是链接和按钮，一个光秃秃的灰词打破了这种模式，用户无法预测什么可交互。（还缺少悬停 / 反馈状态，无法确认它可点击。）两条都重要，因为可用性既依赖用户能找到操作，也依赖用户能预测其行为。",
+              "markingMdxZh": "1 分：给出可发现性 / 可见性方面的违规（控件无法被识别为操作）。\n1 分：给出一致性 / 可识别性方面的违规（应与站点其他可交互元素的外观一致）。"
+            },
+            {
+              "id": "Q3-c",
+              "label": "(c)",
+              "marks": 2,
+              "questionMdx": "Redesign the row so the action is discoverable, and give the markup (inline styles are fine).",
+              "answerMdx": "Turn \"Download\" into a real button or link styled like other actions, e.g. `<a href=\"/files/report.pdf\" style=\"padding:8px 14px;border:1px solid #2563eb;border-radius:6px;color:#2563eb;text-decoration:none;\">Download</a>`, and add a hover state. Giving it an outlined or filled shape plus a pointer cursor and a hover effect restores the affordance, so users can see it is the row's action.",
+              "markingMdx": "1 mark for making the control a button / link with visible action styling (not bare text).\n1 mark for markup that restores the affordance (a shape / outline plus a hover or pointer cue).",
+              "questionMdxZh": "请重新设计这一行，让操作可被发现，并给出 markup（允许内联样式）。",
+              "answerMdxZh": "把 “Download” 变成一个真正的按钮或链接，并使用与其他操作一致的样式，例如 `<a href=\"/files/report.pdf\" style=\"padding:8px 14px;border:1px solid #2563eb;border-radius:6px;color:#2563eb;text-decoration:none;\">Download</a>`，并加上悬停状态。给它一个描边或填充的形状，加手型光标和悬停效果，就能恢复示能，用户便能看出它就是这一行的操作。",
+              "markingMdxZh": "1 分：把控件做成带可见操作样式的按钮 / 链接（而不是裸文本）。\n1 分：给出能恢复示能的 markup（形状 / 描边，加上悬停或手型光标线索）。"
+            }
+          ],
+          "displayNumber": "Q3",
+          "categoryLabel": "Affordance and Usability Checklist",
+          "categoryLabelZh": "示能与可用性检查清单",
+          "displayStyle": "quiz-sample",
+          "mockup": {
+            "files": [
+              {
+                "name": "files.html",
+                "code": "<ul class=\"files\">\n  <li>report.pdf <span>Download</span></li>\n  <li>notes.docx <span>Download</span></li>\n  <li>budget.xlsx <span>Download</span></li>\n</ul>",
+                "codeZh": "<ul class=\"files\">\n  <!-- Download 只是普通文字，没有链接或按钮样式 -->\n  <li>report.pdf <span>Download</span></li>\n  <li>notes.docx <span>Download</span></li>\n  <li>budget.xlsx <span>Download</span></li>\n</ul>"
+              },
+              {
+                "name": "files.png",
+                "active": true
+              }
+            ],
+            "viewport": "desktop",
+            "html": "<div class=\"exam-ui-shell\"><div class=\"exam-ui-topbar\"><span>Workspace</span><span>Files</span></div><div class=\"exam-ui-body\"><p class=\"exam-ui-page-title\">Your files</p><ul class=\"exam-ui-list\"><li class=\"exam-ui-list-row exam-ui-space-between\"><span>report.pdf</span><span class=\"exam-ui-muted\">Download</span></li><li class=\"exam-ui-list-row exam-ui-space-between\"><span>notes.docx</span><span class=\"exam-ui-muted\">Download</span></li><li class=\"exam-ui-list-row exam-ui-space-between\"><span>budget.xlsx</span><span class=\"exam-ui-muted\">Download</span></li></ul></div></div>",
+            "htmlZh": "<div class=\"exam-ui-shell\"><div class=\"exam-ui-topbar\"><span>工作区</span><span>文件</span></div><div class=\"exam-ui-body\"><p class=\"exam-ui-page-title\">我的文件</p><ul class=\"exam-ui-list\"><li class=\"exam-ui-list-row exam-ui-space-between\"><span>report.pdf</span><span class=\"exam-ui-muted\">Download</span></li><li class=\"exam-ui-list-row exam-ui-space-between\"><span>notes.docx</span><span class=\"exam-ui-muted\">Download</span></li><li class=\"exam-ui-list-row exam-ui-space-between\"><span>budget.xlsx</span><span class=\"exam-ui-muted\">Download</span></li></ul></div></div>",
+            "caption": "Each row's \"Download\" is plain grey text, so it does not look like an action.",
+            "captionZh": "每一行的 “Download” 都是普通灰色文字，看不出是一个操作。"
+          }
+        },
+        {
+          "id": "Q4",
+          "title": "The like button, two ways",
+          "titleZh": "点赞按钮，两种写法",
+          "marks": 5,
+          "contentMdx": "A post card has a like button. In the first version (`App.js`) the handler reaches into the DOM with `document.querySelector('.likes')` and rewrites `textContent`. The team wants a declarative React version instead, and also wants to know what JSX such as `<button className=\"like\">{likes}</button>` actually becomes.",
+          "contentMdxZh": "一张帖子卡片有一个点赞按钮。第一版（`App.js`）里的处理函数用 `document.querySelector('.likes')` 直接操作 DOM 并改写 `textContent`。团队想改用声明式的 React 写法，同时还想知道像 `<button className=\"like\">{likes}</button>` 这样的 JSX 究竟会变成什么。",
+          "subQuestions": [
+            {
+              "id": "Q4-a",
+              "label": "(a)",
+              "marks": 1,
+              "questionMdx": "What does the browser actually run when it renders JSX like `<button className=\"like\">{likes}</button>`?",
+              "answerMdx": "JSX is not understood by the browser; a build step compiles it into plain function calls. That element becomes something like `React.createElement('button', { className: 'like' }, likes)`, which returns a plain JavaScript object that React later uses to build the real DOM. So JSX is just readable shorthand for those element objects, not HTML.",
+              "markingMdx": "1 mark for stating that JSX compiles to function calls (React.createElement / the jsx runtime) that return element objects.",
+              "questionMdxZh": "当浏览器渲染像 `<button className=\"like\">{likes}</button>` 这样的 JSX 时，它实际运行的代码是什么？",
+              "answerMdxZh": "浏览器并不认识 JSX；构建步骤会把它编译成普通的函数调用。这个元素会变成类似 `React.createElement('button', { className: 'like' }, likes)` 的形式，返回一个普通的 JavaScript 对象，React 之后用这个对象构建真正的 DOM。所以 JSX 只是这些元素对象的可读简写，而不是 HTML。",
+              "markingMdxZh": "1 分：说明 JSX 会被编译成函数调用（React.createElement / jsx 运行时），并返回元素对象。"
+            },
+            {
+              "id": "Q4-b",
+              "label": "(b)",
+              "marks": 2,
+              "questionMdx": "Why does the imperative approach (querying the DOM and setting `textContent`) fight against how React works?",
+              "answerMdx": "React owns the DOM: on each render it derives the new element tree from state and updates the real DOM to match, assuming it is the only writer. Directly mutating `textContent` changes the DOM behind React's back, so React's model and the real DOM now disagree. On the next render React re-applies the value it believes is correct and overwrites the manual edit, so the button appears to \"snap back\". Two writers editing the same node — the imperative code and the declarative re-render — is the source of the conflict.",
+              "markingMdx": "1 mark for stating that React owns / derives the DOM from state and assumes it is the sole writer.\n1 mark for explaining that manual DOM writes are overwritten on the next render / desync React's model.",
+              "questionMdxZh": "为什么命令式的做法（查询 DOM 并设置 `textContent`）会与 React 的工作方式相冲突？",
+              "answerMdxZh": "React 拥有 DOM：每次渲染它都从 state 推导出新的元素树，并把真实 DOM 更新成一致的状态，它默认自己是唯一的写入者。直接修改 `textContent` 是在 React 背后动 DOM，于是 React 的模型和真实 DOM 不再一致。下一次渲染时，React 会把它认为正确的值重新写回去，覆盖掉手动改动，所以按钮看起来会 “弹回原样”。两个写入者（命令式代码与声明式重渲染）改同一个节点，正是冲突的根源。",
+              "markingMdxZh": "1 分：说明 React 拥有 / 从 state 推导 DOM，并默认自己是唯一写入者。\n1 分：说明手动写 DOM 会在下一次渲染时被覆盖 / 让 React 的模型失同步。"
+            },
+            {
+              "id": "Q4-c",
+              "label": "(c)",
+              "marks": 2,
+              "questionMdx": "Rewrite the like button declaratively so it works with React. Show the state and the handler.",
+              "answerMdx": "Hold the count in state and let the render derive the text: `const [likes, setLikes] = useState(12); const like = () => setLikes(likes + 1); return <button className=\"like\" onClick={like}>{likes}</button>`. Clicking calls the handler, React updates state and re-renders the button with the new number — there is no direct DOM access, so state is the single source of truth and cannot drift from the display.",
+              "markingMdx": "1 mark for storing the count in `useState` and rendering `{likes}` from it.\n1 mark for an `onClick` handler that updates state rather than the DOM.",
+              "questionMdxZh": "请把点赞按钮改写成能与 React 协作的声明式写法，并展示 state 与处理函数。",
+              "answerMdxZh": "把计数放进 state，让渲染从中派生文本：`const [likes, setLikes] = useState(12); const like = () => setLikes(likes + 1); return <button className=\"like\" onClick={like}>{likes}</button>`。点击会调用处理函数，React 更新 state 并带着新数字重渲染按钮——没有任何直接操作 DOM 的地方，state 成为唯一数据源，不会与显示漂移。",
+              "markingMdxZh": "1 分：用 `useState` 保存计数，并从它渲染 `{likes}`。\n1 分：`onClick` 处理函数更新的是 state，而不是 DOM。"
+            }
+          ],
+          "displayNumber": "Q4",
+          "categoryLabel": "Declarative Rendering and JSX",
+          "categoryLabelZh": "声明式渲染与 JSX",
+          "displayStyle": "quiz-sample",
+          "mockup": {
+            "files": [
+              {
+                "name": "App.js",
+                "code": "function LikeButton() {\n  function like() {\n    const el = document.querySelector('.likes')\n    el.textContent = Number(el.textContent) + 1\n  }\n  return (\n    <button className=\"like\" onClick={like}>\n      <span className=\"likes\">12</span>\n    </button>\n  )\n}",
+                "codeZh": "function LikeButton() {\n  function like() {\n    // 直接操作 DOM，绕过了 React\n    const el = document.querySelector('.likes')\n    el.textContent = Number(el.textContent) + 1\n  }\n  return (\n    <button className=\"like\" onClick={like}>\n      <span className=\"likes\">12</span>\n    </button>\n  )\n}"
+              },
+              {
+                "name": "like.png",
+                "active": true
+              }
+            ],
+            "viewport": "desktop",
+            "html": "<div class=\"exam-ui-shell\"><div class=\"exam-ui-topbar\"><span>Qanda</span><span>Thread</span></div><div class=\"exam-ui-body\"><div class=\"exam-ui-card\" style=\"max-width:380px;\"><p class=\"exam-ui-value\" style=\"font-weight:700;\">Assignment 3 help</p><p class=\"exam-ui-value\">Does anyone know what the More button should do?</p><div class=\"exam-ui-button-row\"><button class=\"exam-ui-button-secondary\">Like &middot; 12</button></div><p class=\"exam-ui-help\">After a re-render the count snaps back</p></div></div></div>",
+            "htmlZh": "<div class=\"exam-ui-shell\"><div class=\"exam-ui-topbar\"><span>Qanda</span><span>帖子</span></div><div class=\"exam-ui-body\"><div class=\"exam-ui-card\" style=\"max-width:380px;\"><p class=\"exam-ui-value\" style=\"font-weight:700;\">Assignment 3 求助</p><p class=\"exam-ui-value\">有人知道到达最后一页后 More 按钮应该做什么吗？</p><div class=\"exam-ui-button-row\"><button class=\"exam-ui-button-secondary\">点赞 &middot; 12</button></div><p class=\"exam-ui-help\">重渲染之后计数又弹回原样</p></div></div></div>",
+            "caption": "The post card: the like count is written straight to the DOM, so the next render resets it.",
+            "captionZh": "帖子卡片：点赞数被直接写进 DOM，所以下一次渲染又把它重置了。"
+          }
+        },
+        {
+          "id": "Q5",
+          "title": "Two counters, one number",
+          "titleZh": "两个计数器，一个数字",
+          "marks": 5,
+          "contentMdx": "A page has two separate counters, each with its own button (`App.js`). Pressing either button changes the number shown under both counters. Below them a to-do list re-orders its rows, and after a row moves, the text typed into a row's input stays behind with the wrong row.",
+          "contentMdxZh": "一个页面上有两个互相独立的计数器，各自带一个按钮（`App.js`）。按下任意一个按钮，两个计数器下面显示的数字都会变。下方还有一个待办列表，行会重新排序；某一行移动后，用户在该行输入框里打的字会留在错误的那一行。",
+          "subQuestions": [
+            {
+              "id": "Q5-a",
+              "label": "(a)",
+              "marks": 1,
+              "questionMdx": "Why does pressing one counter's button change the number shown under both counters?",
+              "answerMdx": "Both counters render the same piece of state. The count was declared once — a single `const [count, setCount] = useState(0)` read by both displays — so there is only one value; `setCount` updates that one state, and both places that read it re-render with the new value. They are not independent because they do not each own their own state.",
+              "markingMdx": "1 mark for stating that the two counters share one state value (declared once, not per-counter).",
+              "questionMdxZh": "为什么按下其中一个计数器的按钮，两个计数器下面显示的数字都会变？",
+              "answerMdxZh": "因为两个计数器渲染的是同一份 state。计数只声明了一次——一个 `const [count, setCount] = useState(0)` 被两处显示同时读取——所以只有一个值；`setCount` 更新这唯一的 state，凡是读它的地方都会带着新值重渲染。它们并不独立，因为没有各自拥有自己的 state。",
+              "markingMdxZh": "1 分：说明两个计数器共享同一份 state（只声明了一次，而不是各自一份）。"
+            },
+            {
+              "id": "Q5-b",
+              "label": "(b)",
+              "marks": 2,
+              "questionMdx": "The list uses `key={index}`. Explain why moving a row makes the typed text stay with the wrong row.",
+              "answerMdx": "React uses the key to decide which old and new elements are the same component instance, so it can reuse them and keep their local state. A positional index key tracks position, not the item: after a move, index 0 now points at a different item, but React still treats that slot as the same instance and keeps the input's local text. The text therefore stays at the old position while the data moved underneath it, so the content appears \"shifted\". The key identified the position, not the identity.",
+              "markingMdx": "1 mark for explaining that React reuses instances by key and that index keys track position, not the item.\n1 mark for linking the reused instance's retained local state to the text staying behind.",
+              "questionMdxZh": "列表使用了 `key={index}`。请解释为什么移动某一行后，输入的文字会留在错误的行上。",
+              "answerMdxZh": "React 用 key 判断新旧两棵子树里哪些是同一个组件实例，从而复用它们并保留其本地 state。用位置下标做 key 跟踪的是位置而不是该项：移动之后，下标 0 指向的是另一个条目，但 React 仍把那个位置当成同一个实例，保留了输入框的本地文字。于是数据移动了，文字却留在旧位置，看起来就是内容 “错位”。这个 key 标识的是位置，而不是身份。",
+              "markingMdxZh": "1 分：解释 React 按 key 复用实例，而下标 key 跟踪的是位置而非条目。\n1 分：把被复用实例保留的本地 state 与 “文字留在原地” 联系起来。"
+            },
+            {
+              "id": "Q5-c",
+              "label": "(c)",
+              "marks": 2,
+              "questionMdx": "Give fixes for both bugs.",
+              "answerMdx": "Counters: give each counter its own state — either two separate `useState` calls, or, better, a small `<Counter />` component that owns its own `const [count, setCount] = useState(0)` — so one update cannot touch the other. List: give each row a stable, unique key drawn from the data, `key={item.id}` instead of `key={index}`, so a moved row is matched to the same item and its input keeps the correct text.",
+              "markingMdx": "1 mark for giving each counter its own state (or a self-contained Counter component).\n1 mark for switching to a stable unique key such as `item.id`.",
+              "questionMdxZh": "请给出两个 bug 的修法。",
+              "answerMdxZh": "计数器：让每个计数器拥有自己的 state——要么写两个独立的 `useState`，要么（更好）抽出一个 `<Counter />` 组件，让自己持有 `const [count, setCount] = useState(0)`——这样一次更新就不会影响到另一个。列表：给每一行一个来自数据的稳定唯一 key，用 `key={item.id}` 取代 `key={index}`，这样移动后的行仍能匹配到同一条数据，输入框也会保留正确的文字。",
+              "markingMdxZh": "1 分：让每个计数器拥有自己的 state（或抽出一个自包含的 Counter 组件）。\n1 分：改用稳定的唯一 key，例如 `item.id`。"
+            }
+          ],
+          "displayNumber": "Q5",
+          "categoryLabel": "React State and Rendering",
+          "categoryLabelZh": "React 状态与渲染",
+          "displayStyle": "quiz-sample",
+          "mockup": {
+            "files": [
+              {
+                "name": "App.js",
+                "code": "function App() {\n  const [count, setCount] = useState(0)\n  const [items, setItems] = useState([\n    { id: 'a', text: 'Buy milk' },\n    { id: 'b', text: 'Call Sam' },\n  ])\n  return (\n    <div>\n      <button onClick={() => setCount(count + 1)}>Plus A</button>\n      <button onClick={() => setCount(count + 1)}>Plus B</button>\n      <p>Count: {count}</p>\n      <ul>\n        {items.map((item, index) => (\n          <Row key={index} item={item} />\n        ))}\n      </ul>\n    </div>\n  )\n}",
+                "codeZh": "function App() {\n  // 两个计数器读同一份 count\n  const [count, setCount] = useState(0)\n  const [items, setItems] = useState([\n    { id: 'a', text: 'Buy milk' },\n    { id: 'b', text: 'Call Sam' },\n  ])\n  return (\n    <div>\n      <button onClick={() => setCount(count + 1)}>Plus A</button>\n      <button onClick={() => setCount(count + 1)}>Plus B</button>\n      <p>Count: {count}</p>\n      <ul>\n        {items.map((item, index) => (\n          <Row key={index} item={item} />\n        ))}\n      </ul>\n    </div>\n  )\n}"
+              },
+              {
+                "name": "counters.png",
+                "active": true
+              }
+            ],
+            "viewport": "desktop",
+            "html": "<div class=\"exam-ui-shell\"><div class=\"exam-ui-topbar\"><span>Playground</span><span>App</span></div><div class=\"exam-ui-body\"><div class=\"exam-ui-grid-2\"><div class=\"exam-ui-card\"><p class=\"exam-ui-label\">Counter A</p><p class=\"exam-ui-stat\" style=\"font-size:1.4rem;\">7</p><div class=\"exam-ui-button-row\"><button class=\"exam-ui-button\">+1</button></div></div><div class=\"exam-ui-card\"><p class=\"exam-ui-label\">Counter B</p><p class=\"exam-ui-stat\" style=\"font-size:1.4rem;\">7</p><div class=\"exam-ui-button-row\"><button class=\"exam-ui-button\">+1</button></div></div></div><ul class=\"exam-ui-list\" style=\"margin-top:.8rem;\"><li class=\"exam-ui-list-row\"><span class=\"exam-ui-input\" style=\"flex:1;\">Call Sam</span></li><li class=\"exam-ui-list-row\"><span class=\"exam-ui-input\" style=\"flex:1;\">Buy milk</span></li></ul></div></div>",
+            "htmlZh": "<div class=\"exam-ui-shell\"><div class=\"exam-ui-topbar\"><span>演练场</span><span>App</span></div><div class=\"exam-ui-body\"><div class=\"exam-ui-grid-2\"><div class=\"exam-ui-card\"><p class=\"exam-ui-label\">计数器 A</p><p class=\"exam-ui-stat\" style=\"font-size:1.4rem;\">7</p><div class=\"exam-ui-button-row\"><button class=\"exam-ui-button\">+1</button></div></div><div class=\"exam-ui-card\"><p class=\"exam-ui-label\">计数器 B</p><p class=\"exam-ui-stat\" style=\"font-size:1.4rem;\">7</p><div class=\"exam-ui-button-row\"><button class=\"exam-ui-button\">+1</button></div></div></div><ul class=\"exam-ui-list\" style=\"margin-top:.8rem;\"><li class=\"exam-ui-list-row\"><span class=\"exam-ui-input\" style=\"flex:1;\">Call Sam</span></li><li class=\"exam-ui-list-row\"><span class=\"exam-ui-input\" style=\"flex:1;\">Buy milk</span></li></ul></div></div>",
+            "caption": "Both counters show the same value, and the list rows keep text from the wrong item after a move.",
+            "captionZh": "两个计数器显示同一个值，而列表行在移动后保留了错误条目的文字。"
+          }
+        },
+        {
+          "id": "Q6",
+          "title": "The interval that never stops",
+          "titleZh": "停不下来的定时器",
+          "marks": 5,
+          "contentMdx": "A timer component sets up `setInterval` inside a `useEffect` (`App.js`). The effect has no cleanup, and the callback reads `count` from the render in which the effect ran. The clock's number jumps by more than one, and the interval keeps running after the component is removed.",
+          "contentMdxZh": "一个计时器组件在 `useEffect` 里用 `setInterval` 设置定时器（`App.js`）。该 effect 没有清理函数，而回调读取的是 effect 运行那一次渲染里的 `count`。时钟的数字每次跳变都大于 1，而且组件被移除后定时器还在继续运行。",
+          "subQuestions": [
+            {
+              "id": "Q6-a",
+              "label": "(a)",
+              "marks": 1,
+              "questionMdx": "Why does the displayed number jump by more than one on some ticks instead of adding one?",
+              "answerMdx": "Every time the effect re-runs it starts a brand-new interval, and the old intervals were never cleared because there is no cleanup function. So several intervals are alive at once, each still calling `setCount`, and a single tick can fire from more than one of them — hence the number jumps by 2 (or more) instead of 1.",
+              "markingMdx": "1 mark for stating that the effect starts new intervals without clearing the old ones, so multiple intervals stack.",
+              "questionMdxZh": "为什么显示的数字有时一次跳变会比 1 更大，而不是每次加 1？",
+              "answerMdxZh": "effect 每次重新运行都会新建一个定时器，而旧的定时器因为缺少清理函数从未被清除。于是同一时间有多个定时器存活，每个仍在调用 `setCount`，一次 tick 可能由其中多个同时触发——所以数字会跳 2（甚至更多），而不是加 1。",
+              "markingMdxZh": "1 分：说明 effect 会不断新建定时器而不清除旧的，导致多个定时器叠加。"
+            },
+            {
+              "id": "Q6-b",
+              "label": "(b)",
+              "marks": 2,
+              "questionMdx": "The callback sets the count based on `count` from the render that created the effect. Explain why the value it uses can be stale.",
+              "answerMdx": "When the effect ran, it registered a callback, and that closure captured the `count` value from that specific render. Because the effect does not depend on `count` (empty dependency array), the callback is never re-created, so it keeps reading its originally captured value — a stale value — rather than the latest state. Each tick therefore computes from an out-of-date `count`, so the update is not based on the current number.",
+              "markingMdx": "1 mark for explaining that the callback closes over the `count` from the render that created the effect.\n1 mark for explaining that without a `count` dependency the callback is not re-created, so it keeps using the old value.",
+              "questionMdxZh": "回调基于创建该 effect 那次渲染里的 `count` 来设置计数。请解释它使用的值为什么可能是过期的。",
+              "answerMdxZh": "effect 运行时注册了一个回调，这个闭包捕获了那一次渲染里的 `count` 值。由于该 effect 不依赖 `count`（空依赖数组），回调不会被重新创建，于是一直读取最初捕获的那个值——一个过期的值——而不是最新的 state。因此每次 tick 都基于过时的 `count` 计算，更新并不基于当前数字。",
+              "markingMdxZh": "1 分：解释回调闭包捕获了创建 effect 那次渲染的 `count`。\n1 分：解释因为没有 `count` 依赖，回调不会被重建，于是一直使用旧值。"
+            },
+            {
+              "id": "Q6-c",
+              "label": "(c)",
+              "marks": 2,
+              "questionMdx": "Give the changes so the timer is correct: one interval only, stopping on unmount, and each tick based on the latest value.",
+              "answerMdx": "Return a cleanup that clears the interval and use a functional update: `useEffect(() => { const id = setInterval(() => setCount(prev => prev + 1), 1000); return () => clearInterval(id); }, [])`. Returning `() => clearInterval(id)` stops the single interval when the component unmounts, and the functional updater `setCount(prev => prev + 1)` makes each tick compute from the latest value, so no stale read is needed.",
+              "markingMdx": "1 mark for returning a cleanup that calls `clearInterval` (so there is one interval, stopped on unmount).\n1 mark for using the functional updater `setCount(prev => prev + 1)` so each tick uses the latest value.",
+              "questionMdxZh": "请给出改法，让定时器变正确：只有一个定时器、在卸载时停止、且每次 tick 都基于最新值。",
+              "answerMdxZh": "返回一个清理函数来清除定时器，并使用函数式更新：`useEffect(() => { const id = setInterval(() => setCount(prev => prev + 1), 1000); return () => clearInterval(id); }, [])`。返回 `() => clearInterval(id)` 会在组件卸载时停掉这唯一的定时器；而函数式更新 `setCount(prev => prev + 1)` 让每次 tick 都基于最新值计算，不再需要读取可能过期的值。",
+              "markingMdxZh": "1 分：返回调用 `clearInterval` 的清理函数（只有一个定时器，且卸载时停止）。\n1 分：使用函数式更新 `setCount(prev => prev + 1)`，让每次 tick 使用最新值。"
+            }
+          ],
+          "displayNumber": "Q6",
+          "categoryLabel": "React Effects and Data Flow",
+          "categoryLabelZh": "React 副作用与数据流",
+          "displayStyle": "quiz-sample",
+          "mockup": {
+            "files": [
+              {
+                "name": "App.js",
+                "code": "function Timer() {\n  const [count, setCount] = useState(0)\n  useEffect(() => {\n    setInterval(() => setCount(count + 1), 1000)\n  }, [])\n  return <p>{count}</p>\n}",
+                "codeZh": "function Timer() {\n  const [count, setCount] = useState(0)\n  useEffect(() => {\n    // 没有清理函数；回调捕获了初始的 count\n    setInterval(() => setCount(count + 1), 1000)\n  }, [])\n  return <p>{count}</p>\n}"
+              },
+              {
+                "name": "timer.png",
+                "active": true
+              }
+            ],
+            "viewport": "desktop",
+            "html": "<div class=\"exam-ui-shell\"><div class=\"exam-ui-topbar\"><span>Playground</span><span>Timer</span></div><div class=\"exam-ui-body\"><div class=\"exam-ui-card\" style=\"max-width:260px;\"><p class=\"exam-ui-label\">Elapsed seconds</p><p class=\"exam-ui-stat\" style=\"font-size:1.8rem;\">0 &rarr; 2 &rarr; 4 &rarr; 6</p><p class=\"exam-ui-help\">Jumps by two; keeps running after the component is removed</p></div></div></div>",
+            "htmlZh": "<div class=\"exam-ui-shell\"><div class=\"exam-ui-topbar\"><span>演练场</span><span>计时器</span></div><div class=\"exam-ui-body\"><div class=\"exam-ui-card\" style=\"max-width:260px;\"><p class=\"exam-ui-label\">已过秒数</p><p class=\"exam-ui-stat\" style=\"font-size:1.8rem;\">0 &rarr; 2 &rarr; 4 &rarr; 6</p><p class=\"exam-ui-help\">每次跳 2；组件被移除后仍在运行</p></div></div></div>",
+            "caption": "The timer jumps by two per second and never stops, because intervals stack and the callback reads a stale value.",
+            "captionZh": "计时器每秒跳 2、且永不停止，因为定时器层层叠加，而回调读取的是过期的值。"
+          }
+        }
+      ]
+    }
+  ]
+}

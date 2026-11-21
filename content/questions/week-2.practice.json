@@ -235,6 +235,181 @@
       "codeBlocks": [],
       "images": [],
       "createdAt": "2026-11-07"
+    },
+    {
+      "id": "TOPIC2-Q1",
+      "topic": "css",
+      "weeks": [
+        "week-2"
+      ],
+      "difficulty": "medium",
+      "tags": [
+        "专题卷2",
+        "盒模型",
+        "box-sizing",
+        "外边距折叠"
+      ],
+      "question": "一个商品卡片放在 320px 的侧栏列里，CSS 如下：\n```css\n.card {\n  box-sizing: content-box;\n  width: 300px;\n  padding: 20px;\n  border: 3px solid #333;\n}\n.card + .card { margin-top: 32px; } /* 上一张卡片有 margin-bottom: 16px */\n```\n(a) 这张卡片真实占用的总宽度是多少？为什么 content-box 会得出这个数？(b) 卡片为什么会溢出 320px 的列？加上 `box-sizing: border-box` 后数字怎么变？(c) 设计者以为两张卡片间距是 16 + 32 = 48px，实际却只有 32px，为什么？如何得到确定的 48px？",
+      "knowledgePoint": "盒模型、box-sizing 与相邻外边距折叠",
+      "answerExplanation": "(a) total = 300 + 20*2 + 3*2 = 346px。content-box 下声明的 width 只决定内容盒，内边距和边框是额外加在其上的。(b) 346px 比 320px 的列宽更宽，多出的 26px 冲出列边缘并逼出滚动条；改成 border-box 后声明的 300px 已包含内边距和边框，总宽变为 300px（落在列内），被挤压的变成内容区，缩为 300 - 40 - 6 = 254px。(c) 相邻兄弟的垂直外边距会折叠：一张的 bottom 与下一张的 top 在中间相遇，合并成两者中较大的值（max(16,32)=32px），而不是相加，这就是相邻兄弟外边距折叠。要得到确定的 48px，可把卡片放进 `display: flex; flex-direction: column; gap: 48px` 的容器，因为 gap 不是 margin、不会折叠；或给外层包裹元素加 padding。",
+      "codeBlocks": [
+        {
+          "language": "css",
+          "code": ".cards {\n  display: flex;\n  flex-direction: column;\n  gap: 48px;\n}\n.card {\n  box-sizing: border-box;\n  width: 100%;\n  padding: 20px;\n  border: 3px solid #333;\n}"
+        }
+      ],
+      "images": [],
+      "createdAt": "2026-11-21"
+    },
+    {
+      "id": "TOPIC2-Q2",
+      "topic": "css",
+      "weeks": [
+        "week-2"
+      ],
+      "difficulty": "medium",
+      "tags": [
+        "专题卷2",
+        "Flexbox",
+        "主轴交叉轴",
+        "align-self"
+      ],
+      "question": "一个工具栏的 CSS 如下：\n```css\n.toolbar {\n  display: flex;\n  flex-direction: column;\n  justify-content: space-between;\n  align-items: center;\n  height: 160px;\n}\n.toolbar .save { align-self: stretch; }\n```\n(a) 在默认的 row 容器上，justify-content 与 align-items 各控制什么？(b) 改成 column 后三个按钮为什么变成纵向堆叠？想让它们靠顶部、同时水平居中，应改哪个属性？(c) `.save` 上的 align-self: stretch 做了什么，为什么只有它被拉伸到满高？",
+      "knowledgePoint": "Flexbox 主轴 / 交叉轴与 align-self",
+      "answerExplanation": "(a) justify-content 沿主轴分配项目（row 下是横向），align-items 沿交叉轴对齐项目（row 下是纵向），两者作用于不同的轴。(b) flex-direction: column 把主轴变成纵向，于是 justify-content: space-between 改成从上到下分散按钮，align-items: center 则让它们水平居中——两个轴角色对调。要让按钮靠顶排列，把 justify-content 改成 flex-start（align-items: center 带来的水平居中保持）。(c) align-self 会为单个项目覆盖容器的 align-items，作用对象仍是交叉轴；stretch 让该项目填满它在交叉轴上的尺寸（row 下就是工具栏的整个高度），而其他按钮保持自身高度并居中，因此只有 .save 被拉伸到满高。",
+      "codeBlocks": [
+        {
+          "language": "css",
+          "code": ".toolbar {\n  display: flex;\n  flex-direction: column;\n  justify-content: flex-start; /* 靠顶部排列 */\n  align-items: center;         /* 水平居中 */\n  height: 160px;\n}"
+        }
+      ],
+      "images": [],
+      "createdAt": "2026-11-21"
+    },
+    {
+      "id": "TOPIC2-Q3",
+      "topic": "css",
+      "weeks": [
+        "week-2"
+      ],
+      "difficulty": "hard",
+      "tags": [
+        "专题卷2",
+        "定位",
+        "z-index",
+        "层叠上下文"
+      ],
+      "question": "导航下拉菜单展示了却总是被下方的主视觉横幅盖住，CSS 如下：\n```css\n.header { position: relative; z-index: 1; }\n.hero   { position: relative; z-index: 2; }\n.dropdown { position: absolute; top: 100%; z-index: 10; }\n```\n(a) dropdown 的 z-index 是 10，比 hero 的 2 大得多，为什么仍被 hero 盖住？(b) 什么是层叠上下文？举出一两个会创建它的属性。(c) 给出一个让 dropdown 显示在 hero 之上的修法，并解释为什么单单提高 dropdown 自身的 z-index 没用。",
+      "knowledgePoint": "定位、z-index 与层叠上下文",
+      "answerExplanation": "(a) .header 带了非 auto 的 z-index，创建了层叠上下文。在这个上下文内部，dropdown 的 z-index: 10 只用于在 header 内部排序；整个 header 上下文以第 1 层绘制，低于第 2 层的 hero，所以 dropdown 无法逃出父级上下文，被 hero 盖住。(b) 层叠上下文是一个隔离分组：组内子元素的 z-index 只在彼此之间比较，整个分组作为一个整体由父级的层叠值决定位置。它由带非 auto z-index 的定位元素创建，也由诸如 opacity<1、transform 非 none、filter、position: fixed 等属性创建。(c) 把 header 自身的 z-index 提到 hero 之上（例如 .header { z-index: 3 }），或去掉 header 的层叠上下文。因为 dropdown 处在 header 的上下文里，抬高整个 header 就把它一起抬高，其 10 便位于 hero 的 2 之上；而只改 dropdown 自身的 z-index 无效，因为那个值被困在 header 上下文内，只能与 header 的其他子元素比较。",
+      "codeBlocks": [
+        {
+          "language": "css",
+          "code": ".header {\n  position: relative;\n  z-index: 3; /* 高于 .hero 的 2 */\n}\n.dropdown {\n  position: absolute;\n  top: 100%;\n  z-index: 10;\n}"
+        }
+      ],
+      "images": [],
+      "createdAt": "2026-11-21"
+    },
+    {
+      "id": "TOPIC2-Q4",
+      "topic": "css",
+      "weeks": [
+        "week-2"
+      ],
+      "difficulty": "medium",
+      "tags": [
+        "专题卷2",
+        "响应式",
+        "viewport",
+        "横向滚动"
+      ],
+      "question": "一个价格页在手机上会横向滚动、套餐卡片冲出右边缘，CSS 如下：\n```css\n.container { width: 1200px; }\n.plan { width: 360px; }\n```\n(a) 为什么固定的 1200px 在 400px 手机上会造成横向滚动，而在桌面显示器上却正常？(b) 应如何修改容器让它适配窄屏，为什么这样改有效？(c) 如果页面还缺少 `<meta name=\"viewport\" content=\"width=device-width, initial-scale=1\">`，手机会怎么做？再给一个与之配合的媒体查询。",
+      "knowledgePoint": "响应式单位、视口 meta 与媒体查询",
+      "answerExplanation": "(a) 固定像素宽度永远不会收缩；在 400px 视口里（viewport meta 让布局宽度等于设备宽度），1200px 是屏幕三倍，内容溢出就产生横向滚动；桌面上视口比 1200px 更宽，同一宽度放得下，所以不溢出。(b) 把固定宽度改成 `max-width: 1200px; width: 100%`：在宽屏上最多长到 1200px，但不会超过可用宽度，从而收缩以适应手机；套餐卡片改用百分比或带 `1fr` 的 flex/grid，让它们共享或换行。用“最大宽度”代替“固定宽度”，内容就能放进视口，横向滚动条消失。(c) 没有 viewport meta 时，手机会按一个约 980px 的宽默认布局渲染，再整体缩小到屏幕，文字显得很小、基于 max-width 的断点也可能不触发；加上 width=device-width 后布局宽度等于设备宽度，像 `@media (max-width: 600px) { .container { width: 100% } .plans { flex-direction: column } }` 就能命中手机并把卡片切成单列。",
+      "codeBlocks": [
+        {
+          "language": "css",
+          "code": ".container {\n  width: 100%;\n  max-width: 1200px;\n}\n@media (max-width: 600px) {\n  .plans { flex-direction: column; }\n}"
+        }
+      ],
+      "images": [],
+      "createdAt": "2026-11-21"
+    },
+    {
+      "id": "TOPIC2-Q5",
+      "topic": "css",
+      "weeks": [
+        "week-2"
+      ],
+      "difficulty": "medium",
+      "tags": [
+        "专题卷2",
+        "优先级",
+        "层叠",
+        "!important"
+      ],
+      "question": "主按钮本该是蓝色，却渲染成了灰色，CSS 如下：\n```css\n.btn { background: blue; color: white; }\n.panel .btn { background: #ddd; }\n```\n(a) 比较 `.btn` 与 `.panel .btn` 的优先级，说明谁胜出。(b) 队友给 `.btn` 加 `background: blue !important` 后按钮变蓝，解释 `!important` 为什么能胜出、以及为什么这种修法不被推荐。(c) 给出一个不用 `!important` 的更干净修法，并解释它为什么有效。",
+      "knowledgePoint": "CSS 优先级、层叠与 !important",
+      "answerExplanation": "(a) .btn 是一个类，优先级 (0,1,0)；.panel .btn 是两个类，(0,2,0)。优先级在源顺序之前比较，所以 .panel .btn 胜出，即使 .btn 本意是基础样式，按钮因此变灰。(b) `!important` 会把声明提升到普通声明之上，与优先级和源顺序无关，于是 .btn 的蓝色压过 .panel .btn 的灰色。它不被推荐是因为它破坏了正常层叠：今后任何本应能覆盖它的规则都必须同样带 `!important`，连更具体的选择器也离不开它，样式表会演变成不断升级的 `!important` 之争，难以维护。(c) 与其硬覆盖，不如移除或降低竞争规则的优先级：如果 .panel .btn 只是该面板的通用默认，就把它限定到非主按钮上或降低其优先级，让基础的 .btn 加上 .btn-primary 修饰类能够胜出。因为改的是“哪条规则名正言顺地压过另一条”，它通过正常层叠生效，可预测、易维护。",
+      "codeBlocks": [
+        {
+          "language": "css",
+          "code": ".btn { background: blue; color: white; }\n.btn-primary { background: blue; }\n/* .panel .btn 只保留布局职责，或改为 .panel .btn-secondary */"
+        }
+      ],
+      "images": [],
+      "createdAt": "2026-11-21"
+    },
+    {
+      "id": "TOPIC2-Q6",
+      "topic": "css",
+      "weeks": [
+        "week-2"
+      ],
+      "difficulty": "easy",
+      "tags": [
+        "专题卷2",
+        "overflow",
+        "溢出",
+        "布局"
+      ],
+      "question": "通知卡片设了固定高度，通知一多就溢出卡片、压住下方页脚：\n```css\n.card {\n  height: 200px;\n  /* overflow 保持默认值 visible */\n}\n```\n(a) 为什么内容会溢出卡片，而不是被裁掉或滚动？(b) 比较 `overflow: hidden`、`overflow: auto` 与 `overflow: scroll`，哪一种最适合这里？(c) 设计者希望卡片能随少量通知增高、最多到 200px 后再滚动，应怎么写？",
+      "knowledgePoint": "CSS overflow 与固定高度溢出",
+      "answerExplanation": "(a) overflow 的默认计算值是 visible，意思是超出的内容不被裁剪，会画到盒子外面，所以多出来的通知直接画在卡片下方内容之上，盒子保持 200px 而内容跑了出去。(b) hidden 会在卡片边缘把内容裁掉，用户无法访问多出的通知，数据丢失；scroll 无条件显示滚动条并占着那块空间；auto 只在内容确实溢出时才显示滚动条，短列表干净、长列表可滚动。对通知可能多也可能少的卡片，`overflow: auto` 最合适，hidden 会悄悄藏数据。(c) 用 `max-height: 200px; overflow: auto` 代替固定 height：max-height 让卡片在通知少时更矮、内容长时限制在 200px，到顶后 auto 加上滚动条，每一项都仍可访问；固定 height 会强制正好 200px，通知少时留白，所以 max-height 更贴合意图。",
+      "codeBlocks": [
+        {
+          "language": "css",
+          "code": ".card {\n  max-height: 200px;\n  overflow: auto;\n}"
+        }
+      ],
+      "images": [],
+      "createdAt": "2026-11-21"
+    },
+    {
+      "id": "SPRINT1-Q2",
+      "topic": "css",
+      "weeks": [
+        "week-2"
+      ],
+      "difficulty": "medium",
+      "tags": [
+        "冲刺卷",
+        "CSS",
+        "盒模型",
+        "响应式"
+      ],
+      "question": "票券卡片样式如下：\n```css\n.card {\n  width: 100%;\n  padding: 16px;\n  border: 1px solid #ddd;\n}\n```\n在 360px 手机上，整页出现横向滚动条、卡片右边缘被裁掉。为什么 `width: 100%` 加内边距会让卡片比屏幕还宽？应如何修复？",
+      "knowledgePoint": "盒模型与 box-sizing",
+      "answerExplanation": "默认盒模型是 `content-box`：`width: 100%` 只把内容盒设为父元素宽度，而内边距（16px×2）与边框（1px×2）是加在内容盒之外的。因此元素总宽变成 100% + 34px，超过父元素宽度，产生横向溢出与滚动条。修复方法是加上 `box-sizing: border-box`，此时 `width` 描述的是边框盒，内边距与边框被计入该宽度，总宽等于父元素宽度，内容区相应缩小，溢出随之消失，而内边距仍作用在卡片内部。",
+      "codeBlocks": [
+        {
+          "language": "css",
+          "code": ".card {\n  box-sizing: border-box;\n  width: 100%;\n  padding: 16px;\n  border: 1px solid #ddd;\n}"
+        }
+      ],
+      "images": [],
+      "createdAt": "2026-11-21"
     }
   ]
 }

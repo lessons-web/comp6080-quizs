@@ -1,0 +1,536 @@
+{
+  "topic": "javascript",
+  "exams": [
+    {
+      "id": "SPRINT1-QUIZ12",
+      "title": "Mock Quiz 1 & 2 — Sprint Paper",
+      "titleZh": "模拟 Quiz 1 & 2 · 冲刺卷",
+      "description": "A sprint revision paper for Quiz 1 and Quiz 2: eight questions covering Weeks 1-5 lectures and tutorials (semantic HTML, CSS layout, JavaScript and the DOM, async, fetch, application state and UI/UX), three sub-questions each, with screenshot-style mockups. React (the Week 5 React lectures) is out of scope; Week 5 UI/UX content is included.",
+      "descriptionZh": "面向 Quiz 1 与 Quiz 2 的冲刺复习卷：共 8 道大题，覆盖 Weeks 1-5 的讲义与辅导课内容（语义化 HTML、CSS 布局、JavaScript 与 DOM、异步、fetch、应用状态与 UI/UX），每题 3 个子题，配套截图感 mockup。React（Week 5 的 React 讲义）不在范围内；Week 5 的 UI/UX 内容仍然包含。",
+      "totalMarks": 60,
+      "tags": ["冲刺卷", "Quiz1-2", "Weeks1-5", "期末冲刺"],
+      "questions": [
+        {
+          "id": "Q1",
+          "title": "Images that vanish in a subfolder",
+          "marks": 7,
+          "contentMdx": "A product page lives at `/shop/item.html`. After moving into the `shop` folder, every screenshot fails to load and the \"Back to catalog\" link goes to a missing page, as `broken.png` shows. The markup in `item.html` still uses the same relative paths that worked before the move.",
+          "subQuestions": [
+            {
+              "id": "Q1-a",
+              "label": "(a)",
+              "marks": 2,
+              "questionMdx": "For `<img src=\"images/shoe.png\">` inside `/shop/item.html`, what exact URL does the browser request, and why does the image fail to appear?",
+              "answerMdx": "The browser resolves the relative path against the directory of the current document, which is `/shop/`, so it requests `/shop/images/shoe.png`. The real file is at `/images/shoe.png`, so the server answers 404 and the image does not appear. The path only worked while `item.html` sat in the site root, where its directory and the root were the same.",
+              "markingMdx": "1 mark for stating the requested URL is `/shop/images/shoe.png` (the document's directory is prepended).\n1 mark for explaining the file is not at that location, so the server returns 404.",
+              "questionMdxZh": "对于 `/shop/item.html` 中的 `<img src=\"images/shoe.png\">`，浏览器实际请求的是哪个 URL？为什么图片加载不出来？",
+              "answerMdxZh": "浏览器会以当前文档所在目录（即 `/shop/`）为基准解析相对路径，因此请求的是 `/shop/images/shoe.png`。而真实文件在 `/images/shoe.png`，服务器返回 404，图片便无法显示。这条路径只有在 `item.html` 位于站点根目录（此时它的目录与根目录相同）时才有效。",
+              "markingMdxZh": "1 分：说明请求的 URL 是 `/shop/images/shoe.png`（拼接了文档所在目录）。\n1 分：解释该位置没有对应文件，服务器返回 404。"
+            },
+            {
+              "id": "Q1-b",
+              "label": "(b)",
+              "marks": 2,
+              "questionMdx": "The link `<a href=\"catalog.html\">` also 404s. State the rule the browser uses to resolve a relative URL, and apply it to compute the requested path.",
+              "answerMdx": "A relative URL is resolved against the base URL of the document that contains it, which for a page is the page's own directory. So `catalog.html` inside `/shop/item.html` resolves to `/shop/catalog.html`. Because the catalog page is actually at `/catalog.html`, the request 404s — the same rule that broke the image.",
+              "markingMdx": "1 mark for the rule: a relative URL is resolved against the containing document's directory (base URL).\n1 mark for computing the result as `/shop/catalog.html` and noting it is not the real location.",
+              "questionMdxZh": "链接 `<a href=\"catalog.html\">` 同样 404。请说明浏览器解析相对 URL 所用的规则，并用它算出实际请求的路径。",
+              "answerMdxZh": "相对 URL 会以包含它的文档的基础 URL 为基准解析，对页面而言就是该页面自身所在的目录。因此 `/shop/item.html` 里的 `catalog.html` 会解析为 `/shop/catalog.html`。而目录页实际在 `/catalog.html`，所以请求 404——和图片失败是同一套规则。",
+              "markingMdxZh": "1 分：规则正确——相对 URL 以所在文档的目录（基础 URL）为基准解析。\n1 分：算出结果为 `/shop/catalog.html`，并指出它并非文件的真实位置。"
+            },
+            {
+              "id": "Q1-c",
+              "label": "(c)",
+              "marks": 3,
+              "questionMdx": "Rewrite both paths using root-relative URLs, and explain why the new paths stay correct even if the page is moved to another folder later.",
+              "answerMdx": "Use `/images/shoe.png` for the image and `/shop/catalog.html` for the link. A leading `/` makes the path resolve from the site root rather than from the current document's directory. So no matter which folder the HTML file lives in, the browser always starts from the root, and the same `/images/shoe.png` keeps pointing at the same file. That decouples the path from the page's location and from any future move.",
+              "markingMdx": "1 mark for the image path using a root-relative `/images/shoe.png`.\n1 mark for the link using a root-relative `/shop/catalog.html`.\n1 mark for explaining that a leading `/` resolves from the site root and is therefore independent of the page's current folder.",
+              "questionMdxZh": "请用根相对路径重写这两条路径，并说明为什么即使以后把页面移到别的文件夹，新路径依然正确。",
+              "answerMdxZh": "图片改用 `/images/shoe.png`，链接改用 `/shop/catalog.html`。开头的 `/` 会让路径从站点根目录开始解析，而不是从当前文档所在目录开始。因此无论这个 HTML 文件放在哪个文件夹，浏览器都从根目录出发，同一个 `/images/shoe.png` 始终指向同一个文件。这样就把路径与页面所在位置、以及未来的移动解耦了。",
+              "markingMdxZh": "1 分：图片用根相对路径 `/images/shoe.png`。\n1 分：链接用根相对路径 `/shop/catalog.html`。\n1 分：说明开头 `/` 从站点根目录解析，因此与页面当前所在文件夹无关。"
+            }
+          ],
+          "displayNumber": "Q1",
+          "categoryLabel": "HTML/CSS Layout and Responsive Behaviour",
+          "categoryLabelZh": "HTML/CSS 布局与响应式行为",
+          "displayStyle": "quiz-sample",
+          "mockup": {
+            "files": [
+              {
+                "name": "item.html",
+                "code": "<!doctype html>\n<html>\n  <body>\n    <img src=\"images/shoe.png\" alt=\"Running shoe\">\n    <p>$120</p>\n    <a href=\"catalog.html\">Back to catalog</a>\n  </body>\n</html>",
+                "codeZh": "<!doctype html>\n<html>\n  <body>\n    <!-- item.html 位于 /shop/ 目录下 -->\n    <img src=\"images/shoe.png\" alt=\"Running shoe\">\n    <p>$120</p>\n    <a href=\"catalog.html\">Back to catalog</a>\n  </body>\n</html>"
+              },
+              {
+                "name": "broken.png",
+                "active": true
+              }
+            ],
+            "viewport": "desktop",
+            "html": "<div class=\"exam-ui-shell\"><div class=\"exam-ui-topbar\"><span>Shop</span><span>Item</span></div><div class=\"exam-ui-body\"><p class=\"exam-ui-page-title\">Running Shoe</p><div class=\"exam-ui-card\"><div class=\"exam-ui-stage\" style=\"min-height:120px;display:flex;align-items:center;justify-content:center;\"><span class=\"exam-ui-muted\">Image not found</span></div><p class=\"exam-ui-value\">$120</p></div><div class=\"exam-ui-card\"><span class=\"exam-ui-danger\">Page not found</span></div></div></div>",
+            "htmlZh": "<div class=\"exam-ui-shell\"><div class=\"exam-ui-topbar\"><span>商城</span><span>商品</span></div><div class=\"exam-ui-body\"><p class=\"exam-ui-page-title\">跑鞋</p><div class=\"exam-ui-card\"><div class=\"exam-ui-stage\" style=\"min-height:120px;display:flex;align-items:center;justify-content:center;\"><span class=\"exam-ui-muted\">图片未找到</span></div><p class=\"exam-ui-value\">$120</p></div><div class=\"exam-ui-card\"><span class=\"exam-ui-danger\">页面未找到</span></div></div></div>",
+            "caption": "The item page after the relative paths resolve against the wrong folder.",
+            "captionZh": "相对路径解析到错误文件夹之后，商品页面的样子。"
+          },
+          "titleZh": "换个文件夹就消失的图片",
+          "contentMdxZh": "一个商品页面位于 `/shop/item.html`。移进 `shop` 文件夹后，所有截图都无法加载，\"Back to catalog\" 链接也指向一个不存在的页面，如 `broken.png` 所示。`item.html` 里的标记仍然使用着搬迁前有效的那套相对路径。"
+        },
+        {
+          "id": "Q2",
+          "title": "The card that is wider than the phone",
+          "marks": 8,
+          "contentMdx": "A ticket card should fill the width of a phone screen, but on a 360px phone the whole page gains a horizontal scrollbar and the card's right edge is clipped, as `ticket.png` shows. The card is styled in `card.css`.",
+          "subQuestions": [
+            {
+              "id": "Q2-a",
+              "label": "(a)",
+              "marks": 2,
+              "questionMdx": "The rule sets `width: 100%` together with `padding: 16px`. Why does this make the card wider than the screen instead of exactly the screen width?",
+              "answerMdx": "Because the default box model is `content-box`, `width: 100%` sizes only the content box to the parent's width. The `16px` padding (and the `1px` border) are added on top of that, outside the content box, so the element's total width becomes `100% + 32px + 2px`. That total is wider than the parent, so the page overflows and a horizontal scrollbar appears.",
+              "markingMdx": "1 mark for identifying the default box model as `content-box`, so `width` excludes padding and border.\n1 mark for explaining that padding plus border are added on top of 100%, producing a total wider than the parent.",
+              "questionMdxZh": "这条规则同时设置了 `width: 100%` 和 `padding: 16px`。为什么这让卡片比屏幕还宽，而不是恰好等于屏幕宽度？",
+              "answerMdxZh": "因为默认盒模型是 `content-box`，`width: 100%` 只把内容盒设成父元素宽度。`16px` 的内边距（以及 `1px` 边框）是加在内容盒之外、之上的，所以元素的总宽度变成 `100% + 32px + 2px`。这个总宽度超过了父元素，于是页面溢出并出现横向滚动条。",
+              "markingMdxZh": "1 分：指出默认盒模型是 `content-box`，`width` 不包含内边距与边框。\n1 分：解释内边距加边框被叠加在 100% 之上，使总宽度超过父元素。"
+            },
+            {
+              "id": "Q2-b",
+              "label": "(b)",
+              "marks": 3,
+              "questionMdx": "What does `box-sizing: border-box` change about how `width: 100%` is interpreted, and why do the same values then fit the screen?",
+              "answerMdx": "With `border-box`, `width` describes the border box: padding and border are counted inside that width instead of being added outside it. So `width: 100%` makes the total including the `16px` padding and `1px` border equal the parent's width, and the content area shrinks to make room. Nothing sticks out past the parent, so the horizontal scrollbar disappears while the padding is still applied inside the card.",
+              "markingMdx": "1 mark for stating `border-box` makes `width` include padding and border (the border box).\n1 mark for explaining that `100%` then equals the parent's width, with the content area shrinking to absorb the padding.\n1 mark for concluding there is no overflow and the card fits the screen.",
+              "questionMdxZh": "`box-sizing: border-box` 改变了 `width: 100%` 的含义的哪个部分？为什么相同的数值此后就能装进屏幕？",
+              "answerMdxZh": "使用 `border-box` 时，`width` 描述的是边框盒：内边距与边框被计入这个宽度之内，而不是加在它外面。于是 `width: 100%` 让「包含 `16px` 内边距和 `1px` 边框」的总宽度等于父元素的宽度，内容区相应缩小以腾出空间。这样就没有任何部分超出父元素，横向滚动条消失，而内边距依然作用在卡片内部。",
+              "markingMdxZh": "1 分：说明 `border-box` 让 `width` 包含内边距与边框（即边框盒）。\n1 分：解释此时 `100%` 等于父元素宽度，内容区缩小以容纳内边距。\n1 分：得出不再溢出、卡片贴合屏幕的结论。"
+            },
+            {
+              "id": "Q2-c",
+              "label": "(c)",
+              "marks": 3,
+              "questionMdx": "Give the minimal CSS change that fixes the layout, and describe how the card looks afterwards.",
+              "answerMdx": "Add `box-sizing: border-box` to `.card` (or set it globally, e.g. `*, *::before, *::after { box-sizing: border-box }`). Then the card's total width equals the parent's width: the `16px` padding sits inside the card, the right edge lines up with the screen, and the horizontal scrollbar is gone. Removing the `1px` border or shrinking the padding would also stop the overflow, but `border-box` is the general fix because it keeps the intended values working at any width.",
+              "markingMdx": "1 mark for adding `box-sizing: border-box` to `.card` (or globally).\n1 mark for stating the card's total width now matches the parent, so the right edge lines up and no horizontal scrollbar appears.\n1 mark for noting the padding is still applied inside the card (the fix keeps the intended values, unlike deleting the padding).",
+              "questionMdxZh": "请给出修复布局的最小 CSS 改动，并描述改动后卡片的外观。",
+              "answerMdxZh": "在 `.card` 上加上 `box-sizing: border-box`（或在全局设置，例如 `*, *::before, *::after { box-sizing: border-box }`）。这样卡片总宽等于父元素宽度：`16px` 内边距落在卡片内部，右边缘与屏幕对齐，横向滚动条消失。去掉 `1px` 边框或减小内边距也能止住溢出，但 `border-box` 是通用修法，因为它保留了原本想要的数值，在任何宽度下都成立。",
+              "markingMdxZh": "1 分：给 `.card`（或全局）加上 `box-sizing: border-box`。\n1 分：说明卡片总宽此后与父元素一致，右边缘对齐、不再出现横向滚动条。\n1 分：指出内边距仍作用在卡片内部（该修法保留了原定数值，而非删掉内边距）。"
+            }
+          ],
+          "displayNumber": "Q2",
+          "categoryLabel": "HTML/CSS Layout and Responsive Behaviour",
+          "categoryLabelZh": "HTML/CSS 布局与响应式行为",
+          "displayStyle": "quiz-sample",
+          "mockup": {
+            "files": [
+              {
+                "name": "card.css",
+                "code": ".card {\n  width: 100%;\n  padding: 16px;\n  border: 1px solid #ddd;\n}",
+                "codeZh": ".card {\n  width: 100%;\n  padding: 16px;\n  border: 1px solid #ddd; /* 默认 content-box：总宽度超出 100% */\n}"
+              },
+              {
+                "name": "ticket.png",
+                "active": true
+              }
+            ],
+            "viewport": "mobile",
+            "html": "<div class=\"exam-ui-shell\"><div class=\"exam-ui-topbar\"><span>Ticket</span></div><div class=\"exam-ui-body\"><p class=\"exam-ui-page-title\">Your ticket</p><div class=\"exam-ui-card\"><p class=\"exam-ui-label\">Seat</p><p class=\"exam-ui-value\">Row F &middot; 12</p></div><p class=\"exam-ui-muted\">The card reaches past the right edge — the page scrolls sideways.</p></div></div>",
+            "htmlZh": "<div class=\"exam-ui-shell\"><div class=\"exam-ui-topbar\"><span>票券</span></div><div class=\"exam-ui-body\"><p class=\"exam-ui-page-title\">你的票券</p><div class=\"exam-ui-card\"><p class=\"exam-ui-label\">座位</p><p class=\"exam-ui-value\">F 排 &middot; 12 号</p></div><p class=\"exam-ui-muted\">卡片越过了右边缘——页面可以横向滚动。</p></div></div>",
+            "caption": "The ticket card on a 360px phone overflows the screen width.",
+            "captionZh": "360px 手机上的票券卡片超出了屏幕宽度。"
+          },
+          "titleZh": "比手机还宽的卡片",
+          "contentMdxZh": "票券卡片本应铺满手机屏幕宽度，但在 360px 的手机上，整个页面多出一条横向滚动条，卡片右边缘被裁掉，如 `ticket.png` 所示。卡片样式写在 `card.css` 里。"
+        },
+        {
+          "id": "Q3",
+          "title": "Every swatch reports the last colour",
+          "marks": 7,
+          "contentMdx": "A colour picker builds one button per colour and attaches a click listener that logs which colour was chosen (see `picker.js`). Tapping the first button should log `Red`, but it always logs `Blue` — the last colour — no matter which button is pressed, as `picker.png` shows.",
+          "subQuestions": [
+            {
+              "id": "Q3-a",
+              "label": "(a)",
+              "marks": 2,
+              "questionMdx": "The loop uses `for (var i = 0; ...)`. Why does every button's listener log the same final value of `i`?",
+              "answerMdx": "`var` is function-scoped, so there is a single `i` binding shared by the whole loop and by every closure created inside it. The listeners are not called during the loop; they run later, after the loop has finished and `i` has reached its final value. At that point all three closures read the same, already-finished `i`, so every one of them logs `Blue` (or the value that ended the loop).",
+              "markingMdx": "1 mark for stating that `var` is function-scoped, so all iterations share one `i`.\n1 mark for explaining the closures run after the loop ends, so they all read the final value of `i`.",
+              "questionMdxZh": "循环用的是 `for (var i = 0; ...)`。为什么每个按钮的监听器记录的都是 `i` 的同一个最终值？",
+              "answerMdxZh": "`var` 是函数作用域，整个循环及其内部创建的每个闭包都共享同一个 `i` 绑定。监听器不会在循环过程中被调用；它们在循环结束、`i` 已经变成最终值之后才运行。届时三个闭包读取的都是同一个、已经终止的 `i`，所以每个都记录 `Blue`（也就是让循环结束的那个值）。",
+              "markingMdxZh": "1 分：说明 `var` 是函数作用域，所有迭代共享同一个 `i`。\n1 分：解释闭包在循环结束后才运行，因此都读取 `i` 的最终值。"
+            },
+            {
+              "id": "Q3-b",
+              "label": "(b)",
+              "marks": 2,
+              "questionMdx": "Explain the difference between the scope of `var` and the scope of `let`, and how that difference changes what each closure captures.",
+              "answerMdx": "`var` is scoped to the enclosing function (or the global scope), so the loop reuses one binding for every iteration. `let` is block-scoped, and a `for` loop creates a fresh binding of `i` for each iteration. That means each closure made with `let` captures its own `i`, holding that iteration's value, so the listeners would log `Red`, `Green` and `Blue` respectively instead of all logging the final value.",
+              "markingMdx": "1 mark for stating `var` is function-scoped (one binding) while `let` is block-scoped.\n1 mark for explaining that a `for` loop with `let` makes a new binding per iteration, so each closure captures its own value.",
+              "questionMdxZh": "请解释 `var` 与 `let` 的作用域差异，以及这种差异如何改变每个闭包所捕获的内容。",
+              "answerMdxZh": "`var` 的作用域是所在的函数（或全局作用域），因此循环对每次迭代复用同一个绑定。`let` 是块级作用域，而 `for` 循环会为每次迭代创建全新的 `i` 绑定。这意味着用 `let` 时每个闭包捕获的是它自己的 `i`，保存着那一次迭代的值，于是监听器会分别记录 `Red`、`Green`、`Blue`，而不是都记录最终值。",
+              "markingMdxZh": "1 分：说明 `var` 是函数作用域（单一绑定），而 `let` 是块级作用域。\n1 分：解释用 `let` 的 `for` 循环每次迭代都新建绑定，因此每个闭包捕获自己的值。"
+            },
+            {
+              "id": "Q3-c",
+              "label": "(c)",
+              "marks": 3,
+              "questionMdx": "Give a minimal fix using `let`, and describe an alternative that keeps `var` but still gives each button the correct colour.",
+              "answerMdx": "Change `var i` to `let i`; because each iteration then has its own `i`, each listener closes over its own value and logs the right colour. Alternatively keep `var` but capture the value inside the loop, for example `const colour = colours[i]` and use `colour` in the listener (or wrap the listener in an IIFE that takes `i` as a parameter). Either way the listener reads a value that was fixed at creation time rather than the shared loop variable.",
+              "markingMdx": "1 mark for the `let` fix, with the reason that each iteration gets its own binding.\n1 mark for an alternative that keeps `var` but captures the current value per iteration (copy to a `const`, or an IIFE parameter).\n1 mark for explaining that the fix makes each listener read a value fixed at creation time instead of the shared loop variable.",
+              "questionMdxZh": "请给出用 `let` 的最小修法，并描述一种保留 `var`、但同样能让每个按钮得到正确颜色的替代方案。",
+              "answerMdxZh": "把 `var i` 改成 `let i`；这样每次迭代都有自己的 `i`，每个监听器便闭包捕获自己的值、记录正确的颜色。另一种做法是保留 `var`，但在循环内先固定这个值，例如 `const colour = colours[i]` 并在监听器里用 `colour`（或用 IIFE 把 `i` 作为参数传入）。两种方式都让监听器读取一个在创建时就已固定的值，而不是共享的循环变量。",
+              "markingMdxZh": "1 分：给出 `let` 修法，并说明每次迭代都会得到自己的绑定。\n1 分：给出保留 `var` 但按迭代捕获当前值的替代方案（复制到 `const`，或用 IIFE 参数）。\n1 分：解释该修法让每个监听器读取创建时固定的值，而非共享的循环变量。"
+            }
+          ],
+          "displayNumber": "Q3",
+          "categoryLabel": "JavaScript and the DOM",
+          "categoryLabelZh": "JavaScript 与 DOM",
+          "displayStyle": "quiz-sample",
+          "mockup": {
+            "files": [
+              {
+                "name": "picker.js",
+                "code": "const colours = ['Red', 'Green', 'Blue']\nfor (var i = 0; i < colours.length; i++) {\n  const btn = document.createElement('button')\n  btn.textContent = colours[i]\n  btn.addEventListener('click', () => console.log(i))\n  list.appendChild(btn)\n}",
+                "codeZh": "const colours = ['Red', 'Green', 'Blue']\nfor (var i = 0; i < colours.length; i++) {\n  const btn = document.createElement('button')\n  btn.textContent = colours[i]\n  // var：三个回调共享同一个 i\n  btn.addEventListener('click', () => console.log(i))\n  list.appendChild(btn)\n}"
+              },
+              {
+                "name": "picker.png",
+                "active": true
+              }
+            ],
+            "viewport": "desktop",
+            "html": "<div class=\"exam-ui-shell\"><div class=\"exam-ui-topbar\"><span>Picker</span><span>Colours</span></div><div class=\"exam-ui-body\"><p class=\"exam-ui-page-title\">Choose a colour</p><div class=\"exam-ui-card\"><div class=\"exam-ui-button-row\"><button class=\"exam-ui-button-secondary\">Red</button><button class=\"exam-ui-button-secondary\">Green</button><button class=\"exam-ui-button-secondary\">Blue</button></div></div><div class=\"exam-ui-card\"><p class=\"exam-ui-label\">Console</p><p class=\"exam-ui-code\">Blue</p></div></div></div>",
+            "htmlZh": "<div class=\"exam-ui-shell\"><div class=\"exam-ui-topbar\"><span>取色器</span><span>颜色</span></div><div class=\"exam-ui-body\"><p class=\"exam-ui-page-title\">选择颜色</p><div class=\"exam-ui-card\"><div class=\"exam-ui-button-row\"><button class=\"exam-ui-button-secondary\">Red</button><button class=\"exam-ui-button-secondary\">Green</button><button class=\"exam-ui-button-secondary\">Blue</button></div></div><div class=\"exam-ui-card\"><p class=\"exam-ui-label\">控制台</p><p class=\"exam-ui-code\">Blue</p></div></div></div>",
+            "caption": "Whichever swatch is tapped, the console logs the final colour, Blue.",
+            "captionZh": "无论点哪个色块，控制台记录的都是最后一个颜色 Blue。"
+          },
+          "titleZh": "每个色块都报最后一个颜色",
+          "contentMdxZh": "一个取色器为每种颜色生成一个按钮，并挂上一个点击监听器来记录所选颜色（见 `picker.js`）。点第一个按钮本该记录 `Red`，但无论点哪个按钮，记录的都是 `Blue`（最后一个颜色），如 `picker.png` 所示。"
+        },
+        {
+          "id": "Q4",
+          "title": "Deleting the wrong row",
+          "marks": 8,
+          "contentMdx": "A to-do list uses one click listener on the `<ul>` (event delegation) to delete the item that was clicked, as in `todo.js`. Clicking the empty space of a row works, but clicking the row's text does nothing — no item is removed. `todo.png` shows the list and the attempted delete.",
+          "subQuestions": [
+            {
+              "id": "Q4-a",
+              "label": "(a)",
+              "marks": 2,
+              "questionMdx": "When the user clicks the inner `<span>` that holds the text, what is `event.target` and what is `event.currentTarget`?",
+              "answerMdx": "`event.target` is the innermost element that was actually clicked — here the `<span>`, because it is the deepest node under the pointer. `event.currentTarget` is the element the listener is attached to, which is the `<ul>` (it stays the same for the whole handler). So `target` is the span, and `currentTarget` is the list.",
+              "markingMdx": "1 mark for stating `event.target` is the innermost clicked element (the `<span>`).\n1 mark for stating `event.currentTarget` is the element the listener is bound to (the `<ul>`).",
+              "questionMdxZh": "当用户点击承载文字的内部 `<span>` 时，`event.target` 是什么？`event.currentTarget` 又是什么？",
+              "answerMdxZh": "`event.target` 是实际被点击的最内层元素——这里是 `<span>`，因为它是指针下最深的节点。`event.currentTarget` 是监听器所绑定的元素，即 `<ul>`（在整个处理器运行期间保持不变）。所以 `target` 是那个 span，`currentTarget` 是列表。",
+              "markingMdxZh": "1 分：说明 `event.target` 是实际被点击的最内层元素（那个 `<span>`）。\n1 分：说明 `event.currentTarget` 是监听器绑定的元素（那个 `<ul>`）。"
+            },
+            {
+              "id": "Q4-b",
+              "label": "(b)",
+              "marks": 3,
+              "questionMdx": "The handler reads `event.target.dataset.id`. Why does this fail when the text is clicked, but work when the empty part of the row is clicked? What is the more robust approach?",
+              "answerMdx": "Only the `<li>` carries `data-id`; the inner `<span>` has no `data-id`. When the empty part of the row is clicked, `target` is the `<li>`, so `dataset.id` is the correct id and the delete works. When the text span is clicked, `target` is the span, whose `dataset.id` is `undefined`, so `removeItem(undefined)` matches nothing and no row is deleted. The robust approach is to walk up from the click to the row: use `event.target.closest('li')` to get the nearest ancestor `<li>` regardless of which inner element was clicked.",
+              "markingMdx": "1 mark for noting `data-id` lives on the `<li>`, not on the inner span.\n1 mark for explaining that clicking the empty area makes `target` the `<li>` (works) while clicking the text makes `target` the span with no id (fails).\n1 mark for proposing `event.target.closest('li')` (or equivalent) to resolve the row from the click.",
+              "questionMdxZh": "处理器读取的是 `event.target.dataset.id`。为什么点击文字时它会失败，而点击行的空白处却能正常工作？更稳健的做法是什么？",
+              "answerMdxZh": "只有 `<li>` 带有 `data-id`；内部的 `<span>` 没有 `data-id`。点击行的空白处时，`target` 是 `<li>`，`dataset.id` 就是正确的 id，删除成功。点击文字 span 时，`target` 是那个 span，它的 `dataset.id` 是 `undefined`，于是 `removeItem(undefined)` 匹配不到任何项，没有行被删除。更稳健的做法是从点击处向上找行：用 `event.target.closest('li')` 得到最近的祖先 `<li>`，无论点到的是哪个内部元素。",
+              "markingMdxZh": "1 分：指出 `data-id` 在 `<li>` 上，而不在内部 span 上。\n1 分：解释点空白处 `target` 是 `<li>`（成功），点文字时 `target` 是无 id 的 span（失败）。\n1 分：提出用 `event.target.closest('li')`（或等效做法）从点击处定位到行。"
+            },
+            {
+              "id": "Q4-c",
+              "label": "(c)",
+              "marks": 3,
+              "questionMdx": "Rewrite the delegated handler so it deletes the correct row from any click inside it, and explain why the change is safe.",
+              "answerMdx": "Change the handler to `const li = event.target.closest('li'); if (li) removeItem(li.dataset.id)`. `closest('li')` walks up from whatever was clicked until it finds the nearest `<li>`, so clicking the text span or the row both resolve to the same row, and its `data-id` is the correct id. The `if (li)` guard is needed because a click on the `<ul>`'s padding is not inside any row, so `closest` returns `null` and we must not call `removeItem` in that case.",
+              "markingMdx": "1 mark for using `event.target.closest('li')` to resolve the row from the click.\n1 mark for reading `li.dataset.id` (or the row's id) and passing it to the delete.\n1 mark for guarding against a `null` result (a click that is not inside any row).",
+              "questionMdxZh": "请重写这个委托处理器，使其在行内任意位置点击都能删除正确的行，并说明这个改动为什么是安全的。",
+              "answerMdxZh": "把处理器改成 `const li = event.target.closest('li'); if (li) removeItem(li.dataset.id)`。`closest('li')` 会从被点击的元素向上查找，直到找到最近的 `<li>`，因此点文字 span 或点行本身都会定位到同一行，其 `data-id` 就是正确的 id。`if (li)` 守卫是必要的：点击 `<ul>` 的内边距不在任何行内，`closest` 会返回 `null`，此时不能调用 `removeItem`。",
+              "markingMdxZh": "1 分：用 `event.target.closest('li')` 从点击处定位到行。\n1 分：读取 `li.dataset.id`（或该行的 id）并传给删除逻辑。\n1 分：对 `null` 结果做守卫（点击不在任何行内的情形）。"
+            }
+          ],
+          "displayNumber": "Q4",
+          "categoryLabel": "JavaScript and the DOM",
+          "categoryLabelZh": "JavaScript 与 DOM",
+          "displayStyle": "quiz-sample",
+          "mockup": {
+            "files": [
+              {
+                "name": "todo.js",
+                "code": "list.addEventListener('click', function (event) {\n  const id = event.target.dataset.id\n  removeItem(id)\n})",
+                "codeZh": "list.addEventListener('click', function (event) {\n  // event.target 可能是内部的 span，而不是 li\n  const id = event.target.dataset.id\n  removeItem(id)\n})"
+              },
+              {
+                "name": "todo.png",
+                "active": true
+              }
+            ],
+            "viewport": "desktop",
+            "html": "<div class=\"exam-ui-shell\"><div class=\"exam-ui-topbar\"><span>Tasks</span><span>Today</span></div><div class=\"exam-ui-body\"><p class=\"exam-ui-page-title\">My tasks</p><div class=\"exam-ui-card\"><ul class=\"exam-ui-list\"><li class=\"exam-ui-list-row\" data-id=\"1\"><span>Buy milk</span> <span class=\"exam-ui-muted\">x</span></li><li class=\"exam-ui-list-row\" data-id=\"2\"><span>Call Sam</span> <span class=\"exam-ui-muted\">x</span></li><li class=\"exam-ui-list-row\" data-id=\"3\"><span>Pay rent</span> <span class=\"exam-ui-muted\">x</span></li></ul></div><p class=\"exam-ui-muted\">Clicking a task's text deletes nothing.</p></div></div>",
+            "htmlZh": "<div class=\"exam-ui-shell\"><div class=\"exam-ui-topbar\"><span>任务</span><span>今天</span></div><div class=\"exam-ui-body\"><p class=\"exam-ui-page-title\">我的任务</p><div class=\"exam-ui-card\"><ul class=\"exam-ui-list\"><li class=\"exam-ui-list-row\" data-id=\"1\"><span>买牛奶</span> <span class=\"exam-ui-muted\">x</span></li><li class=\"exam-ui-list-row\" data-id=\"2\"><span>给 Sam 打电话</span> <span class=\"exam-ui-muted\">x</span></li><li class=\"exam-ui-list-row\" data-id=\"3\"><span>交房租</span> <span class=\"exam-ui-muted\">x</span></li></ul></div><p class=\"exam-ui-muted\">点击任务文字不会删除任何东西。</p></div></div>",
+            "caption": "The to-do list where a click on the row text deletes nothing.",
+            "captionZh": "待办列表：点击行内文字时什么都不会被删除。"
+          },
+          "titleZh": "删错了行",
+          "contentMdxZh": "一个待办列表在 `<ul>` 上挂了一个点击监听器（事件委托）来删除被点的项，见 `todo.js`。点击行的空白处能正常工作，但点击行里的文字却毫无反应——没有任何项被删除。`todo.png` 展示了列表和这次失败的删除。"
+        },
+        {
+          "id": "Q5",
+          "title": "The log order that surprises everyone",
+          "marks": 8,
+          "contentMdx": "A page logs four values to the console from `log.js`. Most people expect `2` (the timer) to appear before `3` (the promise), but the real order is different. `console.png` shows what actually prints.",
+          "subQuestions": [
+            {
+              "id": "Q5-a",
+              "label": "(a)",
+              "marks": 2,
+              "questionMdx": "Give the exact order in which the four values are logged, and explain why `4` prints before `3`.",
+              "answerMdx": "The order is `1`, `4`, `3`, `2`. The two `console.log` calls that are plain synchronous statements run first, in source order, so `1` then `4`. The `.then` callback for `3` is queued as a microtask and the timer callback for `2` as a macrotask, but neither can run until the current synchronous script finishes. So `4` prints before any queued callback, including `3`.",
+              "markingMdx": "1 mark for the correct order `1, 4, 3, 2`.\n1 mark for explaining that synchronous statements run first and queued callbacks wait until the current script finishes.",
+              "questionMdxZh": "请给出四个值被记录的确切顺序，并解释为什么 `4` 会在 `3` 之前打印。",
+              "answerMdxZh": "顺序是 `1`、`4`、`3`、`2`。两个属于普通同步语句的 `console.log` 先按源码顺序执行，所以是 `1` 再 `4`。`3` 的 `.then` 回调作为微任务入队，`2` 的定时器回调作为宏任务入队，但在当前同步脚本执行完之前，两者都无法运行。因此 `4` 会在任何已入队的回调（包括 `3`）之前打印。",
+              "markingMdxZh": "1 分：给出正确顺序 `1, 4, 3, 2`。\n1 分：解释同步语句先执行，已入队回调要等当前脚本结束后才能运行。"
+            },
+            {
+              "id": "Q5-b",
+              "label": "(b)",
+              "marks": 3,
+              "questionMdx": "Explain the microtask queue versus the macrotask (task) queue, and why the promise callback (`3`) runs before the timer callback (`2`) even though the timer was scheduled first.",
+              "answerMdx": "Promise `.then` callbacks go on the microtask queue; `setTimeout` callbacks go on the macrotask (task) queue. After the synchronous script finishes, the event loop always drains the entire microtask queue before it takes the next macrotask. So all pending microtasks (`3`) run first, and only then does the loop pick the timer callback (`2`), regardless of which was registered earlier. That is why `3` beats `2`.",
+              "markingMdx": "1 mark for stating promise callbacks are microtasks and `setTimeout` callbacks are macrotasks.\n1 mark for stating the event loop empties the microtask queue before processing the next macrotask.\n1 mark for concluding that ordering is by queue, not by registration order, so the promise callback runs before the timer.",
+              "questionMdxZh": "请解释微任务队列与宏任务（task）队列的区别，并说明为什么即便定时器先被安排，promise 回调（`3`）仍会先于定时器回调（`2`）执行。",
+              "answerMdxZh": "Promise 的 `.then` 回调进入微任务队列；`setTimeout` 回调进入宏任务（task）队列。同步脚本结束后，事件循环总是先把整个微任务队列清空，才会去取下一个宏任务。因此所有待处理的微任务（`3`）先运行，之后循环才取定时器回调（`2`），与谁先注册无关。这就是 `3` 早于 `2` 的原因。",
+              "markingMdxZh": "1 分：说明 promise 回调是微任务，`setTimeout` 回调是宏任务。\n1 分：说明事件循环在处理下一个宏任务之前会清空微任务队列。\n1 分：得出顺序由队列决定而非注册顺序，因此 promise 回调先于定时器。"
+            },
+            {
+              "id": "Q5-c",
+              "label": "(c)",
+              "marks": 3,
+              "questionMdx": "Add a second `setTimeout(() => console.log('5'), 0)` and a nested `.then(() => console.log('6'))` after the first `.then`. Give the new output order and explain why the two timers keep their order relative to each other but still run after both promise callbacks.",
+              "answerMdx": "The new order is `1`, `4`, `3`, `6`, `2`, `5`. The two `.then` callbacks are both microtasks, so they drain fully — `3` then its chained `6` — before any macrotask runs. Only then does the loop take the macrotasks in FIFO order, so the first timer (`2`) runs before the second (`5`). The timers keep their relative order because macrotasks of the same type are served first-in-first-out, and both still follow the promise callbacks because the microtask queue is always emptied first.",
+              "markingMdx": "1 mark for the correct new order `1, 4, 3, 6, 2, 5`.\n1 mark for explaining that both `.then` callbacks (including the chained `6`) are microtasks and run before any timer.\n1 mark for explaining the timers keep their FIFO order relative to each other but still follow the microtasks.",
+              "questionMdxZh": "在第一个 `.then` 之后再加一个 `setTimeout(() => console.log('5'), 0)` 和一个嵌套的 `.then(() => console.log('6'))`。请给出新的输出顺序，并解释为什么两个定时器彼此之间保持先后顺序，却仍然都晚于两个 promise 回调。",
+              "answerMdxZh": "新的顺序是 `1`、`4`、`3`、`6`、`2`、`5`。两个 `.then` 回调都是微任务，会全部清空——先 `3`，再它链上的 `6`——之后任何宏任务才运行。到那时循环才按 FIFO 顺序取宏任务，所以第一个定时器（`2`）先于第二个（`5`）。两个定时器彼此保持顺序，是因为同类宏任务按先进先出处理；而它们都晚于 promise 回调，是因为微任务队列总是先被清空。",
+              "markingMdxZh": "1 分：给出正确的新顺序 `1, 4, 3, 6, 2, 5`。\n1 分：说明两个 `.then` 回调（包括链上的 `6`）都是微任务，先于任何定时器运行。\n1 分：说明两个定时器彼此按 FIFO 保持顺序，但仍晚于微任务。"
+            }
+          ],
+          "displayNumber": "Q5",
+          "categoryLabel": "Async JavaScript: Event Loop and Promises",
+          "categoryLabelZh": "异步 JavaScript：事件循环与 Promise",
+          "displayStyle": "quiz-sample",
+          "mockup": {
+            "files": [
+              {
+                "name": "log.js",
+                "code": "console.log('1')\nsetTimeout(() => console.log('2'), 0)\nPromise.resolve().then(() => console.log('3'))\nconsole.log('4')",
+                "codeZh": "console.log('1')\nsetTimeout(() => console.log('2'), 0)\nPromise.resolve().then(() => console.log('3'))\nconsole.log('4')\n// 猜猜控制台里 2 和 3 谁先出现"
+              },
+              {
+                "name": "console.png",
+                "active": true
+              }
+            ],
+            "viewport": "desktop",
+            "html": "<div class=\"exam-ui-shell\"><div class=\"exam-ui-topbar\"><span>DevTools</span><span>Console</span></div><div class=\"exam-ui-body\"><p class=\"exam-ui-page-title\">Console</p><div class=\"exam-ui-card exam-ui-code-preview\"><p class=\"exam-ui-code\">1</p><p class=\"exam-ui-code\">4</p><p class=\"exam-ui-code\">3</p><p class=\"exam-ui-code\">2</p></div><p class=\"exam-ui-muted\">The promise callback prints before the timer, even though the timer was scheduled first.</p></div></div>",
+            "htmlZh": "<div class=\"exam-ui-shell\"><div class=\"exam-ui-topbar\"><span>开发者工具</span><span>控制台</span></div><div class=\"exam-ui-body\"><p class=\"exam-ui-page-title\">控制台</p><div class=\"exam-ui-card exam-ui-code-preview\"><p class=\"exam-ui-code\">1</p><p class=\"exam-ui-code\">4</p><p class=\"exam-ui-code\">3</p><p class=\"exam-ui-code\">2</p></div><p class=\"exam-ui-muted\">即便定时器先被安排，promise 回调仍先于它打印。</p></div></div>",
+            "caption": "The actual console order from the snippet.",
+            "captionZh": "这段代码实际打印出的控制台顺序。"
+          },
+          "titleZh": "让人意外的打印顺序",
+          "contentMdxZh": "一个页面通过 `log.js` 往控制台记录了四个值。多数人以为 `2`（定时器）会先于 `3`（promise）出现，但真实顺序并非如此。`console.png` 显示了实际打印的内容。"
+        },
+        {
+          "id": "Q6",
+          "title": "A failure that never reaches catch",
+          "marks": 7,
+          "contentMdx": "A dashboard loads a profile and some stats in parallel with `Promise.all` (see `dashboard.js`). The stats endpoint is currently broken and answers `404` with a small JSON body. The dashboard still resolves and shows `NaN` for the totals instead of an error, as `dashboard.png` shows.",
+          "subQuestions": [
+            {
+              "id": "Q6-a",
+              "label": "(a)",
+              "marks": 2,
+              "questionMdx": "The stats request gets an HTTP `404`. Why does `Promise.all` still resolve instead of rejecting, so the `catch` block never runs?",
+              "answerMdx": "`fetch` only rejects its promise on a network-level failure; an HTTP `404` is a completed round-trip, so its promise fulfils with a `Response` object whose `ok` is `false`. Because that promise fulfils, `.then((r) => r.json())` also fulfils (parsing the error body), so none of the three inputs to `Promise.all` rejects. `Promise.all` only rejects when an input rejects, so it resolves — and `catch` is never reached.",
+              "markingMdx": "1 mark for stating `fetch` does not reject on a 404 (it fulfils with a `Response` whose `ok` is false).\n1 mark for linking this to `Promise.all` resolving, since no input rejects.",
+              "questionMdxZh": "stats 请求收到了 HTTP `404`。为什么 `Promise.all` 仍然 resolve 而没有 reject，导致 `catch` 块从不执行？",
+              "answerMdxZh": "`fetch` 只在网络层失败时才会让它的 promise reject；HTTP `404` 是一次完整完成的往返，所以它的 promise 会 fulfill 出一个 `ok` 为 `false` 的 `Response` 对象。由于该 promise fulfill 了，`.then((r) => r.json())` 也随之 fulfill（把错误响应体解析出来），因此传给 `Promise.all` 的输入没有任何一个 reject。`Promise.all` 只有在某个输入 reject 时才 reject，所以它会 resolve——`catch` 永远到不了。",
+              "markingMdxZh": "1 分：说明 `fetch` 遇到 404 不会 reject（会 fulfill 出 `ok` 为 false 的 `Response`）。\n1 分：把这一点与 `Promise.all` resolve（因无输入 reject）联系起来。"
+            },
+            {
+              "id": "Q6-b",
+              "label": "(b)",
+              "marks": 2,
+              "questionMdx": "The 404 body is `{ \"error\": \"not found\" }`. Explain why the page ends up showing `NaN` rather than an error.",
+              "answerMdx": "Because nothing rejects, `stats` is the parsed error object `{ error: 'not found' }`, which has no `total` property. Reading `stats.total` gives `undefined`, and using that undefined value in an arithmetic or numeric context produces `NaN`. The renderer receives `undefined` as if it were real data, so the page shows `NaN` and no error is ever surfaced — the failure is invisible.",
+              "markingMdx": "1 mark for noting that `stats` is the error object, so `stats.total` is `undefined`.\n1 mark for explaining that the undefined value flows into the number rendering as `NaN` and no error is shown.",
+              "questionMdxZh": "404 的响应体是 `{ \"error\": \"not found\" }`。请解释为什么页面最终显示的是 `NaN` 而不是错误。",
+              "answerMdxZh": "因为没有 reject，`stats` 就是被解析出来的错误对象 `{ error: 'not found' }`，它没有 `total` 属性。读取 `stats.total` 得到 `undefined`，把该 undefined 用于算术或数值场景就产生 `NaN`。渲染器把一个 undefined 当成真实数据接收，于是页面显示 `NaN`，也从不暴露错误——这次失败变得不可见。",
+              "markingMdxZh": "1 分：指出 `stats` 是错误对象，因此 `stats.total` 为 `undefined`。\n1 分：解释该 undefined 流入数值渲染变成 `NaN`，且不显示错误。"
+            },
+            {
+              "id": "Q6-c",
+              "label": "(c)",
+              "marks": 3,
+              "questionMdx": "Change `dashboard.js` so a non-2xx response causes the dashboard to show an error instead of `NaN`, and explain why this works.",
+              "answerMdx": "Add an `ok` check inside each `.then` before reading the body: `.then((r) => { if (!r.ok) throw new Error('HTTP ' + r.status); return r.json() })`. Now a 404 makes that input reject, so `Promise.all` rejects and the surrounding `try/catch` runs, letting the dashboard show an explicit error state. The check must come before `r.json()`, otherwise the error body is parsed as data and the dashboard shows `NaN` again.",
+              "markingMdx": "1 mark for adding an `!r.ok` check that throws before `r.json()`.\n1 mark for explaining that throwing makes the input reject, so `Promise.all` rejects and the error path runs.\n1 mark for stating the dashboard now shows an explicit error rather than `NaN` (and why the check must precede `r.json()`).",
+              "questionMdxZh": "请修改 `dashboard.js`，让非 2xx 响应使面板显示错误而不是 `NaN`，并解释这样做的原理。",
+              "answerMdxZh": "在每个 `.then` 里、读取响应体之前加一个 `ok` 检查：`.then((r) => { if (!r.ok) throw new Error('HTTP ' + r.status); return r.json() })`。这样 404 会让该输入 reject，于是 `Promise.all` reject，外层的 `try/catch` 执行，面板就能显示明确的错误状态。该检查必须在 `r.json()` 之前，否则错误响应体又会被当成数据解析，面板照样显示 `NaN`。",
+              "markingMdxZh": "1 分：在 `r.json()` 之前加入 `!r.ok` 检查并抛错。\n1 分：解释抛错使输入 reject，从而 `Promise.all` reject、错误路径执行。\n1 分：说明面板此后显示明确错误而非 `NaN`（并说明检查须先于 `r.json()`）。"
+            }
+          ],
+          "displayNumber": "Q6",
+          "categoryLabel": "Requests: Fetch, Combining and Recovery",
+          "categoryLabelZh": "请求：fetch、组合与恢复",
+          "displayStyle": "quiz-sample",
+          "mockup": {
+            "files": [
+              {
+                "name": "dashboard.js",
+                "code": "const [profile, stats] = await Promise.all([\n  fetch('/api/profile').then((r) => r.json()),\n  fetch('/api/stats').then((r) => r.json()),\n])\nrender(profile, stats.total)",
+                "codeZh": "const [profile, stats] = await Promise.all([\n  fetch('/api/profile').then((r) => r.json()),\n  // /api/stats 返回 404，但 fetch 不会 reject\n  fetch('/api/stats').then((r) => r.json()),\n])\nrender(profile, stats.total)"
+              },
+              {
+                "name": "dashboard.png",
+                "active": true
+              }
+            ],
+            "viewport": "desktop",
+            "html": "<div class=\"exam-ui-shell\"><div class=\"exam-ui-topbar\"><span>Dashboard</span><span>Overview</span></div><div class=\"exam-ui-body\"><p class=\"exam-ui-page-title\">Overview</p><div class=\"exam-ui-grid-2\"><div class=\"exam-ui-card\"><p class=\"exam-ui-label\">Profile</p><p class=\"exam-ui-value\">Alice</p></div><div class=\"exam-ui-card\"><p class=\"exam-ui-label\">Total</p><p class=\"exam-ui-value\">NaN</p></div></div><p class=\"exam-ui-muted\">No error is shown — the broken request was treated as data.</p></div></div>",
+            "htmlZh": "<div class=\"exam-ui-shell\"><div class=\"exam-ui-topbar\"><span>面板</span><span>概览</span></div><div class=\"exam-ui-body\"><p class=\"exam-ui-page-title\">概览</p><div class=\"exam-ui-grid-2\"><div class=\"exam-ui-card\"><p class=\"exam-ui-label\">个人资料</p><p class=\"exam-ui-value\">Alice</p></div><div class=\"exam-ui-card\"><p class=\"exam-ui-label\">合计</p><p class=\"exam-ui-value\">NaN</p></div></div><p class=\"exam-ui-muted\">没有显示错误——坏掉的请求被当成了数据。</p></div></div>",
+            "caption": "The dashboard shows NaN because the failed request never rejected.",
+            "captionZh": "因为失败请求从未 reject，面板显示为 NaN。"
+          },
+          "titleZh": "永远到不了 catch 的失败",
+          "contentMdxZh": "一个面板用 `Promise.all` 并行加载个人资料与统计数据（见 `dashboard.js`）。stats 接口目前坏掉了，以 `404` 返回一个小 JSON 体。面板却仍然 resolve，合计处显示 `NaN` 而不是错误，如 `dashboard.png` 所示。"
+        },
+        {
+          "id": "Q7",
+          "title": "Settings that forget themselves",
+          "marks": 8,
+          "contentMdx": "A settings form saves the user's display name and should restore it on the next visit (see `settings.js`). After saving \"Alice\" and reloading, the field is back to \"Guest\". The save and load functions are shown, and `settings.png` captures the page after the reload.",
+          "subQuestions": [
+            {
+              "id": "Q7-a",
+              "label": "(a)",
+              "marks": 2,
+              "questionMdx": "After a save, what does `localStorage.getItem('settings')` actually return, and why is `raw.name` always `undefined`?",
+              "answerMdx": "`localStorage.getItem` returns a string — here the plain text `Alice` that was stored. A string has no `name` property, so `raw.name` is `undefined` on every load. That makes the ternary condition false, so `loadSettings` always returns the default `{ name: 'Guest' }` and the saved value is never used.",
+              "markingMdx": "1 mark for stating `getItem` returns a string (the stored text).\n1 mark for explaining a string has no `name` property, so `raw.name` is undefined and the default is always returned.",
+              "questionMdxZh": "保存之后，`localStorage.getItem('settings')` 实际返回的是什么？为什么 `raw.name` 总是 `undefined`？",
+              "answerMdxZh": "`localStorage.getItem` 返回的是字符串——也就是存进去的纯文本 `Alice`。字符串没有 `name` 属性，所以每次读取时 `raw.name` 都是 `undefined`。这让三元条件为假，于是 `loadSettings` 总是返回默认值 `{ name: 'Guest' }`，保存的值从未被使用。",
+              "markingMdxZh": "1 分：说明 `getItem` 返回字符串（存进去的文本）。\n1 分：解释字符串没有 `name` 属性，因此 `raw.name` 为 undefined，总是返回默认值。"
+            },
+            {
+              "id": "Q7-b",
+              "label": "(b)",
+              "marks": 3,
+              "questionMdx": "Explain why localStorage can only hold strings, and why saving and loading must be symmetric when you want to keep an object.",
+              "answerMdx": "The Web Storage API stores every value as a string; assigning a non-string is coerced with `toString()`, so an object would become `\"[object Object]\"`. To round-trip an object you must convert to a string on the way out and back on the way in: `JSON.stringify` before `setItem` and `JSON.parse` after `getItem`. The bug here is that the code saved a bare string (not stringified) but read it as if it were an object, so the two sides were not symmetric and property access returned `undefined`.",
+              "markingMdx": "1 mark for stating localStorage stores everything as strings (non-strings are coerced to text).\n1 mark for stating the round-trip needs `JSON.stringify` on save and `JSON.parse` on load.\n1 mark for pointing out this code saved a plain string but read it as an object, so the two sides were not symmetric.",
+              "questionMdxZh": "请解释为什么 localStorage 只能存字符串，以及为什么想保存对象时，保存与读取必须成对配合。",
+              "answerMdxZh": "Web Storage API 会把每个值都存成字符串；赋值非字符串时会用 `toString()` 转换，所以对象会变成 `\"[object Object]\"`。要让对象完成往返，写出时必须转成字符串、读回时必须转回：`setItem` 前用 `JSON.stringify`，`getItem` 后用 `JSON.parse`。这里的 bug 是：代码存的是一个裸字符串（没有 stringify），却把它当对象来读，两侧不对称，于是属性访问得到 `undefined`。",
+              "markingMdxZh": "1 分：说明 localStorage 一律按字符串存储（非字符串会被转成文本）。\n1 分：说明往返需要在保存时 `JSON.stringify`、读取时 `JSON.parse`。\n1 分：指出这段代码存的是纯字符串却当对象读，两侧不对称。"
+            },
+            {
+              "id": "Q7-c",
+              "label": "(c)",
+              "marks": 3,
+              "questionMdx": "Rewrite `saveSettings` and `loadSettings` so the saved name survives a reload, and say what the field shows after reloading.",
+              "answerMdx": "Save with `localStorage.setItem('settings', JSON.stringify(s))`, and load with `const raw = localStorage.getItem('settings'); return raw ? JSON.parse(raw) : { name: 'Guest' }`. Now the object is written as JSON text and parsed back into an object on the next visit, so `settings.name` is `'Alice'` and the field shows \"Alice\" after the reload. The default is only used when nothing is stored yet (`raw` is `null`).",
+              "markingMdx": "1 mark for saving with `JSON.stringify`.\n1 mark for loading with `JSON.parse` and a fallback default when the value is absent.\n1 mark for stating the field shows the saved name (\"Alice\") after reloading.",
+              "questionMdxZh": "请重写 `saveSettings` 与 `loadSettings`，让保存的名字在刷新后仍在，并说明刷新后输入框显示什么。",
+              "answerMdxZh": "保存时用 `localStorage.setItem('settings', JSON.stringify(s))`，读取时用 `const raw = localStorage.getItem('settings'); return raw ? JSON.parse(raw) : { name: 'Guest' }`。这样对象会以 JSON 文本写出，并在下次访问时被解析回对象，于是 `settings.name` 为 `'Alice'`，刷新后输入框显示 \"Alice\"。只有在还没有任何存储值（`raw` 为 `null`）时才使用默认值。",
+              "markingMdxZh": "1 分：保存时用 `JSON.stringify`。\n1 分：读取时用 `JSON.parse`，并在值不存在时回退到默认值。\n1 分：说明刷新后输入框显示已保存的名字（\"Alice\"）。"
+            }
+          ],
+          "displayNumber": "Q7",
+          "categoryLabel": "Application State: Async UI, Auth and Storage",
+          "categoryLabelZh": "应用状态：异步 UI、鉴权与存储",
+          "displayStyle": "quiz-sample",
+          "mockup": {
+            "files": [
+              {
+                "name": "settings.js",
+                "code": "function saveSettings(s) {\n  localStorage.setItem('settings', s.name)\n}\nfunction loadSettings() {\n  const raw = localStorage.getItem('settings')\n  return raw.name ? raw : { name: 'Guest' }\n}",
+                "codeZh": "function saveSettings(s) {\n  localStorage.setItem('settings', s.name)\n}\nfunction loadSettings() {\n  const raw = localStorage.getItem('settings')\n  // 保存的是字符串，读取时却当成对象\n  return raw.name ? raw : { name: 'Guest' }\n}"
+              },
+              {
+                "name": "settings.png",
+                "active": true
+              }
+            ],
+            "viewport": "desktop",
+            "html": "<div class=\"exam-ui-shell\"><div class=\"exam-ui-topbar\"><span>Account</span><span>Settings</span></div><div class=\"exam-ui-body\"><p class=\"exam-ui-page-title\">Settings</p><div class=\"exam-ui-card\"><label class=\"exam-ui-label\">Display name</label><input class=\"exam-ui-input\" value=\"Guest\"><div class=\"exam-ui-form-actions\"><button class=\"exam-ui-button\">Save</button></div></div><p class=\"exam-ui-muted\">After reloading, the field shows the default \"Guest\", not the saved name.</p></div></div>",
+            "htmlZh": "<div class=\"exam-ui-shell\"><div class=\"exam-ui-topbar\"><span>账户</span><span>设置</span></div><div class=\"exam-ui-body\"><p class=\"exam-ui-page-title\">设置</p><div class=\"exam-ui-card\"><label class=\"exam-ui-label\">显示名称</label><input class=\"exam-ui-input\" value=\"Guest\"><div class=\"exam-ui-form-actions\"><button class=\"exam-ui-button\">Save</button></div></div><p class=\"exam-ui-muted\">刷新后输入框显示默认值 \"Guest\"，而不是保存的名字。</p></div></div>",
+            "caption": "The settings form after a reload: the saved name is gone.",
+            "captionZh": "刷新后的设置表单：保存的名字不见了。"
+          },
+          "titleZh": "会「遗忘」的设置",
+          "contentMdxZh": "一个设置表单保存用户的显示名称，并应在下次访问时恢复它（见 `settings.js`）。保存 \"Alice\" 并刷新后，输入框又变回 \"Guest\"。下面是保存与读取两个函数，`settings.png` 捕捉了刷新后的页面。"
+        },
+        {
+          "id": "Q8",
+          "title": "A button that nobody finds",
+          "marks": 7,
+          "contentMdx": "An account settings panel has a primary \"Save\" and a destructive \"Delete account\". Both are styled with the same primary colour and size and sit side by side, as `panel.png` shows. Support reports that users keep hitting \"Delete account\" when they mean to save.",
+          "subQuestions": [
+            {
+              "id": "Q8-a",
+              "label": "(a)",
+              "marks": 2,
+              "questionMdx": "Identify the visual-hierarchy and affordance problem in this layout.",
+              "answerMdx": "The destructive \"Delete account\" is styled exactly like the safe primary \"Save\" — same colour, same size — so neither reads as more or less important than the other; the visual hierarchy is flat. Placed immediately beside Save, it also has the same affordance as the primary action, so a user scanning for \"the button to press\" cannot tell the two apart by sight. That is why mis-clicks happen.",
+              "markingMdx": "1 mark for noting the destructive Delete looks identical to Save (same styling, no visual distinction).\n1 mark for noting the placement right next to Save makes the two hard to tell apart, so mis-clicks happen.",
+              "questionMdxZh": "请指出这个布局在视觉层级与可感知性（affordance）上的问题。",
+              "answerMdxZh": "破坏性的 \"Delete account\" 被做得和安全的 \"Save\" 一模一样——相同的颜色、相同的大小——于是两者没有谁显得更重要或不重要，视觉层级是平的。它又紧挨着 Save 摆放，可感知性与主操作相同，因此用户在寻找「该按的那个按钮」时，仅凭外观无法区分二者。这就是误点发生的原因。",
+              "markingMdxZh": "1 分：指出破坏性的 Delete 与 Save 外观完全相同（样式一致、没有视觉区分）。\n1 分：指出它紧挨 Save 摆放使两者难以区分，从而导致误点。"
+            },
+            {
+              "id": "Q8-b",
+              "label": "(b)",
+              "marks": 2,
+              "questionMdx": "Which usability principle does this violate, and why does the violation make errors more likely?",
+              "answerMdx": "It violates error prevention (with a related break in consistency and standards): a dangerous, hard-to-undo action is presented as if it were the ordinary primary action. Because the two look equally safe and equally prominent, users cannot use appearance to avoid the risky one, so a slip in aim or a quick scan easily lands on Delete. Good error prevention would make the risky action visually distinct (or protected) so that a mistaken click is unlikely in the first place.",
+              "markingMdx": "1 mark for naming the principle (error prevention, and/or consistency & standards).\n1 mark for explaining that presenting a risky action like the primary one removes the visual cue users rely on to avoid it, so slips are more likely.",
+              "questionMdxZh": "这违反了哪条可用性原则？为什么这种违反会让错误更容易发生？",
+              "answerMdxZh": "它违反了「错误预防」（同时连带破坏了「一致性与标准」）：把一个危险、难以撤销的操作呈现得和普通主操作一样。因为两者看起来同样安全、同样突出，用户无法借助外观来避开危险的那个，于是瞄准上的偏差或快速扫视就很容易落到 Delete 上。良好的错误预防会让这个危险操作在外观上明显不同（或加以保护），从源头上降低误点的可能。",
+              "markingMdxZh": "1 分：说出原则（错误预防，和/或一致性与标准）。\n1 分：解释把危险操作做得像主操作，抹去了用户用来规避它的视觉线索，因此失误更容易发生。"
+            },
+            {
+              "id": "Q8-c",
+              "label": "(c)",
+              "marks": 3,
+              "questionMdx": "Propose a redesign that reduces mis-clicks, and explain why each change helps.",
+              "answerMdx": "Make the destructive action visually distinct: render Delete in a danger colour (red) rather than the primary blue, so it no longer reads as the safe default. Separate it from Save — physically move it away, or drop it to a lower-emphasis, secondary style — so the primary action is unambiguous. Add a confirmation step (\"Delete your account? This cannot be undone\") before it acts. Together these rebuild the hierarchy (save = primary, delete = danger), remove the easy slip, and add a safety net so an accidental click can still be cancelled.",
+              "markingMdx": "1 mark for making the destructive action visually distinct (e.g. danger colour or lower emphasis).\n1 mark for separating it from Save and/or adding a confirmation step.\n1 mark for explaining why these restore the hierarchy and create a safety net that prevents an accidental click from causing harm.",
+              "questionMdxZh": "请提出一个能减少误点的重新设计方案，并解释每一项改动为什么有帮助。",
+              "answerMdxZh": "让破坏性操作在外观上明显不同：把 Delete 渲染成危险色（红色），而不是主色蓝，使它不再被当成安全的默认项。把它与 Save 分开——在物理上挪远，或降级为低强调的次级样式——让主操作一目了然。再在真正执行前加一个确认步骤（“确定删除你的账户？此操作无法撤销”）。三者合起来重建了层级（save = 主操作，delete = 危险），消除了轻易的误触，并加了一层安全网，让误点仍可取消。",
+              "markingMdxZh": "1 分：让破坏性操作外观明显不同（例如危险色或降低强调）。\n1 分：把它与 Save 分开，和/或加入确认步骤。\n1 分：解释这些改动如何重建层级、形成安全网，从而避免误点造成危害。"
+            }
+          ],
+          "displayNumber": "Q8",
+          "categoryLabel": "UI Design Principles and User Experience Reasoning",
+          "categoryLabelZh": "UI 设计原则与用户体验推理",
+          "displayStyle": "quiz-sample",
+          "mockup": {
+            "files": [
+              {
+                "name": "panel.css",
+                "code": ".panel button {\n  padding: 10px 18px;\n  border-radius: 6px;\n}\n.save, .delete {\n  background: #2f6fed;\n  color: #fff;\n}",
+                "codeZh": ".panel button {\n  padding: 10px 18px;\n  border-radius: 6px;\n}\n/* Save 与 Delete 共用一个主色，外观完全相同 */\n.save, .delete {\n  background: #2f6fed;\n  color: #fff;\n}"
+              },
+              {
+                "name": "panel.png",
+                "active": true
+              }
+            ],
+            "viewport": "desktop",
+            "html": "<div class=\"exam-ui-shell\"><div class=\"exam-ui-topbar\"><span>Account</span><span>Settings</span></div><div class=\"exam-ui-body\"><p class=\"exam-ui-page-title\">Account settings</p><div class=\"exam-ui-card\"><label class=\"exam-ui-label\">Display name</label><input class=\"exam-ui-input\" value=\"Alice\"><div class=\"exam-ui-button-row\"><button class=\"exam-ui-button\">Save</button><button class=\"exam-ui-button\">Delete account</button></div></div><p class=\"exam-ui-muted\">Save and Delete account look identical and sit side by side.</p></div></div>",
+            "htmlZh": "<div class=\"exam-ui-shell\"><div class=\"exam-ui-topbar\"><span>账户</span><span>设置</span></div><div class=\"exam-ui-body\"><p class=\"exam-ui-page-title\">账户设置</p><div class=\"exam-ui-card\"><label class=\"exam-ui-label\">显示名称</label><input class=\"exam-ui-input\" value=\"Alice\"><div class=\"exam-ui-button-row\"><button class=\"exam-ui-button\">Save</button><button class=\"exam-ui-button\">Delete account</button></div></div><p class=\"exam-ui-muted\">Save 与 Delete account 外观相同，并排摆放。</p></div></div>",
+            "caption": "Save and Delete account share the same primary styling and sit side by side.",
+            "captionZh": "Save 与 Delete account 采用相同的主色样式，并排摆放。"
+          },
+          "titleZh": "没人找得到的按钮",
+          "contentMdxZh": "一个账户设置面板里有一个主操作 \"Save\" 和一个破坏性操作 \"Delete account\"。两者用相同的主色和相同的尺寸样式、并排摆放，如 `panel.png` 所示。客服反馈：用户想保存时却总是点到 \"Delete account\"。"
+        }
+      ]
+    }
+  ]
+}

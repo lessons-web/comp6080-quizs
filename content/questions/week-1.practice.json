@@ -867,6 +867,131 @@
       "codeBlocks": [],
       "images": [],
       "createdAt": "2026-10-25"
+    },
+    {
+      "id": "TOPIC1-Q1",
+      "topic": "html",
+      "weeks": [
+        "week-1"
+      ],
+      "difficulty": "easy",
+      "tags": [
+        "专题卷1",
+        "HTML",
+        "charset",
+        "viewport"
+      ],
+      "question": "咖啡店菜单页 `index.html` 在手机上整个页面显得很小，且部分文字变成乱码（例如 \"Crème brûlée\" 显示成 \"CrÃ¨me brûlée\"）。它的 `<head>` 里缺了两条声明：\n```html\n<!doctype html>\n<html lang=\"en\">\n  <head>\n    <title>Café Lumière</title>\n  </head>\n  <body>\n    <h1>Today's menu</h1>\n    <p>Crème brûlée — $6</p>\n  </body>\n</html>\n```\n为什么缺少 `charset` 会让文字乱码？为什么缺少 `viewport` 会让页面在手机上显得很小？应如何修正？",
+      "knowledgePoint": "Gibberish menu",
+      "answerExplanation": "缺少的两条声明是 `<meta charset=\"utf-8\">` 与 `<meta name=\"viewport\" content=\"width=device-width, initial-scale=1\">`。文件以 UTF-8 保存，带重音的字符占多个字节；没有声明 charset 时浏览器只能猜编码（常猜成单字节编码），把多字节字符读成多个独立字符，就产生乱码。没有 viewport 时，手机会按一个很宽的默认页面（约 980px）渲染再整体缩小到屏幕上，因此文字显得很小；`width=device-width` 让布局宽度等于设备宽度。修正方式是把这个 `<meta charset=\"utf-8\">` 放在 `<head>` 最前面，并补上 viewport meta。",
+      "codeBlocks": [
+        {
+          "language": "html",
+          "code": "<head>\n  <meta charset=\"utf-8\">\n  <meta name=\"viewport\" content=\"width=device-width, initial-scale=1\">\n  <title>Café Lumière</title>\n</head>"
+        }
+      ],
+      "images": [],
+      "createdAt": "2026-11-21"
+    },
+    {
+      "id": "TOPIC1-Q2",
+      "topic": "html",
+      "weeks": [
+        "week-1"
+      ],
+      "difficulty": "medium",
+      "tags": [
+        "专题卷1",
+        "语义化",
+        "landmark",
+        "标题层级"
+      ],
+      "question": "课程主页 `index.html` 的每个区域都用 `<div>`，且标题从 `<h1>` 直接跳到 `<h3>`：\n```html\n<div class=\"top\">COMP6080</div>\n<div class=\"menu\">Home · Docs · About</div>\n<div class=\"main\">\n  <div class=\"title\">Welcome to COMP6080</div>\n  <h3>Getting started</h3>\n</div>\n```\n读屏用户反映无法直接跳到导航或主体内容。请指出缺失的语义地标与跳过的标题层级，说明它们为什么重要，并给出修正后的写法（保留原 class）。",
+      "knowledgePoint": "A page made of divs",
+      "answerExplanation": "缺的是导航地标 `<nav>` 与主体地标 `<main>`；`<div class=\"menu\">` 应为 `<nav>`，`<div class=\"main\">` 应为 `<main>`；标题跳过了 `<h2>`。`<div>` 不携带任何角色，对无障碍树没有贡献，读屏器无法把它们呈现为 navigation / main 地标，也没有快捷跳转入口；`<nav>` 与 `<main>` 会创建这些地标，读屏器可列出并在其间跳转。跳过的 `h2` 使标题大纲变成 h1 → h3，暗示中间缺了一节，按标题层级导航的用户会落到没有上一级的层级。修正时把区域 div 换成对应语义元素并保留 class，`.menu`/`.main` 的样式仍会命中，因此视觉不受影响。",
+      "codeBlocks": [
+        {
+          "language": "html",
+          "code": "<header class=\"top\">COMP6080</header>\n<nav class=\"menu\">Home · Docs · About</nav>\n<main class=\"main\">\n  <h1>Welcome to COMP6080</h1>\n  <h2>Getting started</h2>\n</main>"
+        }
+      ],
+      "images": [],
+      "createdAt": "2026-11-21"
+    },
+    {
+      "id": "TOPIC1-Q3",
+      "topic": "html",
+      "weeks": [
+        "week-1"
+      ],
+      "difficulty": "medium",
+      "tags": [
+        "专题卷1",
+        "路径",
+        "图片",
+        "链接"
+      ],
+      "question": "画廊页位于 `gallery/index.html`，真实图片放在站点根目录 `assets/images/` 下。页面里这样写：\n```html\n<img src=\"assets/images/art1.jpg\" alt=\"Blue Ridge\">\n<a href=\"detail.html\">Details</a>\n```\n线上图片全部加载失败、\"Details\" 链接全部 404。请说明浏览器实际请求的路径、为什么这些相对路径会失败，以及如何改成更稳的写法。",
+      "knowledgePoint": "Broken images and links",
+      "answerExplanation": "浏览器会把相对路径拼接到页面自身所在的目录上。从 `gallery/index.html` 出发，`assets/images/art1.jpg` 会解析成 `gallery/assets/images/art1.jpg`，`detail.html` 会解析成 `gallery/detail.html`，而文件都不在这些位置，于是 404。如果页面待在站点根目录，它所在目录就是根目录，这些路径本会解析正确，所以这是位置相关的 bug，页面移进子目录后才暴露。修正方法是改用根路径：以 `/` 开头，浏览器就从站点根目录解析，与页面所在目录无关，从而更稳。",
+      "codeBlocks": [
+        {
+          "language": "html",
+          "code": "<img src=\"/assets/images/art1.jpg\" alt=\"Blue Ridge\">\n<a href=\"/gallery/detail.html\">Details</a>"
+        }
+      ],
+      "images": [],
+      "createdAt": "2026-11-21"
+    },
+    {
+      "id": "TOPIC1-Q4",
+      "topic": "html",
+      "weeks": [
+        "week-1"
+      ],
+      "difficulty": "medium",
+      "tags": [
+        "专题卷1",
+        "列表",
+        "表格",
+        "代码标签"
+      ],
+      "question": "成绩页 `results.html` 用 `<div>` 行搭排名、用一个连成一串的 `<div>` 写步骤、并用普通 `<div>` 放代码示例，导致缩进被压平：\n```html\n<div class=\"standings\">\n  <div class=\"row\">1  Amara  QLD  12:04</div>\n  <div class=\"row\">2  Wei  NSW  12:11</div>\n</div>\n<div class=\"steps\">Warm up, run, cool down</div>\n<div class=\"code\">\n      function add(a, b) {\n        return a + b;\n      }\n    </div>\n```\n为什么 `<div>` 网格不适合做排名？代码为什么丢失缩进？请分别用正确的元素重写排名、步骤与代码三部分。",
+      "knowledgePoint": "A run-on results page",
+      "answerExplanation": "`<div>` 网格只是看起来像表格，不携带行/列语义：读屏器无法把单元格与其表头关联，也无法报出\"第 2 行、某列\"。应使用 `<table>` 配合 `<thead>`/`<th>`（以及 `<tbody>`/`<td>`）。步骤有固定先后顺序，应使用 `<ol>`/`<li>`，默认带编号。代码丢缩进是因为 HTML 会把连续空白、制表符与换行折叠成一个空格；用 `<pre><code>` 可保留原始空白与换行，让缩进和换行得以保留，同时 `code` 表达\"这是一段代码\"的语义。",
+      "codeBlocks": [
+        {
+          "language": "html",
+          "code": "<ol>\n  <li>Warm up</li>\n  <li>Run</li>\n  <li>Cool down</li>\n</ol>\n\n<table>\n  <thead>\n    <tr><th>Place</th><th>Runner</th><th>Time</th></tr>\n  </thead>\n  <tbody>\n    <tr><td>1</td><td>Amara</td><td>12:04</td></tr>\n    <tr><td>2</td><td>Wei</td><td>12:11</td></tr>\n  </tbody>\n</table>\n\n<pre><code>function add(a, b) {\n  return a + b;\n}</code></pre>"
+        }
+      ],
+      "images": [],
+      "createdAt": "2026-11-21"
+    },
+    {
+      "id": "SPRINT1-Q1",
+      "topic": "html",
+      "weeks": [
+        "week-1"
+      ],
+      "difficulty": "easy",
+      "tags": [
+        "冲刺卷",
+        "HTML",
+        "路径",
+        "相对路径"
+      ],
+      "question": "商品页位于 `/shop/item.html`，页面里写着：\n```html\n<img src=\"images/shoe.png\" alt=\"跑鞋\">\n<a href=\"catalog.html\">返回目录</a>\n```\n线上图片全部加载失败，\"返回目录\" 链接也 404。请说明浏览器实际请求的路径、为什么这些相对路径会失败，以及如何改成更稳的写法。",
+      "knowledgePoint": "相对路径与根相对路径解析",
+      "answerExplanation": "浏览器会把相对路径拼接到当前文档所在目录上。从 `/shop/item.html` 出发，`images/shoe.png` 解析为 `/shop/images/shoe.png`，`catalog.html` 解析为 `/shop/catalog.html`；而文件实际位于 `/images/shoe.png` 与 `/catalog.html`，于是请求 404。这套路径只有在页面处于站点根目录时才正确，页面移进子目录后才暴露问题。改用根相对路径（以 `/` 开头）即从站点根目录解析，与页面所在目录无关，因此更稳：`/images/shoe.png` 与 `/shop/catalog.html`。",
+      "codeBlocks": [
+        {
+          "language": "html",
+          "code": "<img src=\"/images/shoe.png\" alt=\"跑鞋\">\n<a href=\"/shop/catalog.html\">返回目录</a>"
+        }
+      ],
+      "images": [],
+      "createdAt": "2026-11-21"
     }
   ]
 }

@@ -1,0 +1,544 @@
+{
+  "topic": "react",
+  "exams": [
+    {
+      "id": "SPRINT2-QUIZ3",
+      "title": "Mock Quiz 3 — Sprint Paper",
+      "titleZh": "模拟 Quiz 3 · 冲刺卷",
+      "description": "A sprint / revision paper in the real Quiz 3 format: Weeks 1-8 lectures and Weeks 1-9 tutorials plus assignment 4, with a focus on Weeks 7-8 React (state, effects, router) and a light Weeks 1-8 review. Eight questions, three sub-questions each, with screenshot-style mockups.",
+      "descriptionZh": "按真实 Quiz 3 形式组织的冲刺 / 复习卷：覆盖 Weeks 1-8 lectures 与 Weeks 1-9 tutorials，并包含 assignment 4，重点为 Weeks 7-8 的 React（state、effects、router），另含少量 Weeks 1-8 复习。共 8 道大题，每题 3 个子题，配套截图感 mockup。",
+      "totalMarks": 64,
+      "tags": ["冲刺卷", "Quiz3", "Weeks7-8", "React", "期末冲刺"],
+      "questions": [
+        {
+          "id": "Q1",
+          "title": "The total that snaps back",
+          "titleZh": "会弹回去的总价",
+          "marks": 8,
+          "contentMdx": "A cart page shows a running total. In the first version (`Cart.js`) the `addItem` handler reaches into the DOM with `document.querySelector('.total')` and rewrites its `textContent`, but a React re-render then puts the number back to what state says, so the display \"snaps back\". `cart.png` shows the rendered cart. The team now wants the declarative React version and also asks what JSX such as `<span className=\"total\">{total}</span>` actually becomes.",
+          "contentMdxZh": "一个购物车页面会显示实时总价。第一版（`Cart.js`）里 `addItem` 处理器用 `document.querySelector('.total')` 直接操作 DOM 并改写 `textContent`，但随后一次 React 重渲染又把数字改回 state 所说的值，于是显示 “弹了回去”。`cart.png` 展示了渲染后的购物车。团队现在想改成声明式的 React 写法，同时还想知道形如 `<span className=\"total\">{total}</span>` 的 JSX 究竟会变成什么。",
+          "subQuestions": [
+            {
+              "id": "Q1-a",
+              "label": "(a)",
+              "marks": 2,
+              "questionMdx": "When React renders the page, what does JSX such as `<span className=\"total\">{total}</span>` actually turn into, and why is it not HTML?",
+              "answerMdx": "The browser never sees the JSX tags. A build step compiles that element into a plain function call, something like `React.createElement('span', { className: 'total' }, total)` (or the equivalent jsx-runtime call), which returns a plain JavaScript object — an element description. React then uses that object tree to create and update the real DOM. So JSX is only readable shorthand for those element objects; it is not an HTML string and is never sent to the browser as markup.",
+              "markingMdx": "1 mark for stating that JSX is compiled into a function call (`React.createElement` / the jsx runtime) that returns an element object.\n1 mark for stating it is a JavaScript object React turns into DOM, not an HTML string.",
+              "questionMdxZh": "当 React 渲染页面时，形如 `<span className=\"total\">{total}</span>` 的 JSX 实际会变成什么？为什么它不是 HTML？",
+              "answerMdxZh": "浏览器根本看不到这些 JSX 标签。构建步骤会把该元素编译成一个普通的函数调用，类似 `React.createElement('span', { className: 'total' }, total)`（或等价的 jsx-runtime 调用），返回一个普通的 JavaScript 对象——一个元素描述。React 再用这棵对象树去创建和更新真实 DOM。所以 JSX 只是这些元素对象的可读简写，它不是 HTML 字符串，也从不会作为标记发给浏览器。",
+              "markingMdxZh": "1 分：说明 JSX 会被编译成函数调用（`React.createElement` / jsx 运行时），并返回一个元素对象。\n1 分：说明它是 React 用来生成 DOM 的 JavaScript 对象，而不是 HTML 字符串。"
+            },
+            {
+              "id": "Q1-b",
+              "label": "(b)",
+              "marks": 3,
+              "questionMdx": "Why does the imperative handler (querying `.total` and writing `textContent`) fight against React, so that the number snaps back after a re-render?",
+              "answerMdx": "React owns the DOM: on every render it derives the element tree from state and updates the real DOM to match, assuming it is the only writer. The handler calls `setTotal(...)` and *also* writes `textContent` by hand. The manual write changes the DOM behind React's back, so React's model and the real DOM now disagree. On the next render React re-applies the value it believes is correct and overwrites the hand edit — the button appears to \"snap back\". The conflict is two writers (the imperative code and the declarative re-render) editing the same node.",
+              "markingMdx": "1 mark for stating React derives the DOM from state and treats itself as the sole writer.\n1 mark for explaining the manual `textContent` write is overwritten on the next render.\n1 mark for naming the root cause: two writers mutate the same node / the model desyncs from the DOM.",
+              "questionMdxZh": "为什么命令式处理器（查询 `.total` 并写 `textContent`）会与 React 冲突，导致重渲染后数字弹回去？",
+              "answerMdxZh": "React 拥有 DOM：每次渲染它都从 state 推导出元素树，并把真实 DOM 更新成一致的状态，默认自己是唯一的写入者。而该处理器既调用 `setTotal(...)`，又手动写 `textContent`。这次手动写在 React 背后改动了 DOM，于是 React 的模型和真实 DOM 不再一致。下一次渲染时，React 会把它认为正确的值重新写回去，覆盖掉手动改动——按钮看起来就 “弹回原样”。冲突的根源是有两个写入者（命令式代码与声明式重渲染）在改同一个节点。",
+              "markingMdxZh": "1 分：说明 React 从 state 推导 DOM，并把自己当作唯一写入者。\n1 分：说明手动写 `textContent` 会在下一次渲染时被覆盖。\n1 分：指出根本原因——两个写入者改同一个节点 / 模型与 DOM 失同步。"
+            },
+            {
+              "id": "Q1-c",
+              "label": "(c)",
+              "marks": 3,
+              "questionMdx": "Rewrite the total so it is fully declarative: show where the value lives, the handler, and how the display updates.",
+              "answerMdx": "Keep the total in state and let the render derive the text: `const [total, setTotal] = useState(15); function addItem(price) { setTotal(total + price); } return <span className=\"total\">{total}</span>`. Clicking calls `addItem`, which updates state; React re-renders and the span shows the new `total`. There is no DOM access, so state is the single source of truth and the display cannot drift from it.",
+              "markingMdx": "1 mark for holding the total in `useState`.\n1 mark for rendering the value from state (`{total}`) rather than writing the DOM.\n1 mark for updating it only through the setter (`setTotal(...)`), with no direct DOM access.",
+              "questionMdxZh": "请把总价改成完全声明式：展示该值存放在哪里、处理器是什么，以及显示如何更新。",
+              "answerMdxZh": "把总价放进 state，让渲染从中派生文本：`const [total, setTotal] = useState(15); function addItem(price) { setTotal(total + price); } return <span className=\"total\">{total}</span>`。点击会调用 `addItem` 更新 state，React 重渲染后 span 就显示新的 `total`。全程没有操作 DOM，state 成为唯一数据源，显示不可能与它漂移。",
+              "markingMdxZh": "1 分：用 `useState` 保存总价。\n1 分：从 state 渲染该值（`{total}`），而不是写 DOM。\n1 分：只通过 setter（`setTotal(...)`）更新，没有任何直接操作 DOM 的地方。"
+            }
+          ],
+          "displayNumber": "Q1",
+          "categoryLabel": "React State and Rendering",
+          "categoryLabelZh": "React 状态与渲染",
+          "displayStyle": "quiz-sample",
+          "mockup": {
+            "files": [
+              {
+                "name": "Cart.js",
+                "code": "function Cart() {\n  const [total, setTotal] = useState(15)\n\n  function addItem(price) {\n    setTotal(total + price)\n    const el = document.querySelector('.total')\n    el.textContent = '$' + (total + price)\n  }\n\n  return <span className=\"total\">{total}</span>\n}",
+                "codeZh": "function Cart() {\n  const [total, setTotal] = useState(15)\n\n  function addItem(price) {\n    setTotal(total + price)\n    // 绕过 React 直接改 DOM\n    const el = document.querySelector('.total')\n    el.textContent = '$' + (total + price)\n  }\n\n  return <span className=\"total\">{total}</span>\n}"
+              },
+              {
+                "name": "cart.png",
+                "active": true
+              }
+            ],
+            "viewport": "desktop",
+            "html": "<div class=\"exam-ui-shell\"><div class=\"exam-ui-topbar\"><span>Shop</span><span>Cart</span></div><div class=\"exam-ui-body\"><p class=\"exam-ui-page-title\">Your cart</p><div class=\"exam-ui-card\"><ul class=\"exam-ui-list\"><li class=\"exam-ui-list-row exam-ui-space-between\"><span>Flat White &times; 2</span><span>$9.00</span></li><li class=\"exam-ui-list-row exam-ui-space-between\"><span>Banana Bread &times; 1</span><span>$6.00</span></li></ul><div class=\"exam-ui-divider\"></div><div class=\"exam-ui-space-between\"><span class=\"exam-ui-label\">Total</span><span class=\"exam-ui-stat\">$15.00</span></div><p class=\"exam-ui-help\">The total snaps back to the old value after each re-render</p></div></div></div>",
+            "htmlZh": "<div class=\"exam-ui-shell\"><div class=\"exam-ui-topbar\"><span>商城</span><span>购物车</span></div><div class=\"exam-ui-body\"><p class=\"exam-ui-page-title\">我的购物车</p><div class=\"exam-ui-card\"><ul class=\"exam-ui-list\"><li class=\"exam-ui-list-row exam-ui-space-between\"><span>馥芮白 &times; 2</span><span>$9.00</span></li><li class=\"exam-ui-list-row exam-ui-space-between\"><span>香蕉面包 &times; 1</span><span>$6.00</span></li></ul><div class=\"exam-ui-divider\"></div><div class=\"exam-ui-space-between\"><span class=\"exam-ui-label\">总价</span><span class=\"exam-ui-stat\">$15.00</span></div><p class=\"exam-ui-help\">每次重渲染后总价又弹回旧值</p></div></div></div>",
+            "caption": "The cart page: the total is written by hand, so the next render resets it.",
+            "captionZh": "购物车页面：总价被手动写入，所以下一次渲染又把它重置了。"
+          },
+          "titleZh": "会弹回去的总价"
+        },
+        {
+          "id": "Q2",
+          "title": "The comment box that follows the wrong row",
+          "titleZh": "跟着错误行走的输入框",
+          "marks": 8,
+          "contentMdx": "A thread page lists comments, and each row has its own text box (`CommentList.js`). The list is rendered with `key={index}`. When the first comment is deleted, the text a user had typed into the remaining boxes shifts down by one row — each box now shows the comment that used to be above it. `comments.png` shows the result.",
+          "contentMdxZh": "一个帖子页把评论列出来，每一行都有自己的输入框（`CommentList.js`）。列表用 `key={index}` 渲染。删除第一条评论后，用户在剩余输入框里打的字会整体往下错一行——每个框显示的都是原来上一行的评论。`comments.png` 展示了结果。",
+          "subQuestions": [
+            {
+              "id": "Q2-a",
+              "label": "(a)",
+              "marks": 3,
+              "questionMdx": "What is the `key` for, and what does React use it to decide during a re-render?",
+              "answerMdx": "The key is the stable identity React attaches to each element in a list so it can match the new list against the previous one. During reconciliation React compares old and new children by key to decide which elements are \"the same\" and can be reused (and moved) rather than recreated. Reusing an instance also preserves its local state (such as a text box's typed value). Without a trustworthy key React cannot tell which row is which.",
+              "markingMdx": "1 mark for stating the key is the identity React attaches to each list item across renders.\n1 mark for stating React uses it to match old and new children during reconciliation.\n1 mark for stating matching lets React reuse the instance and preserve its local state (or reorder correctly).",
+              "questionMdxZh": "`key` 是做什么用的？在一次重渲染中，React 用它来决定什么？",
+              "answerMdxZh": "key 是 React 为列表中每个元素附加的稳定身份，用来把新列表和上一次的列表对应起来。在协调（reconciliation）过程中，React 按 key 比较新旧子节点，以判断哪些元素是 “同一个”、可以复用（并移动）而不是重建。复用实例还会保留它的本地 state（例如输入框里已输入的文字）。没有可信的 key，React 就分不清哪一行是哪一行。",
+              "markingMdxZh": "1 分：说明 key 是 React 跨渲染为每个列表项附加的身份。\n1 分：说明 React 在协调时用它来匹配新旧子节点。\n1 分：说明匹配后 React 能复用实例并保留其本地 state（或正确重排序）。"
+            },
+            {
+              "id": "Q2-b",
+              "label": "(b)",
+              "marks": 3,
+              "questionMdx": "Why does using `key={index}` make the typed text shift to the wrong row when the first comment is deleted?",
+              "answerMdx": "An index key identifies a *position*, not an item. When the first comment is removed, every remaining comment moves up one slot, so the data at index 0, 1, 2 ... all changes — but the keys are still 0, 1, 2 .... React sees the same keys and treats each slot as the same instance, so it keeps that instance and its local input state. The data under the box changed, but the box's text stayed, so the text appears to shift down a row. The key matched the position, so React could not follow the item's identity.",
+              "markingMdx": "1 mark for stating an index key tracks position, not the item's identity.\n1 mark for explaining that after a delete the data at each index changes while the keys stay the same.\n1 mark for linking the reused instance's retained local state to the text staying behind / shifting.",
+              "questionMdxZh": "删除第一条评论后，为什么用 `key={index}` 会让输入的文字错到错误的行上？",
+              "answerMdxZh": "下标 key 标识的是 *位置*，而不是条目本身。第一条评论被移除后，剩下的每条评论都上移一格，于是下标 0、1、2…… 对应的数据全变了——但 key 仍然是 0、1、2……。React 看到 key 没变，就把每个位置当成同一个实例，于是保留该实例及其本地输入文字。框下面的数据变了，框里的文字却没变，看起来就是文字往下错了一行。key 匹配的是位置，所以 React 无法跟随条目的身份。",
+              "markingMdxZh": "1 分：说明下标 key 跟踪的是位置，而不是条目的身份。\n1 分：解释删除后每个下标处的数据都变了，而 key 保持不变。\n1 分：把被复用实例保留的本地 state 与 “文字留在原地 / 错位” 联系起来。"
+            },
+            {
+              "id": "Q2-c",
+              "label": "(c)",
+              "marks": 2,
+              "questionMdx": "Give the fix that stops the text from shifting, with the code.",
+              "answerMdx": "Give each row a stable, unique key that comes from the data, not its position: `{comments.map((comment) => <Comment key={comment.id} comment={comment} />)}`. Now a row keeps the same key as its item wherever it moves, so React matches the box to the same comment and its typed text follows the correct item instead of the slot.",
+              "markingMdx": "1 mark for using a stable, unique key drawn from the data (e.g. `comment.id` instead of `index`).\n1 mark for explaining that the key now follows the item, so each box keeps its own text.",
+              "questionMdxZh": "请给出能阻止文字错位的改法，并附上代码。",
+              "answerMdxZh": "给每一行一个来自数据的稳定唯一 key，而不是用位置：`{comments.map((comment) => <Comment key={comment.id} comment={comment} />)}`。这样无论条目移动到哪里，这一行都保持相同的 key，React 就把输入框匹配到同一条评论，输入的文字也会跟着正确的条目走，而不是跟着位置走。",
+              "markingMdxZh": "1 分：改用来自数据的稳定唯一 key（例如用 `comment.id` 代替 `index`）。\n1 分：说明 key 现在跟随条目，因此每个输入框保留各自的文字。"
+            }
+          ],
+          "displayNumber": "Q2",
+          "categoryLabel": "React State and Rendering",
+          "categoryLabelZh": "React 状态与渲染",
+          "displayStyle": "quiz-sample",
+          "mockup": {
+            "files": [
+              {
+                "name": "CommentList.js",
+                "code": "function CommentList() {\n  const [comments, setComments] = useState(initial)\n  return (\n    <ul>\n      {comments.map((comment, index) => (\n        <Comment key={index} comment={comment} />\n      ))}\n    </ul>\n  )\n}",
+                "codeZh": "function CommentList() {\n  const [comments, setComments] = useState(initial)\n  return (\n    <ul>\n      {/* 用下标做 key，位置一变就错位 */}\n      {comments.map((comment, index) => (\n        <Comment key={index} comment={comment} />\n      ))}\n    </ul>\n  )\n}"
+              },
+              {
+                "name": "comments.png",
+                "active": true
+              }
+            ],
+            "viewport": "desktop",
+            "html": "<div class=\"exam-ui-shell\"><div class=\"exam-ui-topbar\"><span>Qanda</span><span>Thread</span></div><div class=\"exam-ui-body\"><p class=\"exam-ui-page-title\">Comments</p><div class=\"exam-ui-card\"><ul class=\"exam-ui-list\"><li class=\"exam-ui-list-row\"><div class=\"exam-ui-input\" style=\"flex:1;\">Thanks, that fixed it</div></li><li class=\"exam-ui-list-row\"><div class=\"exam-ui-input\" style=\"flex:1;\">Mine says 42</div></li><li class=\"exam-ui-list-row\"><div class=\"exam-ui-input\" style=\"flex:1;\">draft I was typing</div></li></ul><p class=\"exam-ui-help\">After deleting the first comment, each box shows the text from the row above</p></div></div></div>",
+            "htmlZh": "<div class=\"exam-ui-shell\"><div class=\"exam-ui-topbar\"><span>Qanda</span><span>帖子</span></div><div class=\"exam-ui-body\"><p class=\"exam-ui-page-title\">评论</p><div class=\"exam-ui-card\"><ul class=\"exam-ui-list\"><li class=\"exam-ui-list-row\"><div class=\"exam-ui-input\" style=\"flex:1;\">谢谢，这样就好了</div></li><li class=\"exam-ui-list-row\"><div class=\"exam-ui-input\" style=\"flex:1;\">我这里是 42</div></li><li class=\"exam-ui-list-row\"><div class=\"exam-ui-input\" style=\"flex:1;\">我正在写的草稿</div></li></ul><p class=\"exam-ui-help\">删掉第一条评论后，每个框都显示上一行的文字</p></div></div></div>",
+            "caption": "The comment list after a delete: the input text stays with the position, so it appears to shift down.",
+            "captionZh": "删除之后的评论列表：输入的文字留在原位置，看起来整体往下错位。"
+          },
+          "titleZh": "跟着错误行走的输入框"
+        },
+        {
+          "id": "Q3",
+          "title": "The +3 button that adds one",
+          "titleZh": "点了只加一的 +3 按钮",
+          "marks": 8,
+          "contentMdx": "A counter has a single button labelled \"+3\". Its handler runs `setCount(count + 1)` three times (`Counter.js`). Clicking it once only moves the number from 1 to 2, as `counter.png` shows, even though three updates were requested.",
+          "contentMdxZh": "一个计数器只有一个标着 “+3” 的按钮。它的处理器连续三次执行 `setCount(count + 1)`（`Counter.js`）。如 `counter.png` 所示，点一次数字只从 1 变成 2，尽管请求了三次更新。",
+          "subQuestions": [
+            {
+              "id": "Q3-a",
+              "label": "(a)",
+              "marks": 2,
+              "questionMdx": "Clicking \"+3\" only adds 1. Why do the three calls not add three?",
+              "answerMdx": "All three calls read the same `count` value from the current render. `count` is a constant captured when this render ran, so each call computes `count + 1` from the same starting number. Every call proposes the same new value (`2`), so the result is a single increment no matter how many times you write it.",
+              "markingMdx": "1 mark for stating that all three calls read the same `count` from the current render.\n1 mark for stating they all compute the same value, so the update counts as one.",
+              "questionMdxZh": "点击 “+3” 却只加了 1。为什么这三次调用没有加三？",
+              "answerMdxZh": "三次调用读取的都是当前渲染里的同一个 `count` 值。`count` 是这次渲染运行时捕获的常量，所以每次都在同一个起始数字上算 `count + 1`。每一次提出的都是同一个新值（`2`），所以无论写几遍，结果都只加了一次。",
+              "markingMdxZh": "1 分：说明三次调用读取的都是当前渲染里的同一个 `count`。\n1 分：说明它们算出的是同一个值，因此更新只算作一次。"
+            },
+            {
+              "id": "Q3-b",
+              "label": "(b)",
+              "marks": 3,
+              "questionMdx": "Explain the mechanism: how React batches these updates and why the later calls cannot see the earlier ones.",
+              "answerMdx": "React batches all the state updates made inside one event handler and re-renders once at the end. And `count` is a per-render constant: `setCount` *schedules* a new value but does not change the `count` variable of the render that is currently running. So when the second and third calls execute, they still read the old `count`; none of them can see a value produced by an earlier call in the same handler. The three calls chain nothing — they all start from the same snapshot.",
+              "markingMdx": "1 mark for stating React batches the updates from one handler and re-renders once.\n1 mark for stating `count` is a per-render constant that `setCount` does not mutate immediately.\n1 mark for concluding that the later calls therefore still read the old value.",
+              "questionMdxZh": "请解释其中的机制：React 如何批处理这些更新，以及为什么后面的调用看不到前面的调用。",
+              "answerMdxZh": "React 会把一个事件处理器内做的所有 state 更新批处理，并在最后只重渲染一次。而且 `count` 是每次渲染的常量：`setCount` 只是 *安排* 一个新值，并不会改变当前正在运行的这次渲染里的 `count` 变量。所以当第二、第三次调用执行时，它们读到的仍是旧的 `count`；没有任何一次能看到同一处理器里更早的调用产生的值。三次调用没有串联——它们都从同一份快照出发。",
+              "markingMdxZh": "1 分：说明 React 会批处理一个处理器内的更新，只重渲染一次。\n1 分：说明 `count` 是每次渲染的常量，`setCount` 不会立即改变它。\n1 分：由此得出后面的调用读到的仍是旧值。"
+            },
+            {
+              "id": "Q3-c",
+              "label": "(c)",
+              "marks": 3,
+              "questionMdx": "Give the change so one click really adds three.",
+              "answerMdx": "Use the functional updater form, which receives the latest pending value instead of the render's snapshot: `function addThree() { setCount(c => c + 1); setCount(c => c + 1); setCount(c => c + 1); }`. React queues the three updater functions and applies them in order, each taking the result of the previous, so the count chains 0 → 1 → 2 → 3 on a single click.",
+              "markingMdx": "1 mark for switching to the functional updater form (`setCount(c => c + 1)`).\n1 mark for explaining the updater receives the latest pending value, not the stale render value.\n1 mark for noting the three updates now chain, giving +3.",
+              "questionMdxZh": "请给出改法，让点一次真的加三。",
+              "answerMdxZh": "改用函数式更新形式，它接收的是最新的待处理值，而不是本次渲染的快照：`function addThree() { setCount(c => c + 1); setCount(c => c + 1); setCount(c => c + 1); }`。React 会把这三个更新函数排队并按顺序应用，每一个都拿到上一个的结果，于是点一次就会从 0 → 1 → 2 → 3 串联起来。",
+              "markingMdxZh": "1 分：改用函数式更新形式（`setCount(c => c + 1)`）。\n1 分：说明该更新函数拿到的是最新待处理值，而不是过期的渲染值。\n1 分：指出三次更新现在会串联，得到 +3。"
+            }
+          ],
+          "displayNumber": "Q3",
+          "categoryLabel": "React State and Rendering",
+          "categoryLabelZh": "React 状态与渲染",
+          "displayStyle": "quiz-sample",
+          "mockup": {
+            "files": [
+              {
+                "name": "Counter.js",
+                "code": "function Counter() {\n  const [count, setCount] = useState(0)\n\n  function addThree() {\n    setCount(count + 1)\n    setCount(count + 1)\n    setCount(count + 1)\n  }\n\n  return <button onClick={addThree}>+3</button>\n}",
+                "codeZh": "function Counter() {\n  const [count, setCount] = useState(0)\n\n  function addThree() {\n    // 每次都读同一个 count\n    setCount(count + 1)\n    setCount(count + 1)\n    setCount(count + 1)\n  }\n\n  return <button onClick={addThree}>+3</button>\n}"
+              },
+              {
+                "name": "counter.png",
+                "active": true
+              }
+            ],
+            "viewport": "desktop",
+            "html": "<div class=\"exam-ui-shell\"><div class=\"exam-ui-topbar\"><span>Playground</span><span>Counter</span></div><div class=\"exam-ui-body\"><div class=\"exam-ui-card\" style=\"max-width:240px;\"><p class=\"exam-ui-label\">Count</p><p class=\"exam-ui-stat\" style=\"font-size:1.8rem;\">1</p><div class=\"exam-ui-button-row\"><button class=\"exam-ui-button\">+3</button></div><p class=\"exam-ui-help\">Clicking +3 moves the count by only 1</p></div></div></div>",
+            "htmlZh": "<div class=\"exam-ui-shell\"><div class=\"exam-ui-topbar\"><span>演练场</span><span>计数器</span></div><div class=\"exam-ui-body\"><div class=\"exam-ui-card\" style=\"max-width:240px;\"><p class=\"exam-ui-label\">计数</p><p class=\"exam-ui-stat\" style=\"font-size:1.8rem;\">1</p><div class=\"exam-ui-button-row\"><button class=\"exam-ui-button\">+3</button></div><p class=\"exam-ui-help\">点 +3 只会让计数走 1</p></div></div></div>",
+            "caption": "The counter: three identical updates collapse into one because they all read the same snapshot.",
+            "captionZh": "计数器：三次相同的更新因为都读同一份快照而塌缩成一次。"
+          },
+          "titleZh": "点了只加一的 +3 按钮"
+        },
+        {
+          "id": "Q4",
+          "title": "The profile that never refreshes",
+          "titleZh": "从不刷新的个人主页",
+          "marks": 8,
+          "contentMdx": "A profile page fetches the user whenever the id in the URL changes, but the effect in `Profile.js` has an empty dependency array (`[]`). Opening `/users/1` and then `/users/2` keeps showing user 1. A teammate then tries to \"fix\" it by putting an options object that is created inline into the array, and now requests fire forever. `profile.png` shows the page.",
+          "contentMdxZh": "一个个人主页希望在 URL 里的 id 变化时重新获取用户，但 `Profile.js` 里的 effect 用了空依赖数组（`[]`）。先打开 `/users/1` 再打开 `/users/2`，页面一直显示用户 1。一位同事随后想 “修好” 它，于是把一个在每次渲染时内联创建的选项对象放进了依赖数组，结果请求开始无限触发。`profile.png` 展示了这个页面。",
+          "subQuestions": [
+            {
+              "id": "Q4-a",
+              "label": "(a)",
+              "marks": 3,
+              "questionMdx": "Why does the effect with `[]` run only once, so opening another user keeps showing stale data?",
+              "answerMdx": "An empty dependency array tells React the effect has no inputs, so it runs once after the first render and never again. The fetch inside it captured the first `id` (user 1). When the route changes to user 2, the component re-renders with the new `id` and the new element tree, but because the dependencies did not change the effect is not re-run, so no new request goes out and state still holds user 1's data. The display is stale because the effect that would refresh it never fires again.",
+              "markingMdx": "1 mark for stating an empty dependency array runs the effect only after the first render.\n1 mark for stating a new `id` does not re-run the effect.\n1 mark for linking this to the state holding the first user's data (stale).",
+              "questionMdxZh": "为什么用 `[]` 的 effect 只运行一次，导致切换用户后一直显示过期数据？",
+              "answerMdxZh": "空依赖数组告诉 React 这个 effect 没有输入，于是它只在首次渲染后运行一次，之后不再运行。它内部的 fetch 捕获的是第一个 `id`（用户 1）。当路由切到用户 2 时，组件带着新的 `id` 和新的元素树重渲染，但由于依赖没有变化，effect 不会重新运行，因此不会发出新请求，state 仍保存着用户 1 的数据。显示之所以过期，正是因为本该刷新它的 effect 再也不会触发。",
+              "markingMdxZh": "1 分：说明空依赖数组让 effect 只在首次渲染后运行一次。\n1 分：说明新的 `id` 不会让 effect 重新运行。\n1 分：把这一点与 “state 仍保留第一个用户的数据（过期）” 联系起来。"
+            },
+            {
+              "id": "Q4-b",
+              "label": "(b)",
+              "marks": 3,
+              "questionMdx": "The teammate adds a dependency that is an object created inline on every render. Why does the effect now run on every render (an infinite loop)?",
+              "answerMdx": "React compares dependencies between renders by reference (`Object.is`), not by deep equality. An object (or array) literal is a brand-new object on every render, so its reference is always different and React always thinks that dependency changed. The effect re-runs; if it calls a setter, that schedules a re-render; the re-render creates yet another object; the dependency \"changes\" again — so the effect runs forever. The loop is from a reference that never stays the same.",
+              "markingMdx": "1 mark for stating dependencies are compared by reference, not by value.\n1 mark for stating an inline object/array is a new reference on every render, so it always looks changed.\n1 mark for tracing the loop: effect runs → setter → re-render → new object → effect runs again.",
+              "questionMdxZh": "这位同事加入了一个在每次渲染时内联创建的依赖对象。为什么现在 effect 会在每次渲染时都运行（无限循环）？",
+              "answerMdxZh": "React 在两轮渲染之间按引用（`Object.is`）比较依赖，而不是深比较。一个对象（或数组）字面量在每次渲染时都是全新的对象，所以它的引用永远不同，React 总认为这个依赖变了。于是 effect 重新运行；如果它调用了 setter，就会安排一次重渲染；重渲染又创建另一个新对象；依赖又 “变了”——effect 就永远运行下去。这个循环的根源是一个永远保持不变的引用。",
+              "markingMdxZh": "1 分：说明依赖是按引用比较，而不是按值比较。\n1 分：说明内联对象 / 数组在每次渲染都是新引用，因此看起来永远在变化。\n1 分：完整推演循环——effect 运行 → setter → 重渲染 → 新对象 → effect 再次运行。"
+            },
+            {
+              "id": "Q4-c",
+              "label": "(c)",
+              "marks": 2,
+              "questionMdx": "Give the correct dependency list for both problems, and say why it is correct.",
+              "answerMdx": "For the fetch, depend on the primitive that actually changes: `useEffect(() => { fetch('/api/users/' + id).then(r => r.json()).then(setUser) }, [id])`. `id` is a string, so its reference comparison is a value comparison, and the effect re-runs exactly when the route id changes (and not otherwise). If a value you really need is an object, do not put the object literal in the array — list its primitive fields (`[options.page, options.sort]`) or memoise it with `useMemo` so the reference stays stable.",
+              "markingMdx": "1 mark for giving `[id]` (the primitive that changes) so the effect re-runs only when the id changes.\n1 mark for avoiding an object dependency — listing primitive fields or memoising the object.",
+              "questionMdxZh": "请为解决这两个问题给出正确的依赖列表，并说明为什么它是对的。",
+              "answerMdxZh": "对于这次 fetch，应依赖真正会变化的原始值：`useEffect(() => { fetch('/api/users/' + id).then(r => r.json()).then(setUser) }, [id])`。`id` 是字符串，引用比较即值比较，所以 effect 恰好在路由 id 变化时重新运行（其它时候不会）。如果确实需要的是一个对象，就不要把对象字面量放进数组——列出它的原始字段（`[options.page, options.sort]`），或者用 `useMemo` 把它缓存起来让引用保持稳定。",
+              "markingMdxZh": "1 分：给出 `[id]`（真正变化的原始值），使 effect 只在 id 变化时重新运行。\n1 分：避免使用对象依赖——列出原始字段或用 `useMemo` 缓存该对象。"
+            }
+          ],
+          "displayNumber": "Q4",
+          "categoryLabel": "React Effects and Data Flow",
+          "categoryLabelZh": "React 副作用与数据流",
+          "displayStyle": "quiz-sample",
+          "mockup": {
+            "files": [
+              {
+                "name": "Profile.js",
+                "code": "function Profile() {\n  const [user, setUser] = useState(null)\n  const { id } = useParams()\n\n  useEffect(() => {\n    fetch('/api/users/' + id)\n      .then(r => r.json())\n      .then(setUser)\n  }, [])\n\n  return <h1>{user && user.name}</h1>\n}",
+                "codeZh": "function Profile() {\n  const [user, setUser] = useState(null)\n  const { id } = useParams()\n\n  useEffect(() => {\n    /* 空依赖：id 变了也不会重新请求 */\n    fetch('/api/users/' + id)\n      .then(r => r.json())\n      .then(setUser)\n  }, [])\n\n  return <h1>{user && user.name}</h1>\n}"
+              },
+              {
+                "name": "profile.png",
+                "active": true
+              }
+            ],
+            "viewport": "desktop",
+            "html": "<div class=\"exam-ui-shell\"><div class=\"exam-ui-topbar\"><span>Directory</span><span>Profile</span></div><div class=\"exam-ui-body\"><p class=\"exam-ui-page-title\">User 1</p><div class=\"exam-ui-card\"><p class=\"exam-ui-label\">Opened /users/2, but showing</p><p class=\"exam-ui-value\" style=\"font-weight:700;\">User 1</p><p class=\"exam-ui-help\">The effect never re-ran for the new id</p></div></div></div>",
+            "htmlZh": "<div class=\"exam-ui-shell\"><div class=\"exam-ui-topbar\"><span>通讯录</span><span>个人主页</span></div><div class=\"exam-ui-body\"><p class=\"exam-ui-page-title\">用户 1</p><div class=\"exam-ui-card\"><p class=\"exam-ui-label\">已打开 /users/2，但显示的是</p><p class=\"exam-ui-value\" style=\"font-weight:700;\">用户 1</p><p class=\"exam-ui-help\">新的 id 没有让 effect 重新运行</p></div></div></div>",
+            "caption": "The profile page: it still shows user 1 after navigating to user 2.",
+            "captionZh": "个人主页：切到用户 2 之后仍显示用户 1。"
+          },
+          "titleZh": "从不刷新的个人主页"
+        },
+        {
+          "id": "Q5",
+          "title": "One resize, three logs",
+          "titleZh": "一次缩放，三条日志",
+          "marks": 8,
+          "contentMdx": "A responsive toolbar records the window width on resize inside a `useEffect` (`Toolbar.js`). The effect returns no cleanup function. After visiting the page a couple of times, a single window resize logs the width several times, and a warning about updating state on an unmounted component appears. `toolbar.png` shows the width readings.",
+          "contentMdxZh": "一个响应式工具栏在 `useEffect` 里监听窗口缩放、记录窗口宽度（`Toolbar.js`）。这个 effect 没有返回清理函数。访问页面几次之后，仅仅一次窗口缩放就会把宽度打印好几遍，并且出现 “在已卸载组件上更新 state” 的警告。`toolbar.png` 展示了这些宽度读数。",
+          "subQuestions": [
+            {
+              "id": "Q5-a",
+              "label": "(a)",
+              "marks": 2,
+              "questionMdx": "What happens when a `useEffect` returns no cleanup function?",
+              "answerMdx": "Nothing the effect set up is ever undone. Whatever it created — an event listener, an interval, a subscription, a connection — stays alive for the rest of the page's life, even after the component unmounts or after the effect re-runs. React has no code to call when it is time to tear those things down, so the side effects leak and keep running.",
+              "markingMdx": "1 mark for stating that without a cleanup the effect's side effects are never undone / removed.\n1 mark for stating they persist after unmount or after the effect re-runs.",
+              "questionMdxZh": "当一个 `useEffect` 没有返回清理函数时会怎样？",
+              "answerMdxZh": "该 effect 建立的任何东西都永远不会被撤销。无论它创建的是事件监听、定时器、订阅还是连接，都会在页面余下的生命周期里一直存活，即便组件卸载了、或 effect 重新运行了也一样。React 没有代码可在需要拆掉这些东西时调用，于是副作用泄漏并持续运行。",
+              "markingMdxZh": "1 分：说明没有清理函数时，effect 的副作用永远不会被撤销 / 移除。\n1 分：说明它们在卸载之后、或 effect 重新运行之后仍然存活。"
+            },
+            {
+              "id": "Q5-b",
+              "label": "(b)",
+              "marks": 3,
+              "questionMdx": "Why does one window resize now log the width several times?",
+              "answerMdx": "Every time the effect runs it calls `window.addEventListener('resize', onResize)` and adds another listener, but because there is no cleanup the previous listeners were never removed. After the effect has run N times, N listeners are attached, and a single resize event invokes all of them — so the width is logged N times. The callback also keeps calling `setWidth` after the component has unmounted, which is what triggers the \"update on unmounted component\" warning.",
+              "markingMdx": "1 mark for stating each run of the effect adds another listener.\n1 mark for stating the old listeners were never removed (no cleanup).\n1 mark for concluding that one event fires all of them, so the log repeats (and can fire after unmount).",
+              "questionMdxZh": "为什么现在一次窗口缩放会把宽度打印好几遍？",
+              "answerMdxZh": "effect 每次运行都会调用 `window.addEventListener('resize', onResize)` 再添加一个监听器，但因为缺少清理函数，之前那些监听器从未被移除。effect 运行过 N 次后，就有 N 个监听器被挂上，一次缩放事件会把它们全部触发——于是宽度被打印 N 遍。而且组件卸载后，回调仍会继续调用 `setWidth`，这正是出现 “在已卸载组件上更新 state” 警告的原因。",
+              "markingMdxZh": "1 分：说明 effect 每运行一次就多挂一个监听器。\n1 分：说明旧监听器从未被移除（缺少清理）。\n1 分：由此得出一次事件会触发全部监听器、于是日志重复（并可能在卸载后触发）。"
+            },
+            {
+              "id": "Q5-c",
+              "label": "(c)",
+              "marks": 3,
+              "questionMdx": "Give the fix, with the code.",
+              "answerMdx": "Return a cleanup function from the effect that removes exactly what the effect added: `useEffect(() => { const onResize = () => setWidth(window.innerWidth); window.addEventListener('resize', onResize); return () => window.removeEventListener('resize', onResize); }, [])`. React calls the returned function before the next run of the effect and when the component unmounts, so only one listener is ever active and it is torn down on unmounting. (The same pattern applies to `clearInterval` / `clearTimeout` / unsubscribe.)",
+              "markingMdx": "1 mark for returning a cleanup function from the effect.\n1 mark for having the cleanup remove the listener (`removeEventListener`, or `clearInterval` / unsubscribe for the matching setup).\n1 mark for stating the result: one active listener, removed on unmount / before the next run.",
+              "questionMdxZh": "请给出改法，并附上代码。",
+              "answerMdxZh": "让 effect 返回一个清理函数，精确移除它自己添加的东西：`useEffect(() => { const onResize = () => setWidth(window.innerWidth); window.addEventListener('resize', onResize); return () => window.removeEventListener('resize', onResize); }, [])`。React 会在 effect 下次运行前、以及组件卸载时调用这个返回的函数，于是始终只有一个监听器存活，并在卸载时被拆掉。（`clearInterval` / `clearTimeout` / 取消订阅同理。）",
+              "markingMdxZh": "1 分：让 effect 返回一个清理函数。\n1 分：让清理函数移除监听器（`removeEventListener`，或与对应建立动作匹配的 `clearInterval` / 取消订阅）。\n1 分：说明结果——只有一个存活的监听器，且在卸载 / 下次运行前被移除。"
+            }
+          ],
+          "displayNumber": "Q5",
+          "categoryLabel": "React Effects and Data Flow",
+          "categoryLabelZh": "React 副作用与数据流",
+          "displayStyle": "quiz-sample",
+          "mockup": {
+            "files": [
+              {
+                "name": "Toolbar.js",
+                "code": "function Toolbar() {\n  const [width, setWidth] = useState(window.innerWidth)\n\n  useEffect(() => {\n    const onResize = () => setWidth(window.innerWidth)\n    window.addEventListener('resize', onResize)\n  }, [])\n\n  return <span>{width}</span>\n}",
+                "codeZh": "function Toolbar() {\n  const [width, setWidth] = useState(window.innerWidth)\n\n  useEffect(() => {\n    // 没有 cleanup，监听器只增不减\n    const onResize = () => setWidth(window.innerWidth)\n    window.addEventListener('resize', onResize)\n  }, [])\n\n  return <span>{width}</span>\n}"
+              },
+              {
+                "name": "toolbar.png",
+                "active": true
+              }
+            ],
+            "viewport": "desktop",
+            "html": "<div class=\"exam-ui-shell\"><div class=\"exam-ui-topbar\"><span>App</span><span>Toolbar</span></div><div class=\"exam-ui-body\"><p class=\"exam-ui-page-title\">Responsive toolbar</p><div class=\"exam-ui-card\"><div class=\"exam-ui-stack\"><div class=\"exam-ui-chip\">Width: 1280</div><div class=\"exam-ui-chip\">Width: 1024</div><div class=\"exam-ui-chip\">Width: 800</div></div><p class=\"exam-ui-help\">One resize logs the width three times</p></div></div></div>",
+            "htmlZh": "<div class=\"exam-ui-shell\"><div class=\"exam-ui-topbar\"><span>应用</span><span>工具栏</span></div><div class=\"exam-ui-body\"><p class=\"exam-ui-page-title\">响应式工具栏</p><div class=\"exam-ui-card\"><div class=\"exam-ui-stack\"><div class=\"exam-ui-chip\">宽度：1280</div><div class=\"exam-ui-chip\">宽度：1024</div><div class=\"exam-ui-chip\">宽度：800</div></div><p class=\"exam-ui-help\">一次缩放把宽度打印了三遍</p></div></div></div>",
+            "caption": "The toolbar: stacked resize listeners make one event log the width several times.",
+            "captionZh": "工具栏：层层叠加的缩放监听器让一次事件把宽度打印好几遍。"
+          },
+          "titleZh": "一次缩放，三条日志"
+        },
+        {
+          "id": "Q6",
+          "title": "The parameter that is always undefined",
+          "titleZh": "永远是 undefined 的路由参数",
+          "marks": 8,
+          "contentMdx": "A user profile route is declared as `/users/:id`, and the page component reads `useParams()` (`UserProfile.js`). The page always requests `/api/users/undefined` and shows \"Not found\", as `user.png` shows, even though the URL contains a real id.",
+          "contentMdxZh": "用户主页的路由声明为 `/users/:id`，而页面组件读取的是 `useParams()`（`UserProfile.js`）。如 `user.png` 所示，页面总是请求 `/api/users/undefined` 并显示 “Not found”，尽管 URL 里明明带着真实的 id。",
+          "subQuestions": [
+            {
+              "id": "Q6-a",
+              "label": "(a)",
+              "marks": 3,
+              "questionMdx": "What does `useParams()` return, and why is the destructured `userId` undefined here?",
+              "answerMdx": "`useParams()` returns an object of the dynamic segments of the matched URL, keyed by the exact segment name written in the route path. Here the route path is `/users/:id`, so the object is `{ id: '42' }` — the key is `id`. Destructuring `const { userId } = useParams()` reads a key named `userId`, which does not exist in that object, so it is `undefined`. The name you read must match the name after the `:` in the path.",
+              "markingMdx": "1 mark for stating `useParams()` returns the dynamic URL segments keyed by the segment name.\n1 mark for stating the route uses `:id`, so the key is `id`.\n1 mark for stating destructuring `userId` reads a key that does not exist, giving `undefined`.",
+              "questionMdxZh": "`useParams()` 返回的是什么？为什么这里解构出来的 `userId` 是 undefined？",
+              "answerMdxZh": "`useParams()` 返回一个对象，包含匹配到的 URL 中的动态段，键名就是路由路径里写的那个段名。这里路由路径是 `/users/:id`，所以对象是 `{ id: '42' }`——键是 `id`。而 `const { userId } = useParams()` 读取的是名为 `userId` 的键，这个键在该对象里并不存在，所以是 `undefined`。你读取的名字必须与路径中 `:` 后面的名字一致。",
+              "markingMdxZh": "1 分：说明 `useParams()` 返回按段名作键的动态 URL 段。\n1 分：说明路由用的是 `:id`，所以键是 `id`。\n1 分：说明解构 `userId` 读的是不存在的键，得到 `undefined`。"
+            },
+            {
+              "id": "Q6-b",
+              "label": "(b)",
+              "marks": 3,
+              "questionMdx": "Why does the page end up requesting `/api/users/undefined` and showing \"Not found\"?",
+              "answerMdx": "Because `userId` is `undefined`, the template string builds the URL `/api/users/undefined`. The server has no user whose id is the literal text \"undefined\", so it answers `404`. The page then renders its not-found state. The real id (`42`) was available in `params.id` the whole time; the component simply read the wrong key, so the value never reached the request URL.",
+              "markingMdx": "1 mark for stating `undefined` is interpolated into the request URL.\n1 mark for stating the server has no such user and returns 404.\n1 mark for linking this to the page rendering \"Not found\" (no valid data ever arrives).",
+              "questionMdxZh": "为什么页面最终会请求 `/api/users/undefined` 并显示 “Not found”？",
+              "answerMdxZh": "因为 `userId` 是 `undefined`，模板字符串拼出的 URL 就是 `/api/users/undefined`。服务器上没有任何用户的 id 是字面文本 “undefined”，于是返回 `404`。页面随后渲染出 “未找到” 状态。真实的 id（`42`）其实一直躺在 `params.id` 里；组件只是读错了键，所以这个值从未进入请求 URL。",
+              "markingMdxZh": "1 分：说明 `undefined` 被拼进了请求 URL。\n1 分：说明服务器没有这样的用户，返回 404。\n1 分：把这一点与页面渲染 “Not found”（始终没有有效数据）联系起来。"
+            },
+            {
+              "id": "Q6-c",
+              "label": "(c)",
+              "marks": 2,
+              "questionMdx": "Give the fix so the page uses the real id.",
+              "answerMdx": "Read the key that matches the route segment: `const { id } = useParams()`, and use `id` in the request: `fetch('/api/users/' + id)`. Alternatively, keep the `userId` variable but rename the route segment to `:userId` so the two names agree. The important thing is that the destructured name and the `:` segment name are identical.",
+              "markingMdx": "1 mark for destructuring the key that matches the route segment (`id`), or renaming the route segment to match.\n1 mark for using that value in the request so `/api/users/42` is fetched.",
+              "questionMdxZh": "请给出改法，让页面用上真实的 id。",
+              "answerMdxZh": "读取与路由段一致的那个键：`const { id } = useParams()`，并在请求里使用 `id`：`fetch('/api/users/' + id)`。另一种做法是保留 `userId` 变量，把路由段改名为 `:userId`，让两个名字一致。关键是解构的名字与 `:` 后面的段名必须相同。",
+              "markingMdxZh": "1 分：解构与路由段一致的键（`id`），或把路由段改名以匹配。\n1 分：在请求里使用该值，从而请求 `/api/users/42`。"
+            }
+          ],
+          "displayNumber": "Q6",
+          "categoryLabel": "React Router and URL State",
+          "categoryLabelZh": "React Router 与 URL 状态",
+          "displayStyle": "quiz-sample",
+          "mockup": {
+            "files": [
+              {
+                "name": "UserProfile.js",
+                "code": "function UserProfile() {\n  const { userId } = useParams()\n\n  useEffect(() => {\n    fetch('/api/users/' + userId)\n      .then(r => r.json())\n      .then(setUser)\n  }, [userId])\n\n  return <h1>{user && user.name}</h1>\n}\n\n// route: <Route path=\"/users/:id\" element={<UserProfile />} />",
+                "codeZh": "function UserProfile() {\n  // 路由参数叫 :id，这里却解构 userId\n  const { userId } = useParams()\n\n  useEffect(() => {\n    fetch('/api/users/' + userId)\n      .then(r => r.json())\n      .then(setUser)\n  }, [userId])\n\n  return <h1>{user && user.name}</h1>\n}\n\n// 路由: <Route path=\"/users/:id\" element={<UserProfile />} />"
+              },
+              {
+                "name": "user.png",
+                "active": true
+              }
+            ],
+            "viewport": "desktop",
+            "html": "<div class=\"exam-ui-shell\"><div class=\"exam-ui-topbar\"><span>Directory</span><span>User</span></div><div class=\"exam-ui-body\"><p class=\"exam-ui-page-title\">User profile</p><div class=\"exam-ui-card\"><p class=\"exam-ui-label\">Request</p><p class=\"exam-ui-value\">GET /api/users/undefined</p><p class=\"exam-ui-danger\">Not found</p></div></div></div>",
+            "htmlZh": "<div class=\"exam-ui-shell\"><div class=\"exam-ui-topbar\"><span>通讯录</span><span>用户</span></div><div class=\"exam-ui-body\"><p class=\"exam-ui-page-title\">用户主页</p><div class=\"exam-ui-card\"><p class=\"exam-ui-label\">请求</p><p class=\"exam-ui-value\">GET /api/users/undefined</p><p class=\"exam-ui-danger\">未找到</p></div></div></div>",
+            "caption": "The profile page: the mismatched param name makes the request ask for \"undefined\".",
+            "captionZh": "个人主页：参数名不匹配，请求里去要 “undefined”。"
+          },
+          "titleZh": "永远是 undefined 的路由参数"
+        },
+        {
+          "id": "Q7",
+          "title": "The tab that reloads everything",
+          "titleZh": "一点就整页刷新的标签",
+          "marks": 8,
+          "contentMdx": "A settings area uses nested routes: a parent layout renders the header and the tab bar, and child routes should render inside it. In `Settings.js` the tabs are plain `<a href>` links, and the layout renders no `<Outlet />`. Clicking a tab reloads the whole app, and the child content never appears, as `settings.png` shows.",
+          "contentMdxZh": "一个设置区域使用嵌套路由：父级布局渲染页头和标签栏，子路由应当在其中渲染。但在 `Settings.js` 里，标签用的是普通的 `<a href>` 链接，而布局里没有渲染 `<Outlet />`。如 `settings.png` 所示，点击标签会刷新整个应用，子级内容也从不出现。",
+          "subQuestions": [
+            {
+              "id": "Q7-a",
+              "label": "(a)",
+              "marks": 2,
+              "questionMdx": "What is the difference between an `<a href>` and a `<Link to>` in a React Router app, and why does it matter here?",
+              "answerMdx": "An `<a href>` is ordinary browser navigation: the browser makes a full document request and reloads the whole page, so the single-page app restarts from scratch. A `<Link to>` intercepts the click, calls the history API to change the URL, and lets the router swap the matched route on the client — no reload. Here the `<a>` tags force a full reload on every tab click.",
+              "markingMdx": "1 mark for stating `<a href>` triggers a full page reload.\n1 mark for stating `<Link>` does client-side navigation via the history API without reloading.",
+              "questionMdxZh": "在 React Router 应用里，`<a href>` 和 `<Link to>` 有什么区别？为什么这一点在这里很重要？",
+              "answerMdxZh": "`<a href>` 是普通的浏览器导航：浏览器发出整份文档请求并重载整个页面，单页应用会从头重启。而 `<Link to>` 会拦截点击，调用 history API 改变 URL，让路由器在客户端换掉匹配到的路由——不刷新。这里的 `<a>` 标签让每次点击标签都强制整页刷新。",
+              "markingMdxZh": "1 分：说明 `<a href>` 会触发整页刷新。\n1 分：说明 `<Link>` 通过 history API 在客户端导航、不刷新。"
+            },
+            {
+              "id": "Q7-b",
+              "label": "(b)",
+              "marks": 3,
+              "questionMdx": "The tab click reloads the page; describe the two problems this causes — losing state and the child route not showing.",
+              "answerMdx": "A full reload throws away all in-memory state: React unmounts everything, re-downloads the bundle, re-runs effects and any fetches, so the user loses their place and waits again — poor UX and wasted work. Separately, a nested route only renders its child if the parent layout includes `<Outlet />`, the placeholder where the matched child element is mounted. Without `<Outlet />` the child route has nowhere to render, so the tab area stays empty even though the route matched.",
+              "markingMdx": "1 mark for stating the full reload discards in-memory app state (re-download / re-init / re-fetch).\n1 mark for stating nested child routes render through `<Outlet />` in the parent layout.\n1 mark for stating that without `<Outlet />` the child content does not appear.",
+              "questionMdxZh": "点击标签会刷新页面；请描述这带来的两个问题——丢失状态，以及子路由不显示。",
+              "answerMdxZh": "整页刷新会丢弃所有内存中的状态：React 卸载一切、重新下载打包文件、重新运行 effect 和任何请求，用户因此丢失当前位置、还要再等一次——体验差，而且做无用功。另外，嵌套路由只有在父级布局包含 `<Outlet />`（挂载匹配到的子元素的占位符）时才会渲染子级。没有 `<Outlet />`，子路由就无处渲染，即便路由已经匹配，标签区域也是空的。",
+              "markingMdxZh": "1 分：说明整页刷新会丢弃内存中的应用状态（重新下载 / 重新初始化 / 重新请求）。\n1 分：说明嵌套子路由通过父布局里的 `<Outlet />` 渲染。\n1 分：说明没有 `<Outlet />` 时子级内容不会出现。"
+            },
+            {
+              "id": "Q7-c",
+              "label": "(c)",
+              "marks": 3,
+              "questionMdx": "Give the fixes that make the tabs navigate on the client and show the child content.",
+              "answerMdx": "Replace each `<a href=\"/settings/profile\">` with `<Link to=\"/settings/profile\">` so clicking changes the URL on the client without reloading, and render `<Outlet />` inside the layout element so the matched child route mounts there: `function SettingsLayout() { return (<div><nav><Link to=\"/settings/profile\">Profile</Link> <Link to=\"/settings/billing\">Billing</Link></nav><Outlet /></div>) }`. The result: no reload, state is kept, and the tab's child content appears in place.",
+              "markingMdx": "1 mark for using `<Link to>` instead of `<a href>` for the tabs.\n1 mark for adding `<Outlet />` in the layout so the child route renders.\n1 mark for stating the outcome: client-side navigation that renders the child route without a reload.",
+              "questionMdxZh": "请给出改法，让标签在客户端导航并显示子级内容。",
+              "answerMdxZh": "把每个 `<a href=\"/settings/profile\">` 换成 `<Link to=\"/settings/profile\">`，这样点击会在客户端改变 URL、不刷新；并在布局元素里渲染 `<Outlet />`，让匹配到的子路由挂载在那里：`function SettingsLayout() { return (<div><nav><Link to=\"/settings/profile\">Profile</Link> <Link to=\"/settings/billing\">Billing</Link></nav><Outlet /></div>) }`。结果：不刷新、状态保留，标签对应的子级内容就地出现。",
+              "markingMdxZh": "1 分：用 `<Link to>` 取代标签的 `<a href>`。\n1 分：在布局里加入 `<Outlet />`，让子路由得以渲染。\n1 分：说明结果——客户端导航、无需刷新即可渲染子路由。"
+            }
+          ],
+          "displayNumber": "Q7",
+          "categoryLabel": "React Router and URL State",
+          "categoryLabelZh": "React Router 与 URL 状态",
+          "displayStyle": "quiz-sample",
+          "mockup": {
+            "files": [
+              {
+                "name": "Settings.js",
+                "code": "function SettingsLayout() {\n  return (\n    <div>\n      <nav>\n        <a href=\"/settings/profile\">Profile</a>\n        <a href=\"/settings/billing\">Billing</a>\n      </nav>\n      {/* no <Outlet /> here */}\n    </div>\n  )\n}",
+                "codeZh": "function SettingsLayout() {\n  return (\n    <div>\n      <nav>\n        {/* 用 <a> 会整页刷新 */}\n        <a href=\"/settings/profile\">Profile</a>\n        <a href=\"/settings/billing\">Billing</a>\n      </nav>\n      {/* 这里缺少 <Outlet /> */}\n    </div>\n  )\n}"
+              },
+              {
+                "name": "settings.png",
+                "active": true
+              }
+            ],
+            "viewport": "desktop",
+            "html": "<div class=\"exam-ui-shell\"><div class=\"exam-ui-topbar\"><span>Account</span><span>Settings</span></div><div class=\"exam-ui-body\"><p class=\"exam-ui-page-title\">Settings</p><div class=\"exam-ui-card\"><div class=\"exam-ui-breadcrumbs\"><span class=\"exam-ui-nav-item\">Profile</span><span class=\"exam-ui-nav-item\">Billing</span><span class=\"exam-ui-nav-item\">Security</span></div><div class=\"exam-ui-stage\" style=\"min-height:120px;display:flex;align-items:center;justify-content:center;\"><span class=\"exam-ui-muted\">Tab content does not appear</span></div><p class=\"exam-ui-help\">Clicking a tab reloads the whole app</p></div></div></div>",
+            "htmlZh": "<div class=\"exam-ui-shell\"><div class=\"exam-ui-topbar\"><span>账户</span><span>设置</span></div><div class=\"exam-ui-body\"><p class=\"exam-ui-page-title\">设置</p><div class=\"exam-ui-card\"><div class=\"exam-ui-breadcrumbs\"><span class=\"exam-ui-nav-item\">个人资料</span><span class=\"exam-ui-nav-item\">账单</span><span class=\"exam-ui-nav-item\">安全</span></div><div class=\"exam-ui-stage\" style=\"min-height:120px;display:flex;align-items:center;justify-content:center;\"><span class=\"exam-ui-muted\">标签内容不显示</span></div><p class=\"exam-ui-help\">点击标签会让整个应用刷新</p></div></div></div>",
+            "caption": "The settings tabs: plain links reload the app and no <Outlet /> renders the child route.",
+            "captionZh": "设置页标签：普通链接会刷新应用，且没有 <Outlet /> 渲染子路由。"
+          },
+          "titleZh": "一点就整页刷新的标签"
+        },
+        {
+          "id": "Q8",
+          "title": "The logs that come out in a different order",
+          "titleZh": "顺序对不上的日志",
+          "marks": 8,
+          "contentMdx": "A warm-up review from Weeks 1-8. `main.js` runs a small script that mixes a synchronous log, a `setTimeout` with zero delay, and a resolved promise. The output order is not the source order, as `console.png` shows.",
+          "contentMdxZh": "一道来自 Weeks 1-8 的复习题。`main.js` 运行一小段脚本，混合了同步日志、零延迟的 `setTimeout` 和一个已 resolve 的 promise。如 `console.png` 所示，输出顺序与源码顺序不一致。",
+          "subQuestions": [
+            {
+              "id": "Q8-a",
+              "label": "(a)",
+              "marks": 3,
+              "questionMdx": "In what order do A, B, C and D print, and why?",
+              "answerMdx": "The order is A, D, C, B. The synchronous statements run first, on the current call stack: `console.log('A')` prints A, then the script reaches `console.log('D')` and prints D (the timer and the promise callbacks were only *scheduled*, not run). Once the call stack is empty, the event loop drains the microtask queue — the promise's `.then` — printing C. Only after all microtasks are done does it run the next macrotask, the timer, printing B.",
+              "markingMdx": "1 mark for stating the synchronous logs run first (A, then D).\n1 mark for stating the promise (microtask) runs before the timer (macrotask).\n1 mark for giving the correct full order: A, D, C, B.",
+              "questionMdxZh": "A、B、C、D 依次打印的顺序是什么？为什么？",
+              "answerMdxZh": "顺序是 A、D、C、B。同步语句先在当前调用栈上执行：`console.log('A')` 打印 A，然后脚本走到 `console.log('D')` 打印 D（定时器和 promise 的回调只是被 *安排* 了，还没运行）。调用栈清空后，事件循环排空微任务队列——promise 的 `.then`——打印 C。只有所有微任务结束后，它才会执行下一个宏任务，即定时器，打印 B。",
+              "markingMdxZh": "1 分：说明同步日志最先运行（A，然后 D）。\n1 分：说明 promise（微任务）先于定时器（宏任务）运行。\n1 分：给出完整的正确顺序：A、D、C、B。"
+            },
+            {
+              "id": "Q8-b",
+              "label": "(b)",
+              "marks": 3,
+              "questionMdx": "Explain why the promise callback runs before the timer, even though the timer was set with a `0` delay.",
+              "answerMdx": "`setTimeout(fn, 0)` does not run immediately; it queues a macrotask that only runs after the current task and every pending microtask have finished. The promise schedules a microtask via `.then`. The event loop always drains the *entire* microtask queue before it picks up the next macrotask, so the timer's callback — even with zero delay — waits behind the promise's microtask. That is why B comes after C, not before it.",
+              "markingMdx": "1 mark for stating `setTimeout(fn, 0)` still queues a macrotask, not an immediate run.\n1 mark for stating promises schedule microtasks.\n1 mark for stating the microtask queue drains fully before the next macrotask runs.",
+              "questionMdxZh": "请解释为什么即使定时器是 `0` 延迟，promise 回调仍先运行。",
+              "answerMdxZh": "`setTimeout(fn, 0)` 并不会立即运行；它把一个宏任务排队，只有当前任务和所有待处理的微任务都完成后才会运行。而 promise 通过 `.then` 安排了一个微任务。事件循环总是先排空 *整个* 微任务队列，然后才会去取下一个宏任务，所以定时器的回调——即便零延迟——也得排在 promise 的微任务之后。这就是 B 出现在 C 之后、而不是之前的原因。",
+              "markingMdxZh": "1 分：说明 `setTimeout(fn, 0)` 仍然只是排队一个宏任务，而不是立即运行。\n1 分：说明 promise 安排的是微任务。\n1 分：说明微任务队列会在下一个宏任务之前被完整排空。"
+            },
+            {
+              "id": "Q8-c",
+              "label": "(c)",
+              "marks": 2,
+              "questionMdx": "Describe one change that would make B print before C, and why it works.",
+              "answerMdx": "Schedule B as a microtask too, and before C's microtask — for example replace the `setTimeout` with `queueMicrotask(() => console.log('B'))` placed before the `.then`. Now both logs are in the microtask queue, which runs in scheduling order, so B is drained before C. A timer can never jump ahead of a microtask that is already queued in the same turn.",
+              "markingMdx": "1 mark for making B a microtask (e.g. `queueMicrotask(...)` or a resolved promise) scheduled before C.\n1 mark for stating microtasks run in scheduling order, so B precedes C.",
+              "questionMdxZh": "请描述一种能让 B 在 C 之前打印的改动，并说明它为什么有效。",
+              "answerMdxZh": "把 B 也安排成微任务，并且排在 C 的微任务之前——例如把 `setTimeout` 换成 `queueMicrotask(() => console.log('B'))`，并放在 `.then` 之前。这样两条日志都在微任务队列里，按安排顺序执行，于是 B 会先于 C 被排空。定时器永远无法插到一个在同一轮里已经排好的微任务前面。",
+              "markingMdxZh": "1 分：把 B 变成微任务（例如 `queueMicrotask(...)` 或一个已 resolve 的 promise），并排在 C 之前。\n1 分：说明微任务按安排顺序执行，所以 B 在 C 之前。"
+            }
+          ],
+          "displayNumber": "Q8",
+          "categoryLabel": "JavaScript and the DOM",
+          "categoryLabelZh": "JavaScript 与 DOM",
+          "displayStyle": "quiz-sample",
+          "mockup": {
+            "files": [
+              {
+                "name": "main.js",
+                "code": "console.log('A')\nsetTimeout(() => console.log('B'), 0)\nPromise.resolve().then(() => console.log('C'))\nconsole.log('D')",
+                "codeZh": "console.log('A')\n// 定时器只是排队，稍后才跑\nsetTimeout(() => console.log('B'), 0)\n// promise 回调是微任务\nPromise.resolve().then(() => console.log('C'))\nconsole.log('D')"
+              },
+              {
+                "name": "console.png",
+                "active": true
+              }
+            ],
+            "viewport": "desktop",
+            "html": "<div class=\"exam-ui-shell\"><div class=\"exam-ui-topbar\"><span>Console</span><span>main.js</span></div><div class=\"exam-ui-body\"><p class=\"exam-ui-page-title\">Console output</p><ul class=\"exam-ui-list\"><li class=\"exam-ui-list-row\">A</li><li class=\"exam-ui-list-row\">D</li><li class=\"exam-ui-list-row\">C</li><li class=\"exam-ui-list-row\">B</li></ul><p class=\"exam-ui-help\">Not the source order — the logs come out as A D C B</p></div></div></div>",
+            "htmlZh": "<div class=\"exam-ui-shell\"><div class=\"exam-ui-topbar\"><span>控制台</span><span>main.js</span></div><div class=\"exam-ui-body\"><p class=\"exam-ui-page-title\">控制台输出</p><ul class=\"exam-ui-list\"><li class=\"exam-ui-list-row\">A</li><li class=\"exam-ui-list-row\">D</li><li class=\"exam-ui-list-row\">C</li><li class=\"exam-ui-list-row\">B</li></ul><p class=\"exam-ui-help\">不是源码顺序——日志实际输出为 A D C B</p></div></div></div>",
+            "caption": "The console after running main.js: sync first, then the promise, then the timer.",
+            "captionZh": "运行 main.js 后的控制台：先同步，再 promise，最后定时器。"
+          },
+          "titleZh": "顺序对不上的日志"
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,276 @@
+{
+  "topic": "html",
+  "exams": [
+    {
+      "id": "TOPIC1-HTML",
+      "title": "HTML & Semantics — Topic Paper",
+      "titleZh": "HTML 与语义结构 · 专题卷",
+      "description": "Week 1 topic paper: HTML document structure, semantic landmarks and heading levels, links / images / paths, and lists, tables and code tags. Four questions, three sub-questions each, with screenshot-style mockups.",
+      "descriptionZh": "Week 1 专题卷：HTML 文档骨架、语义地标与标题层级、链接 / 图片 / 路径，以及列表、表格与代码标签。共 4 道大题，每题 3 个子题，配套截图感 mockup。",
+      "totalMarks": 20,
+      "tags": ["专题卷", "Weeks1", "HTML", "语义"],
+      "questions": [
+        {
+          "id": "Q1",
+          "title": "Gibberish menu",
+          "marks": 5,
+          "contentMdx": "`index.html` is Café Lumière's menu page. On phones the whole page looks tiny and some of the text shows as gibberish — for example \"CrÃ¨me brÃ»lÃ©e\" where the menu should read \"Crème brûlée\" — as `page.png` shows. Two important lines are missing from the page's `<head>`.",
+          "subQuestions": [
+            {
+              "id": "Q1-a",
+              "label": "(a)",
+              "marks": 1,
+              "questionMdx": "Look at `index.html`. Which two declarations are missing from the `<head>`, and what is each one responsible for?",
+              "answerMdx": "The `<meta charset=\"utf-8\">` declaration and the `<meta name=\"viewport\" content=\"width=device-width, initial-scale=1\">` declaration. The `charset` tells the browser which character encoding the bytes of the file use; the `viewport` tag tells a mobile browser to lay the page out at the device's own width instead of a wide default width.",
+              "markingMdx": "1 mark for naming both missing declarations (`charset` and `viewport`) and giving each one's job.",
+              "questionMdxZh": "观察 `index.html`。`<head>` 里缺了哪两行声明？各自负责什么？",
+              "answerMdxZh": "缺的是 `<meta charset=\"utf-8\">` 和 `<meta name=\"viewport\" content=\"width=device-width, initial-scale=1\">`。`charset` 告诉浏览器这个文件的字节用的是什么字符编码；`viewport` 标签让移动端浏览器按设备自身宽度来排版，而不是用一个很宽的默认宽度。",
+              "markingMdxZh": "1 分：说出缺失的两条声明（`charset` 和 `viewport`），并分别说明各自作用。"
+            },
+            {
+              "id": "Q1-b",
+              "label": "(b)",
+              "marks": 2,
+              "questionMdx": "Why does the missing `charset` turn \"Crème brûlée\" into \"CrÃ¨me brÃ»lÃ©e\", and why does the missing `viewport` make the whole page look tiny and zoomed out on a phone?",
+              "answerMdx": "The file is saved as UTF-8, so each accented character is stored as more than one byte (è is two bytes). With no `charset` declared, the browser has to guess an encoding — often a single-byte one such as windows-1252 — so it reads those two bytes as two separate characters and \"è\" becomes \"Ã¨\": the classic mojibake. The `viewport` tag works differently: without it a phone assumes a wide virtual page (about 980px) and then shrinks it to fit the screen, so all the text renders tiny; `width=device-width` makes the layout width equal the device width, so it maps 1:1.",
+              "markingMdx": "1 mark for explaining mojibake: without a declared charset the browser guesses an encoding and misreads the multi-byte UTF-8 characters.\n1 mark for explaining the viewport: without it the phone uses a wide default page and scales it down, so everything looks tiny.",
+              "questionMdxZh": "为什么缺少 `charset` 会让 \"Crème brûlée\" 变成 \"CrÃ¨me brÃ»lÃ©e\"？又为什么缺少 `viewport` 会让整个页面在手机上显得很小、被缩小？",
+              "answerMdxZh": "文件是以 UTF-8 保存的，所以每个带重音的字符会占不止一个字节（è 是两个字节）。没有声明 `charset` 时，浏览器只能猜编码——常常猜成单字节编码（如 windows-1252），于是它把这两个字节读成两个独立的字符，\"è\" 就变成了 \"Ã¨\"：这就是典型的乱码。`viewport` 起作用的方式不同：没有它时，手机会假设一个很宽的虚拟页面（约 980px），再把它整体缩小到屏幕里，所以文字都变得很小；`width=device-width` 让布局宽度等于设备宽度，就能 1:1 映射。",
+              "markingMdxZh": "1 分：解释乱码——没有声明 charset 时浏览器靠猜编码，把多字节的 UTF-8 字符读错。\n1 分：解释 viewport——没有它时手机按很宽的默认页面渲染再整体缩小，因此一切都显得很小。"
+            },
+            {
+              "id": "Q1-c",
+              "label": "(c)",
+              "marks": 2,
+              "questionMdx": "Rewrite the `<head>` of `index.html` so both problems are fixed, and say where these lines must sit.",
+              "answerMdx": "Add both tags at the very top of `<head>`, with `charset` first so the browser knows the encoding before it reads any text: `<head><meta charset=\"utf-8\"><meta name=\"viewport\" content=\"width=device-width, initial-scale=1\"><title>Café Lumière</title></head>`. The `charset` makes the browser decode the bytes correctly, so the accents render properly, and the `viewport` tag makes the phone lay the page out at the device width, so the text is no longer tiny. Both belong inside `<head>`, because they are metadata about the document rather than content shown on the page.",
+              "markingMdx": "1 mark for adding `<meta charset=\"utf-8\">` (ideally first in the head).\n1 mark for adding the `viewport` meta with `width=device-width`, and for placing both lines inside `<head>`.",
+              "questionMdxZh": "请重写 `index.html` 的 `<head>`，让两个问题都得到修复，并说明这两行应该放在哪里。",
+              "answerMdxZh": "把两行都放在 `<head>` 的最前面，且 `charset` 放第一行，这样浏览器在读取任何文本之前就知道编码：`<head><meta charset=\"utf-8\"><meta name=\"viewport\" content=\"width=device-width, initial-scale=1\"><title>Café Lumière</title></head>`。`charset` 让浏览器正确解码字节，重音字符就能正常显示；`viewport` 让手机按设备宽度排版，文字不再变小。二者都应放在 `<head>` 内，因为它们是关于文档的元信息，而不是页面上展示的内容。",
+              "markingMdxZh": "1 分：加入 `<meta charset=\"utf-8\">`（最好放在 head 最前面）。\n1 分：加入带 `width=device-width` 的 `viewport` meta，并把两行都放在 `<head>` 内。"
+            }
+          ],
+          "displayNumber": "Q1",
+          "categoryLabel": "HTML Document Structure",
+          "categoryLabelZh": "HTML 文档结构",
+          "displayStyle": "quiz-sample",
+          "mockup": {
+            "files": [
+              {
+                "name": "index.html",
+                "code": "<!doctype html>\n<html lang=\"en\">\n  <head>\n    <title>Café Lumière</title>\n  </head>\n  <body>\n    <h1>Today's menu</h1>\n    <p>Crème brûlée — $6</p>\n  </body>\n</html>",
+                "codeZh": "<!doctype html>\n<html lang=\"en\">\n  <head>\n    <!-- 缺少 <meta charset=\"utf-8\"> -->\n    <!-- 缺少 <meta name=\"viewport\" ...> -->\n    <title>Café Lumière</title>\n  </head>\n  <body>\n    <h1>Today's menu</h1>\n    <p>Crème brûlée — $6</p>\n  </body>\n</html>"
+              },
+              {
+                "name": "page.png",
+                "active": true
+              }
+            ],
+            "viewport": "mobile",
+            "html": "<div class=\"exam-ui-shell\"><div class=\"exam-ui-topbar\"><span>CafÃ© LumiÃ¨re</span><span>Menu</span></div><div class=\"exam-ui-body\"><p class=\"exam-ui-page-title\" style=\"font-size:1rem;\">Todayâ€™s menu</p><div class=\"exam-ui-card\"><p class=\"exam-ui-label\">Flat White</p><p class=\"exam-ui-value\">CrÃ¨me brÃ»lÃ©e â€“ $6</p></div><div class=\"exam-ui-card\"><p class=\"exam-ui-label\">Tea</p><p class=\"exam-ui-value\">Chamomile â€“ $4</p></div></div></div>",
+            "htmlZh": "<div class=\"exam-ui-shell\"><div class=\"exam-ui-topbar\"><span>CafÃ© LumiÃ¨re</span><span>菜单</span></div><div class=\"exam-ui-body\"><p class=\"exam-ui-page-title\" style=\"font-size:1rem;\">Todayâ€™s menu</p><div class=\"exam-ui-card\"><p class=\"exam-ui-label\">Flat White</p><p class=\"exam-ui-value\">CrÃ¨me brÃ»lÃ©e â€“ $6</p></div><div class=\"exam-ui-card\"><p class=\"exam-ui-label\">Tea</p><p class=\"exam-ui-value\">Chamomile â€“ $4</p></div></div></div>",
+            "caption": "The café page on a phone: the text is tiny and some characters are wrong.",
+            "captionZh": "手机上的咖啡馆页面：文字很小，还有字符显示错误。"
+          },
+          "titleZh": "乱码的菜单",
+          "contentMdxZh": "`index.html` 是 Café Lumière 的菜单页。在手机上整个页面显得很小，而且有些文字变成了乱码——例如本该是 \"Crème brûlée\" 的地方显示成 \"CrÃ¨me brÃ»lÃ©e\"，如 `page.png` 所示。这个页面的 `<head>` 里缺了两条重要的行。"
+        },
+        {
+          "id": "Q2",
+          "title": "A page made of divs",
+          "marks": 5,
+          "contentMdx": "`index.html` is the COMP6080 course homepage. Every region is a `<div>`, and the headings jump from `<h1>` straight to `<h3>`, as `outline.png` shows. A screen-reader user complains that they cannot jump straight to the navigation or to the main content.",
+          "subQuestions": [
+            {
+              "id": "Q2-a",
+              "label": "(a)",
+              "marks": 1,
+              "questionMdx": "Which two semantic landmarks are missing (and which `<div>`s should become them), and which heading level is skipped?",
+              "answerMdx": "The navigation landmark `<nav>` and the main-content landmark `<main>` are missing: `<div class=\"menu\">` should be a `<nav>` and `<div class=\"main\">` should be a `<main>`. The heading levels also skip `<h2>` — the page goes from `<h1>` straight to `<h3>`.",
+              "markingMdx": "1 mark for naming both missing landmarks (`nav` and `main`) and identifying the skipped `<h2>`.",
+              "questionMdxZh": "缺了哪两个语义地标（对应的 `<div>` 应改成它们）？又跳过了哪一级标题？",
+              "answerMdxZh": "缺的是导航地标 `<nav>` 和主体内容地标 `<main>`：`<div class=\"menu\">` 应改为 `<nav>`，`<div class=\"main\">` 应改为 `<main>`。标题层级还跳过了 `<h2>`——页面从 `<h1>` 直接跳到 `<h3>`。",
+              "markingMdxZh": "1 分：说出缺失的两个地标（`nav` 和 `main`），并指出被跳过的 `<h2>`。"
+            },
+            {
+              "id": "Q2-b",
+              "label": "(b)",
+              "marks": 2,
+              "questionMdx": "Why does replacing those `<div>`s with landmarks matter for a screen-reader user, and how does the skipped `<h2>` make it worse?",
+              "answerMdx": "A `<div>` carries no role, so it contributes nothing to the accessibility tree: a screen reader cannot present `<div class=\"menu\">` as a \"navigation\" landmark or `<div class=\"main\">` as \"main\", and the user has no shortcut to jump to either. `<nav>` and `<main>` create those landmarks, so the reader can list them and jump between them. The missing `<h2>` makes it worse because the heading outline now reads h1 → h3: that contradiction implies a section is missing, so someone navigating by heading level lands on a level that has no level above it in that branch.",
+              "markingMdx": "1 mark for explaining that a `<div>` has no landmark role, so screen readers cannot jump to navigation/main, whereas `nav`/`main` add those roles.\n1 mark for explaining that the skipped `h2` breaks the heading outline (h1 → h3 implies a missing section).",
+              "questionMdxZh": "把这些 `<div>` 换成地标，对读屏用户为什么重要？跳过的 `<h2>` 又为什么让情况更糟？",
+              "answerMdxZh": "`<div>` 不携带任何角色，对无障碍树没有任何贡献：读屏器无法把 `<div class=\"menu\">` 呈现为 \"navigation\" 地标，也无法把 `<div class=\"main\">` 呈现为 \"main\"，用户没有任何快捷方式可以跳到它们。`<nav>` 和 `<main>` 会创建这些地标，读屏器就能把它们列出来并在其间跳转。跳过的 `<h2>` 让情况更糟，是因为标题大纲现在读起来是 h1 → h3：这种矛盾暗示中间缺了一节，于是按标题层级导航的用户会落到一个在该分支上没有上一级的层级上。",
+              "markingMdxZh": "1 分：说明 `<div>` 没有地标角色，读屏器无法跳到 navigation / main，而 `nav` / `main` 会补上这些角色。\n1 分：说明跳过的 `h2` 破坏标题大纲（h1 → h3 暗示缺了一节）。"
+            },
+            {
+              "id": "Q2-c",
+              "label": "(c)",
+              "marks": 2,
+              "questionMdx": "Rewrite the `<body>` using the right elements and fix the heading level, and explain why the class-based styling still works.",
+              "answerMdx": "Change `<div class=\"menu\">` to `<nav class=\"menu\">`, `<div class=\"main\">` to `<main class=\"main\">`, and the `<h3>` to `<h2>`: `<body><header class=\"top\">COMP6080</header><nav class=\"menu\">Home · Docs · About</nav><main class=\"main\"><h1>Welcome to COMP6080</h1><h2>Getting started</h2></main></body>`. The new elements expose landmark roles in the accessibility tree and make the outline read h1 → h2. The existing class names are kept, so the CSS rules that target `.menu` and `.main` still match and nothing breaks visually — that separation of semantics (the element) from presentation (the class) is exactly why the fix is safe.",
+              "markingMdx": "1 mark for changing the region divs to `<nav>` and `<main>` (element changed, class kept).\n1 mark for fixing the heading level (`h3` → `h2`) and noting that keeping the class means the styling still applies.",
+              "questionMdxZh": "请用正确的元素重写 `<body>` 并修复标题层级，并解释为什么基于 class 的样式依然生效。",
+              "answerMdxZh": "把 `<div class=\"menu\">` 改为 `<nav class=\"menu\">`、`<div class=\"main\">` 改为 `<main class=\"main\">`，并把 `<h3>` 改为 `<h2>`：`<body><header class=\"top\">COMP6080</header><nav class=\"menu\">Home · Docs · About</nav><main class=\"main\"><h1>Welcome to COMP6080</h1><h2>Getting started</h2></main></body>`。新元素会在无障碍树中暴露地标角色，并让大纲读作 h1 → h2。原有的 class 名都保留了，所以针对 `.menu` 和 `.main` 的 CSS 规则仍然命中，视觉上不会破坏——把语义（元素）和表现（class）分开，正是这个改法安全的原因。",
+              "markingMdxZh": "1 分：把区域 div 改成 `<nav>` 和 `<main>`（换元素、保留 class）。\n1 分：修正标题层级（`h3` → `h2`），并说明保留 class 意味着样式仍然生效。"
+            }
+          ],
+          "displayNumber": "Q2",
+          "categoryLabel": "Semantic Landmarks and Heading Levels",
+          "categoryLabelZh": "语义地标与标题层级",
+          "displayStyle": "quiz-sample",
+          "mockup": {
+            "files": [
+              {
+                "name": "index.html",
+                "code": "<!doctype html>\n<html lang=\"en\">\n  <body>\n    <div class=\"top\">COMP6080</div>\n    <div class=\"menu\">Home · Docs · About</div>\n    <div class=\"main\">\n      <div class=\"title\">Welcome to COMP6080</div>\n      <h3>Getting started</h3>\n    </div>\n  </body>\n</html>",
+                "codeZh": "<!doctype html>\n<html lang=\"en\">\n  <body>\n    <div class=\"top\">COMP6080</div>\n    <div class=\"menu\">Home · Docs · About</div>\n    <div class=\"main\">\n      <!-- 标题只是 div，且层级从 h1 跳到 h3 -->\n      <div class=\"title\">Welcome to COMP6080</div>\n      <h3>Getting started</h3>\n    </div>\n  </body>\n</html>"
+              },
+              {
+                "name": "outline.png",
+                "active": true
+              }
+            ],
+            "viewport": "desktop",
+            "html": "<div class=\"exam-ui-shell\"><div class=\"exam-ui-topbar\"><span>COMP6080</span><span>Course hub</span></div><div class=\"exam-ui-body\"><div class=\"exam-ui-toolbar-demo\"><span class=\"exam-ui-nav-item\">Home</span><span class=\"exam-ui-nav-item-active\">Docs</span><span class=\"exam-ui-nav-item\">About</span></div><p class=\"exam-ui-page-title\">Welcome to COMP6080</p><p class=\"exam-ui-value\" style=\"font-size:1.05rem;font-weight:600;\">Getting started</p><div class=\"exam-ui-card\"><p class=\"exam-ui-label\">Heading outline</p><div class=\"exam-ui-stack\"><span class=\"exam-ui-chip\">h1 · Welcome to COMP6080</span><span class=\"exam-ui-chip\" style=\"margin-left:1.25rem;\">h3 · Getting started</span></div><p class=\"exam-ui-muted\">No h2 between them</p></div></div></div>",
+            "htmlZh": "<div class=\"exam-ui-shell\"><div class=\"exam-ui-topbar\"><span>COMP6080</span><span>课程主页</span></div><div class=\"exam-ui-body\"><div class=\"exam-ui-toolbar-demo\"><span class=\"exam-ui-nav-item\">Home</span><span class=\"exam-ui-nav-item-active\">Docs</span><span class=\"exam-ui-nav-item\">About</span></div><p class=\"exam-ui-page-title\">Welcome to COMP6080</p><p class=\"exam-ui-value\" style=\"font-size:1.05rem;font-weight:600;\">Getting started</p><div class=\"exam-ui-card\"><p class=\"exam-ui-label\">标题大纲</p><div class=\"exam-ui-stack\"><span class=\"exam-ui-chip\">h1 · Welcome to COMP6080</span><span class=\"exam-ui-chip\" style=\"margin-left:1.25rem;\">h3 · Getting started</span></div><p class=\"exam-ui-muted\">中间没有 h2</p></div></div></div>",
+            "caption": "The homepage as it renders, with the heading outline underneath.",
+            "captionZh": "首页的渲染效果，下方是它的标题大纲。"
+          },
+          "titleZh": "整页都是 div",
+          "contentMdxZh": "`index.html` 是 COMP6080 的课程主页。每个区域都是一个 `<div>`，而且标题从 `<h1>` 直接跳到 `<h3>`，如 `outline.png` 所示。一位读屏用户抱怨说，他无法直接跳到导航或主体内容。"
+        },
+        {
+          "id": "Q3",
+          "title": "Broken images and links",
+          "marks": 5,
+          "contentMdx": "`index.html` is a gallery at `gallery/index.html` that lists artworks. On the live site every image shows as a broken-image icon and each \"Details\" link lands on a 404, as `list.png` shows. The real image files sit under `assets/images/` at the site root.",
+          "subQuestions": [
+            {
+              "id": "Q3-a",
+              "label": "(a)",
+              "marks": 1,
+              "questionMdx": "The page uses `<img src=\"assets/images/art1.jpg\">`. What path does the browser actually request, and why does the image fail to load?",
+              "answerMdx": "The browser resolves the relative path against the page's own folder, so from `gallery/index.html` it requests `gallery/assets/images/art1.jpg`. That file does not exist — the images are under `assets/` at the site root, not inside `gallery/` — so the request 404s and the browser shows the broken-image placeholder.",
+              "markingMdx": "1 mark for stating the browser requests `gallery/assets/images/art1.jpg` (the relative path is joined onto the page's folder) and that the file is not there.",
+              "questionMdxZh": "页面里写的是 `<img src=\"assets/images/art1.jpg\">`。浏览器实际请求的是什么路径？为什么图片加载失败？",
+              "answerMdxZh": "浏览器会把相对路径拼接到页面自身所在的目录上，所以从 `gallery/index.html` 出发，它请求的是 `gallery/assets/images/art1.jpg`。这个文件并不存在——图片在站点根目录的 `assets/` 下，而不是 `gallery/` 里——于是请求 404，浏览器显示图片损坏的占位图。",
+              "markingMdxZh": "1 分：说明浏览器实际请求的是 `gallery/assets/images/art1.jpg`（相对路径会拼到页面所在目录），而该文件并不存在。"
+            },
+            {
+              "id": "Q3-b",
+              "label": "(b)",
+              "marks": 2,
+              "questionMdx": "Why do the \"Details\" links fail for exactly the same reason, and why would the bug have been invisible if the page had stayed at the site root?",
+              "answerMdx": "`<a href=\"detail.html\">` is also relative, so from `gallery/index.html` the browser requests `gallery/detail.html`, which is not where the file lives — the same resolution rule that broke the images. Had the page been at the site root, its folder would be the root, so `assets/images/art1.jpg` and `detail.html` would both resolve to the correct files and everything would work. That is why the mistake is easy to miss: it only surfaces once the page is moved into a subfolder, because relative paths depend on the page's position.",
+              "markingMdx": "1 mark for explaining the links fail because relative paths resolve against the page's folder (`gallery/detail.html`).\n1 mark for explaining the bug is position-dependent — it only appears after the page moves into a subfolder, so it is invisible at the root.",
+              "questionMdxZh": "为什么 \"Details\" 链接会因完全相同的原因失败？如果页面一直待在站点根目录，这个 bug 又为什么看不出来？",
+              "answerMdxZh": "`<a href=\"detail.html\">` 同样是相对路径，所以从 `gallery/index.html` 出发，浏览器请求的是 `gallery/detail.html`，而文件并不在那里——和把图片弄坏的是同一条解析规则。如果页面待在站点根目录，它所在目录就是根目录，那么 `assets/images/art1.jpg` 和 `detail.html` 都会解析到正确的文件，一切正常。这正是这个错误容易被忽略的原因：只有当页面被移进子目录后它才暴露，因为相对路径依赖页面的位置。",
+              "markingMdxZh": "1 分：说明链接失败是因为相对路径会基于页面所在目录解析（`gallery/detail.html`）。\n1 分：说明这是位置相关的 bug——页面移进子目录后才出现，在根目录下看不出来。"
+            },
+            {
+              "id": "Q3-c",
+              "label": "(c)",
+              "marks": 2,
+              "questionMdx": "Rewrite the image and link paths so they work from any folder, and explain why that form is more robust.",
+              "answerMdx": "Use root-relative paths that start with `/`: `<img src=\"/assets/images/art1.jpg\" alt=\"Blue Ridge\">` and `<a href=\"/gallery/detail.html\">Details</a>`. A leading `/` makes the browser resolve the path from the site root, not from the current page's folder, so the same markup keeps working no matter how deep the page moves. That decouples the paths from the file's location, which is why root-relative paths are the safer default in a project with folders.",
+              "markingMdx": "1 mark for rewriting both paths as root-relative (starting with `/`), e.g. `/assets/images/art1.jpg` and `/gallery/detail.html`.\n1 mark for explaining that a leading `/` resolves from the site root, so the paths no longer depend on the page's folder.",
+              "questionMdxZh": "请重写图片与链接的路径，让它们在任何目录下都能工作，并解释这种写法为什么更稳。",
+              "answerMdxZh": "改用以 `/` 开头的根路径：`<img src=\"/assets/images/art1.jpg\" alt=\"Blue Ridge\">` 和 `<a href=\"/gallery/detail.html\">Details</a>`。开头的 `/` 让浏览器从站点根目录解析路径，而不是从当前页面所在目录，所以无论页面移动多深，同一套 markup 都能继续工作。这样就把路径与文件位置解耦了，也是在带目录的项目里根路径更稳妥的原因。",
+              "markingMdxZh": "1 分：把两条路径都改成根路径（以 `/` 开头），例如 `/assets/images/art1.jpg` 和 `/gallery/detail.html`。\n1 分：说明开头的 `/` 从站点根目录解析，因此路径不再依赖页面所在目录。"
+            }
+          ],
+          "displayNumber": "Q3",
+          "categoryLabel": "Links, Images and Paths",
+          "categoryLabelZh": "链接、图片与路径",
+          "displayStyle": "quiz-sample",
+          "mockup": {
+            "files": [
+              {
+                "name": "index.html",
+                "code": "<ul class=\"gallery\">\n  <li>\n    <img src=\"assets/images/art1.jpg\" alt=\"Blue Ridge\">\n    <a href=\"detail.html\">Details</a>\n  </li>\n  <li>\n    <img src=\"assets/images/art2.jpg\" alt=\"Still Water\">\n    <a href=\"detail.html\">Details</a>\n  </li>\n</ul>",
+                "codeZh": "<ul class=\"gallery\">\n  <li>\n    <!-- 页面位于 gallery/ 下，相对路径解析错误 -->\n    <img src=\"assets/images/art1.jpg\" alt=\"Blue Ridge\">\n    <a href=\"detail.html\">Details</a>\n  </li>\n  <li>\n    <img src=\"assets/images/art2.jpg\" alt=\"Still Water\">\n    <a href=\"detail.html\">Details</a>\n  </li>\n</ul>"
+              },
+              {
+                "name": "list.png",
+                "active": true
+              }
+            ],
+            "viewport": "desktop",
+            "html": "<div class=\"exam-ui-shell\"><div class=\"exam-ui-topbar\"><span>Gallery</span><span>List</span></div><div class=\"exam-ui-body\"><p class=\"exam-ui-page-title\">Artworks</p><div class=\"exam-ui-grid-2\"><div class=\"exam-ui-card\"><div class=\"exam-ui-outline\" style=\"height:72px;display:flex;align-items:center;justify-content:center;color:#9ca3af;font-size:.7rem;\">broken image</div><p class=\"exam-ui-value\">Blue Ridge</p><a class=\"exam-ui-link\">Details</a></div><div class=\"exam-ui-card\"><div class=\"exam-ui-outline\" style=\"height:72px;display:flex;align-items:center;justify-content:center;color:#9ca3af;font-size:.7rem;\">broken image</div><p class=\"exam-ui-value\">Still Water</p><a class=\"exam-ui-link\">Details</a></div></div></div></div>",
+            "htmlZh": "<div class=\"exam-ui-shell\"><div class=\"exam-ui-topbar\"><span>画廊</span><span>列表</span></div><div class=\"exam-ui-body\"><p class=\"exam-ui-page-title\">作品</p><div class=\"exam-ui-grid-2\"><div class=\"exam-ui-card\"><div class=\"exam-ui-outline\" style=\"height:72px;display:flex;align-items:center;justify-content:center;color:#9ca3af;font-size:.7rem;\">图片损坏</div><p class=\"exam-ui-value\">Blue Ridge</p><a class=\"exam-ui-link\">详情</a></div><div class=\"exam-ui-card\"><div class=\"exam-ui-outline\" style=\"height:72px;display:flex;align-items:center;justify-content:center;color:#9ca3af;font-size:.7rem;\">图片损坏</div><p class=\"exam-ui-value\">Still Water</p><a class=\"exam-ui-link\">详情</a></div></div></div></div>",
+            "caption": "The gallery list: images fail to load and the Details links lead nowhere.",
+            "captionZh": "画廊列表：图片加载失败，Details 链接也指向了死路。"
+          },
+          "titleZh": "图片与链接全挂",
+          "contentMdxZh": "`index.html` 是一个位于 `gallery/index.html` 的画廊页面，列出了若干作品。线上页面里每张图片都显示为损坏图标，每个 \"Details\" 链接都落到 404，如 `list.png` 所示。真正的图片文件放在站点根目录的 `assets/images/` 下。"
+        },
+        {
+          "id": "Q4",
+          "title": "A run-on results page",
+          "marks": 5,
+          "contentMdx": "`results.html` shows a marathon results page. The standings are built from `<div>` rows, the finishing steps are a single run-on `<div>`, and the code sample loses all its indentation, as `results.png` shows.",
+          "subQuestions": [
+            {
+              "id": "Q4-a",
+              "label": "(a)",
+              "marks": 1,
+              "questionMdx": "The finishing steps are one run-on `<div>`. Which element gives them ordered-list semantics, and what visual difference does it make by default?",
+              "answerMdx": "An ordered list: `<ol>` with one `<li>` per step. By default the browser numbers the items (1., 2., 3.), which matches the fact that the steps have a fixed order — something a single `<div>` cannot express.",
+              "markingMdx": "1 mark for naming `<ol>` (with `<li>` items) and its default numbered, ordered appearance.",
+              "questionMdxZh": "完赛步骤现在是一个连成一串的 `<div>`。哪个元素能赋予它有序列表的语义？它默认会带来什么视觉差异？",
+              "answerMdxZh": "有序列表：`<ol>`，每一步一个 `<li>`。浏览器默认会给条目编号（1.、2.、3.），这与这些步骤有固定先后顺序相符——这是单独一个 `<div>` 无法表达的。",
+              "markingMdxZh": "1 分：说出 `<ol>`（配合 `<li>`），以及它默认带编号的有序外观。"
+            },
+            {
+              "id": "Q4-b",
+              "label": "(b)",
+              "marks": 2,
+              "questionMdx": "Why is a `<div>` grid the wrong choice for the standings, and why does the code sample lose its indentation?",
+              "answerMdx": "A `<div>` grid only looks like a table: it carries no row/column semantics, so a screen reader cannot announce \"column Race time, row 2\" or tie a cell back to its header, and there is nothing programmatic for the browser's reading or printing to use. A real `<table>` with `<thead>` and `<th>` provides that structure. The code sample loses its indentation because HTML collapses any run of spaces, tabs and newlines into a single space; without a `<pre>` element to preserve the original whitespace, the multi-line, indented code is flattened onto one line.",
+              "markingMdx": "1 mark for explaining that div rows have no table semantics, so headers and cells are not programmatically linked (a real `table`/`thead`/`th` is needed).\n1 mark for explaining that HTML collapses runs of whitespace and newlines, which is why the indentation disappears.",
+              "questionMdxZh": "为什么用 `<div>` 网格来做排名是错误的选择？代码示例又为什么会丢失缩进？",
+              "answerMdxZh": "`<div>` 网格只是看起来像表格：它不携带任何行/列语义，所以读屏器无法报出 \"column Race time, row 2\"，也无法把单元格与其表头关联，浏览器在朗读或打印时也没有可用的结构化信息。真正的 `<table>` 配合 `<thead>` 和 `<th>` 才能提供这种结构。代码示例丢失缩进，是因为 HTML 会把任意连续的空白、制表符和换行都折叠成一个空格；没有 `<pre>` 元素来保留原始空白，这段多行、带缩进的代码就会被压平到一行。",
+              "markingMdxZh": "1 分：说明 div 行没有表格语义，表头与单元格没有程序化的关联（需要真正的 `table`/`thead`/`th`）。\n1 分：说明 HTML 会折叠连续的空白与换行，因此缩进消失。"
+            },
+            {
+              "id": "Q4-c",
+              "label": "(c)",
+              "marks": 2,
+              "questionMdx": "Rewrite the three areas — steps, standings and code — with the correct elements, and explain why each fix works.",
+              "answerMdx": "Steps: `<ol><li>Warm up</li><li>Run</li><li>Cool down</li></ol>` — the `ol` gives the items order semantics and numbers them. Standings: `<table><thead><tr><th>Place</th><th>Runner</th><th>Time</th></tr></thead><tbody><tr><td>1</td><td>Amara</td><td>12:04</td></tr></tbody></table>` — the table lets a screen reader read each cell against its column header. Code: `<pre><code>function add(a, b) {\n  return a + b;\n}</code></pre>` — `pre` preserves the whitespace so the indentation and line breaks survive, and `code` marks the text as code. Each fix replaces a presentational `<div>` with the element that actually carries the meaning.",
+              "markingMdx": "1 mark for using `<ol>`/`<li>` for the steps and `<table>`/`<thead>`/`<th>` (with `<tbody>`/`<td>`) for the standings.\n1 mark for using `<pre><code>` for the code sample and explaining that `pre` preserves whitespace.",
+              "questionMdxZh": "请用正确的元素重写这三块——步骤、排名、代码——并解释每个改法为什么有效。",
+              "answerMdxZh": "步骤：`<ol><li>Warm up</li><li>Run</li><li>Cool down</li></ol>`——`ol` 给条目赋予顺序语义并编号。排名：`<table><thead><tr><th>Place</th><th>Runner</th><th>Time</th></tr></thead><tbody><tr><td>1</td><td>Amara</td><td>12:04</td></tr></tbody></table>`——表格让读屏器能按列头朗读每个单元格。代码：`<pre><code>function add(a, b) {\n  return a + b;\n}</code></pre>`——`pre` 保留空白，让缩进和换行得以保留，`code` 标记这段文字是代码。每个改法都是用一个真正承载含义的元素，替换掉只负责表现的 `<div>`。",
+              "markingMdxZh": "1 分：用 `<ol>`/`<li>` 表达步骤，用 `<table>`/`<thead>`/`<th>`（配合 `<tbody>`/`<td>`）表达排名。\n1 分：用 `<pre><code>` 表达代码示例，并说明 `pre` 会保留空白。"
+            }
+          ],
+          "displayNumber": "Q4",
+          "categoryLabel": "Lists, Tables and Code",
+          "categoryLabelZh": "列表、表格与代码标签",
+          "displayStyle": "quiz-sample",
+          "mockup": {
+            "files": [
+              {
+                "name": "results.html",
+                "code": "<body>\n  <h1>Race results</h1>\n  <div class=\"standings\">\n    <div class=\"row\">1  Amara  QLD  12:04</div>\n    <div class=\"row\">2  Wei  NSW  12:11</div>\n  </div>\n  <div class=\"steps\">Warm up, run, cool down</div>\n  <div class=\"code\">\n      function add(a, b) {\n        return a + b;\n      }\n    </div>\n</body>",
+                "codeZh": "<body>\n  <h1>Race results</h1>\n  <div class=\"standings\">\n    <!-- 只是“看起来像表格”的 div 行 -->\n    <div class=\"row\">1  Amara  QLD  12:04</div>\n    <div class=\"row\">2  Wei  NSW  12:11</div>\n  </div>\n  <div class=\"steps\">Warm up, run, cool down</div>\n  <!-- 没有 <pre>，缩进与换行被折叠 -->\n  <div class=\"code\">\n      function add(a, b) {\n        return a + b;\n      }\n    </div>\n</body>"
+              },
+              {
+                "name": "results.png",
+                "active": true
+              }
+            ],
+            "viewport": "desktop",
+            "html": "<div class=\"exam-ui-shell\"><div class=\"exam-ui-topbar\"><span>Marathon</span><span>Results</span></div><div class=\"exam-ui-body\"><p class=\"exam-ui-page-title\">Race results</p><div class=\"exam-ui-card\"><p class=\"exam-ui-label\">Standings</p><div class=\"exam-ui-stack\"><span class=\"exam-ui-value\">1&nbsp;&nbsp;Amara&nbsp;&nbsp;QLD&nbsp;&nbsp;12:04</span><span class=\"exam-ui-value\">2&nbsp;&nbsp;Wei&nbsp;&nbsp;NSW&nbsp;&nbsp;12:11</span></div></div><div class=\"exam-ui-card\"><p class=\"exam-ui-label\">Steps</p><p class=\"exam-ui-value\">Warm up, run, cool down</p></div><div class=\"exam-ui-card\"><p class=\"exam-ui-label\">Sample</p><p class=\"exam-ui-value\" style=\"font-family:monospace;font-size:.68rem;\">function add(a, b) { return a + b; }</p><p class=\"exam-ui-muted\">Indentation and line breaks are gone</p></div></div></div>",
+            "htmlZh": "<div class=\"exam-ui-shell\"><div class=\"exam-ui-topbar\"><span>马拉松</span><span>成绩</span></div><div class=\"exam-ui-body\"><p class=\"exam-ui-page-title\">比赛成绩</p><div class=\"exam-ui-card\"><p class=\"exam-ui-label\">排名</p><div class=\"exam-ui-stack\"><span class=\"exam-ui-value\">1&nbsp;&nbsp;Amara&nbsp;&nbsp;QLD&nbsp;&nbsp;12:04</span><span class=\"exam-ui-value\">2&nbsp;&nbsp;Wei&nbsp;&nbsp;NSW&nbsp;&nbsp;12:11</span></div></div><div class=\"exam-ui-card\"><p class=\"exam-ui-label\">步骤</p><p class=\"exam-ui-value\">热身、跑步、放松</p></div><div class=\"exam-ui-card\"><p class=\"exam-ui-label\">示例</p><p class=\"exam-ui-value\" style=\"font-family:monospace;font-size:.68rem;\">function add(a, b) { return a + b; }</p><p class=\"exam-ui-muted\">缩进和换行都丢了</p></div></div></div>",
+            "caption": "The results page: flattened code and runs of data as plain divs.",
+            "captionZh": "结果页：代码被压成一行，数据也只是普通的 div。"
+          },
+          "titleZh": "被压平的结果页",
+          "contentMdxZh": "`results.html` 是一个马拉松成绩页。排名是用 `<div>` 行搭出来的，完赛步骤是一个连成一串的 `<div>`，而代码示例丢失了全部缩进，如 `results.png` 所示。"
+        }
+      ]
+    }
+  ]
+}

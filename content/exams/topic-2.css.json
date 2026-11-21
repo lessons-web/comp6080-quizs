@@ -1,0 +1,406 @@
+{
+  "topic": "css",
+  "exams": [
+    {
+      "id": "TOPIC2-CSS",
+      "title": "CSS Layout & Responsive — Topic Paper",
+      "titleZh": "CSS 布局与响应式 · 专题卷",
+      "description": "Week 2 topic paper: the CSS box model, flexbox alignment, positioning and stacking, responsive units and media queries, specificity / cascade, and overflow / grid. Six questions, three sub-questions each, with screenshot-style mockups.",
+      "descriptionZh": "Week 2 专题卷：CSS 盒模型、Flexbox 对齐、定位与层叠、响应式单位与媒体查询、以及优先级 / 层叠与溢出 / 栅格。共 6 道大题，每题 3 个子题，配套截图感 mockup。",
+      "totalMarks": 30,
+      "tags": ["专题卷", "Weeks2", "CSS", "布局", "响应式"],
+      "questions": [
+        {
+          "id": "Q1",
+          "title": "A card wider than its column",
+          "marks": 5,
+          "contentMdx": "`card.css` styles a product card that sits inside a 320px sidebar column. In `layout.png` the card's right edge runs past the column, and the gap between the two stacked cards is smaller than the designer's `margin-bottom: 16px` plus `margin-top: 32px`. The card uses `box-sizing: content-box`.",
+          "subQuestions": [
+            {
+              "id": "Q1-a",
+              "label": "(a)",
+              "marks": 1,
+              "questionMdx": "`card.css` declares `width: 300px`, `padding: 20px` on each side and a `3px` border on each side. What is the card's real total width, and why does `content-box` give that number?",
+              "answerMdx": "The real width is 300 + 20 + 20 + 3 + 3 = 346px. With `box-sizing: content-box` the declared `width` sizes only the content box, so the padding and border are added on top of the 300px rather than included in it.",
+              "markingMdx": "1 mark for 346px with the correct arithmetic (300 + padding + border).",
+              "questionMdxZh": "`card.css` 声明了 `width: 300px`，每侧 `padding: 20px`，每侧 `3px` 边框。这张卡片真实的总宽度是多少？为什么 `content-box` 会得出这个数？",
+              "answerMdxZh": "真实宽度是 300 + 20 + 20 + 3 + 3 = 346px。在 `box-sizing: content-box` 下，声明的 `width` 只决定内容盒的尺寸，所以内边距和边框是额外加在 300px 之上的，而不是包含在里面。",
+              "markingMdxZh": "1 分：算出 346px 并写出正确算式（300 + 内边距 + 边框）。"
+            },
+            {
+              "id": "Q1-b",
+              "label": "(b)",
+              "marks": 2,
+              "questionMdx": "The column is only 320px wide. Explain why the card overflows, and how adding `box-sizing: border-box` changes the numbers.",
+              "answerMdx": "346px is wider than the 320px column, so the extra 26px spills past the column edge and either gets clipped or forces a scrollbar. With `box-sizing: border-box` the declared 300px includes the padding and border, so the total width stays 300px — inside the column — and instead the content area shrinks to 300 - 40 - 6 = 254px. So the fix moves the squeeze from the box outside to the content inside.",
+              "markingMdx": "1 mark for explaining that the content-box total (346px) exceeds 320px and so overflows.\n1 mark for explaining that border-box folds padding and border into the declared 300px, giving a 300px total and a smaller content area.",
+              "questionMdxZh": "这个列宽只有 320px。请解释卡片为什么会溢出，以及加上 `box-sizing: border-box` 后数字会怎么变。",
+              "answerMdxZh": "346px 比 320px 的列宽更宽，多出的 26px 会冲出列边缘，或被裁掉，或逼出横向滚动条。加上 `box-sizing: border-box` 后，声明的 300px 就包含了内边距和边框，于是总宽度保持在 300px——落在列内——而是内容区缩小为 300 - 40 - 6 = 254px。也就是说，这个修改把“被挤压”的位置从盒子外部挪到了内部内容上。",
+              "markingMdxZh": "1 分：说明 content-box 的总宽（346px）超过 320px，因此溢出。\n1 分：说明 border-box 把内边距和边框并入声明的 300px，总宽变为 300px，而内容区变小。"
+            },
+            {
+              "id": "Q1-c",
+              "label": "(c)",
+              "marks": 2,
+              "questionMdx": "The first card has `margin-bottom: 16px` and the second has `margin-top: 32px`, yet the gap between them is only 32px, not 48px. Explain why, and give a fix that produces exactly 48px.",
+              "answerMdx": "Adjacent vertical margins collapse: the bottom margin of one sibling and the top margin of the next meet in the middle and become a single gap equal to the larger of the two (32px), not their sum. This is margin collapsing between adjacent siblings. To get a deterministic 48px, put the cards in a flex (or grid) column and use `gap: 48px`, because `gap` is not a margin and never collapses; alternatively give a wrapper `padding` instead of using sibling margins.",
+              "markingMdx": "1 mark for explaining that adjacent sibling vertical margins collapse to the larger value (32px), not the sum.\n1 mark for a fix that avoids collapsing, e.g. `display: flex; flex-direction: column; gap: 48px` (or wrapper padding).",
+              "questionMdxZh": "第一张卡片有 `margin-bottom: 16px`，第二张有 `margin-top: 32px`，可它们之间的间距却只有 32px，而不是 48px。请解释原因，并给出一个能得到恰好 48px 的修法。",
+              "answerMdxZh": "相邻的垂直外边距会折叠：一张卡片的 bottom margin 与下一张的 top margin 在中间相遇，合并成一个等于两者较大值（32px）的间距，而不是两者之和。这就是相邻兄弟元素之间的外边距折叠。要得到确定的 48px，可以把卡片放进一个 flex（或 grid）纵向容器里并使用 `gap: 48px`，因为 `gap` 不是外边距、永远不会折叠；另一种做法是给外层包裹元素加 `padding`，而不用兄弟 margin。",
+              "markingMdxZh": "1 分：说明相邻兄弟的垂直 margin 会折叠为较大的那个值（32px），而非两者之和。\n1 分：给出避免折叠的修法，例如 `display: flex; flex-direction: column; gap: 48px`（或给包裹层加 padding）。"
+            }
+          ],
+          "displayNumber": "Q1",
+          "categoryLabel": "CSS Layout and Responsive Behaviour",
+          "categoryLabelZh": "CSS 布局与响应式行为",
+          "displayStyle": "quiz-sample",
+          "mockup": {
+            "files": [
+              {
+                "name": "card.css",
+                "code": ".card {\n  box-sizing: content-box;\n  width: 300px;\n  padding: 20px;\n  border: 3px solid #333;\n}\n\n.card + .card {\n  margin-top: 32px;\n}",
+                "codeZh": ".card {\n  box-sizing: content-box;\n  width: 300px;\n  padding: 20px;\n  border: 3px solid #333;\n}\n\n.card + .card {\n  /* 与上一张的 margin-bottom 折叠 */\n  margin-top: 32px;\n}"
+              },
+              {
+                "name": "layout.png",
+                "active": true
+              }
+            ],
+            "viewport": "desktop",
+            "html": "<div class=\"exam-ui-shell\"><div class=\"exam-ui-topbar\"><span>Storefront</span><span>Cart</span></div><div class=\"exam-ui-body\"><p class=\"exam-ui-page-title\">Your cart</p><div class=\"exam-ui-card\"><p class=\"exam-ui-label\">Product card</p><p class=\"exam-ui-muted\">Real width 346px &mdash; the right edge runs past the 320px column.</p></div><div class=\"exam-ui-card\"><span class=\"exam-ui-muted\">Second card &mdash; the gap above is 32px, not 16 + 32px.</span></div></div></div>",
+            "htmlZh": "<div class=\"exam-ui-shell\"><div class=\"exam-ui-topbar\"><span>商城</span><span>购物车</span></div><div class=\"exam-ui-body\"><p class=\"exam-ui-page-title\">你的购物车</p><div class=\"exam-ui-card\"><p class=\"exam-ui-label\">商品卡片</p><p class=\"exam-ui-muted\">真实宽度 346px —— 右边已经越过了 320px 的列。</p></div><div class=\"exam-ui-card\"><span class=\"exam-ui-muted\">第二张卡片 —— 上方间距是 32px，而不是 16 + 32px。</span></div></div></div>",
+            "caption": "The product card overflows its 320px column and the two cards sit too close together.",
+            "captionZh": "商品卡片溢出了 320px 的列，两张卡片又挨得太近。"
+          },
+          "titleZh": "比列还宽的卡片",
+          "contentMdxZh": "`card.css` 为一个放在 320px 侧栏列里的商品卡片设置样式。`layout.png` 里卡片的右边越过了列，而两张上下堆叠的卡片之间的间距，比设计者设的 `margin-bottom: 16px` 加 `margin-top: 32px` 要小。这张卡片用了 `box-sizing: content-box`。"
+        },
+        {
+          "id": "Q2",
+          "title": "Buttons on the wrong axis",
+          "marks": 5,
+          "contentMdx": "`toolbar.css` styles a toolbar with `display: flex`, `justify-content: space-between` and `align-items: center`. Changing `flex-direction` to `column` was meant to keep the three buttons in a horizontal row, but in `toolbar.png` they now stack vertically and one of them is stretched full height.",
+          "subQuestions": [
+            {
+              "id": "Q2-a",
+              "label": "(a)",
+              "marks": 1,
+              "questionMdx": "On the default `row` container, what does `justify-content` control, and how is that different from `align-items`?",
+              "answerMdx": "`justify-content` distributes items along the main axis — horizontally for a `row` — while `align-items` aligns items along the cross axis — vertically for a `row`. They act on different axes, so changing one does not move items along the other.",
+              "markingMdx": "1 mark for stating justify-content acts on the main axis and align-items on the cross axis (horizontal vs vertical in a row).",
+              "questionMdxZh": "在默认的 `row` 容器上，`justify-content` 控制什么？它和 `align-items` 有什么不同？",
+              "answerMdxZh": "`justify-content` 沿主轴分配项目——在 `row` 下就是横向；而 `align-items` 沿交叉轴对齐项目——在 `row` 下就是纵向。它们作用在不同的轴上，所以改其中一个不会让项目沿另一个轴移动。",
+              "markingMdxZh": "1 分：说明 justify-content 作用于主轴、align-items 作用于交叉轴（在 row 下即横向与纵向）。"
+            },
+            {
+              "id": "Q2-b",
+              "label": "(b)",
+              "marks": 2,
+              "questionMdx": "Why did the buttons stack vertically after `flex-direction: column`, and which property do you change to keep them at the top while still centred horizontally?",
+              "answerMdx": "Setting `flex-direction: column` makes the main axis vertical, so `justify-content: space-between` now spreads the buttons from top to bottom and `align-items: center` centres them horizontally. The axes have swapped roles. To pack them at the top, change `justify-content` to `flex-start` (the horizontal centring from `align-items: center` stays).",
+              "markingMdx": "1 mark for explaining that column swaps the main axis to vertical, so justify-content now controls vertical spacing.\n1 mark for changing justify-content to flex-start (or start) for top packing.",
+              "questionMdxZh": "为什么改成 `flex-direction: column` 后按钮会纵向堆叠？如果想让它们靠顶部对齐、同时保持水平居中，应该改哪个属性？",
+              "answerMdxZh": "设置 `flex-direction: column` 后主轴变成纵向，于是 `justify-content: space-between` 改成从上到下分散按钮，而 `align-items: center` 让它们水平居中——两个轴的角色对调了。想让它们靠顶部排列，就把 `justify-content` 改成 `flex-start`（`align-items: center` 带来的水平居中保持不变）。",
+              "markingMdxZh": "1 分：说明 column 把主轴换成纵向，因此 justify-content 现在控制纵向间距。\n1 分：把 justify-content 改为 flex-start（或 start）以实现靠顶排列。"
+            },
+            {
+              "id": "Q2-c",
+              "label": "(c)",
+              "marks": 2,
+              "questionMdx": "One button sets `align-self: stretch`. Explain what `align-self` does and the effect on that button.",
+              "answerMdx": "`align-self` overrides the container's `align-items` for a single item, and it still works on the cross axis. With `stretch`, that one button is stretched to fill the cross-axis size of its line (the toolbar's full height in a row), while the other buttons keep their natural height and stay centred. So one button ends up full-height and the rest do not, which is the asymmetry visible in the mockup.",
+              "markingMdx": "1 mark for stating that align-self overrides align-items for a single item.\n1 mark for explaining that stretch makes that item fill the cross axis while the others do not.",
+              "questionMdxZh": "其中一个按钮设置了 `align-self: stretch`。请解释 `align-self` 的作用，以及它对那个按钮造成的影响。",
+              "answerMdxZh": "`align-self` 会为单个项目覆盖容器的 `align-items`，作用对象仍是交叉轴。配合 `stretch`，那一个按钮会被拉伸，填满它所在行在交叉轴上的尺寸（在 row 下就是工具栏的整个高度），而其他按钮保持自身高度并居中。结果就是有一个按钮撑满高度、其余不会——这正是 mockup 里看到的不对称。",
+              "markingMdxZh": "1 分：说明 align-self 会为单个项目覆盖 align-items。\n1 分：说明 stretch 让该项目填满交叉轴，而其他项目不会。"
+            }
+          ],
+          "displayNumber": "Q2",
+          "categoryLabel": "CSS Layout and Responsive Behaviour",
+          "categoryLabelZh": "CSS 布局与响应式行为",
+          "displayStyle": "quiz-sample",
+          "mockup": {
+            "files": [
+              {
+                "name": "toolbar.css",
+                "code": ".toolbar {\n  display: flex;\n  flex-direction: column;\n  justify-content: space-between;\n  align-items: center;\n  height: 160px;\n}\n\n.toolbar .save {\n  align-self: stretch;\n}",
+                "codeZh": ".toolbar {\n  display: flex;\n  /* 主轴变成纵向 */\n  flex-direction: column;\n  justify-content: space-between;\n  align-items: center;\n  height: 160px;\n}\n\n.toolbar .save {\n  /* 这一个被拉伸到满高 */\n  align-self: stretch;\n}"
+              },
+              {
+                "name": "toolbar.png",
+                "active": true
+              }
+            ],
+            "viewport": "desktop",
+            "html": "<div class=\"exam-ui-shell\"><div class=\"exam-ui-topbar\"><span>Editor</span><span>Toolbar</span></div><div class=\"exam-ui-body\"><p class=\"exam-ui-page-title\">Document</p><div class=\"exam-ui-card\"><div class=\"exam-ui-stack\"><span class=\"exam-ui-button\">Save</span><span class=\"exam-ui-button exam-ui-button-secondary\">Preview</span><span class=\"exam-ui-button exam-ui-button-secondary\">Share</span></div></div><p class=\"exam-ui-muted\">The buttons stack top-to-bottom; Save is stretched full height.</p></div></div>",
+            "htmlZh": "<div class=\"exam-ui-shell\"><div class=\"exam-ui-topbar\"><span>编辑器</span><span>工具栏</span></div><div class=\"exam-ui-body\"><p class=\"exam-ui-page-title\">文档</p><div class=\"exam-ui-card\"><div class=\"exam-ui-stack\"><span class=\"exam-ui-button\">保存</span><span class=\"exam-ui-button exam-ui-button-secondary\">预览</span><span class=\"exam-ui-button exam-ui-button-secondary\">分享</span></div></div><p class=\"exam-ui-muted\">按钮从上到下堆叠；保存按钮被拉伸到满高。</p></div></div>",
+            "caption": "The toolbar after switching flex-direction to column: buttons stack and one is stretched.",
+            "captionZh": "把 flex-direction 改成 column 后的工具栏：按钮纵向堆叠，其中一个被拉伸。"
+          },
+          "titleZh": "按钮跑到了错误的轴上",
+          "contentMdxZh": "`toolbar.css` 给一个工具栏设置了 `display: flex`、`justify-content: space-between` 和 `align-items: center`。本想通过把 `flex-direction` 改成 `column` 让三个按钮保持横向一排，但 `toolbar.png` 里它们却纵向堆叠，而且其中一个被拉伸到满高。"
+        },
+        {
+          "id": "Q3",
+          "title": "The dropdown that hides behind the banner",
+          "marks": 5,
+          "contentMdx": "`header.css` opens a nav dropdown with `position: absolute; z-index: 10`. In `dropdown.png` the dropdown is hidden behind the hero banner below it, even though its `z-index` is far higher than the banner's.",
+          "subQuestions": [
+            {
+              "id": "Q3-a",
+              "label": "(a)",
+              "marks": 1,
+              "questionMdx": "`.header` has `position: relative; z-index: 1`, `.hero` has `z-index: 2`, and the dropdown inside the header has `z-index: 10`. Why is the dropdown still behind the hero?",
+              "answerMdx": "Because `.header`, with a non-auto `z-index`, creates a stacking context. Inside it the dropdown's `z-index: 10` only orders elements within that header; the whole header context is painted at level 1, which is below the hero at level 2. So the dropdown cannot escape its parent's stacking context and stays behind the hero.",
+              "markingMdx": "1 mark for explaining that the header forms a stacking context and the dropdown's z-index only orders within it, so the parent's value (1) decides against the hero (2).",
+              "questionMdxZh": "`.header` 是 `position: relative; z-index: 1`，`.hero` 是 `z-index: 2`，而 header 内部的 dropdown 是 `z-index: 10`。为什么这个 dropdown 仍然在 hero 后面？",
+              "answerMdxZh": "因为 `.header` 带了一个非 auto 的 `z-index`，从而创建了一个层叠上下文。在这个上下文内部，dropdown 的 `z-index: 10` 只用于在 header 内部排序；整个 header 上下文是以第 1 层绘制的，低于第 2 层的 hero。所以 dropdown 无法逃出父级的层叠上下文，只能待在 hero 后面。",
+              "markingMdxZh": "1 分：说明 header 形成了层叠上下文，dropdown 的 z-index 只在其内部排序，真正与 hero（2）比较的是父级的层级（1）。"
+            },
+            {
+              "id": "Q3-b",
+              "label": "(b)",
+              "marks": 2,
+              "questionMdx": "What is a stacking context, and name a couple of CSS properties that create one.",
+              "answerMdx": "A stacking context is an isolated group in which the child `z-index` values are compared only with each other; the group as a whole is placed in its parent by the parent's own stacking value. It is created by a positioned element with a non-auto `z-index`, and also by things like `opacity` less than 1, a `transform` other than `none`, a `filter`, or `position: fixed`. That is why a child inside such a context can have an enormous `z-index` and still render below something outside it.",
+              "markingMdx": "1 mark for defining a stacking context as an isolated group where inner z-index values only compare with each other.\n1 mark for naming at least one creating property beyond position plus z-index (e.g. opacity < 1, transform, filter).",
+              "questionMdxZh": "什么是层叠上下文？请举出一两个会创建它的 CSS 属性。",
+              "answerMdxZh": "层叠上下文是一个隔离的分组：组内子元素的 `z-index` 只在彼此之间比较；整个分组作为一个整体，由父级的层叠值决定它在父级中的位置。它会由一个带非 auto `z-index` 的定位元素创建，也会由诸如 `opacity` 小于 1、`transform` 不为 `none`、`filter`，或 `position: fixed` 等属性创建。这就是为什么处在这种上下文里的子元素即使 `z-index` 很大，仍可能被它外部的东西压在下面。",
+              "markingMdxZh": "1 分：把层叠上下文定义为组内 z-index 只在彼此间比较的隔离分组。\n1 分：举出除“定位 + z-index”之外至少一个会创建它的属性（例如 opacity < 1、transform、filter）。"
+            },
+            {
+              "id": "Q3-c",
+              "label": "(c)",
+              "marks": 2,
+              "questionMdx": "Give a fix so the dropdown appears above the hero, and explain why it works.",
+              "answerMdx": "Raise the header's own `z-index` above the hero, for example `.header { z-index: 3 }` (or lower the hero's). Because the dropdown lives inside the header's stacking context, lifting the whole header lifts the dropdown with it, so its `z-index: 10` now sits above the hero's `2`. A `z-index` on the dropdown alone cannot help, because that value is trapped inside the header's context and only competes with the header's other children.",
+              "markingMdx": "1 mark for raising the header's z-index above the hero (or removing the header's stacking context).\n1 mark for explaining why lifting the parent lifts the dropdown, while changing the dropdown's own z-index cannot.",
+              "questionMdxZh": "请给出一个修法，让 dropdown 显示在 hero 之上，并解释它为什么有效。",
+              "answerMdxZh": "把 header 自身的 `z-index` 提到比 hero 更高，例如 `.header { z-index: 3 }`（或把 hero 降低）。因为 dropdown 处在 header 的层叠上下文里，抬高整个 header 就会连带把 dropdown 一起抬高，于是它的 `z-index: 10` 现在位于 hero 的 `2` 之上。只改 dropdown 自身的 `z-index` 没用，因为那个值被困在 header 上下文内部，只能与 header 的其他子元素比较。",
+              "markingMdxZh": "1 分：把 header 的 z-index 提到 hero 之上（或去掉 header 的层叠上下文）。\n1 分：解释为什么抬高父级就抬高了 dropdown，而只改 dropdown 自身无效。"
+            }
+          ],
+          "displayNumber": "Q3",
+          "categoryLabel": "CSS Layout and Responsive Behaviour",
+          "categoryLabelZh": "CSS 布局与响应式行为",
+          "displayStyle": "quiz-sample",
+          "mockup": {
+            "files": [
+              {
+                "name": "header.css",
+                "code": ".header {\n  position: relative;\n  z-index: 1;\n}\n\n.hero {\n  position: relative;\n  z-index: 2;\n}\n\n.dropdown {\n  position: absolute;\n  top: 100%;\n  z-index: 10;\n}",
+                "codeZh": ".header {\n  position: relative;\n  /* 这里形成了层叠上下文 */\n  z-index: 1;\n}\n\n.hero {\n  position: relative;\n  z-index: 2;\n}\n\n.dropdown {\n  position: absolute;\n  top: 100%;\n  /* 10 只在 header 内部有效 */\n  z-index: 10;\n}"
+              },
+              {
+                "name": "dropdown.png",
+                "active": true
+              }
+            ],
+            "viewport": "desktop",
+            "html": "<div class=\"exam-ui-shell\"><div class=\"exam-ui-topbar\"><span>Shop</span><span>Menu</span></div><div class=\"exam-ui-body\"><p class=\"exam-ui-page-title\">Home</p><div class=\"exam-ui-card\"><p class=\"exam-ui-label\">Menu bar</p><span class=\"exam-ui-muted\">Account v (dropdown should open here)</span></div><div class=\"exam-ui-stage\"><span class=\"exam-ui-muted\">Hero banner &mdash; the dropdown is hidden behind this</span></div></div></div>",
+            "htmlZh": "<div class=\"exam-ui-shell\"><div class=\"exam-ui-topbar\"><span>商城</span><span>菜单</span></div><div class=\"exam-ui-body\"><p class=\"exam-ui-page-title\">首页</p><div class=\"exam-ui-card\"><p class=\"exam-ui-label\">菜单栏</p><span class=\"exam-ui-muted\">账户 v（下拉本应在这里展开）</span></div><div class=\"exam-ui-stage\"><span class=\"exam-ui-muted\">主视觉横幅 —— 下拉被它盖住了</span></div></div></div>",
+            "caption": "The nav dropdown is painted behind the hero banner.",
+            "captionZh": "导航下拉被画在了主视觉横幅的后面。"
+          },
+          "titleZh": "躲在横幅后面的下拉菜单",
+          "contentMdxZh": "`header.css` 用一个 `position: absolute; z-index: 10` 展开导航下拉菜单。`dropdown.png` 里这个下拉被下方的主视觉横幅盖住，尽管它的 `z-index` 比横幅高得多。"
+        },
+        {
+          "id": "Q4",
+          "title": "The page that scrolls sideways on a phone",
+          "marks": 5,
+          "contentMdx": "`pricing.css` sets `.container { width: 1200px }` and gives each plan card a fixed `width: 360px`. On a 400px-wide phone the page scrolls horizontally, as `pricing.png` shows, and the plan cards run off the right edge.",
+          "subQuestions": [
+            {
+              "id": "Q4-a",
+              "label": "(a)",
+              "marks": 1,
+              "questionMdx": "Why does a `1200px` container cause horizontal scrolling on a 400px phone but look fine on a desktop monitor?",
+              "answerMdx": "The container has a fixed pixel width that never shrinks. On a 400px viewport — where the viewport meta makes the layout width match the device — 1200px is three times the screen, so the content overflows and the browser offers horizontal scrolling. On a desktop the viewport is wider than 1200px, so the same width fits without any overflow.",
+              "markingMdx": "1 mark for explaining that a fixed px width does not shrink to the device width, so 1200px exceeds a 400px viewport and overflows.",
+              "questionMdxZh": "为什么一个 `1200px` 的容器在 400px 手机上会造成横向滚动，而在桌面显示器上却看起来正常？",
+              "answerMdxZh": "这个容器用的是固定像素宽度，永远不会收缩。在 400px 的视口里——viewport meta 让布局宽度等于设备宽度——1200px 是屏幕的三倍，所以内容溢出，浏览器就给出横向滚动。桌面上视口比 1200px 更宽，同样的宽度能放得下，不会溢出。",
+              "markingMdxZh": "1 分：说明固定 px 宽度不会随设备宽度收缩，因此 1200px 超过 400px 视口并溢出。"
+            },
+            {
+              "id": "Q4-b",
+              "label": "(b)",
+              "marks": 2,
+              "questionMdx": "Change the container so it fits narrow screens, and explain the rule you used.",
+              "answerMdx": "Replace the fixed width with `max-width: 1200px; width: 100%`, so the container grows up to 1200px on a wide screen but never exceeds the available width, shrinking to fit a phone. Use relative units — percentages, or a flex / grid row with `1fr` — for the plan cards so they share or wrap the row instead of holding a fixed 360px. With a maximum rather than a fixed width, the content fits the viewport and the horizontal scrollbar disappears.",
+              "markingMdx": "1 mark for replacing the fixed width with `max-width: 1200px` and/or `width: 100%` (or percentages).\n1 mark for explaining that a maximum rather than a fixed width lets the element shrink with the viewport, so it no longer overflows.",
+              "questionMdxZh": "请修改这个容器，让它在窄屏上也能放下，并解释你所用规则的原因。",
+              "answerMdxZh": "把固定宽度改成 `max-width: 1200px; width: 100%`，这样容器在宽屏上最多长到 1200px，但永远不会超过可用宽度，从而收缩以适应手机。给套餐卡片使用相对单位——百分比，或带 `1fr` 的 flex / grid 行——让它们共享或换行，而不是死守 360px 的固定宽度。用“最大宽度”代替“固定宽度”后，内容就能放进视口，横向滚动条随之消失。",
+              "markingMdxZh": "1 分：把固定宽度改为 `max-width: 1200px` 和/或 `width: 100%`（或百分比）。\n1 分：说明用“最大宽度”而非“固定宽度”能让元素随视口收缩，从而不再溢出。"
+            },
+            {
+              "id": "Q4-c",
+              "label": "(c)",
+              "marks": 2,
+              "questionMdx": "If the page was instead missing `<meta name=\"viewport\" content=\"width=device-width, initial-scale=1\">`, what would the phone do, and how would that change the layout? Suggest a media query that fits the fix.",
+              "answerMdx": "Without the viewport meta a phone lays the page out at a wide default (about 980px) and then scales the whole thing down to fit the screen, so text looks tiny and percentage-based `max-width` breakpoints may not trigger as expected. Adding the meta with `width=device-width` makes the layout width equal the device width, so a rule such as `@media (max-width: 600px) { .container { width: 100% } .plans { flex-direction: column } }` now matches the phone and switches the cards to a single column. The meta and the media query work together: the meta makes the viewport realistic, the media query rearranges the layout for it.",
+              "markingMdx": "1 mark for explaining that without the viewport meta the phone uses a wide default layout and scales it down (tiny text).\n1 mark for stating width=device-width makes the layout match the device so a mobile media query like max-width: 600px applies.",
+              "questionMdxZh": "如果页面反而缺少 `<meta name=\"viewport\" content=\"width=device-width, initial-scale=1\">`，手机会怎么做？这又会如何改变布局？再给出一个与之配合的媒体查询。",
+              "answerMdxZh": "没有 viewport meta 时，手机会按一个很宽的默认宽度（约 980px）排版，再整体缩小到屏幕里，于是文字显得很小，基于百分比的 `max-width` 断点也可能不像预期那样触发。加上带 `width=device-width` 的 meta 后，布局宽度等于设备宽度，像 `@media (max-width: 600px) { .container { width: 100% } .plans { flex-direction: column } }` 这样的规则就能命中手机，把卡片切成单列。meta 与媒体查询是配合工作的：meta 让视口真实，媒体查询据此重排布局。",
+              "markingMdxZh": "1 分：说明没有 viewport meta 时手机用很宽的默认布局并整体缩小（文字很小）。\n1 分：说明 width=device-width 让布局匹配设备，从而 `max-width: 600px` 之类的移动端媒体查询能生效。"
+            }
+          ],
+          "displayNumber": "Q4",
+          "categoryLabel": "CSS Layout and Responsive Behaviour",
+          "categoryLabelZh": "CSS 布局与响应式行为",
+          "displayStyle": "quiz-sample",
+          "mockup": {
+            "files": [
+              {
+                "name": "pricing.css",
+                "code": ".container {\n  width: 1200px;\n}\n\n.plan {\n  width: 360px;\n}",
+                "codeZh": ".container {\n  /* 固定宽度，比手机视口宽 3 倍 */\n  width: 1200px;\n}\n\n.plan {\n  width: 360px;\n}"
+              },
+              {
+                "name": "pricing.png",
+                "active": true
+              }
+            ],
+            "viewport": "mobile",
+            "html": "<div class=\"exam-ui-shell\"><div class=\"exam-ui-topbar\"><span>Pricing</span><span>Plans</span></div><div class=\"exam-ui-body\"><p class=\"exam-ui-page-title\">Plans</p><div class=\"exam-ui-card\"><span class=\"exam-ui-muted\">Free</span></div><p class=\"exam-ui-muted\">The next cards run off the right edge &mdash; swipe/scroll sideways.</p></div></div>",
+            "htmlZh": "<div class=\"exam-ui-shell\"><div class=\"exam-ui-topbar\"><span>价格</span><span>套餐</span></div><div class=\"exam-ui-body\"><p class=\"exam-ui-page-title\">套餐</p><div class=\"exam-ui-card\"><span class=\"exam-ui-muted\">免费版</span></div><p class=\"exam-ui-muted\">后面的卡片冲出了右边缘 —— 需要横向滑动。</p></div></div>",
+            "caption": "On a 400px phone the fixed 1200px container pushes the cards off-screen.",
+            "captionZh": "在 400px 手机上，固定的 1200px 容器把卡片挤出了屏幕。"
+          },
+          "titleZh": "在手机上横向滚动的页面",
+          "contentMdxZh": "`pricing.css` 设了 `.container { width: 1200px }`，并给每张套餐卡片一个固定的 `width: 360px`。在 400px 宽的手机上页面会横向滚动，正如 `pricing.png` 所示，套餐卡片冲出了右边缘。"
+        },
+        {
+          "id": "Q5",
+          "title": "The button that refuses to be blue",
+          "marks": 5,
+          "contentMdx": "`button.css` sets `.btn { background: blue }`, but the primary button in `buttons.png` renders grey. A later rule, `.panel .btn { background: #ddd }`, is winning the cascade.",
+          "subQuestions": [
+            {
+              "id": "Q5-a",
+              "label": "(a)",
+              "marks": 1,
+              "questionMdx": "Compare the specificity of `.btn` and `.panel .btn`, and say which one wins.",
+              "answerMdx": "`.btn` is one class, specificity (0,1,0). `.panel .btn` is two classes, specificity (0,2,0). Specificity is compared before source order, so `.panel .btn` wins even though `.btn` was intended to be the base style. That is why the primary button renders grey.",
+              "markingMdx": "1 mark for giving the two specificity values (one class vs two classes) and concluding `.panel .btn` wins.",
+              "questionMdxZh": "请比较 `.btn` 与 `.panel .btn` 的优先级，并说明哪一个胜出。",
+              "answerMdxZh": "`.btn` 是一个类，优先级为 (0,1,0)；`.panel .btn` 是两个类，优先级为 (0,2,0)。优先级在源顺序之前被比较，所以尽管 `.btn` 本意是基础样式，`.panel .btn` 仍然胜出。这就是主按钮渲染成灰色的原因。",
+              "markingMdxZh": "1 分：给出两者优先级（一个类 vs 两个类），并得出 `.panel .btn` 胜出的结论。"
+            },
+            {
+              "id": "Q5-b",
+              "label": "(b)",
+              "marks": 2,
+              "questionMdx": "A teammate adds `background: blue !important` to `.btn`, and the button turns blue. Explain why `!important` wins and why this fix is discouraged.",
+              "answerMdx": "`!important` lifts a declaration above normal declarations regardless of specificity and source order, so `.btn`'s blue now beats `.panel .btn`'s grey. It is discouraged because it breaks the normal cascade: any future rule that should legitimately override it must also carry `!important`, and even a more specific selector cannot win without one. The stylesheet turns into an escalating fight of `!important`s that is hard to reason about and maintain.",
+              "markingMdx": "1 mark for explaining that !important overrides the normal cascade independent of specificity and source order.\n1 mark for explaining why it is discouraged (it breaks the cascade and forces later rules to also use !important).",
+              "questionMdxZh": "队友给 `.btn` 加了 `background: blue !important`，按钮变蓝了。请解释 `!important` 为什么能胜出，以及为什么这种修法不被推荐。",
+              "answerMdxZh": "`!important` 会把一条声明提升到普通声明之上，与优先级和源顺序无关，所以 `.btn` 的蓝色现在压过了 `.panel .btn` 的灰色。它不被推荐，是因为它破坏了正常的层叠：今后任何本应能合理覆盖它的规则都必须同样带上 `!important`，连优先级更高的选择器都离不开一个 `!important` 才能胜出。样式表会演变成一场不断升级的 `!important` 之争，很难推理和维护。",
+              "markingMdxZh": "1 分：说明 !important 会越过正常层叠，与优先级和源顺序无关。\n1 分：说明它为何不被推荐（破坏层叠、逼迫后续规则也使用 !important）。"
+            },
+            {
+              "id": "Q5-c",
+              "label": "(c)",
+              "marks": 2,
+              "questionMdx": "Give a cleaner fix that makes the primary button blue without `!important`, and explain why it works.",
+              "answerMdx": "Remove or reduce the competing rule instead of overriding it. If `.panel .btn` is really a generic default for that panel, scope it to non-primary buttons, or lower its specificity so the base `.btn` plus a `.btn-primary` modifier can win. For example keep `.panel .btn` for layout only and give the primary button a `.btn-primary { background: blue }` class whose specificity matches or beats the conflicting rule. The fix works through the normal cascade because it changes which rule legitimately outranks the other, rather than forcing an override, so it stays predictable and maintainable.",
+              "markingMdx": "1 mark for removing or lowering the competing selector's specificity (or scoping it) instead of overriding it.\n1 mark for using a proper modifier class (e.g. `.btn-primary`) and explaining that it wins through the normal cascade.",
+              "questionMdxZh": "请给出一个更干净的修法，让主按钮变成蓝色且不用 `!important`，并解释它为什么有效。",
+              "answerMdxZh": "与其强行覆盖，不如移除或降低那条竞争规则。如果 `.panel .btn` 其实只是该面板的通用默认值，就把它限定到非主按钮上，或降低它的优先级，让基础的 `.btn` 加上一个 `.btn-primary` 修饰类能够胜出。例如让 `.panel .btn` 只管布局，给主按钮加一个 `.btn-primary { background: blue }`，其优先级不低于冲突规则。这个修法通过正常的层叠起作用，因为它改变的是“哪条规则名正言顺地压过另一条”，而不是强行覆盖，因此可预测、易维护。",
+              "markingMdxZh": "1 分：移除或降低竞争选择器的优先级（或对其限定作用域），而不是硬覆盖。\n1 分：使用一个合适的修饰类（如 `.btn-primary`），并说明它通过正常层叠胜出。"
+            }
+          ],
+          "displayNumber": "Q5",
+          "categoryLabel": "CSS Layout and Responsive Behaviour",
+          "categoryLabelZh": "CSS 布局与响应式行为",
+          "displayStyle": "quiz-sample",
+          "mockup": {
+            "files": [
+              {
+                "name": "button.css",
+                "code": ".btn {\n  background: blue;\n  color: white;\n}\n\n.panel .btn {\n  background: #ddd;\n}",
+                "codeZh": ".btn {\n  background: blue;\n  color: white;\n}\n\n/* 两个类，优先级更高 */\n.panel .btn {\n  background: #ddd;\n}"
+              },
+              {
+                "name": "buttons.png",
+                "active": true
+              }
+            ],
+            "viewport": "desktop",
+            "html": "<div class=\"exam-ui-shell\"><div class=\"exam-ui-topbar\"><span>Settings</span><span>Account</span></div><div class=\"exam-ui-body\"><p class=\"exam-ui-page-title\">Account</p><div class=\"exam-ui-card\"><p class=\"exam-ui-label\">Danger zone</p><div class=\"exam-ui-button-row\"><span class=\"exam-ui-button\">Save changes</span><span class=\"exam-ui-button exam-ui-button-secondary\">Cancel</span></div><p class=\"exam-ui-muted\">The primary button is grey instead of blue.</p></div></div></div>",
+            "htmlZh": "<div class=\"exam-ui-shell\"><div class=\"exam-ui-topbar\"><span>设置</span><span>账户</span></div><div class=\"exam-ui-body\"><p class=\"exam-ui-page-title\">账户</p><div class=\"exam-ui-card\"><p class=\"exam-ui-label\">危险区</p><div class=\"exam-ui-button-row\"><span class=\"exam-ui-button\">保存修改</span><span class=\"exam-ui-button exam-ui-button-secondary\">取消</span></div><p class=\"exam-ui-muted\">主按钮是灰色的，而不是蓝色。</p></div></div></div>",
+            "caption": "The primary button renders grey because a more specific rule wins.",
+            "captionZh": "由于更具体的选择器胜出，主按钮渲染成了灰色。"
+          },
+          "titleZh": "怎么都不肯变蓝的按钮",
+          "contentMdxZh": "`button.css` 设了 `.btn { background: blue }`，但 `buttons.png` 里的主按钮却渲染成灰色。是后面的 `.panel .btn { background: #ddd }` 在层叠中取胜了。"
+        },
+        {
+          "id": "Q6",
+          "title": "The notifications that spill out of the card",
+          "marks": 5,
+          "contentMdx": "`panel.css` gives the notifications card a fixed `height: 200px` and leaves the default overflow. When there are many notifications, in `notifications.png` they spill past the card and overlap the footer below instead of scrolling.",
+          "subQuestions": [
+            {
+              "id": "Q6-a",
+              "label": "(a)",
+              "marks": 1,
+              "questionMdx": "Why does the content spill out of the 200px card rather than being clipped or scrolled?",
+              "answerMdx": "The default computed value of `overflow` is `visible`, which means content larger than the box is not clipped — it paints outside the box. So the extra notifications simply draw over whatever is below the card, and the box keeps its 200px height while its content escapes.",
+              "markingMdx": "1 mark for stating that overflow defaults to visible, so overflowing content is not clipped and paints outside the box.",
+              "questionMdxZh": "为什么这些内容会溢出 200px 的卡片，而不是被裁掉或滚动？",
+              "answerMdxZh": "`overflow` 的默认计算值是 `visible`，意思是超出的内容不被裁剪——它会画到盒子外面。于是多出来的通知就直接画在卡片下方的内容之上，盒子本身保持 200px 高，而内容跑到外面去了。",
+              "markingMdxZh": "1 分：说明 overflow 默认是 visible，因此溢出内容不被裁剪，会画到盒子外面。"
+            },
+            {
+              "id": "Q6-b",
+              "label": "(b)",
+              "marks": 2,
+              "questionMdx": "Compare `overflow: hidden`, `overflow: auto` and `overflow: scroll` for this card, and say which fits the design.",
+              "answerMdx": "`hidden` clips the content at the card edge, so users cannot reach the extra notifications at all — the data is lost. `scroll` always shows a scrollbar, even when the content fits, and reserves that space. `auto` shows a scrollbar only when the content actually overflows, so a short list stays clean and a long list scrolls. For a card that may have few or many notifications, `overflow: auto` fits best; `hidden` would silently hide data.",
+              "markingMdx": "1 mark for explaining that hidden clips and loses content while scroll always reserves a scrollbar.\n1 mark for choosing auto (a scrollbar only when needed) as the fit for this design.",
+              "questionMdxZh": "请针对这张卡片比较 `overflow: hidden`、`overflow: auto` 与 `overflow: scroll`，并说明哪一种更贴合设计。",
+              "answerMdxZh": "`hidden` 会在卡片边缘把内容裁掉，用户根本无法访问多出来的通知——数据丢失。`scroll` 无条件显示滚动条，即使内容放得下也占着那块空间。`auto` 只在内容确实溢出时才显示滚动条，所以短列表干净、长列表可滚动。对于通知可能少也可能多的卡片，`overflow: auto` 最合适；`hidden` 会悄悄把数据藏起来。",
+              "markingMdxZh": "1 分：说明 hidden 会裁剪并丢失内容，而 scroll 总会预留滚动条。\n1 分：选择 auto（仅在需要时出现滚动条）作为该设计的合适方案。"
+            },
+            {
+              "id": "Q6-c",
+              "label": "(c)",
+              "marks": 2,
+              "questionMdx": "The designer later wants the card to grow with a few notifications but cap at 200px and then scroll. Give the CSS and say why it works.",
+              "answerMdx": "Use `max-height: 200px; overflow: auto` instead of a fixed `height`. A `max-height` lets the card be shorter when there are few items and clamps it at 200px when the content is longer; at that point `overflow: auto` adds a scrollbar so every item stays reachable. A fixed `height` would force exactly 200px with empty space for short lists, so `max-height` matches the intent and the scroll only appears when it is needed.",
+              "markingMdx": "1 mark for using `max-height: 200px` so the card can be shorter but never taller.\n1 mark for pairing it with `overflow: auto` so longer content scrolls within the cap.",
+              "questionMdxZh": "设计者后来希望卡片能随少量通知增高，但最多到 200px 后就开始滚动。请给出 CSS，并说明它为什么有效。",
+              "answerMdxZh": "用 `max-height: 200px; overflow: auto` 代替固定的 `height`。`max-height` 让卡片在通知少时可以更矮，在内容更长时把高度限制在 200px；一旦到顶，`overflow: auto` 就加上滚动条，让每一项都仍可访问。固定的 `height` 会强制正好 200px，通知少时留下空白，所以 `max-height` 更贴合意图，滚动条也只在需要时才出现。",
+              "markingMdxZh": "1 分：使用 `max-height: 200px`，让卡片可以更矮但不会更高。\n1 分：配合 `overflow: auto`，让较长内容在上限内滚动。"
+            }
+          ],
+          "displayNumber": "Q6",
+          "categoryLabel": "CSS Layout and Responsive Behaviour",
+          "categoryLabelZh": "CSS 布局与响应式行为",
+          "displayStyle": "quiz-sample",
+          "mockup": {
+            "files": [
+              {
+                "name": "panel.css",
+                "code": ".card {\n  height: 200px;\n  /* overflow is left at its default: visible */\n}",
+                "codeZh": ".card {\n  height: 200px;\n  /* overflow 保持默认值：visible */\n}"
+              },
+              {
+                "name": "notifications.png",
+                "active": true
+              }
+            ],
+            "viewport": "desktop",
+            "html": "<div class=\"exam-ui-shell\"><div class=\"exam-ui-topbar\"><span>Inbox</span><span>Notifications</span></div><div class=\"exam-ui-body\"><p class=\"exam-ui-page-title\">Notifications</p><div class=\"exam-ui-card\"><ul class=\"exam-ui-list\"><li class=\"exam-ui-list-row\">New comment on your post</li><li class=\"exam-ui-list-row\">Friend request</li><li class=\"exam-ui-list-row\">Weekly digest</li><li class=\"exam-ui-list-row exam-ui-danger\">These extra rows spill past the 200px card&hellip;</li></ul></div><p class=\"exam-ui-muted\">Footer &mdash; overlapped by the overflowing list</p></div></div>",
+            "htmlZh": "<div class=\"exam-ui-shell\"><div class=\"exam-ui-topbar\"><span>收件箱</span><span>通知</span></div><div class=\"exam-ui-body\"><p class=\"exam-ui-page-title\">通知</p><div class=\"exam-ui-card\"><ul class=\"exam-ui-list\"><li class=\"exam-ui-list-row\">你的帖子有一条新评论</li><li class=\"exam-ui-list-row\">好友请求</li><li class=\"exam-ui-list-row\">每周摘要</li><li class=\"exam-ui-list-row exam-ui-danger\">这些多出来的行溢出了 200px 的卡片&hellip;</li></ul></div><p class=\"exam-ui-muted\">页脚 —— 被溢出的列表压住了</p></div></div>",
+            "caption": "The notification list paints straight over the footer because the card does not clip it.",
+            "captionZh": "因为卡片没有裁剪，通知列表直接画到了页脚上面。"
+          },
+          "titleZh": "从卡片里溢出来的通知",
+          "contentMdxZh": "`panel.css` 给通知卡片设了固定的 `height: 200px`，并保留了默认的 overflow。当通知很多时，`notifications.png` 里它们会溢出卡片、压住下方的页脚，而不是滚动。"
+        }
+      ]
+    }
+  ]
+}
