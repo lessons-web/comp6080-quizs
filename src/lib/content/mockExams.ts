@@ -61,6 +61,10 @@ const examLoaders: Record<string, () => Promise<MockExamCollection>> = {
     import('@/content/exams/sprint-2.quiz3.json').then(
       (m) => m.default as unknown as MockExamCollection,
     ),
+  'sprint-3.final': () =>
+    import('@/content/exams/sprint-3.final.json').then(
+      (m) => m.default as unknown as MockExamCollection,
+    ),
 }
 
 export async function getAllMockExams(): Promise<ExamPaper[]> {

@@ -707,6 +707,163 @@
       ],
       "images": [],
       "createdAt": "2026-11-21"
+    },
+    {
+      "id": "SPRINT3-Q1",
+      "topic": "react",
+      "weeks": [
+        "week-7"
+      ],
+      "difficulty": "medium",
+      "tags": [
+        "冲刺卷",
+        "React",
+        "createRoot",
+        "挂载",
+        "容器"
+      ],
+      "question": "一个小 React 应用的页面是 `<div id=\"app\"></div>`，但入口这样写：\n```jsx\nimport { createRoot } from 'react-dom/client'\nimport App from './App'\n\nconst root = createRoot(document.getElementById('root'))\nroot.render(<App />)\n```\n加载后控制台报 `createRoot(...): Target container is not a DOM element.`，页面空白。请说明 (1) `document.getElementById('root')` 返回什么、`createRoot` 为什么失败；(2) HTML 里的 id 与查找调用是什么关系、React 的 “root 容器” 指什么；(3) 给出改法，并说明如果脚本在目标元素出现之前执行会怎样。",
+      "knowledgePoint": "React 挂载：`createRoot` 需要一个真实存在的 DOM 容器节点",
+      "answerExplanation": "页面上只有 `id=\"app\"` 的元素，没有任何元素的 id 是 `root`，因此 `document.getElementById('root')` 返回 `null`；`createRoot` 需要一个真实 DOM 元素作为渲染落点，拿到 `null` 就抛出 “Target container is not a DOM element”。HTML 中的 id 是给元素起的名字，`getElementById` 按该名字在当前文档里查找并返回匹配元素（找不到返回 null），两个字符串必须逐字符一致。root 容器就是 React 接管的那一个已存在的 DOM 节点，组件树挂载并更新渲染在它里面。改法：让名字一致——把 HTML 改成 `<div id=\"root\"></div>`，或把调用改成 `createRoot(document.getElementById('app'))`，再 `root.render(<App />)`。如果模块脚本在目标元素进入 DOM 之前就执行，查找仍为 `null`，同样的错误会再次出现；`createRoot` 运行时元素必须已被解析（脚本放在元素之后，或用 `defer`）。",
+      "codeBlocks": [
+        {
+          "language": "jsx",
+          "code": "import { createRoot } from 'react-dom/client'\nimport App from './App'\n\nconst root = createRoot(document.getElementById('root'))\nroot.render(<App />)"
+        }
+      ],
+      "images": [],
+      "createdAt": "2026-11-22"
+    },
+    {
+      "id": "SPRINT3-Q2",
+      "topic": "react",
+      "weeks": [
+        "week-7"
+      ],
+      "difficulty": "medium",
+      "tags": [
+        "冲刺卷",
+        "React",
+        "Props",
+        "单向数据流",
+        "只读"
+      ],
+      "question": "子组件从父组件拿到值作为 prop，并在点击处理器里给 `props.value` 赋值来累加：\n```jsx\nfunction Counter(props) {\n  function handleClick() {\n    props.value = props.value + 1\n    console.log(props.value)\n  }\n  return <button onClick={handleClick}>Count: {props.value}</button>\n}\n```\n每次点击控制台都打印更大的数字，但按钮上的文字始终不变。请说明 (1) 为什么标签不变；(2) 这份数据是谁的、子组件对 prop 能做什么、应当如何发出 “要改” 的信号；(3) 按契约重写，并解释为什么改 prop 是 Bug。",
+      "knowledgePoint": "Props 是只读输入：子组件不得修改 prop，只能通过父组件回调请求变更",
+      "answerExplanation": "处理器只写了本次渲染的 `props` 对象，没有请求 React 重新渲染；React 因 state 变化而重渲染，这里没有任何 state 改变，所以不发生渲染，标签保留上一次渲染的旧值，日志里被改动的对象与屏幕显示不一致。prop 是父组件传下的数据，对子组件只读；React 单向数据流要求子组件不得改 prop（props 是组件的输入，类似函数参数），要改就调用父组件传入的回调（如 `onIncrement`），由父组件更新 state 并以新 prop 值重渲染子组件。正确写法：父 `const [count, setCount] = useState(0); <Counter value={count} onIncrement={() => setCount(count + 1)} />`，子 `function Counter({ value, onIncrement }) { return <button onClick={onIncrement}>Count: {value}</button> }`。改 prop 是 Bug：它绕过重渲染改了另一个组件的数据，使模型与 DOM 失同步，只在局部日志里 “看起来对”，下一次渲染就会覆盖它。",
+      "codeBlocks": [
+        {
+          "language": "jsx",
+          "code": "function Counter({ value, onIncrement }) {\n  return <button onClick={onIncrement}>Count: {value}</button>\n}"
+        }
+      ],
+      "images": [],
+      "createdAt": "2026-11-22"
+    },
+    {
+      "id": "SPRINT3-Q3",
+      "topic": "react",
+      "weeks": [
+        "week-7"
+      ],
+      "difficulty": "easy",
+      "tags": [
+        "冲刺卷",
+        "React",
+        "children",
+        "组件组合",
+        "复用"
+      ],
+      "question": "`Card` 把标题和正文写死在组件里，团队为 “报告面板” 和 “提示面板” 又各自复制了一份，结果改一次边框要改三个地方。请说明 (1) `props.children` 是什么、它让 Card 能做到哪些写死内容做不到的事；(2) 这样形成的职责划分与 “组合（composition）” 的含义；(3) 把 Card 改成接收 children 并给出两种用法，解释为什么不再需要复制粘贴。",
+      "knowledgePoint": "`children` 组合：组件负责外框，调用方提供内容",
+      "answerExplanation": "`props.children` 是放在组件开始与结束标签之间的内容——React 把这部分嵌套 JSX 作为 prop 传进来。它让组件保留固定外框、由调用方提供内部内容，因此同一个 Card 能承载标题、列表、表单或提示。职责划分：Card 只负责外框（边框、内边距、布局），调用方负责内容；这就是组合——把小组件嵌套起来搭更大的界面，而不是加选项或复制粘贴。因为外框只有一处定义，改动会体现在所有使用处，Card 也能承载它没见过的新内容。改法：`function Card({ children }) { return <section className=\"card\">{children}</section> }`，用法如 `<Card><h3>新品上架</h3><p>本周新增六件</p></Card>` 与 `<Card><h3>周报</h3><p>销售额上升 12%</p></Card>`。两者复用同一个 Card，差别只在调用处，因此无需维护第二份外框，新增内容也无需新组件。",
+      "codeBlocks": [
+        {
+          "language": "jsx",
+          "code": "function Card({ children }) {\n  return <section className=\"card\">{children}</section>\n}\n\n<Card><h3>New arrivals</h3><p>Six items</p></Card>\n<Card><h3>Weekly report</h3><p>Sales are up 12%</p></Card>"
+        }
+      ],
+      "images": [],
+      "createdAt": "2026-11-22"
+    },
+    {
+      "id": "SPRINT3-Q4",
+      "topic": "react",
+      "weeks": [
+        "week-7"
+      ],
+      "difficulty": "medium",
+      "tags": [
+        "冲刺卷",
+        "React",
+        "style 对象",
+        "camelCase",
+        "内联样式"
+      ],
+      "question": "一个组件用内联 `style` 设定外观：\n```jsx\n<span style={{ 'background-color': level === 'high' ? 'red' : 'grey', 'border-radius': 4, padding: 6 }}>\n  {level}\n</span>\n```\n`padding: 6` 生效了，但背景色与圆角都没效果。请说明 (1) 为什么 padding 生效而 `background-color` 不生效；(2) 为什么键要用 JavaScript 属性名、React 遇到不认识的键会怎样；(3) 重写让每条声明都生效，并解释数字的处理规则。",
+      "knowledgePoint": "React 的 `style` 对象使用 JavaScript（小驼峰）属性名，长度数字自动补 px",
+      "answerExplanation": "React 的 `style` prop 是 JavaScript 对象，键必须是 JavaScript 属性名（小驼峰），所以 `padding` 合法并生效；`background-color` 是 CSS 属性名而非 JavaScript 属性名，React 不认识该键、跳过它并在开发模式警告 “Unsupported style property background-color. Did you mean backgroundColor?”，声明被丢弃。内联样式不是写 CSS 文本，而是给元素的 `style` 对象设置属性，其属性为小驼峰（标识符不能含连字符），所以要用 `backgroundColor`、`borderRadius`、`fontSize` 等；遇到不认识的键无法映射，就忽略该声明、元素保持之前的值。重写：`style={{ backgroundColor: level === 'high' ? 'red' : 'grey', borderRadius: 4, padding: 6 }}`。数字对长度类属性会自动补 `px`（`padding: 6` → `6px`），少数无单位属性（如 `lineHeight`、`opacity`、`zIndex`、`flex`）直接取数字，其他单位写成字符串（如 `width: '50%'`）。",
+      "codeBlocks": [
+        {
+          "language": "jsx",
+          "code": "<span style={{ backgroundColor: level === 'high' ? 'red' : 'grey', borderRadius: 4, padding: 6 }}>\n  {level}\n</span>"
+        }
+      ],
+      "images": [],
+      "createdAt": "2026-11-22"
+    },
+    {
+      "id": "SPRINT3-Q5",
+      "topic": "react",
+      "weeks": [
+        "week-7"
+      ],
+      "difficulty": "medium",
+      "tags": [
+        "冲刺卷",
+        "React",
+        "CSS Modules",
+        "样式作用域",
+        "类名冲突"
+      ],
+      "question": "`Card.jsx` 与 `Button.jsx` 各自引入一个普通的 `.css` 文件，且都渲染 `className=\"title\"`；`Card.css` 想让标题大而深，`Button.css` 想让它小且浅。结果两个标题被渲染成同一套样式。请说明 (1) 为什么两个组件会共用一套样式；(2) CSS Module 如何改变这一点、为什么能消除冲突；(3) 展示 Card 如何引入并使用 module，并解释生成的类名是什么。",
+      "knowledgePoint": "CSS Modules：把类名改写成文件级唯一名，消除全局样式冲突",
+      "answerExplanation": "普通的 `.css` 引入是全局的：选择器 `.title` 作用于整个文档，两个组件里带 `title` 类的元素都匹配同一组规则；优先级相同时，层叠中靠后的声明对两者都生效，所以改不出两种标题样式。CSS Module（`*.module.css`）会在构建时把每个类名改写成该文件专属的唯一哈希名（如 `.title` → `.Card_title__a1b2c`），组件引入一个把原始名映射到生成名的对象并用 `className={styles.title}` 应用；由于两个文件产出不同的生成名，各自的规则永不冲突，类名从全局变成局部。用法：把文件改名为 `Card.module.css`，`import styles from './Card.module.css'`，然后 `<h3 className={styles.title}>...</h3>`；`styles.title` 就是生成后的类名字符串，构建时 CSS 里的 `.title` 会被替换成同一个名字，元素最终带上类似 `Card_title__a1b2c` 的唯一类，因此只收到 Card 的标题样式。",
+      "codeBlocks": [
+        {
+          "language": "jsx",
+          "code": "import styles from './Card.module.css'\n\nfunction Card() {\n  return <h3 className={styles.title}>Card title</h3>\n}"
+        }
+      ],
+      "images": [],
+      "createdAt": "2026-11-22"
+    },
+    {
+      "id": "SPRINT3-Q6",
+      "topic": "react",
+      "weeks": [
+        "week-7"
+      ],
+      "difficulty": "hard",
+      "tags": [
+        "冲刺卷",
+        "React",
+        "多文件",
+        "职责边界",
+        "util",
+        "hook"
+      ],
+      "question": "三个组件都需要按商店格式显示价格，却各自在组件体内定义了自己的 `formatPrice`：`ItemCard.jsx` 四舍五入到整元，`Checkout.jsx` 保留两位小数，收据又是另一种，于是同一件商品显示出三种价格。请说明 (1) 把同一条规则写成组件体内各自辅助函数的问题；(2) 组件、hook、util 各自的职责，以及这段逻辑该放哪里；(3) 展示拆分（一个 `formatPrice` util、一个 `useVisibleItems` hook、以及同时使用两者的组件），并解释为什么每部分都可复用。",
+      "knowledgePoint": "多文件职责边界：纯逻辑放 util，依赖 React 的共享逻辑放 hook，组件只负责渲染",
+      "answerExplanation": "每份副本都是独立定义，会各自漂移（一个四舍五入到整元、一个保留两位小数），同一输入产生不同结果；辅助函数还会每次渲染都被重建，且被困在组件内部，无法被引入或单独测试，想改规则找不到统一的地方。职责划分：组件负责决定外观并返回 JSX，不承载业务规则；util 是不接触 React/DOM 的纯函数，价格格式化属于 util（纯 “输入到输出”，随处可引入可测试）；自定义 hook 是会用到 React 能力（state、effect、记忆化）的可复用逻辑，共享的筛选/排序在需要这些能力时应放进诸如 `useVisibleItems` 的 hook，让多个界面共用一份实现。拆分：`utils/format.js` 导出 `export function formatPrice(cents) { return '$' + (cents / 100).toFixed(2) }`；`hooks/useVisibleItems.js` 导出 `export function useVisibleItems(items, query) { return useMemo(() => items.filter((i) => i.name.includes(query)).sort(...), [items, query]) }`；组件 `import { formatPrice } from '../utils/format'`、`import { useVisibleItems } from '../hooks/useVisibleItems'` 后 `const visible = useVisibleItems(items, query); return <li>{formatPrice(item.cents)}</li>`。这样每条规则只有一份定义：`formatPrice` 纯、可单独单元测试，`useVisibleItems` 被所有需要的界面共享，组件只渲染，改动只需改一个文件。",
+      "codeBlocks": [
+        {
+          "language": "js",
+          "code": "// utils/format.js\nexport function formatPrice(cents) {\n  return '$' + (cents / 100).toFixed(2)\n}\n\n// hooks/useVisibleItems.js\nexport function useVisibleItems(items, query) {\n  return useMemo(\n    () => items.filter((i) => i.name.includes(query)).sort((a, b) => a.price - b.price),\n    [items, query],\n  )\n}"
+        }
+      ],
+      "images": [],
+      "createdAt": "2026-11-22"
     }
   ]
 }

@@ -552,6 +552,13 @@ describe('content files', () => {
         totalMarks: 80,
         questions: 10,
       },
+      {
+        file: 'content/exams/sprint-3.final.json',
+        id: 'SPRINT3-FINAL',
+        titleZh: 'COMP6080 冲刺卷03',
+        totalMarks: 80,
+        questions: 10,
+      },
     ]
 
     const sync: Record<string, Array<{ week: string; ids: string[] }>> = {
@@ -592,6 +599,16 @@ describe('content files', () => {
           ],
         },
         { week: 'week-3', ids: ['SPRINT2-Q8'] },
+      ],
+      'SPRINT3-FINAL': [
+        {
+          week: 'week-7',
+          ids: ['SPRINT3-Q1', 'SPRINT3-Q2', 'SPRINT3-Q3', 'SPRINT3-Q4', 'SPRINT3-Q5', 'SPRINT3-Q6'],
+        },
+        {
+          week: 'week-8',
+          ids: ['SPRINT3-Q7', 'SPRINT3-Q8', 'SPRINT3-Q9', 'SPRINT3-Q10'],
+        },
       ],
     }
 

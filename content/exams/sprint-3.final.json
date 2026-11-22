@@ -1,0 +1,718 @@
+{
+  "topic": "react",
+  "exams": [
+    {
+      "id": "SPRINT3-FINAL",
+      "title": "COMP6080 Sprint Paper 03",
+      "titleZh": "COMP6080 冲刺卷03",
+      "description": "A final sprint paper that deliberately avoids the mechanisms already drilled in the other papers. It focuses on the least-covered material: React fundamentals (mounting, props, children, the style object, CSS Modules), one Week 7 module-boundary question, and four Week 8 questions on delivery, UI testing, rendering strategies and tooling. Ten questions, three sub-questions each, with screenshot-style mockups.",
+      "descriptionZh": "一套刻意避开其他整卷已反复考查机制的总复习冲刺卷。重点放在目前覆盖最少的材料：React 基础（挂载、props、children、style 对象、CSS Modules）、一道 Week 7 的模块职责边界题，以及四道 Week 8 题，分别关于交付、UI 测试、渲染策略与工程工具。共 10 道大题，每题 3 个子题，配套截图感 mockup。",
+      "totalMarks": 80,
+      "time": "2026-11-19 10:00",
+      "tags": [
+        "冲刺卷",
+        "Weeks6-8",
+        "React",
+        "UI测试",
+        "期末冲刺"
+      ],
+      "questions": [
+        {
+          "id": "Q1",
+          "title": "The app that mounts nothing",
+          "titleZh": "什么都没挂上的应用",
+          "marks": 8,
+          "contentMdx": "A small React app is split across `index.html` and `main.jsx`. The HTML page contains `<div id=\"app\"></div>`, but `main.jsx` calls `createRoot(document.getElementById('root'))`. When the page loads the console shows `Uncaught Error: createRoot(...): Target container is not a DOM element.` and nothing renders. `screen.png` shows the blank page.",
+          "contentMdxZh": "一个小的 React 应用拆在 `index.html` 与 `main.jsx` 两个文件里。HTML 页面里是 `<div id=\"app\"></div>`，但 `main.jsx` 调用的是 `createRoot(document.getElementById('root'))`。页面加载后控制台报 `Uncaught Error: createRoot(...): Target container is not a DOM element.`，什么也没渲染出来。`screen.png` 展示了这张空白页。",
+          "subQuestions": [
+            {
+              "id": "Q1-a",
+              "label": "(a)",
+              "marks": 2,
+              "questionMdx": "What does `document.getElementById('root')` return on this page, and why does `createRoot(...)` fail with it?",
+              "answerMdx": "The markup only has an element with `id=\"app\"`, so no element has the id `root`. `document.getElementById('root')` therefore returns `null`. `createRoot` needs a real DOM element to use as the container it will render into; given `null` it has nothing to attach to and throws `Target container is not a DOM element`.",
+              "markingMdx": "1 mark for identifying that `getElementById('root')` returns `null` because no element carries that id.\n1 mark for stating `createRoot` needs a real DOM element as its container and throws when it gets `null`.",
+              "questionMdxZh": "在这个页面上 `document.getElementById('root')` 会返回什么？为什么 `createRoot(...)` 会因此报错？",
+              "answerMdxZh": "标记里只有一个 `id=\"app\"` 的元素，没有任何元素的 id 是 `root`，所以 `document.getElementById('root')` 返回 `null`。`createRoot` 需要一个真实的 DOM 元素作为它的容器（也就是渲染落点）；拿到 `null` 就没有可挂载的对象，于是抛出 `Target container is not a DOM element`。",
+              "markingMdxZh": "1 分：指出 `getElementById('root')` 返回 `null`，因为没有元素带这个 id。\n1 分：说明 `createRoot` 需要一个真实 DOM 元素作为容器，拿到 `null` 就会报错。"
+            },
+            {
+              "id": "Q1-b",
+              "label": "(b)",
+              "marks": 3,
+              "questionMdx": "Explain the relationship between the id written in the HTML and the `getElementById` call, and what the \"root\" container is for React.",
+              "answerMdx": "The `id` in the HTML names an element; `getElementById` looks that name up in the current document and returns the matching element, or `null` if none matches. The two strings must agree character for character — `app` and `root` are different names, so the lookup misses. The root container is the one existing DOM node that React takes over: React mounts its component tree inside it and re-renders into it. Everything React draws lives under that container, so when the lookup fails there is no place to mount and the app never starts.",
+              "markingMdx": "1 mark for explaining that the HTML id and the `getElementById` argument must match exactly.\n1 mark for describing the root as the existing DOM node React mounts its component tree into.\n1 mark for linking a failed lookup to there being no container, so nothing renders.",
+              "questionMdxZh": "请说明 HTML 里写的 id 与 `getElementById` 调用之间的关系，并说明 React 所说的 “root” 容器是什么。",
+              "answerMdxZh": "HTML 里的 `id` 是给某个元素起的名字；`getElementById` 在当前文档里按这个名字查找，返回匹配到的元素，找不到就返回 `null`。两个字符串必须逐字符一致——`app` 和 `root` 是两个不同的名字，所以查找落空。root 容器就是 React 接管的那一个已存在的 DOM 节点：React 把组件树挂载到它里面，并把更新渲染进它里面。React 画出的所有内容都活在这个容器之下，所以查找一旦失败就没有挂载落点，应用根本起不来。",
+              "markingMdxZh": "1 分：说明 HTML 中的 id 与 `getElementById` 的参数必须完全一致。\n1 分：把 root 描述为 React 把组件树挂载进去的那个已存在的 DOM 节点。\n1 分：把查找失败与 “没有容器、所以什么都不渲染” 联系起来。"
+            },
+            {
+              "id": "Q1-c",
+              "label": "(c)",
+              "marks": 3,
+              "questionMdx": "Give the fix, and explain what happens if the module script runs before the target element exists.",
+              "answerMdx": "Make the two names agree — either change the HTML to `<div id=\"root\"></div>` or change the call to `createRoot(document.getElementById('app'))` — then `root.render(<App />)` mounts into that element. If the module script runs before the element exists in the DOM, the lookup still returns `null` and the same error is thrown; the element must already be parsed when `createRoot` runs (place the script after the element, or use `defer` or a module that waits for the DOM).",
+              "markingMdx": "1 mark for making the id in the HTML and the lookup match (either side).\n1 mark for showing `root.render(<App />)` mounts into that container.\n1 mark for stating the element must already exist at run time, otherwise the lookup is `null` and mounting fails again.",
+              "questionMdxZh": "请给出改法，并说明如果模块脚本在目标元素出现之前就执行，会发生什么。",
+              "answerMdxZh": "让两个名字一致即可——要么把 HTML 改成 `<div id=\"root\"></div>`，要么把调用改成 `createRoot(document.getElementById('app'))`，然后 `root.render(<App />)` 就会挂载进该元素。如果模块脚本在目标元素还没进入 DOM 时就执行，查找仍会返回 `null`，同一个错误会再次抛出；`createRoot` 运行时该元素必须已经被解析（把脚本放到元素之后，或使用 `defer`，或让模块等到 DOM 就绪）。",
+              "markingMdxZh": "1 分：让 HTML 中的 id 与查找参数一致（改任意一侧）。\n1 分：展示 `root.render(<App />)` 挂载进该容器。\n1 分：说明运行时该元素必须已经存在，否则查找为 `null`，挂载再次失败。"
+            }
+          ],
+          "displayNumber": "Q1",
+          "categoryLabel": "React Fundamentals",
+          "categoryLabelZh": "React 基础",
+          "displayStyle": "quiz-sample",
+          "mockup": {
+            "files": [
+              {
+                "name": "index.html",
+                "code": "<!doctype html>\n<html>\n  <head>\n    <meta charset=\"utf-8\" />\n    <title>Coffee journal</title>\n  </head>\n  <body>\n    <div id=\"app\"></div>\n    <script type=\"module\" src=\"/main.jsx\"></script>\n  </body>\n</html>",
+                "codeZh": "<!doctype html>\n<html>\n  <head>\n    <meta charset=\"utf-8\" />\n    <title>咖啡手记</title>\n  </head>\n  <body>\n    <!-- 容器的 id 是 app -->\n    <div id=\"app\"></div>\n    <script type=\"module\" src=\"/main.jsx\"></script>\n  </body>\n</html>"
+              },
+              {
+                "name": "main.jsx",
+                "code": "import { createRoot } from 'react-dom/client'\nimport App from './App'\n\nconst root = createRoot(document.getElementById('root'))\nroot.render(<App />)",
+                "codeZh": "import { createRoot } from 'react-dom/client'\nimport App from './App'\n\n// 这里查的是 #root，但页面上只有 #app\nconst root = createRoot(document.getElementById('root'))\nroot.render(<App />)"
+              },
+              {
+                "name": "screen.png",
+                "active": true
+              }
+            ],
+            "viewport": "desktop",
+            "html": "<div class=\"exam-ui-shell\"><div class=\"exam-ui-topbar\"><span>Coffee journal</span><span>localhost:5173</span></div><div class=\"exam-ui-body\"><div class=\"exam-ui-stage\"><div class=\"exam-ui-center\"><p class=\"exam-ui-help\">The page is blank</p></div></div><p class=\"exam-ui-note\">Console: createRoot(...): Target container is not a DOM element.</p></div></div>",
+            "htmlZh": "<div class=\"exam-ui-shell\"><div class=\"exam-ui-topbar\"><span>咖啡手记</span><span>localhost:5173</span></div><div class=\"exam-ui-body\"><div class=\"exam-ui-stage\"><div class=\"exam-ui-center\"><p class=\"exam-ui-help\">页面是空白的</p></div></div><p class=\"exam-ui-note\">控制台：createRoot(...): Target container is not a DOM element.</p></div></div>",
+            "caption": "The browser shows an empty page; the console explains that the mount never happened.",
+            "captionZh": "浏览器里是空白页；控制台说明了这次挂载从未发生。"
+          }
+        },
+        {
+          "id": "Q2",
+          "title": "The count that forgets the click",
+          "titleZh": "记不住点击的次数",
+          "marks": 8,
+          "contentMdx": "`Counter.jsx` receives its value from the parent as a prop and tries to add to it inside the click handler by writing to `props.value`. Each click logs a larger number in the console, but the button label never changes, and any later render puts the old value back. `counter.png` shows the frozen label.",
+          "contentMdxZh": "`Counter.jsx` 从父组件以 prop 的形式拿到值，并试图在点击处理器里通过给 `props.value` 赋值来累加。每次点击控制台都会打印一个更大的数字，但按钮上的文字始终不变，之后任何一次渲染又会把旧值写回去。`counter.png` 展示了这个 “冻结” 的标签。",
+          "subQuestions": [
+            {
+              "id": "Q2-a",
+              "label": "(a)",
+              "marks": 2,
+              "questionMdx": "Why does the label stay the same after a click even though the console logs a larger number?",
+              "answerMdx": "The handler only writes to the `props` object of the current render; it never asks React to render again. React re-renders in response to state changes, and nothing here changed any state, so no new render happens and the visible label keeps the old prop value. The `console.log` shows the mutated object in memory, which is not what the screen is showing.",
+              "markingMdx": "1 mark for stating the handler never triggers a re-render because no state changed.\n1 mark for stating the screen keeps the previously rendered value, so the log (a mutated object) differs from what is shown.",
+              "questionMdxZh": "明明控制台打印了更大的数字，为什么点击后标签还是不变？",
+              "answerMdxZh": "该处理器只是写了本次渲染的 `props` 对象，并没有请求 React 再渲染一次。React 是因 state 变化而重新渲染的，而这里没有任何 state 改变，所以不会发生新的渲染，屏幕上的标签仍保留上一次渲染出的旧 prop 值。`console.log` 打印的是内存里被改动的对象，它并不等于屏幕正在显示的内容。",
+              "markingMdxZh": "1 分：说明处理器没有触发重渲染，因为没有任何 state 变化。\n1 分：说明屏幕仍是上一次渲染的值，所以日志（被改动的对象）与所显示的内容不一致。"
+            },
+            {
+              "id": "Q2-b",
+              "label": "(b)",
+              "marks": 3,
+              "questionMdx": "Whose data is it, and what is a child component allowed to do with a prop it does not own? How is a child supposed to signal a change?",
+              "answerMdx": "The prop is the parent's data passed down read-only; the parent owns the value and the child only reads it. React's one-way data flow means a child must not modify a prop — props are a component's inputs, like function arguments. To change the value, the child calls a function the parent passed down (for example `onIncrement`), which changes the parent's state; the parent then re-renders the child with the new prop value. The child requests a change; the owner performs it.",
+              "markingMdx": "1 mark for stating the prop belongs to the parent and is read-only for the child.\n1 mark for explaining one-way data flow: mutating a prop is not allowed.\n1 mark for describing the child calling a parent-provided callback, so the owner updates state and re-renders with the new value.",
+              "questionMdxZh": "这份数据是谁的？子组件对不属于自己的 prop 能做什么？子组件应当如何发出 “我要改” 的信号？",
+              "answerMdxZh": "prop 是父组件传下来的数据，对子组件而言是只读的；父组件拥有这个值，子组件只能读。React 的单向数据流意味着子组件不得修改 prop——props 是组件的输入，就像函数的参数。要改变这个值，子组件应调用父组件传下来的函数（例如 `onIncrement`），由它去改父组件的 state；父组件随后带着新的 prop 值重新渲染子组件。子组件负责 “请求改动”，拥有者负责 “执行改动”。",
+              "markingMdxZh": "1 分：说明 prop 属于父组件，对子组件是只读的。\n1 分：解释单向数据流——不允许修改 prop。\n1 分：说明子组件调用父组件传入的回调，让拥有者更新 state 并以新值重渲染。"
+            },
+            {
+              "id": "Q2-c",
+              "label": "(c)",
+              "marks": 3,
+              "questionMdx": "Rewrite Counter so it follows the contract, and explain why mutating props is a bug even when the number sometimes looks right.",
+              "answerMdx": "Give the parent a `useState` for the count and pass both the value and a callback: parent `const [count, setCount] = useState(0); <Counter value={count} onIncrement={() => setCount(count + 1)} />`; child `function Counter({ value, onIncrement }) { return <button onClick={onIncrement}>Count: {value}</button> }`. Now a click calls the parent's setter, state changes, and React re-renders with the new value. Mutating a prop is a bug because it edits another component's data without a re-render and desynchronises the DOM from the model; the number only \"looks right\" in a local log, until the next render overwrites it.",
+              "markingMdx": "1 mark for keeping the value in the parent's `useState`.\n1 mark for passing a callback (e.g. `onIncrement`) that calls the parent setter.\n1 mark for explaining that mutating a prop bypasses the re-render and desynchronises the model from the DOM.",
+              "questionMdxZh": "请按这套契约重写 Counter，并解释为什么 “修改 props” 是 Bug——即便那个数字有时看起来是对的。",
+              "answerMdxZh": "在父组件里用 `useState` 保存计数，同时把值和回调一起传下去：父组件 `const [count, setCount] = useState(0); <Counter value={count} onIncrement={() => setCount(count + 1)} />`；子组件 `function Counter({ value, onIncrement }) { return <button onClick={onIncrement}>Count: {value}</button> }`。这样点击会调用父组件的 setter，state 变化后 React 用新值重渲染。修改 prop 之所以是 Bug，是因为它在不触发重渲染的情况下改了另一个组件的数据，让 DOM 与模型失同步；那个数字只是在一个局部日志里 “看起来对”，下一次渲染就会把它覆盖掉。",
+              "markingMdxZh": "1 分：把值保存在父组件的 `useState` 里。\n1 分：传下一个调用父组件 setter 的回调（如 `onIncrement`）。\n1 分：说明修改 prop 绕过了重渲染，使模型与 DOM 失同步。"
+            }
+          ],
+          "displayNumber": "Q2",
+          "categoryLabel": "React Fundamentals",
+          "categoryLabelZh": "React 基础",
+          "displayStyle": "quiz-sample",
+          "mockup": {
+            "files": [
+              {
+                "name": "Counter.jsx",
+                "code": "function Counter(props) {\n  function handleClick() {\n    props.value = props.value + 1\n    console.log(props.value)\n  }\n\n  return <button onClick={handleClick}>Count: {props.value}</button>\n}",
+                "codeZh": "function Counter(props) {\n  function handleClick() {\n    // 直接改 prop，React 不会重渲染\n    props.value = props.value + 1\n    console.log(props.value)\n  }\n\n  return <button onClick={handleClick}>Count: {props.value}</button>\n}"
+              },
+              {
+                "name": "App.jsx",
+                "code": "function App() {\n  const [count, setCount] = useState(0)\n  return <Counter value={count} />\n}",
+                "codeZh": "function App() {\n  const [count, setCount] = useState(0)\n  // 只传了值，没有传回调\n  return <Counter value={count} />\n}"
+              },
+              {
+                "name": "counter.png",
+                "active": true
+              }
+            ],
+            "viewport": "desktop",
+            "html": "<div class=\"exam-ui-shell\"><div class=\"exam-ui-topbar\"><span>Counter demo</span><span>App</span></div><div class=\"exam-ui-body\"><p class=\"exam-ui-page-title\">Counter</p><div class=\"exam-ui-card\"><div class=\"exam-ui-center\"><button class=\"exam-ui-button\">Count: 0</button></div><p class=\"exam-ui-help\">Clicking logs a larger number but the label never changes</p></div></div></div>",
+            "htmlZh": "<div class=\"exam-ui-shell\"><div class=\"exam-ui-topbar\"><span>计数器示例</span><span>App</span></div><div class=\"exam-ui-body\"><p class=\"exam-ui-page-title\">计数器</p><div class=\"exam-ui-card\"><div class=\"exam-ui-center\"><button class=\"exam-ui-button\">Count: 0</button></div><p class=\"exam-ui-help\">点击会打印更大的数字，但标签始终不变</p></div></div></div>",
+            "caption": "The button keeps showing 0: the handler mutated a prop, and no re-render followed.",
+            "captionZh": "按钮一直显示 0：处理器改的是 prop，之后没有发生重渲染。"
+          }
+        },
+        {
+          "id": "Q3",
+          "title": "The card that was copied three times",
+          "titleZh": "被复制了三遍的卡片",
+          "marks": 8,
+          "contentMdx": "`Card.jsx` hardcodes its body (a heading and a paragraph). The team also needed the same frame for a report panel and a tip panel, so they duplicated the whole component twice. A single border change now has to be made in three places. `cards.png` shows the three identical frames.",
+          "contentMdxZh": "`Card.jsx` 把内容写死在里面（一个标题加一段文字）。团队后来又需要同样的外框来做 “报告面板” 和 “提示面板”，于是把整个组件复制了两份。现在只要改一次边框，就得改三个地方。`cards.png` 展示了这三个一模一样的外框。",
+          "subQuestions": [
+            {
+              "id": "Q3-a",
+              "label": "(a)",
+              "marks": 2,
+              "questionMdx": "What is `props.children`, and what does it let Card do that a hardcoded body cannot?",
+              "answerMdx": "`props.children` is whatever you place between a component's opening and closing tags — the nested JSX React passes to the component as a prop. It lets the component own a fixed frame while the caller supplies the inside, so one Card can wrap a heading, a list, a form or a tip without being rewritten. A hardcoded body can only ever render the one thing written inside it.",
+              "markingMdx": "1 mark for defining `props.children` as the JSX placed between the component's tags.\n1 mark for stating it lets the caller supply the content while the component keeps a fixed frame.",
+              "questionMdxZh": "`props.children` 是什么？它让 Card 能做到哪些写死内容做不到的事？",
+              "answerMdxZh": "`props.children` 就是你在组件开始标签和结束标签之间放的内容——React 把这部分嵌套 JSX 作为 prop 传给组件。它让组件保留一个固定的外框，而由调用方提供内部内容，于是同一个 Card 就能承载标题、列表、表单或提示，而不必重写。写死内容的话，永远只能渲染里面写的那一样东西。",
+              "markingMdxZh": "1 分：把 `props.children` 定义为放在组件标签之间的 JSX。\n1 分：说明它让调用方提供内容，而组件保留固定外框。"
+            },
+            {
+              "id": "Q3-b",
+              "label": "(b)",
+              "marks": 3,
+              "questionMdx": "Explain the separation of responsibility this creates, and what \"composition\" means here.",
+              "answerMdx": "Card becomes responsible only for the frame (border, padding, layout) and stays the same for every use; the caller becomes responsible for the content it passes in. This is composition: building bigger screens by nesting small, single-purpose components rather than by adding options or copy-pasting. Because the frame lives in one definition, a change to it appears everywhere it is used, and Card stays reusable for content it has never seen.",
+              "markingMdx": "1 mark for stating Card owns the frame and the caller owns the content.\n1 mark for naming this \"composition\" (nesting small components to build bigger UI).\n1 mark for noting the frame is defined once, so changes propagate and Card stays reusable.",
+              "questionMdxZh": "请说明这样形成的职责划分，以及这里的 “组合（composition）” 指什么。",
+              "answerMdxZh": "Card 只负责外框（边框、内边距、布局），在每次使用时都保持不变；调用方则负责它传进去的内容。这就是组合（composition）：通过把小而专一的组件嵌套起来搭出更大的界面，而不是靠加选项或复制粘贴。由于外框只有一处定义，改一次就会体现在所有使用它的地方，Card 也能用来承载它从未见过的新内容。",
+              "markingMdxZh": "1 分：说明 Card 负责外框、调用方负责内容。\n1 分：点出这是 “组合”（通过嵌套小组件搭建更大的 UI）。\n1 分：指出外框只定义一次，改动会自动传播，Card 保持可复用。"
+            },
+            {
+              "id": "Q3-c",
+              "label": "(c)",
+              "marks": 3,
+              "questionMdx": "Rewrite Card to accept children, and show two different usages. Explain why this removes the copy-paste.",
+              "answerMdx": "`function Card({ children }) { return <section className=\"card\">{children}</section> }`. Usage: `<Card><h3>New arrivals</h3><p>Six items</p></Card>` and `<Card><h3>Weekly report</h3><p>Sales are up 12%</p></Card>`. Both reuse the one Card, and the only difference lives at the call site. There is no second frame to maintain, so a border or spacing change is made once, and new content needs no new component.",
+              "markingMdx": "1 mark for a Card that renders `{children}` inside its frame.\n1 mark for two usages that pass different children to the same Card.\n1 mark for explaining that one definition removes the duplicate frames, so changes are made once and new content needs no new component.",
+              "questionMdxZh": "请把 Card 改成接收 children，并给出两种不同的用法；解释为什么这样就不再需要复制粘贴了。",
+              "answerMdxZh": "`function Card({ children }) { return <section className=\"card\">{children}</section> }`。用法示例：`<Card><h3>新品上架</h3><p>本周新增六件</p></Card>` 和 `<Card><h3>周报</h3><p>销售额上升 12%</p></Card>`。两者复用同一个 Card，唯一差别留在调用处。再也没有第二份外框需要维护，所以改边框或间距只需改一次，新增内容也不需要新组件。",
+              "markingMdxZh": "1 分：Card 在它的外框里渲染 `{children}`。\n1 分：给出两种用法，向同一个 Card 传入不同的 children。\n1 分：说明单一实现消除了重复外框，改动只需一次，新内容无需新组件。"
+            }
+          ],
+          "displayNumber": "Q3",
+          "categoryLabel": "React Fundamentals",
+          "categoryLabelZh": "React 基础",
+          "displayStyle": "quiz-sample",
+          "mockup": {
+            "files": [
+              {
+                "name": "Card.jsx",
+                "code": "function Card() {\n  return (\n    <section className=\"card\">\n      <h3>New arrivals</h3>\n      <p>Six items added this week</p>\n    </section>\n  )\n}",
+                "codeZh": "function Card() {\n  // 内容写死，无法复用\n  return (\n    <section className=\"card\">\n      <h3>新品上架</h3>\n      <p>本周新增六件</p>\n    </section>\n  )\n}"
+              },
+              {
+                "name": "Home.jsx",
+                "code": "function Home() {\n  return (\n    <main>\n      <Card />\n      <Card />\n    </main>\n  )\n}",
+                "codeZh": "function Home() {\n  // 两块卡片只好渲染成一样的内容\n  return (\n    <main>\n      <Card />\n      <Card />\n    </main>\n  )\n}"
+              },
+              {
+                "name": "cards.png",
+                "active": true
+              }
+            ],
+            "viewport": "desktop",
+            "html": "<div class=\"exam-ui-shell\"><div class=\"exam-ui-topbar\"><span>Home</span><span>App</span></div><div class=\"exam-ui-body\"><p class=\"exam-ui-page-title\">Panels</p><section class=\"exam-ui-card\"><h3 class=\"exam-ui-value\">New arrivals</h3><p class=\"exam-ui-help\">Six items added this week</p></section><section class=\"exam-ui-card\"><h3 class=\"exam-ui-value\">Weekly report</h3><p class=\"exam-ui-help\">Sales are up 12%</p></section><section class=\"exam-ui-card\"><h3 class=\"exam-ui-value\">Tip</h3><p class=\"exam-ui-help\">Press / to search</p></section><p class=\"exam-ui-muted\">Three copies of the same frame</p></div></div>",
+            "htmlZh": "<div class=\"exam-ui-shell\"><div class=\"exam-ui-topbar\"><span>首页</span><span>App</span></div><div class=\"exam-ui-body\"><p class=\"exam-ui-page-title\">面板</p><section class=\"exam-ui-card\"><h3 class=\"exam-ui-value\">新品上架</h3><p class=\"exam-ui-help\">本周新增六件</p></section><section class=\"exam-ui-card\"><h3 class=\"exam-ui-value\">周报</h3><p class=\"exam-ui-help\">销售额上升 12%</p></section><section class=\"exam-ui-card\"><h3 class=\"exam-ui-value\">提示</h3><p class=\"exam-ui-help\">按 / 搜索</p></section><p class=\"exam-ui-muted\">同一个外框被复制了三份</p></div></div>",
+            "caption": "Three panels sharing one look: the frame was duplicated instead of composed.",
+            "captionZh": "三个样式一致的面板：外框是被复制出来的，而不是组合出来的。"
+          }
+        },
+        {
+          "id": "Q4",
+          "title": "The badge that never turns red",
+          "titleZh": "永远变不成红色的徽标",
+          "marks": 8,
+          "contentMdx": "`Badge.jsx` sets its look with an inline `style` object. `padding: 6` takes effect, but `background-color` and `border-radius` do nothing — every badge keeps the browser default. `badge.png` shows a high-priority badge that ignored the red.",
+          "contentMdxZh": "`Badge.jsx` 用一个内联 `style` 对象来设定外观。`padding: 6` 生效了，但 `background-color` 和 `border-radius` 毫无效果——每个徽标都保持浏览器默认样式。`badge.png` 展示了一个本该是红色的高优先级徽标。",
+          "subQuestions": [
+            {
+              "id": "Q4-a",
+              "label": "(a)",
+              "marks": 2,
+              "questionMdx": "Why does `padding: 6` apply but `background-color` does not?",
+              "answerMdx": "React's `style` prop is a JavaScript object, and its keys must be the JavaScript property names (camelCase), so `padding` is a valid key and is applied. `background-color` is a CSS property name, not a JavaScript one; React does not recognise that key, skips it, and warns `Unsupported style property background-color. Did you mean backgroundColor?` in development. The declaration is dropped, so the background never changes.",
+              "markingMdx": "1 mark for stating the style object uses JavaScript (camelCase) property names, so `padding` is valid and applied.\n1 mark for stating `background-color` is not a recognised key, so it is ignored (with a warning).",
+              "questionMdxZh": "为什么 `padding: 6` 能生效，而 `background-color` 却不能？",
+              "answerMdxZh": "React 的 `style` prop 是一个 JavaScript 对象，它的键必须是 JavaScript 属性名（小驼峰），所以 `padding` 是合法的键，会被应用。`background-color` 是 CSS 属性名而不是 JavaScript 属性名；React 不认识这个键，会跳过它，并在开发模式下警告 `Unsupported style property background-color. Did you mean backgroundColor?`。这条声明被丢弃，背景自然没有变化。",
+              "markingMdxZh": "1 分：说明 style 对象使用 JavaScript（小驼峰）属性名，所以 `padding` 合法并生效。\n1 分：说明 `background-color` 不是被识别的键，因此被忽略（并给出警告）。"
+            },
+            {
+              "id": "Q4-b",
+              "label": "(b)",
+              "marks": 3,
+              "questionMdx": "Why are the keys JavaScript property names rather than CSS property names, and what does React do with a key it does not recognise?",
+              "answerMdx": "In an inline style React does not write CSS text; it sets properties on the element's `style` object in JavaScript, and that object's properties are camelCase (identifiers cannot contain dashes). So React expects `backgroundColor`, `borderRadius`, `fontSize`, and so on. When it meets an unknown key it cannot map it to a `style` property, so it ignores the declaration — the element keeps its previous value — and logs a warning in development. The style silently \"does not work\" rather than throwing.",
+              "markingMdx": "1 mark for explaining that React sets properties on the JavaScript `style` object, whose properties are camelCase.\n1 mark for naming the correct keys (e.g. `backgroundColor`, `borderRadius`).\n1 mark for stating an unknown key is ignored (with a warning), so the declaration silently has no effect.",
+              "questionMdxZh": "为什么这些键用的是 JavaScript 属性名而不是 CSS 属性名？React 遇到不认识的键会怎么处理？",
+              "answerMdxZh": "对于内联样式，React 并不是在写 CSS 文本，而是在 JavaScript 里给元素的 `style` 对象设置属性，而这个对象上的属性是小驼峰命名（标识符里不能带连字符）。所以 React 期望的是 `backgroundColor`、`borderRadius`、`fontSize` 等等。当它遇到不认识的键时，无法把它映射到 `style` 属性上，就会忽略这条声明——元素保持之前的值——并在开发模式下打印警告。样式是 “悄悄失效”，而不是抛错。",
+              "markingMdxZh": "1 分：说明 React 给 JavaScript 的 `style` 对象设置属性，其属性名为小驼峰。\n1 分：给出正确的键名（如 `backgroundColor`、`borderRadius`）。\n1 分：说明不认识的键会被忽略（并警告），声明悄无声息地失效。"
+            },
+            {
+              "id": "Q4-c",
+              "label": "(c)",
+              "marks": 3,
+              "questionMdx": "Rewrite the style so every declaration applies, and explain the rule for numbers.",
+              "answerMdx": "Use camelCase keys: `style={{ backgroundColor: level === 'high' ? 'red' : 'grey', borderRadius: 4, padding: 6 }}`. For numbers React appends `px` automatically for the length properties (so `padding: 6` becomes `6px` and `borderRadius: 4` becomes `4px`), which is why bare numbers are fine for them. A few unitless properties (such as `lineHeight`, `zIndex`, `opacity`, `flex`) take the number as-is, and other units can be given as strings, e.g. `width: '50%'` or `fontSize: '1.2rem'`.",
+              "markingMdx": "1 mark for the camelCase keys (`backgroundColor`, `borderRadius`).\n1 mark for stating React appends `px` to numeric length values automatically.\n1 mark for noting unitless exceptions (e.g. `lineHeight`, `opacity`) or giving other units as strings.",
+              "questionMdxZh": "请重写这段 style，让每条声明都生效，并解释数字的处理规则。",
+              "answerMdxZh": "改用小驼峰键：`style={{ backgroundColor: level === 'high' ? 'red' : 'grey', borderRadius: 4, padding: 6 }}`。对数字，React 会为长度类属性自动补上 `px`（于是 `padding: 6` 变成 `6px`、`borderRadius: 4` 变成 `4px`），这就是这类属性直接写数字也没问题的原因。少数无单位属性（如 `lineHeight`、`zIndex`、`opacity`、`flex`）直接取数字，其他单位则写字符串，例如 `width: '50%'` 或 `fontSize: '1.2rem'`。",
+              "markingMdxZh": "1 分：使用小驼峰键（`backgroundColor`、`borderRadius`）。\n1 分：说明 React 会自动为数字长度值补上 `px`。\n1 分：指出无单位例外的属性（如 `lineHeight`、`opacity`），或其他单位应写成字符串。"
+            }
+          ],
+          "displayNumber": "Q4",
+          "categoryLabel": "React Fundamentals",
+          "categoryLabelZh": "React 基础",
+          "displayStyle": "quiz-sample",
+          "mockup": {
+            "files": [
+              {
+                "name": "Badge.jsx",
+                "code": "function Badge({ level }) {\n  return (\n    <span\n      style={{\n        'background-color': level === 'high' ? 'red' : 'grey',\n        'border-radius': 4,\n        padding: 6,\n      }}\n    >\n      {level}\n    </span>\n  )\n}",
+                "codeZh": "function Badge({ level }) {\n  return (\n    <span\n      style={{\n        // 用连字符的 CSS 名：React 会忽略\n        'background-color': level === 'high' ? 'red' : 'grey',\n        'border-radius': 4,\n        padding: 6,\n      }}\n    >\n      {level}\n    </span>\n  )\n}"
+              },
+              {
+                "name": "theme.js",
+                "code": "export const colors = {\n  high: '#d64545',\n  low: '#8a8a8a',\n}",
+                "codeZh": "export const colors = {\n  high: '#d64545',\n  low: '#8a8a8a',\n}"
+              },
+              {
+                "name": "badge.png",
+                "active": true
+              }
+            ],
+            "viewport": "desktop",
+            "html": "<div class=\"exam-ui-shell\"><div class=\"exam-ui-topbar\"><span>Orders</span><span>Detail</span></div><div class=\"exam-ui-body\"><p class=\"exam-ui-page-title\">Order #1042</p><div class=\"exam-ui-card\"><div class=\"exam-ui-space-between\"><span class=\"exam-ui-label\">Priority</span><span class=\"exam-ui-badge\">high</span></div><p class=\"exam-ui-help\">The badge stays default: background-color and border-radius were ignored</p></div></div></div>",
+            "htmlZh": "<div class=\"exam-ui-shell\"><div class=\"exam-ui-topbar\"><span>订单</span><span>详情</span></div><div class=\"exam-ui-body\"><p class=\"exam-ui-page-title\">订单 #1042</p><div class=\"exam-ui-card\"><div class=\"exam-ui-space-between\"><span class=\"exam-ui-label\">优先级</span><span class=\"exam-ui-badge\">high</span></div><p class=\"exam-ui-help\">徽标保持默认样式：background-color 与 border-radius 被忽略了</p></div></div></div>",
+            "caption": "The high-priority badge stays grey: the dashed style keys never applied.",
+            "captionZh": "高优先级徽标仍然是灰色的：带连字符的 style 键从未生效。"
+          }
+        },
+        {
+          "id": "Q5",
+          "title": "The title style that fights itself",
+          "titleZh": "互相打架的标题样式",
+          "marks": 8,
+          "contentMdx": "`Card.jsx` and `Button.jsx` each import a plain `.css` file, and both render `className=\"title\"`. `Card.css` wants a large, dark title; `Button.css` wants a small, light one. Because the plain CSS is global, whichever file is imported last wins for both components. `page.png` shows the two titles looking identical.",
+          "contentMdxZh": "`Card.jsx` 与 `Button.jsx` 各自引入一个普通的 `.css` 文件，而且都渲染 `className=\"title\"`。`Card.css` 想要一个大号、深色的标题；`Button.css` 想要一个小号、浅色的标题。由于普通 CSS 是全局的，最后被引入的那个文件对两个组件都生效。`page.png` 展示出两个标题看起来一模一样。",
+          "subQuestions": [
+            {
+              "id": "Q5-a",
+              "label": "(a)",
+              "marks": 2,
+              "questionMdx": "Why do two components that both use `className=\"title\"` end up sharing one style?",
+              "answerMdx": "A plain `.css` import is global: the selector `.title` is added to the whole document, not scoped to the file that imported it. So both components' elements match the same `title` rule set, and with equal specificity the declaration that appears later in the cascade wins for both. The class name is a shared global handle, so the two components cannot have different `title` styles.",
+              "markingMdx": "1 mark for stating a plain CSS import is global, so `.title` applies document-wide.\n1 mark for stating equal specificity means the later rule wins for both components.",
+              "questionMdxZh": "为什么两个都用了 `className=\"title\"` 的组件最终会共用同一套样式？",
+              "answerMdxZh": "普通的 `.css` 引入是全局的：选择器 `.title` 会被加到整个文档上，而不是局限于引入它的那个文件。于是两个组件里带 `title` 类的元素都匹配到同一组规则；在优先级相同的情况下，层叠中靠后的那条声明对两者都生效。类名是一个共享的全局句柄，所以两个组件无法拥有各自不同的 `title` 样式。",
+              "markingMdxZh": "1 分：说明普通 CSS 引入是全局的，`.title` 作用于整个文档。\n1 分：说明优先级相同时，靠后的规则对两个组件都生效。"
+            },
+            {
+              "id": "Q5-b",
+              "label": "(b)",
+              "marks": 3,
+              "questionMdx": "How does a CSS Module change this, and why does it remove the clash?",
+              "answerMdx": "A CSS Module (a `*.module.css` file) rewrites each class name at build time into a unique, hashed name scoped to that file — for example `.title` becomes `.Card_title__a1b2c`. The component imports an object mapping the original names to the generated ones and applies `className={styles.title}`. Because the two files now emit different generated names, their rules can never collide even though both authors wrote `.title`; the class becomes local instead of global.",
+              "markingMdx": "1 mark for stating a CSS Module rewrites class names into unique, file-scoped (hashed) names.\n1 mark for stating the component applies the name through the imported object (e.g. `styles.title`).\n1 mark for explaining that different generated names remove the collision.",
+              "questionMdxZh": "CSS Module 如何改变这种情况？它为什么能消除冲突？",
+              "answerMdxZh": "CSS Module（`*.module.css` 文件）会在构建时把每个类名改写成该文件专属的唯一哈希名——例如 `.title` 变成 `.Card_title__a1b2c`。组件引入一个把原始名映射到生成名的对象，并通过 `className={styles.title}` 来使用。由于两个文件现在产出不同的生成名，即使两位作者都写了 `.title`，它们的规则也永远不会冲突；类名从全局变成了局部。",
+              "markingMdxZh": "1 分：说明 CSS Module 会把类名改写成专属本文件的唯一（哈希）名。\n1 分：说明组件通过引入的对象（如 `styles.title`）来应用类名。\n1 分：解释不同的生成名消除了冲突。"
+            },
+            {
+              "id": "Q5-c",
+              "label": "(c)",
+              "marks": 3,
+              "questionMdx": "Show how to import and apply the module for Card, and explain what the generated class name is.",
+              "answerMdx": "Rename the file to `Card.module.css` and import it: `import styles from './Card.module.css'`, then `<h3 className={styles.title}>...</h3>`. `styles` is an object whose `title` property is the generated name string; at build time the bundler replaces `.title` in the CSS with that name and gives you the same string in JavaScript. The element ends up with a unique class such as `Card_title__a1b2c`, so it only receives the Card title styles and never the Button's.",
+              "markingMdx": "1 mark for renaming to `*.module.css` and importing it as an object (`import styles from './Card.module.css'`).\n1 mark for applying `className={styles.title}`.\n1 mark for explaining the generated name is a unique, file-scoped string shared between the CSS and the JS.",
+              "questionMdxZh": "请展示 Card 如何引入并使用这个 module，并解释生成的类名是什么。",
+              "answerMdxZh": "把文件改名为 `Card.module.css` 并引入：`import styles from './Card.module.css'`，然后写 `<h3 className={styles.title}>...</h3>`。`styles` 是一个对象，它的 `title` 属性就是生成后的类名字符串；构建时打包器会把 CSS 里的 `.title` 替换成这个名字，并在 JavaScript 中给你同一个字符串。这个元素最终带上的类名类似 `Card_title__a1b2c`，所以它只会收到 Card 标题的样式，永远不会收到 Button 的。",
+              "markingMdxZh": "1 分：改名为 `*.module.css` 并以对象方式引入（`import styles from './Card.module.css'`）。\n1 分：使用 `className={styles.title}`。\n1 分：说明生成名是 CSS 与 JS 共享的唯一、文件级字符串。"
+            }
+          ],
+          "displayNumber": "Q5",
+          "categoryLabel": "React Fundamentals",
+          "categoryLabelZh": "React 基础",
+          "displayStyle": "quiz-sample",
+          "mockup": {
+            "files": [
+              {
+                "name": "Card.jsx",
+                "code": "import './Card.css'\n\nfunction Card() {\n  return <h3 className=\"title\">Card title</h3>\n}",
+                "codeZh": "import './Card.css'\n\nfunction Card() {\n  return <h3 className=\"title\">卡片标题</h3>\n}"
+              },
+              {
+                "name": "Card.css",
+                "code": ".title {\n  font-size: 24px;\n  color: #1a1a1a;\n}",
+                "codeZh": ".title {\n  font-size: 24px;\n  color: #1a1a1a;\n}"
+              },
+              {
+                "name": "Button.css",
+                "code": ".title {\n  font-size: 13px;\n  color: #9a9a9a;\n}",
+                "codeZh": ".title {\n  font-size: 13px;\n  color: #9a9a9a;\n}"
+              },
+              {
+                "name": "page.png",
+                "active": true
+              }
+            ],
+            "viewport": "desktop",
+            "html": "<div class=\"exam-ui-shell\"><div class=\"exam-ui-topbar\"><span>Dashboard</span><span>App</span></div><div class=\"exam-ui-body\"><p class=\"exam-ui-page-title\">Widgets</p><section class=\"exam-ui-card\"><h3 class=\"exam-ui-value\">Card title</h3><p class=\"exam-ui-help\">Should be large and dark</p><button class=\"exam-ui-button-secondary\"><span class=\"exam-ui-value\">Button title</span></button><p class=\"exam-ui-help\">Should be small and light</p></section><p class=\"exam-ui-muted\">Both titles render with the same styles</p></div></div>",
+            "htmlZh": "<div class=\"exam-ui-shell\"><div class=\"exam-ui-topbar\"><span>仪表盘</span><span>App</span></div><div class=\"exam-ui-body\"><p class=\"exam-ui-page-title\">组件</p><section class=\"exam-ui-card\"><h3 class=\"exam-ui-value\">卡片标题</h3><p class=\"exam-ui-help\">本应是大号深色</p><button class=\"exam-ui-button-secondary\"><span class=\"exam-ui-value\">按钮标题</span></button><p class=\"exam-ui-help\">本应是小号浅色</p></section><p class=\"exam-ui-muted\">两个标题渲染成了同样的样式</p></div></div>",
+            "caption": "Both titles look the same: the global `.title` rule from the last-imported file won.",
+            "captionZh": "两个标题长得一样：最后引入的那个文件里的全局 `.title` 规则胜出。"
+          }
+        },
+        {
+          "id": "Q6",
+          "title": "The same rule in three files",
+          "titleZh": "同一套规则写在三个文件里",
+          "marks": 8,
+          "contentMdx": "Three components each need to show a price in the shop's format, but instead of a shared helper each defines its own `formatPrice` inside the component body. `ItemCard.jsx` rounds to whole dollars, `Checkout.jsx` rounds to two decimals, and the receipt rounds differently again, so the same item shows three different prices. `prices.png` shows the mismatch.",
+          "contentMdxZh": "三个组件都需要按商店的格式显示价格，但每个组件没有共用辅助函数，而是在各自组件体内定义了自己的 `formatPrice`。`ItemCard.jsx` 四舍五入到整元，`Checkout.jsx` 保留两位小数，收据又是另一种，于是同一件商品显示出三种价格。`prices.png` 展示了这处不一致。",
+          "subQuestions": [
+            {
+              "id": "Q6-a",
+              "label": "(a)",
+              "marks": 2,
+              "questionMdx": "What problems come from defining the same rule as a helper inside each component body?",
+              "answerMdx": "Each copy is a separate definition, so they drift: one rounds to dollars, another to cents, and the same item shows different prices. The helper is also re-created on every render (a new function each time), and because it is trapped inside the component it cannot be imported or tested on its own. There is no single place to change the rule.",
+              "markingMdx": "1 mark for stating the copies drift, so the same input produces different results in different places.\n1 mark for stating the helper is re-created each render and cannot be imported or tested on its own.",
+              "questionMdxZh": "把同一条规则写成组件体内各自的辅助函数，会带来什么问题？",
+              "answerMdxZh": "每一份都是独立的定义，于是它们会各自漂移：一个四舍五入到整元，另一个保留两位小数，同一件商品就显示出不同价格。这个辅助函数还会在每次渲染时被重新创建（每次都生成新函数），而且因为它被困在组件内部，既无法被其它文件引入，也无法单独测试。想改这条规则，找不到一个统一的地方。",
+              "markingMdxZh": "1 分：说明各份副本会漂移，同样的输入在不同地方产生不同结果。\n1 分：说明辅助函数每次渲染都被重建，且无法被引入或单独测试。"
+            },
+            {
+              "id": "Q6-b",
+              "label": "(b)",
+              "marks": 3,
+              "questionMdx": "Explain the intended responsibility of a component, a hook, and a util, and where this duplicated logic belongs.",
+              "answerMdx": "A component decides how something looks and returns JSX; it should not own business rules. A util is a pure function with no React or DOM access — the price formatting belongs in a util because it is plain input-to-output logic, importable and testable anywhere. A custom hook is reusable logic that uses React features (state, effects or memoisation) — the shared filter/sort belongs in a hook such as `useVisibleItems` when it needs those features, so both screens share one implementation. The rule of thumb: pure → util, React-dependent and shared → hook, rendering → component.",
+              "markingMdx": "1 mark for stating a component's job is rendering and it should not own business rules.\n1 mark for placing the pure price formatting in a util (no React/DOM, importable and testable).\n1 mark for placing shared React-dependent logic (e.g. filter/sort) in a custom hook.",
+              "questionMdxZh": "请说明组件、hook、util 各自应有的职责，以及这段重复逻辑应当放在哪里。",
+              "answerMdxZh": "组件负责决定某样东西长什么样并返回 JSX，不应承载业务规则。util 是不接触 React 或 DOM 的纯函数——价格格式化属于 util，因为它是纯粹的 “输入到输出” 逻辑，随处可引入、可测试。自定义 hook 是会用到 React 能力（state、effect 或记忆化）的可复用逻辑——共享的筛选/排序在需要这些能力时应放进诸如 `useVisibleItems` 的 hook 里，让两个界面共用同一份实现。判断口诀：纯逻辑 → util，依赖 React 且共享 → hook，渲染 → 组件。",
+              "markingMdxZh": "1 分：说明组件的职责是渲染，不应承载业务规则。\n1 分：把纯价格格式化放进 util（不依赖 React/DOM，可引入可测试）。\n1 分：把共享且依赖 React 的逻辑（如筛选/排序）放进自定义 hook。"
+            },
+            {
+              "id": "Q6-c",
+              "label": "(c)",
+              "marks": 3,
+              "questionMdx": "Show the split — a `formatPrice` util, a `useVisibleItems` hook and a component using both — and explain why each piece is now reusable.",
+              "answerMdx": "`utils/format.js`: `export function formatPrice(cents) { return '$' + (cents / 100).toFixed(2) }`. `hooks/useVisibleItems.js`: `export function useVisibleItems(items, query) { return useMemo(() => items.filter((i) => i.name.includes(query)).sort(...), [items, query]) }`. Component: `import { formatPrice } from '../utils/format'; import { useVisibleItems } from '../hooks/useVisibleItems'; const visible = useVisibleItems(items, query); return <li>{formatPrice(item.cents)}</li>`. Now there is one definition of each rule: `formatPrice` is pure and can be unit-tested on its own, `useVisibleItems` is shared by every screen that needs it, and the component only renders — a change to the rule is made in one file.",
+              "markingMdx": "1 mark for a pure `formatPrice` util exported from its own file.\n1 mark for a `useVisibleItems` hook holding the shared derived logic.\n1 mark for a component importing both and only rendering, with a reason each piece is now reusable / testable.",
+              "questionMdxZh": "请展示拆分：一个 `formatPrice` util、一个 `useVisibleItems` hook，以及同时使用两者的组件，并解释为什么每一部分现在都可复用。",
+              "answerMdxZh": "`utils/format.js`：`export function formatPrice(cents) { return '$' + (cents / 100).toFixed(2) }`。`hooks/useVisibleItems.js`：`export function useVisibleItems(items, query) { return useMemo(() => items.filter((i) => i.name.includes(query)).sort(...), [items, query]) }`。组件：`import { formatPrice } from '../utils/format'; import { useVisibleItems } from '../hooks/useVisibleItems'; const visible = useVisibleItems(items, query); return <li>{formatPrice(item.cents)}</li>`。现在每条规则都只有一份定义：`formatPrice` 是纯函数，可单独做单元测试；`useVisibleItems` 被所有需要它的界面共享；组件只负责渲染——改动这条规则只需改一个文件。",
+              "markingMdxZh": "1 分：把纯 `formatPrice` 从独立文件导出。\n1 分：用 `useVisibleItems` hook 承载共享的派生逻辑。\n1 分：组件同时引入两者且只负责渲染，并说明每部分为何可复用/可测试。"
+            }
+          ],
+          "displayNumber": "Q6",
+          "categoryLabel": "Project Structure",
+          "categoryLabelZh": "项目结构",
+          "displayStyle": "quiz-sample",
+          "mockup": {
+            "files": [
+              {
+                "name": "ItemCard.jsx",
+                "code": "function ItemCard({ item }) {\n  function formatPrice(cents) {\n    return '$' + Math.round(cents / 100)\n  }\n\n  return <p>{item.name} {formatPrice(item.cents)}</p>\n}",
+                "codeZh": "function ItemCard({ item }) {\n  // 这个副本四舍五入到整元\n  function formatPrice(cents) {\n    return '$' + Math.round(cents / 100)\n  }\n\n  return <p>{item.name} {formatPrice(item.cents)}</p>\n}"
+              },
+              {
+                "name": "Checkout.jsx",
+                "code": "function Checkout({ items }) {\n  function formatPrice(cents) {\n    return '$' + (cents / 100).toFixed(2)\n  }\n\n  return (\n    <ul>\n      {items.map((item) => (\n        <li key={item.id}>{item.name} {formatPrice(item.cents)}</li>\n      ))}\n    </ul>\n  )\n}",
+                "codeZh": "function Checkout({ items }) {\n  // 这个副本保留两位小数\n  function formatPrice(cents) {\n    return '$' + (cents / 100).toFixed(2)\n  }\n\n  return (\n    <ul>\n      {items.map((item) => (\n        <li key={item.id}>{item.name} {formatPrice(item.cents)}</li>\n      ))}\n    </ul>\n  )\n}"
+              },
+              {
+                "name": "prices.png",
+                "active": true
+              }
+            ],
+            "viewport": "desktop",
+            "html": "<div class=\"exam-ui-shell\"><div class=\"exam-ui-topbar\"><span>Shop</span><span>Order</span></div><div class=\"exam-ui-body\"><p class=\"exam-ui-page-title\">Flat White</p><div class=\"exam-ui-card\"><ul class=\"exam-ui-list\"><li class=\"exam-ui-list-row exam-ui-space-between\"><span class=\"exam-ui-label\">Card list</span><span class=\"exam-ui-value\">$4</span></li><li class=\"exam-ui-list-row exam-ui-space-between\"><span class=\"exam-ui-label\">Checkout</span><span class=\"exam-ui-value\">$4.20</span></li><li class=\"exam-ui-list-row exam-ui-space-between\"><span class=\"exam-ui-label\">Receipt</span><span class=\"exam-ui-value\">$4.200</span></li></ul><p class=\"exam-ui-help\">One item, three different prices</p></div></div></div>",
+            "htmlZh": "<div class=\"exam-ui-shell\"><div class=\"exam-ui-topbar\"><span>商店</span><span>订单</span></div><div class=\"exam-ui-body\"><p class=\"exam-ui-page-title\">馥芮白</p><div class=\"exam-ui-card\"><ul class=\"exam-ui-list\"><li class=\"exam-ui-list-row exam-ui-space-between\"><span class=\"exam-ui-label\">卡片列表</span><span class=\"exam-ui-value\">$4</span></li><li class=\"exam-ui-list-row exam-ui-space-between\"><span class=\"exam-ui-label\">结算</span><span class=\"exam-ui-value\">$4.20</span></li><li class=\"exam-ui-list-row exam-ui-space-between\"><span class=\"exam-ui-label\">收据</span><span class=\"exam-ui-value\">$4.200</span></li></ul><p class=\"exam-ui-help\">同一件商品，三种价格</p></div></div></div>",
+            "caption": "One item shown in three components: each copy of the formatting rule drifted.",
+            "captionZh": "同一件商品出现在三个组件里：每一份格式化规则都各自漂移了。"
+          }
+        },
+        {
+          "id": "Q7",
+          "title": "The link nobody else can open",
+          "titleZh": "别人打不开的链接",
+          "marks": 8,
+          "contentMdx": "For a deliverable a student runs `npm run dev` and submits the printed address, `http://localhost:3000`, as the \"deployed site\". The marker opens it and sees nothing. `deploy.png` shows the terminal with the dev server running.",
+          "contentMdxZh": "在交作业时，一位同学运行了 `npm run dev`，并把终端打印出来的地址 `http://localhost:3000` 当作 “已部署的网站” 提交。评分者打开后什么也看不到。`deploy.png` 展示了正在运行开发服务器的终端。",
+          "subQuestions": [
+            {
+              "id": "Q7-a",
+              "label": "(a)",
+              "marks": 2,
+              "questionMdx": "Why does `http://localhost:3000` not work for anyone but the student's own machine?",
+              "answerMdx": "`localhost` means \"this machine\". The address only resolves to the student's own computer, where the dev server is running; on the marker's computer, `localhost` points at the marker's machine, where nothing is listening on port 3000. The site was never published anywhere others can reach, so there is nothing to open.",
+              "markingMdx": "1 mark for stating `localhost` refers to the viewer's own machine.\n1 mark for stating the site was never published to a reachable host, so the marker's browser finds nothing.",
+              "questionMdxZh": "为什么 `http://localhost:3000` 除了这位同学自己的电脑之外，别人都打不开？",
+              "answerMdxZh": "`localhost` 的意思是 “本机”。该地址只会解析到这位同学自己的电脑——开发服务器正跑在那里；而在评分者的电脑上，`localhost` 指向的是评分者那台机器，那里并没有东西在 3000 端口上监听。这个网站从未发布到任何别人能访问的地方，所以自然打不开。",
+              "markingMdxZh": "1 分：说明 `localhost` 指的是访问者自己的机器。\n1 分：说明网站从未发布到可达的主机上，所以评分者的浏览器什么也找不到。"
+            },
+            {
+              "id": "Q7-b",
+              "label": "(b)",
+              "marks": 3,
+              "questionMdx": "Explain what the dev server does that a production build does not, and why the dev server is not a delivery target.",
+              "answerMdx": "The dev server is a development tool: it compiles and serves modules on demand, keeps unminified, source-mapped output for fast rebuilds, and runs hot-module reload to update the page as you edit. It is optimised for feedback speed on your machine, not for serving many users. A production build instead bundles and minifies the code, strips development-only code, and writes self-contained static files meant to be hosted. The dev server is bound to your machine and is not intended to be the public site.",
+              "markingMdx": "1 mark for describing the dev server: on-demand compilation, unminified output, hot reload — built for development feedback.\n1 mark for describing a production build: bundles and minifies into static output meant for hosting.\n1 mark for stating the dev server runs on your machine and is not a public hosting target.",
+              "questionMdxZh": "请说明开发服务器做的事与生产构建有何不同，以及为什么开发服务器不能作为交付目标。",
+              "answerMdxZh": "开发服务器是开发工具：它按需编译并分发模块、保留未压缩且带 source map 的产物以便快速重建，还会用热更新在编辑时即时刷新页面。它的优化目标是 “在你这台机器上快速给出反馈”，而不是服务大量用户。生产构建则会把代码打包、压缩、剔除仅开发用的代码，产出可托管的、自包含的静态文件。开发服务器绑定在你自己的机器上，本来就不是给公众访问的站点。",
+              "markingMdxZh": "1 分：描述开发服务器——按需编译、未压缩产物、热更新，为开发反馈服务。\n1 分：描述生产构建——打包压缩成供托管使用的静态产物。\n1 分：说明开发服务器只跑在你自己机器上，不是公开的托管目标。"
+            },
+            {
+              "id": "Q7-c",
+              "label": "(c)",
+              "marks": 3,
+              "questionMdx": "Describe the correct way to deliver the site.",
+              "answerMdx": "Run the production build command (for example `npm run build`) to generate the optimised output (a `dist/` or `build/` folder). Then serve that generated output from a host — a static host such as Netlify, Vercel or GitHub Pages, or any web server pointed at the folder — and share that host's public URL. What you deliver is the built output, not the running dev server.",
+              "markingMdx": "1 mark for running the production build to generate the optimised output folder.\n1 mark for serving that output from a reachable host.\n1 mark for sharing the host's public URL, not a localhost address.",
+              "questionMdxZh": "请描述交付这个网站的正确做法。",
+              "answerMdxZh": "运行生产构建命令（例如 `npm run build`），生成优化后的产物（`dist/` 或 `build/` 文件夹）。然后让一个可访问的主机来托管这份产物——可以是 Netlify、Vercel、GitHub Pages 这类静态托管，也可以是把任意 web 服务器指向该文件夹——再把该主机的公开 URL 分享出去。交付的是构建产物，而不是正在运行的开发服务器。",
+              "markingMdxZh": "1 分：运行生产构建，生成优化后的产物文件夹。\n1 分：用可达的主机托管这份产物。\n1 分：分享该主机的公开 URL，而不是 localhost 地址。"
+            }
+          ],
+          "displayNumber": "Q7",
+          "categoryLabel": "Build and Delivery",
+          "categoryLabelZh": "构建与交付",
+          "displayStyle": "quiz-sample",
+          "mockup": {
+            "files": [
+              {
+                "name": "package.json",
+                "code": "{\n  \"name\": \"shop\",\n  \"scripts\": {\n    \"dev\": \"vite\",\n    \"build\": \"vite build\",\n    \"preview\": \"vite preview\"\n  },\n  \"dependencies\": {\n    \"react\": \"^18.2.0\",\n    \"react-dom\": \"^18.2.0\"\n  }\n}",
+                "codeZh": "{\n  \"name\": \"shop\",\n  \"scripts\": {\n    \"dev\": \"vite\",\n    \"build\": \"vite build\",\n    \"preview\": \"vite preview\"\n  },\n  \"dependencies\": {\n    \"react\": \"^18.2.0\",\n    \"react-dom\": \"^18.2.0\"\n  }\n}"
+              },
+              {
+                "name": "deploy.png",
+                "active": true
+              }
+            ],
+            "viewport": "desktop",
+            "html": "<div class=\"exam-ui-shell\"><div class=\"exam-ui-topbar\"><span>Terminal</span><span>project</span></div><div class=\"exam-ui-body\"><p class=\"exam-ui-page-title\">$ npm run dev</p><div class=\"exam-ui-card\"><div class=\"exam-ui-code-preview\"><span class=\"exam-ui-help\">VITE v5 ready in 412 ms</span><span class=\"exam-ui-help\">Local: http://localhost:3000/</span></div><p class=\"exam-ui-help\">The address only opens on this computer</p></div><p class=\"exam-ui-note\">Submitted link: http://localhost:3000</p></div></div>",
+            "htmlZh": "<div class=\"exam-ui-shell\"><div class=\"exam-ui-topbar\"><span>终端</span><span>project</span></div><div class=\"exam-ui-body\"><p class=\"exam-ui-page-title\">$ npm run dev</p><div class=\"exam-ui-card\"><div class=\"exam-ui-code-preview\"><span class=\"exam-ui-help\">VITE v5 ready in 412 ms</span><span class=\"exam-ui-help\">Local: http://localhost:3000/</span></div><p class=\"exam-ui-help\">这个地址只在这台电脑上能打开</p></div><p class=\"exam-ui-note\">提交的链接：http://localhost:3000</p></div></div>",
+            "caption": "The dev server printed a localhost URL; sharing it hands out an address only the student can open.",
+            "captionZh": "开发服务器打印的是 localhost 地址；把它分享出去，等于给了一个只有这位同学能打开的入口。"
+          }
+        },
+        {
+          "id": "Q8",
+          "title": "The test that guards the class name",
+          "titleZh": "守着类名的测试",
+          "marks": 8,
+          "contentMdx": "A button test asserts on the element's `className` and only that the element exists: `expect(button.className).toBe('btn-primary')`. When the design system renames the class to `button-primary` the test fails, although the button looks and works the same; meanwhile the test never noticed that clicking the button stopped updating the total. `test.png` shows the failing run and the still-correct button.",
+          "contentMdxZh": "一个按钮测试断言元素的 `className`，并且只断言元素存在：`expect(button.className).toBe('btn-primary')`。当设计系统把类名改成 `button-primary` 时，测试失败了——可按钮的外表和功能都没变；与此同时，测试却始终没发现 “点击按钮后总价不再更新” 这个问题。`test.png` 展示了失败的运行结果和仍然正常的按钮。",
+          "subQuestions": [
+            {
+              "id": "Q8-a",
+              "label": "(a)",
+              "marks": 2,
+              "questionMdx": "Why does asserting on the class name make the test brittle and unable to catch a real regression?",
+              "answerMdx": "The class name is an implementation detail — a styling handle that can change without any change to what the user sees or can do. Tying the test to the exact string means a harmless refactor (renaming the class) breaks the test, producing false alarms. At the same time it says nothing about behaviour, so a real bug — the click no longer updating the total — passes the test, because the class is still correct.",
+              "markingMdx": "1 mark for stating the class name is an implementation detail that can change without any user-visible change.\n1 mark for stating that this makes the test fail on harmless refactors while missing actual behaviour bugs.",
+              "questionMdxZh": "为什么断言类名会让测试变脆，并且抓不住真正的回归？",
+              "answerMdxZh": "类名是实现的细节——一个样式句柄，它可以在用户所见、所能做的都没有变化的情况下被改掉。把测试绑定到精确的字符串，意味着一次无害的重构（改类名）就会让测试失败，制造误报。与此同时，它对行为只字未提，所以真正的 Bug——点击后总价不再更新——反而能通过测试，因为类名还是对的。",
+              "markingMdxZh": "1 分：说明类名是实现的细节，可以在用户无感的情况下变化。\n1 分：说明这会让测试在无害重构时失败，却漏掉真正的行为 Bug。"
+            },
+            {
+              "id": "Q8-b",
+              "label": "(b)",
+              "marks": 3,
+              "questionMdx": "Explain the difference between testing implementation details and testing user-visible behaviour, and which survives a refactor.",
+              "answerMdx": "An implementation test asserts on internals: class names, component names, internal state, or exact markup structure. A behaviour test describes what a user can see and do — the text on screen, an accessible name, or the result of clicking — which is the contract of the feature. Behaviour survives refactors because renaming a class, changing a wrapper element or moving code does not change the visible outcome, so the test keeps passing while still failing if the outcome actually breaks. Implementation tests tend to break on refactors and miss behaviour bugs at the same time.",
+              "markingMdx": "1 mark for defining an implementation test (class names, internal state, exact markup) versus a behaviour test (what the user sees or does).\n1 mark for stating behaviour survives refactors because the visible outcome is unchanged.\n1 mark for noting implementation tests break on refactors and miss behaviour bugs at the same time.",
+              "questionMdxZh": "请说明 “测实现细节” 与 “测用户可见行为” 的区别，以及哪一种能在重构后存活。",
+              "answerMdxZh": "测实现细节，断言的是内部构造：类名、组件名、内部 state，或精确的标记结构。测行为，描述的是用户能看到、能做到的事——屏幕上的文字、可访问名称、点击后的结果——这才是该功能的契约。行为测试能在重构后存活：改类名、换一层包裹元素、挪动代码都不会改变可见结果，于是测试继续通过，而一旦结果真的坏掉它就会失败。实现测试则往往在重构时崩掉，同时还漏掉行为 Bug。",
+              "markingMdxZh": "1 分：定义实现测试（类名、内部 state、精确标记）与行为测试（用户所见/所做）。\n1 分：说明行为测试因可见结果不变而能熬过重构。\n1 分：指出实现测试既会在重构时崩掉，又会漏掉行为 Bug。"
+            },
+            {
+              "id": "Q8-c",
+              "label": "(c)",
+              "marks": 3,
+              "questionMdx": "Rewrite the test to assert what the user can see and do.",
+              "answerMdx": "Query by role and accessible name, then assert on the visible result: `const button = screen.getByRole('button', { name: /add to cart/i }); await userEvent.click(button); expect(screen.getByText('Total: $15.00')).toBeInTheDocument()`. The test no longer mentions the class, so a rename cannot break it; it checks the button's accessible name (also a small accessibility check) and that clicking actually updates the total, which is the behaviour a regression would break.",
+              "markingMdx": "1 mark for querying by role and accessible name instead of a class.\n1 mark for performing a user action (clicking) and asserting on a visible result.\n1 mark for explaining the test now survives a rename and would catch the total no longer updating.",
+              "questionMdxZh": "请把测试改成断言用户能看到和能做到的事情。",
+              "answerMdxZh": "按角色与可访问名称来查询，然后断言可见的结果：`const button = screen.getByRole('button', { name: /add to cart/i }); await userEvent.click(button); expect(screen.getByText('Total: $15.00')).toBeInTheDocument()`。测试不再提到类名，所以改名就无法让它失败；它检查按钮的可访问名称（顺带做了一次小小的可访问性检查），并检查点击确实更新了总价——这正是回归会破坏的行为。",
+              "markingMdxZh": "1 分：用角色与可访问名称来查询，而不是用类名。\n1 分：执行用户动作（点击）并断言可见结果。\n1 分：说明测试现在能熬过改名，并且能抓住 “总价不再更新” 的问题。"
+            }
+          ],
+          "displayNumber": "Q8",
+          "categoryLabel": "UI Testing",
+          "categoryLabelZh": "UI 测试",
+          "displayStyle": "quiz-sample",
+          "mockup": {
+            "files": [
+              {
+                "name": "Button.jsx",
+                "code": "function Button({ onClick }) {\n  return (\n    <button className=\"btn-primary\" onClick={onClick}>\n      Add to cart\n    </button>\n  )\n}",
+                "codeZh": "function Button({ onClick }) {\n  return (\n    <button className=\"btn-primary\" onClick={onClick}>\n      加入购物车\n    </button>\n  )\n}"
+              },
+              {
+                "name": "button.test.js",
+                "code": "test('button renders', () => {\n  render(<Button onClick={() => {}} />)\n  const button = screen.getByText('Add to cart')\n  expect(button.className).toBe('btn-primary')\n})",
+                "codeZh": "test('button renders', () => {\n  render(<Button onClick={() => {}} />)\n  // 只断言类名：改名就红，行为坏了也不管\n  const button = screen.getByText('Add to cart')\n  expect(button.className).toBe('btn-primary')\n})"
+              },
+              {
+                "name": "test.png",
+                "active": true
+              }
+            ],
+            "viewport": "desktop",
+            "html": "<div class=\"exam-ui-shell\"><div class=\"exam-ui-topbar\"><span>Tests</span><span>button.test.js</span></div><div class=\"exam-ui-body\"><p class=\"exam-ui-page-title\">Test run</p><div class=\"exam-ui-card\"><div class=\"exam-ui-space-between\"><span class=\"exam-ui-label\">Button</span><button class=\"exam-ui-button\">Add to cart</button></div><ul class=\"exam-ui-list\"><li class=\"exam-ui-list-row\"><span class=\"exam-ui-danger\">FAIL expected 'button-primary' to be 'btn-primary'</span></li><li class=\"exam-ui-list-row\"><span class=\"exam-ui-help\">No test asserts that the total updates after a click</span></li></ul></div></div></div>",
+            "htmlZh": "<div class=\"exam-ui-shell\"><div class=\"exam-ui-topbar\"><span>测试</span><span>button.test.js</span></div><div class=\"exam-ui-body\"><p class=\"exam-ui-page-title\">测试运行</p><div class=\"exam-ui-card\"><div class=\"exam-ui-space-between\"><span class=\"exam-ui-label\">按钮</span><button class=\"exam-ui-button\">加入购物车</button></div><ul class=\"exam-ui-list\"><li class=\"exam-ui-list-row\"><span class=\"exam-ui-danger\">FAIL expected 'button-primary' to be 'btn-primary'</span></li><li class=\"exam-ui-list-row\"><span class=\"exam-ui-help\">没有任何测试断言点击后总价会更新</span></li></ul></div></div></div>",
+            "caption": "The test is red over a renamed class while the real behaviour goes unchecked.",
+            "captionZh": "测试因为一个被改名的类名变红，而真正的行为却无人检查。"
+          }
+        },
+        {
+          "id": "Q9",
+          "title": "The page the crawler sees as empty",
+          "titleZh": "爬虫眼中的空页面",
+          "marks": 8,
+          "contentMdx": "A content page is a client-rendered single-page app: the server sends a shell whose only body content is `<div id=\"root\"></div>`, and the text appears only after the JavaScript has downloaded and run. With JavaScript blocked (or before it finishes on a slow phone) the page looks empty, and the fetched HTML source contains none of the article. `source.png` shows the raw HTML the server returned.",
+          "contentMdxZh": "一个内容页是客户端渲染的单页应用：服务器返回的骨架里，body 内容只有一个 `<div id=\"root\"></div>`，正文要等 JavaScript 下载并执行之后才会出现。在禁用 JavaScript（或在慢手机上 JS 还没跑完）时，页面看上去是空的，而取回的 HTML 源码里完全没有正文内容。`source.png` 展示了服务器返回的原始 HTML。",
+          "subQuestions": [
+            {
+              "id": "Q9-a",
+              "label": "(a)",
+              "marks": 2,
+              "questionMdx": "Why is the page empty before the JavaScript runs, and what does that mean for a crawler that does not run JavaScript?",
+              "answerMdx": "This is client-side rendering: the HTML the server sends is only a shell with an empty container, and the actual content is created in the browser by JavaScript after it loads. Until that script runs there is nothing in the DOM to show, so the user sees a blank page. Anything that reads the HTML without running the app's JavaScript — such as a crawler or a link-preview generator — sees only the empty shell, not the article.",
+              "markingMdx": "1 mark for stating the server sends only an empty shell and the content is built by JavaScript in the browser.\n1 mark for stating that without running that JavaScript there is no content, so anything reading the HTML sees an empty page.",
+              "questionMdxZh": "为什么在 JavaScript 运行之前页面是空的？对不执行 JavaScript 的爬虫来说这意味着什么？",
+              "answerMdxZh": "这是客户端渲染：服务器发来的 HTML 只是一个带空容器的骨架，真正的内容要等 JavaScript 加载后在浏览器里生成。脚本运行之前，DOM 里没有可显示的东西，所以用户看到空白页。任何不执行该应用 JavaScript 的读取者——例如爬虫或链接预览生成器——看到的都只是空骨架，而不是正文。",
+              "markingMdxZh": "1 分：说明服务器只发来空骨架，内容由浏览器里的 JavaScript 生成。\n1 分：说明不运行这段 JavaScript 就没有内容，读取 HTML 的一方只会看到空页面。"
+            },
+            {
+              "id": "Q9-b",
+              "label": "(b)",
+              "marks": 3,
+              "questionMdx": "Explain how SSR and SSG differ from CSR in where and when the HTML is produced, and one trade-off of each.",
+              "answerMdx": "With SSR the HTML is produced on the server for each request: the server runs the components and returns filled HTML, which then rehydrates into the interactive app in the browser — trade-off: it costs server work on every request and needs a server running. With SSG the HTML is produced once at build time and the same static file is served to everyone — trade-off: it is fast and cheap to serve, but the page is fixed at build time unless you rebuild, so it suits content that rarely changes. Both send real content in the first response, unlike CSR where content appears only after JavaScript runs.",
+              "markingMdx": "1 mark for SSR: HTML produced per request on the server (with rehydration).\n1 mark for SSG: HTML produced once at build time and served as a static file.\n1 mark for one trade-off of each (SSR: per-request server cost; SSG: content fixed until rebuild).",
+              "questionMdxZh": "请说明 SSR、SSG 与 CSR 在 “HTML 在哪、何时生成” 上的区别，并各给一个取舍。",
+              "answerMdxZh": "SSR 在每个请求时于服务器生成 HTML：服务器运行组件并返回填好内容的 HTML，随后在浏览器里水合（rehydrate）成可交互的应用——取舍：每个请求都消耗服务器算力，并且需要一个常驻的服务器。SSG 在构建时一次性生成 HTML，之后把同一份静态文件发给所有人——取舍：托管快且便宜，但页面在构建时就固定了，除非重新构建，因此适合很少变化的内容。两者都会在首个响应里带上真实内容，而 CSR 要等 JavaScript 运行后才出现内容。",
+              "markingMdxZh": "1 分：SSR——每次请求在服务器生成 HTML（并水合）。\n1 分：SSG——构建时一次性生成，作为静态文件分发。\n1 分：各一个取舍（SSR：每请求服务器开销；SSG：内容在重新构建前固定）。"
+            },
+            {
+              "id": "Q9-c",
+              "label": "(c)",
+              "marks": 3,
+              "questionMdx": "Choose the right strategy for a marketing page whose content barely changes, and justify it.",
+              "answerMdx": "Use SSG. The page's HTML can be generated once at build time and reused for every visitor, so the first response already contains the full content and needs no JavaScript to be readable — good for crawlers and slow devices. Because the content barely changes, the usual downside of SSG (having to rebuild to update) rarely applies, and there is no per-request server-rendering cost.",
+              "markingMdx": "1 mark for choosing SSG.\n1 mark for justifying it with prebuilt HTML served to everyone (readable without JavaScript).\n1 mark for connecting the choice to the content barely changing, so the rebuild downside rarely matters.",
+              "questionMdxZh": "对于一个内容几乎不变的营销页面，请选择合适策略并给出理由。",
+              "answerMdxZh": "选 SSG。这个页面的 HTML 可以在构建时一次性生成、给每个访客复用，因此首个响应里就带着完整内容，不依赖 JavaScript 也能阅读——对爬虫和慢设备都友好。由于内容几乎不变，SSG 通常的缺点（更新需要重新构建）几乎不构成问题，而且没有每次请求都渲染的服务端开销。",
+              "markingMdxZh": "1 分：选择 SSG。\n1 分：以 “预构建的 HTML 分发给所有人、无需 JavaScript 即可阅读” 作为理由。\n1 分：把这一选择与 “内容几乎不变，因此重新构建的缺点几乎不影响” 联系起来。"
+            }
+          ],
+          "displayNumber": "Q9",
+          "categoryLabel": "Rendering Strategies",
+          "categoryLabelZh": "渲染策略",
+          "displayStyle": "quiz-sample",
+          "mockup": {
+            "files": [
+              {
+                "name": "index.html",
+                "code": "<!doctype html>\n<html>\n  <head>\n    <title>Guide</title>\n  </head>\n  <body>\n    <div id=\"root\"></div>\n    <script type=\"module\" src=\"/main.jsx\"></script>\n  </body>\n</html>",
+                "codeZh": "<!doctype html>\n<html>\n  <head>\n    <title>指南</title>\n  </head>\n  <body>\n    <!-- 空容器：正文由 JS 生成 -->\n    <div id=\"root\"></div>\n    <script type=\"module\" src=\"/main.jsx\"></script>\n  </body>\n</html>"
+              },
+              {
+                "name": "source.png",
+                "active": true
+              }
+            ],
+            "viewport": "desktop",
+            "html": "<div class=\"exam-ui-shell\"><div class=\"exam-ui-topbar\"><span>View source</span><span>example.com/guide</span></div><div class=\"exam-ui-body\"><p class=\"exam-ui-page-title\">Raw HTML</p><div class=\"exam-ui-card\"><div class=\"exam-ui-code-preview\"><span class=\"exam-ui-code\">&lt;body&gt;&lt;div id=\"root\"&gt;&lt;/div&gt;&lt;/body&gt;</span></div><p class=\"exam-ui-help\">No article text is in the response</p><div class=\"exam-ui-stage\"><div class=\"exam-ui-center\"><p class=\"exam-ui-help\">Rendered page before JS: blank</p></div></div></div></div></div>",
+            "htmlZh": "<div class=\"exam-ui-shell\"><div class=\"exam-ui-topbar\"><span>查看源代码</span><span>example.com/guide</span></div><div class=\"exam-ui-body\"><p class=\"exam-ui-page-title\">原始 HTML</p><div class=\"exam-ui-card\"><div class=\"exam-ui-code-preview\"><span class=\"exam-ui-code\">&lt;body&gt;&lt;div id=\"root\"&gt;&lt;/div&gt;&lt;/body&gt;</span></div><p class=\"exam-ui-help\">响应里没有任何正文文本</p><div class=\"exam-ui-stage\"><div class=\"exam-ui-center\"><p class=\"exam-ui-help\">JS 运行前的页面：空白</p></div></div></div></div></div>",
+            "caption": "The server response is an empty shell; the article only exists after JavaScript runs.",
+            "captionZh": "服务器的响应只是空骨架；正文要等 JavaScript 运行后才存在。"
+          }
+        },
+        {
+          "id": "Q10",
+          "title": "Lint switched off, bug shipped",
+          "titleZh": "关掉 Lint，Bug 上路",
+          "marks": 8,
+          "contentMdx": "A student could not get the linter to pass, so they disabled it and kept coding. `npm run build` still succeeded, they submitted, and a review found a comparison written with `==` and a variable that was never used. `terminal.png` shows a green build next to a skipped lint step.",
+          "contentMdxZh": "一位同学搞不定 linter 报错，于是把它关掉继续写代码。`npm run build` 依然成功，他就提交了；结果在评审中发现了一处用 `==` 写的比较，以及一个从未被使用的变量。`terminal.png` 展示了构建通过、lint 步骤被跳过的情形。",
+          "subQuestions": [
+            {
+              "id": "Q10-a",
+              "label": "(a)",
+              "marks": 2,
+              "questionMdx": "Why does turning lint off not stop the build, and what kind of problems does that let through?",
+              "answerMdx": "Linting and building are separate steps. The build only needs the code to compile and bundle, so nothing runs the linter and the build still succeeds. Disabling lint lets through code-quality and hazard problems that are still valid JavaScript — for example a `==` comparison that coerces unexpectedly, an unused or misspelled variable, or a suspicious pattern — none of which make the build fail on their own.",
+              "markingMdx": "1 mark for stating lint and build are separate steps, so the build does not run the linter.\n1 mark for giving the kind of problems that survive (valid-but-risky code such as `==` or an unused variable).",
+              "questionMdxZh": "为什么关掉 lint 并不会让构建失败？这又会放过哪些问题？",
+              "answerMdxZh": "lint 与构建是两个独立的步骤。构建只要求代码能编译、能打包，所以没人会去跑 linter，构建照样成功。关掉 lint 就会放过那些仍然是合法 JavaScript 的代码质量与风险问题——例如会意外做类型转换的 `==` 比较、未使用或拼错的变量、以及可疑的写法——这些本身都不会让构建失败。",
+              "markingMdxZh": "1 分：说明 lint 与构建是独立步骤，构建不会运行 linter。\n1 分：给出会漏过去的问题类型（合法但有风险的代码，如 `==` 或未使用变量）。"
+            },
+            {
+              "id": "Q10-b",
+              "label": "(b)",
+              "marks": 3,
+              "questionMdx": "Explain what lint is for versus what the build does.",
+              "answerMdx": "Lint is static analysis of source code: it reads the code without running it and flags patterns against a set of rules (style, common mistakes, likely bugs), quickly and per-line. The build compiles and bundles: it resolves imports, transforms JSX and produces the output files; it fails on hard errors such as a missing module or a syntax error, but it does not judge style or suspicious-but-legal patterns. Lint catches \"this is legal but probably wrong\"; the build catches \"this cannot be turned into a working app\".",
+              "markingMdx": "1 mark for describing lint as static analysis that flags risky patterns without running the code.\n1 mark for describing the build as resolving imports and producing output, failing on hard errors (missing module, syntax error).\n1 mark for the contrast: lint finds legal-but-wrong patterns; the build finds what cannot be compiled at all.",
+              "questionMdxZh": "请说明 lint 的用途，以及构建做的是什么。",
+              "answerMdxZh": "lint 是对源码的静态分析：它不运行代码，只按一套规则（风格、常见错误、可疑 Bug）快速逐行检查并标出问题。构建则负责编译与打包：解析 import、转换 JSX、产出输出文件；它会在硬错误上失败，例如找不到模块或语法错误，但它不会评判风格，也不会判断 “合法但可疑” 的写法。lint 抓的是 “这合法但大概率是错的”；构建抓的是 “这根本没法变成能跑的应用”。",
+              "markingMdxZh": "1 分：把 lint 描述为不运行代码、只标出风险模式的静态分析。\n1 分：把构建描述为解析 import 并产出产物，遇到硬错误（缺模块、语法错误）就失败。\n1 分：给出对比——lint 抓 “合法但写错”，构建抓 “根本编译不出来”。"
+            },
+            {
+              "id": "Q10-c",
+              "label": "(c)",
+              "marks": 3,
+              "questionMdx": "Give one case only lint catches and one case only the build catches, and explain why you keep both.",
+              "answerMdx": "Only lint: a `==` where `===` was meant, or an unused variable — the code runs and the build is happy, but the pattern is a hazard lint flags. Only the build: an `import` of a file that does not exist, or a syntax error — no lint rule can produce a bundle, and the build fails because it cannot resolve or compile. Keep both because they cover different failures: lint guards the correctness and consistency of the source before it runs, the build proves the app can actually be produced and served. Turning lint off to silence it hides the first class of bugs without fixing them.",
+              "markingMdx": "1 mark for a case only lint catches (e.g. `==` misuse, unused variable).\n1 mark for a case only the build catches (e.g. a missing import, a syntax error).\n1 mark for explaining both are kept because they catch different failures and silencing lint hides bugs rather than fixing them.",
+              "questionMdxZh": "请各举一个 “只有 lint 能抓” 和 “只有构建能抓” 的例子，并解释为什么要两者都保留。",
+              "answerMdxZh": "只有 lint 能抓：本想写 `===` 却写成 `==`，或未使用的变量——代码能跑、构建也开心，但这个模式是 lint 会标记的隐患。只有构建能抓：import 了一个并不存在的文件，或出现语法错误——没有任何 lint 规则能产出打包文件，构建因为无法解析或编译而失败。两者都要保留，因为它们覆盖的是不同的失败：lint 在代码运行前守住它的正确性与一致性，构建则证明这个应用确实能被产出并交付。为了消掉报错而关掉 lint，只是把第一类 Bug 藏起来，并没有修好。",
+              "markingMdxZh": "1 分：举出只有 lint 能抓的例子（如 `==` 误用、未使用变量）。\n1 分：举出只有构建能抓的例子（如缺失 import、语法错误）。\n1 分：说明两者保留是因为覆盖不同失败，且关掉 lint 只是隐藏 Bug 而非修复。"
+            }
+          ],
+          "displayNumber": "Q10",
+          "categoryLabel": "Tooling",
+          "categoryLabelZh": "工程工具",
+          "displayStyle": "quiz-sample",
+          "mockup": {
+            "files": [
+              {
+                "name": "eslint.config.js",
+                "code": "export default [\n  {\n    rules: {\n      eqeqeq: 'off',\n      'no-unused-vars': 'off',\n    },\n  },\n]",
+                "codeZh": "export default [\n  {\n    rules: {\n      eqeqeq: 'off',\n      'no-unused-vars': 'off',\n    },\n  },\n]"
+              },
+              {
+                "name": "package.json",
+                "code": "{\n  \"scripts\": {\n    \"lint\": \"eslint .\",\n    \"build\": \"vite build\"\n  }\n}",
+                "codeZh": "{\n  \"scripts\": {\n    \"lint\": \"eslint .\",\n    \"build\": \"vite build\"\n  }\n}"
+              },
+              {
+                "name": "terminal.png",
+                "active": true
+              }
+            ],
+            "viewport": "desktop",
+            "html": "<div class=\"exam-ui-shell\"><div class=\"exam-ui-topbar\"><span>Terminal</span><span>project</span></div><div class=\"exam-ui-body\"><p class=\"exam-ui-page-title\">$ npm run build</p><div class=\"exam-ui-card\"><div class=\"exam-ui-space-between\"><span class=\"exam-ui-label\">lint</span><span class=\"exam-ui-badge\">skipped</span></div><div class=\"exam-ui-space-between\"><span class=\"exam-ui-label\">build</span><span class=\"exam-ui-stat\">success</span></div><p class=\"exam-ui-help\">The bundle was produced; the == and the unused variable sailed through</p></div></div></div>",
+            "htmlZh": "<div class=\"exam-ui-shell\"><div class=\"exam-ui-topbar\"><span>终端</span><span>project</span></div><div class=\"exam-ui-body\"><p class=\"exam-ui-page-title\">$ npm run build</p><div class=\"exam-ui-card\"><div class=\"exam-ui-space-between\"><span class=\"exam-ui-label\">lint</span><span class=\"exam-ui-badge\">已跳过</span></div><div class=\"exam-ui-space-between\"><span class=\"exam-ui-label\">build</span><span class=\"exam-ui-stat\">成功</span></div><p class=\"exam-ui-help\">产物照常生成；`==` 和未使用变量都溜了过去</p></div></div></div>",
+            "caption": "The build is green while lint is skipped, so hazard patterns ship unchecked.",
+            "captionZh": "lint 被跳过时构建依然是绿的，于是隐患模式未经检查就上线了。"
+          }
+        }
+      ]
+    }
+  ]
+}
