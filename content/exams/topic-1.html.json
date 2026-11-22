@@ -5,10 +5,15 @@
       "id": "TOPIC1-HTML",
       "title": "HTML & Semantics — Topic Paper",
       "titleZh": "HTML 与语义结构 · 专题卷",
-      "description": "Week 1 topic paper: HTML document structure, semantic landmarks and heading levels, links / images / paths, and lists, tables and code tags. Four questions, three sub-questions each, with screenshot-style mockups.",
-      "descriptionZh": "Week 1 专题卷：HTML 文档骨架、语义地标与标题层级、链接 / 图片 / 路径，以及列表、表格与代码标签。共 4 道大题，每题 3 个子题，配套截图感 mockup。",
-      "totalMarks": 20,
-      "tags": ["专题卷", "Weeks1", "HTML", "语义"],
+      "description": "Week 1 topic paper: HTML document structure, semantic landmarks and heading levels, links / images / paths, and lists, tables and code tags. Ten questions, three sub-questions each, with screenshot-style mockups.",
+      "descriptionZh": "Week 1 专题卷：HTML 文档骨架、语义地标与标题层级、链接 / 图片 / 路径，以及列表、表格与代码标签。共 10 道大题，每题 3 个子题，配套截图感 mockup。",
+      "totalMarks": 50,
+      "tags": [
+        "专题卷",
+        "Weeks1",
+        "HTML",
+        "语义"
+      ],
       "questions": [
         {
           "id": "Q1",
@@ -269,8 +274,399 @@
           },
           "titleZh": "被压平的结果页",
           "contentMdxZh": "`results.html` 是一个马拉松成绩页。排名是用 `<div>` 行搭出来的，完赛步骤是一个连成一串的 `<div>`，而代码示例丢失了全部缩进，如 `results.png` 所示。"
+        },
+        {
+          "id": "Q5",
+          "title": "Headings chosen by size",
+          "titleZh": "按字号挑的标题",
+          "marks": 5,
+          "contentMdx": "`guide.html` is a documentation page. To make the page title smaller than the browser's default `<h1>`, the author used `<h2>`, and to get small bold section labels they used `<h4>` for every section. The page never uses `<h1>` and jumps from `<h2>` straight to `<h4>`, as `sizes.png` shows.",
+          "contentMdxZh": "`guide.html` 是一个文档页。为了让页面标题比浏览器默认的 `<h1>` 小一些，作者用了 `<h2>`；为了得到小而粗的章节标签，每个章节都用了 `<h4>`。整页没有 `<h1>`，而且从 `<h2>` 直接跳到 `<h4>`，如 `sizes.png` 所示。",
+          "subQuestions": [
+            {
+              "id": "Q5-a",
+              "label": "(a)",
+              "marks": 1,
+              "questionMdx": "What two problems does this create in the document's heading structure?",
+              "answerMdx": "The top-level heading is `<h2>` instead of `<h1>`, so the page has no level-1 heading at all; and the levels skip — the outline goes from `<h2>` straight to `<h4>` with no `<h3>` in between.",
+              "markingMdx": "1 mark for naming both problems: no `<h1>` at the top, and a skipped level (`h2` → `h4`, no `h3`).",
+              "questionMdxZh": "这样做让文档的标题结构出现了哪两个问题？",
+              "answerMdxZh": "最顶层标题是 `<h2>` 而不是 `<h1>`，所以整页根本没有一级标题；而且层级出现跳级——大纲从 `<h2>` 直接到 `<h4>`，中间没有 `<h3>`。",
+              "markingMdxZh": "1 分：说清两个问题——最顶层没有 `<h1>`，以及出现跳级（`h2` → `h4`，缺 `h3`）。"
+            },
+            {
+              "id": "Q5-b",
+              "label": "(b)",
+              "marks": 2,
+              "questionMdx": "Why does this break navigation for a screen-reader user, and why is choosing a heading by the text size it produces the wrong reason?",
+              "answerMdx": "Heading levels build a tree that screen readers use to summarise and navigate the page: a user can list all headings or jump to the next heading of a given level. With no `<h1>`, a user who jumps to level 1 lands on nothing, and with `<h2>` → `<h4>` the outline claims two deeper levels exist that are missing, so the tree is inconsistent and the user cannot tell which sections are peers of which. Choosing a level by the font size it renders is wrong because the element is meant to express structure, not appearance — the size is a styling decision that belongs in CSS. Picking `<h4>` for a small label means the level no longer reflects where that section sits in the hierarchy.",
+              "markingMdx": "1 mark for explaining that heading levels form the outline tree a screen reader navigates (no `h1` and skipped levels make it inconsistent/unusable).\n1 mark for explaining that a heading level conveys structure, not size, so the visual size should come from CSS instead.",
+              "questionMdxZh": "这为什么会破坏读屏用户的导航？又为什么「按标题渲染出来的字号大小来选标题级别」是错误理由？",
+              "answerMdxZh": "标题层级构成一棵树，读屏器用它来概述和导航页面：用户可以列出所有标题，或跳到某一层级的下一个标题。没有 `<h1>` 时，跳到一级标题的用户会落空；而 `<h2>` → `<h4>` 让大纲声称存在两个更深的层级却缺失，于是这棵树自相矛盾，用户无法判断哪些章节是同级。按渲染出的字号来选级别之所以错误，是因为元素本应表达结构而非外观——字号是样式决定，属于 CSS。为了得到一个小的标签而选用 `<h4>`，会让该级别不再反映这一节在层级中的位置。",
+              "markingMdxZh": "1 分：说明标题层级构成读屏器导航所依赖的大纲树（缺 h1、跳级都会让它矛盾/不可用）。\n1 分：说明标题级别表达的是结构而非字号，视觉大小应由 CSS 负责。"
+            },
+            {
+              "id": "Q5-c",
+              "label": "(c)",
+              "marks": 2,
+              "questionMdx": "Rewrite the headings so the outline is correct, and explain why the size should be fixed in CSS instead.",
+              "answerMdx": "Use `<h1>` for the page title, `<h2>` for each section and `<h3>` for a sub-section: `<h1>Getting started</h1><h2>Install</h2><h3>Requirements</h3><h2>Usage</h2>`. This makes the outline read h1 → h2 → h3 → h2, a consistent tree with no gaps. The smaller visual size is then set with CSS, e.g. `h1 { font-size: 1.4rem; }`, which changes appearance without touching the structure. Separating the two is exactly why the fix is safe: the element still tells the browser and assistive tech what each heading means, while CSS decides how big it looks.",
+              "markingMdx": "1 mark for rewriting with `<h1>` for the title and a consistent h2/h3 structure (no skipped levels).\n1 mark for explaining that visual size should be adjusted in CSS (`font-size`), keeping the element's meaning intact.",
+              "questionMdxZh": "请重写这些标题让大纲正确，并解释为什么字号应该改在 CSS 里。",
+              "answerMdxZh": "页面标题用 `<h1>`，每个章节用 `<h2>`，子章节用 `<h3>`：`<h1>Getting started</h1><h2>Install</h2><h3>Requirements</h3><h2>Usage</h2>`。这样大纲读作 h1 → h2 → h3 → h2，是一棵连续、无缺口的树。更小的视觉尺寸则用 CSS 设置，例如 `h1 { font-size: 1.4rem; }`，它只改变外观而不动结构。把两者分开正是这个改法安全的原因：元素仍然告诉浏览器和辅助技术每个标题的含义，而由 CSS 决定它看起来多大。",
+              "markingMdxZh": "1 分：用 `<h1>` 作标题、并以一致的 h2/h3 结构重写（无跳级）。\n1 分：说明视觉大小应在 CSS（`font-size`）中调整，保持元素的语义不变。"
+            }
+          ],
+          "displayNumber": "Q5",
+          "categoryLabel": "Semantic Landmarks and Heading Levels",
+          "categoryLabelZh": "语义地标与标题层级",
+          "displayStyle": "quiz-sample",
+          "mockup": {
+            "files": [
+              {
+                "name": "guide.html",
+                "code": "<body>\n  <h2>Install & usage</h2>\n  <h4>Install</h4>\n  <p>Run the installer.</p>\n  <h4>Usage</h4>\n  <p>Import the module.</p>\n</body>",
+                "codeZh": "<body>\n  <!-- 页面标题用了 h2：整页没有 h1 -->\n  <h2>Install & usage</h2>\n  <!-- 章节用 h4：从 h2 直接跳到 h4，缺 h3 -->\n  <h4>Install</h4>\n  <p>Run the installer.</p>\n  <h4>Usage</h4>\n  <p>Import the module.</p>\n</body>"
+              },
+              {
+                "name": "sizes.png",
+                "active": true
+              }
+            ],
+            "viewport": "desktop",
+            "html": "<div class=\"exam-ui-shell\"><div class=\"exam-ui-topbar\"><span>Docs</span><span>Guide</span></div><div class=\"exam-ui-body\"><p class=\"exam-ui-page-title\">Install & usage</p><div class=\"exam-ui-card\"><p class=\"exam-ui-label\">Heading outline</p><div class=\"exam-ui-stack\"><span class=\"exam-ui-chip\">h2 · Install & usage</span><span class=\"exam-ui-chip\">h4 · Install</span><span class=\"exam-ui-chip\">h4 · Usage</span></div><p class=\"exam-ui-muted\">No h1, and h3 is skipped</p></div></div></div>",
+            "htmlZh": "<div class=\"exam-ui-shell\"><div class=\"exam-ui-topbar\"><span>文档</span><span>指南</span></div><div class=\"exam-ui-body\"><p class=\"exam-ui-page-title\">安装与使用</p><div class=\"exam-ui-card\"><p class=\"exam-ui-label\">标题大纲</p><div class=\"exam-ui-stack\"><span class=\"exam-ui-chip\">h2 · 安装与使用</span><span class=\"exam-ui-chip\">h4 · 安装</span><span class=\"exam-ui-chip\">h4 · 使用</span></div><p class=\"exam-ui-muted\">没有 h1，且跳过了 h3</p></div></div></div>",
+            "caption": "The guide page: an h2 title with h4 sections.",
+            "captionZh": "指南页：h2 作标题，章节却是 h4。"
+          }
+        },
+        {
+          "id": "Q6",
+          "title": "Sections with no names",
+          "titleZh": "没有名字的 section",
+          "marks": 5,
+          "contentMdx": "`landing.html` is a product landing page. The main content is already wrapped in `<main>`, but inside it every block is a `<section>` whose title is a plain `<div class=\"title\">`, so no section actually contains a heading. A strip of advertising is also a `<section>`, sitting between the features and the sign-up form, as `regions.png` shows.",
+          "contentMdxZh": "`landing.html` 是一个产品落地页。主内容已经用 `<main>` 包好了，但里面每个区块都是 `<section>`，而它们的标题只是普通的 `<div class=\"title\">`，所以没有任何 section 真正包含标题。一条广告条也是 `<section>`，夹在功能介绍和注册表单之间，如 `regions.png` 所示。",
+          "subQuestions": [
+            {
+              "id": "Q6-a",
+              "label": "(a)",
+              "marks": 1,
+              "questionMdx": "What is wrong with the `<section>` blocks, and which block uses the wrong element for its role?",
+              "answerMdx": "None of the `<section>` blocks contains a heading — their titles are plain `<div>`s — so the sections have no accessible name. The advertising strip is not part of the page's main content, so it should be an `<aside>` (complementary content), not a `<section>`.",
+              "markingMdx": "1 mark for noting that the sections have no heading (so no name), and that the ad strip should be `<aside>`.",
+              "questionMdxZh": "这些 `<section>` 区块有什么问题？哪个区块用错了元素？",
+              "answerMdxZh": "没有任何一个 `<section>` 里有标题——它们的标题都是普通的 `<div>`——所以这些 section 没有可访问名称。广告条并不属于页面的主内容，因此它应该是 `<aside>`（补充性内容），而不是 `<section>`。",
+              "markingMdxZh": "1 分：指出这些 section 没有标题（因此没有名称），且广告条应是 `<aside>`。"
+            },
+            {
+              "id": "Q6-b",
+              "label": "(b)",
+              "marks": 2,
+              "questionMdx": "Why does a `<section>` without a heading cause a problem for assistive technology, and why does labelling the ad as `<aside>` matter?",
+              "answerMdx": "A `<section>` only becomes a meaningful, navigable region when it has an accessible name, and that name comes from a heading (or an `aria-label`). With only a `<div class=\"title\">` inside, the section is just a generic container: screen-reader users get no name to list or jump to, so region navigation cannot distinguish \"Features\" from \"Sign up\". Making the ad an `<aside>` matters because it marks that content as complementary rather than primary: assistive tech can group and skip it, and the reading order makes clear it is not the page's main message. Incorrectly marking the ad as a `<section>` blurs it into the page's structural content.",
+              "markingMdx": "1 mark for explaining that a section needs a heading (or `aria-label`) to get an accessible name, otherwise region navigation cannot identify it.\n1 mark for explaining that `<aside>` marks complementary content so it can be grouped/skipped as not-primary.",
+              "questionMdxZh": "为什么没有标题的 `<section>` 会给辅助技术带来问题？把广告标成 `<aside>` 又为什么重要？",
+              "answerMdxZh": "`<section>` 只有在拥有可访问名称时才会成为一个有意义、可导航的区域，而这个名称来自标题（或 `aria-label`）。如果里面只有一个 `<div class=\"title\">`，这个 section 就只是个通用容器：读屏用户拿不到名字去列出或跳转，区域导航也就无法区分 \"Features\" 和 \"Sign up\"。把广告做成 `<aside>` 很重要，因为它把这部分内容标记为补充性而非主体：辅助技术可以对其分组、跳过，阅读顺序也表明它不是页面的主旨。把广告错标成 `<section>` 会让它混进页面的结构内容里。",
+              "markingMdxZh": "1 分：说明 section 需要一个标题（或 aria-label）才能获得可访问名称，否则区域导航无法识别它。\n1 分：说明 `<aside>` 标记补充性内容，可被分组/跳过，不当作主体。"
+            },
+            {
+              "id": "Q6-c",
+              "label": "(c)",
+              "marks": 2,
+              "questionMdx": "Rewrite the structure so each section is named and the ad has the right role, and explain why this helps a screen-reader user.",
+              "answerMdx": "Replace each `<div class=\"title\">` with a real heading and change the ad strip to `<aside>`: `<main class=\"wrap\"><section class=\"features\"><h2>Features</h2>...</section><aside class=\"ads\"><a href=\"/promo\">Spring sale</a></aside><section class=\"signup\"><h2>Sign up</h2>...</section></main>`. Now each `<section>` gets its name from its `<h2>`, so region and heading navigation can list and jump to \"Features\" and \"Sign up\", and the `<aside>` groups the ad as complementary content that can be skipped. The styling is unchanged because the class names are kept.",
+              "markingMdx": "1 mark for giving each section a real heading (`<h2>`) so it has a name.\n1 mark for changing the ad to `<aside>` and explaining that this makes region navigation and skipping work while keeping the classes/styles.",
+              "questionMdxZh": "请重写结构，让每个 section 都有名字、广告有正确的角色，并解释这为什么对读屏用户有帮助。",
+              "answerMdxZh": "把每个 `<div class=\"title\">` 换成真正的标题，并把广告条改成 `<aside>`：`<main class=\"wrap\"><section class=\"features\"><h2>Features</h2>...</section><aside class=\"ads\"><a href=\"/promo\">Spring sale</a></aside><section class=\"signup\"><h2>Sign up</h2>...</section></main>`。现在每个 `<section>` 都从它的 `<h2>` 获得名称，区域与标题导航就能列出并跳到 \"Features\" 和 \"Sign up\"，`<aside>` 则把广告归为可跳过的补充性内容。因为保留了 class 名，样式不变。",
+              "markingMdxZh": "1 分：给每个 section 一个真正的标题（`<h2>`），使其拥有名称。\n1 分：把广告改成 `<aside>`，并说明这让区域导航与跳过可用，同时保留 class/样式。"
+            }
+          ],
+          "displayNumber": "Q6",
+          "categoryLabel": "Semantic Landmarks and Heading Levels",
+          "categoryLabelZh": "语义地标与标题层级",
+          "displayStyle": "quiz-sample",
+          "mockup": {
+            "files": [
+              {
+                "name": "landing.html",
+                "code": "<main class=\"wrap\">\n  <section class=\"features\">\n    <div class=\"title\">Features</div>\n    <p>Everything you need.</p>\n  </section>\n  <section class=\"ads\">\n    <a href=\"/promo\">Spring sale</a>\n  </section>\n  <section class=\"signup\">\n    <div class=\"title\">Sign up</div>\n    <form>...</form>\n  </section>\n</main>",
+                "codeZh": "<main class=\"wrap\">\n  <section class=\"features\">\n    <!-- 标题只是普通 div，section 没有名字 -->\n    <div class=\"title\">Features</div>\n    <p>Everything you need.</p>\n  </section>\n  <!-- 广告是补充性内容，却用了 section -->\n  <section class=\"ads\">\n    <a href=\"/promo\">Spring sale</a>\n  </section>\n  <section class=\"signup\">\n    <div class=\"title\">Sign up</div>\n    <form>...</form>\n  </section>\n</main>"
+              },
+              {
+                "name": "regions.png",
+                "active": true
+              }
+            ],
+            "viewport": "desktop",
+            "html": "<div class=\"exam-ui-shell\"><div class=\"exam-ui-topbar\"><span>Acme</span><span>Landing</span></div><div class=\"exam-ui-body\"><p class=\"exam-ui-page-title\">Ship faster</p><div class=\"exam-ui-card\"><p class=\"exam-ui-kicker\">region · features</p><p class=\"exam-ui-value\">Features</p><p class=\"exam-ui-muted\">no heading inside, so the region is unnamed</p></div><div class=\"exam-ui-card\"><p class=\"exam-ui-kicker\">region · section</p><p class=\"exam-ui-link\">Spring sale</p><p class=\"exam-ui-muted\">advertising, but marked as a section</p></div><div class=\"exam-ui-card\"><p class=\"exam-ui-kicker\">region · signup</p><p class=\"exam-ui-value\">Sign up</p><p class=\"exam-ui-muted\">no heading inside, so the region is unnamed</p></div></div></div>",
+            "htmlZh": "<div class=\"exam-ui-shell\"><div class=\"exam-ui-topbar\"><span>Acme</span><span>落地页</span></div><div class=\"exam-ui-body\"><p class=\"exam-ui-page-title\">更快上线</p><div class=\"exam-ui-card\"><p class=\"exam-ui-kicker\">区域 · features</p><p class=\"exam-ui-value\">功能</p><p class=\"exam-ui-muted\">内部没有标题，区域没有名字</p></div><div class=\"exam-ui-card\"><p class=\"exam-ui-kicker\">区域 · section</p><p class=\"exam-ui-link\">Spring sale</p><p class=\"exam-ui-muted\">广告内容，却被标成了 section</p></div><div class=\"exam-ui-card\"><p class=\"exam-ui-kicker\">区域 · signup</p><p class=\"exam-ui-value\">注册</p><p class=\"exam-ui-muted\">内部没有标题，区域没有名字</p></div></div></div>",
+            "caption": "The landing page regions: unnamed sections and an ad marked as a section.",
+            "captionZh": "落地页的各区域：未命名的 section，以及被标成 section 的广告。"
+          }
+        },
+        {
+          "id": "Q7",
+          "title": "The wrong alt text",
+          "titleZh": "alt 写反了",
+          "marks": 5,
+          "contentMdx": "`gallery.html` shows a product gallery. The decorative background swirl is given `alt=\"decorative swirl pattern\"`, while the product photo that carries the price and the offer is given `alt=\"\"`. A photo is also wrapped in `<figure>` but its caption sits in a plain `<p>`, as `alt.png` shows.",
+          "contentMdxZh": "`gallery.html` 是一个产品画廊页。作为装饰的背景花纹被写成了 `alt=\"decorative swirl pattern\"`，而真正承载价格和优惠信息的产品照片却写成了 `alt=\"\"`。还有一张照片用 `<figure>` 包着，但它的说明文字却放在普通的 `<p>` 里，如 `alt.png` 所示。",
+          "subQuestions": [
+            {
+              "id": "Q7-a",
+              "label": "(a)",
+              "marks": 1,
+              "questionMdx": "Which two images have their `alt` the wrong way round, and what is the caption element problem?",
+              "answerMdx": "The decorative swirl should have an empty `alt=\"\"` (it is purely decorative) but instead has a long description; the informative product photo should describe the product but instead has `alt=\"\"` (empty). The caption for the framed photo is in a `<p>` and should be in a `<figcaption>` inside the `<figure>`.",
+              "markingMdx": "1 mark for identifying that the decorative image should have empty alt and the informative image should be described, and that the caption should be a `<figcaption>`.",
+              "questionMdxZh": "哪两张图片的 `alt` 写反了？说明文字的元素又有什么问题？",
+              "answerMdxZh": "装饰用的花纹本该用空 `alt=\"\"`（它纯属装饰），却被写了长描述；承载信息的产品照片本该描述产品，却是 `alt=\"\"`（空）。那张带框照片的说明文字放在 `<p>` 里，应该放在 `<figure>` 内的 `<figcaption>` 中。",
+              "markingMdxZh": "1 分：指出装饰图应为空 alt、信息图应被描述，且说明文字应是 `<figcaption>`。"
+            },
+            {
+              "id": "Q7-b",
+              "label": "(b)",
+              "marks": 2,
+              "questionMdx": "Why is empty `alt` right for the decorative image but wrong for the product photo, and what does `<figcaption>` add over a plain `<p>`?",
+              "answerMdx": "`alt` is the text alternative a screen reader announces instead of the image. If the image is decorative and adds no information, a verbose `alt` is noise the user must listen through, so `alt=\"\"` tells the reader to skip it — the correct choice for the swirl. For the product photo the image itself is the content, so `alt=\"\"` hides it completely: the user loses the price and offer. Here the `alt` must describe the product. `<figcaption>` is programmatically tied to its `<figure>`, so assistive tech presents the caption as belonging to that image; a sibling `<p>` has no such relationship and reads as unrelated text.",
+              "markingMdx": "1 mark for explaining empty alt = decorative/skip vs a descriptive alt for a meaningful image (and why the swap hides or spams information).\n1 mark for explaining that `<figcaption>` is programmatically associated with the figure, unlike a plain `<p>`.",
+              "questionMdxZh": "为什么空 `alt` 对装饰图是对的、对产品图却错了？`<figcaption>` 相比普通 `<p>` 多了什么？",
+              "answerMdxZh": "`alt` 是读屏器用来替代图片朗读的文本替代。若图片是装饰性的、不承载信息，冗长的 `alt` 就是用户必须听完的噪音，所以 `alt=\"\"` 让读屏器跳过它——这正是花纹图应有的选择。对产品图而言，图片本身就是内容，`alt=\"\"` 会把它完全隐藏：用户就丢掉了价格和优惠信息。这里 `alt` 必须描述产品。`<figcaption>` 与它的 `<figure>` 在程序上绑定，辅助技术会把说明呈现为“属于这张图”；而并列的 `<p>` 没有这种关系，会被当作无关文字朗读。",
+              "markingMdxZh": "1 分：说明空 alt = 装饰/跳过，而信息图需要描述性 alt（并解释写反会隐藏或干扰信息）。\n1 分：说明 `<figcaption>` 与 figure 在程序上关联，而普通 `<p>` 不会。"
+            },
+            {
+              "id": "Q7-c",
+              "label": "(c)",
+              "marks": 2,
+              "questionMdx": "Rewrite the three spots so the alternative text and the caption are correct, and explain why each change is right.",
+              "answerMdx": "Decorative swirl: `<img src=\"swirl.svg\" alt=\"\">` — the empty alt lets the screen reader skip it. Product photo: `<img src=\"shoe.jpg\" alt=\"Red running shoe, $120, on sale\">` — the alt now carries the information the picture shows. Framed photo: `<figure><img src=\"beach.jpg\" alt=\"Bondi Beach at sunrise\"><figcaption>Morning near the harbour</figcaption></figure>` — the `figcaption` binds the caption to the figure. Each fix matches the alt to the image's role and the element to the relationship it must express.",
+              "markingMdx": "1 mark for an empty alt on the decorative image and a descriptive alt on the product photo.\n1 mark for moving the caption into `<figcaption>` inside the `<figure>`, with a matching reason.",
+              "questionMdxZh": "请重写这三处，让替代文本和说明文字正确，并解释每处改动为什么对。",
+              "answerMdxZh": "装饰花纹：`<img src=\"swirl.svg\" alt=\"\">`——空 alt 让读屏器跳过它。产品图：`<img src=\"shoe.jpg\" alt=\"Red running shoe, $120, on sale\">`——alt 现在承载了图片所展示的信息。带框照片：`<figure><img src=\"beach.jpg\" alt=\"Bondi Beach at sunrise\"><figcaption>Morning near the harbour</figcaption></figure>`——`figcaption` 把说明绑定到 figure。每处改动都是让 alt 与图片的角色相匹配、让元素表达它必须表达的关系。",
+              "markingMdxZh": "1 分：装饰图用空 alt、产品图用描述性 alt。\n1 分：把说明移入 `<figure>` 内的 `<figcaption>`，并给出相应理由。"
+            }
+          ],
+          "displayNumber": "Q7",
+          "categoryLabel": "Links, Images and Paths",
+          "categoryLabelZh": "链接、图片与路径",
+          "displayStyle": "quiz-sample",
+          "mockup": {
+            "files": [
+              {
+                "name": "gallery.html",
+                "code": "<img class=\"swirl\" src=\"swirl.svg\" alt=\"decorative swirl pattern\">\n<img class=\"shoe\" src=\"shoe.jpg\" alt=\"\">\n\n<figure>\n  <img src=\"beach.jpg\" alt=\"Bondi Beach at sunrise\">\n  <p>Morning near the harbour</p>\n</figure>",
+                "codeZh": "<!-- 装饰图却写了长 alt -->\n<img class=\"swirl\" src=\"swirl.svg\" alt=\"decorative swirl pattern\">\n<!-- 信息图却是空 alt -->\n<img class=\"shoe\" src=\"shoe.jpg\" alt=\"\">\n\n<figure>\n  <img src=\"beach.jpg\" alt=\"Bondi Beach at sunrise\">\n  <!-- 说明文字应是 figcaption，而不是普通 p -->\n  <p>Morning near the harbour</p>\n</figure>"
+              },
+              {
+                "name": "alt.png",
+                "active": true
+              }
+            ],
+            "viewport": "desktop",
+            "html": "<div class=\"exam-ui-shell\"><div class=\"exam-ui-topbar\"><span>Shop</span><span>Gallery</span></div><div class=\"exam-ui-body\"><p class=\"exam-ui-page-title\">Products</p><div class=\"exam-ui-grid-2\"><div class=\"exam-ui-card\"><div class=\"exam-ui-outline\"><span class=\"exam-ui-muted\">swirl.svg</span></div><p class=\"exam-ui-label\">Decorative</p><p class=\"exam-ui-muted\">alt=\"decorative swirl pattern\"</p></div><div class=\"exam-ui-card\"><div class=\"exam-ui-outline\"><span class=\"exam-ui-muted\">shoe.jpg</span></div><p class=\"exam-ui-label\">Product</p><p class=\"exam-ui-muted\">alt=\"\"</p></div></div></div></div>",
+            "htmlZh": "<div class=\"exam-ui-shell\"><div class=\"exam-ui-topbar\"><span>商店</span><span>画廊</span></div><div class=\"exam-ui-body\"><p class=\"exam-ui-page-title\">产品</p><div class=\"exam-ui-grid-2\"><div class=\"exam-ui-card\"><div class=\"exam-ui-outline\"><span class=\"exam-ui-muted\">swirl.svg</span></div><p class=\"exam-ui-label\">装饰图</p><p class=\"exam-ui-muted\">alt=\"decorative swirl pattern\"</p></div><div class=\"exam-ui-card\"><div class=\"exam-ui-outline\"><span class=\"exam-ui-muted\">shoe.jpg</span></div><p class=\"exam-ui-label\">产品图</p><p class=\"exam-ui-muted\">alt=\"\"</p></div></div></div></div>",
+            "caption": "The gallery: the decorative image has a long alt and the product image has none.",
+            "captionZh": "画廊：装饰图带了长 alt，产品图却是空 alt。"
+          }
+        },
+        {
+          "id": "Q8",
+          "title": "The wrong kinds of lists",
+          "titleZh": "用错了的列表",
+          "marks": 5,
+          "contentMdx": "`recipe.html` is a porridge recipe. The steps, which have a fixed order, are marked up as a `<ul>`; the nutrition facts, which are term-and-value pairs, are written as two `<p>` elements with bold labels, as `lists.png` shows.",
+          "contentMdxZh": "`recipe.html` 是一份燕麦粥食谱。有固定顺序的步骤被写成了 `<ul>`；而作为“名词—数值”配对的营养成分，被写成两个带粗体标签的 `<p>`，如 `lists.png` 所示。",
+          "subQuestions": [
+            {
+              "id": "Q8-a",
+              "label": "(a)",
+              "marks": 1,
+              "questionMdx": "Which element should the steps use instead of `<ul>`, and which element fits the term-and-value nutrition facts?",
+              "answerMdx": "The steps have a fixed order, so they should be an ordered list, `<ol>` with `<li>` items. The term-and-value pairs are a description list, `<dl>` with `<dt>` for each term and `<dd>` for its value.",
+              "markingMdx": "1 mark for naming `<ol>` (with `<li>`) for the steps and `<dl>` (with `<dt>`/`<dd>`) for the nutrition facts.",
+              "questionMdxZh": "步骤应该用哪个元素而不是 `<ul>`？那种“名词—数值”的营养成分又适合哪个元素？",
+              "answerMdxZh": "步骤有固定顺序，应使用有序列表 `<ol>`（配 `<li>`）。名词—数值配对属于描述列表 `<dl>`，用 `<dt>` 写名词、`<dd>` 写数值。",
+              "markingMdxZh": "1 分：步骤用 `<ol>`（配 `<li>`），营养成分用 `<dl>`（配 `<dt>`/`<dd>`）。"
+            },
+            {
+              "id": "Q8-b",
+              "label": "(b)",
+              "marks": 2,
+              "questionMdx": "Why does `<ul>` vs `<ol>` matter to a screen reader, and what does `<dl>` express that two `<p>`s do not?",
+              "answerMdx": "`<ul>` and `<ol>` announce different things: both say \"list\", but `<ol>` also tells assistive tech the items are ordered, so it can report \"item 2 of 3\" and the user knows the sequence matters. Marking ordered steps as `<ul>` tells the user the order is arbitrary, which is false for a recipe — they might add milk before boiling the oats. `<dl>` expresses that each term is paired with its description, so assistive tech can convey \"Calories: 320 kcal\" as a term and its value. Two `<p>`s are just two sentences; the pairing lives only in the visual bold text, so a screen reader hears unrelated lines and the relationship is lost.",
+              "markingMdx": "1 mark for explaining that `<ol>` signals a meaningful order (screen readers announce position/numbers) while `<ul>` implies no order.\n1 mark for explaining that `<dl>` encodes term→description pairs that plain `<p>`s do not.",
+              "questionMdxZh": "对读屏器来说，`<ul>` 和 `<ol>` 为什么有区别？`<dl>` 又表达了两个 `<p>` 表达不了的东西吗？",
+              "answerMdxZh": "`<ul>` 与 `<ol>` 播报的内容不同：两者都会说 \"list\"，但 `<ol>` 还告诉辅助技术条目是有顺序的，于是它可报出 \"item 2 of 3\"，用户就知道顺序有意义。把有序步骤标成 `<ul>` 会告诉用户顺序是任意的，而这对食谱是错的——用户可能在煮燕麦之前就加牛奶。`<dl>` 表达的是每个名词与它的描述成对出现，辅助技术就能把 \"Calories: 320 kcal\" 作为名词及其取值传达。两个 `<p>` 只是两句话；配对只存在于视觉上的粗体文字里，读屏器听到的是两行无关文字，关系就丢失了。",
+              "markingMdxZh": "1 分：说明 `<ol>` 表示顺序有意义（读屏器会播报位置/编号），`<ul>` 则表示无序。\n1 分：说明 `<dl>` 编码了“名词→描述”的配对，普通 `<p>` 做不到。"
+            },
+            {
+              "id": "Q8-c",
+              "label": "(c)",
+              "marks": 2,
+              "questionMdx": "Rewrite the two lists with the right elements, and explain why each fix works.",
+              "answerMdx": "Steps: `<ol><li>Boil the oats.</li><li>Stir in the milk.</li><li>Top with berries.</li></ol>` — the `ol` marks the items as ordered and numbers them, matching the recipe's fixed sequence. Nutrition: `<dl><dt>Calories</dt><dd>320 kcal</dd><dt>Protein</dt><dd>9 g</dd></dl>` — each `dt` is the term and the following `dd` its description, so the pairing is in the markup, not just the styling. Both fixes replace a presentational choice with the element that carries the meaning the content actually has.",
+              "markingMdx": "1 mark for rewriting the steps as `<ol>`/`<li>`.\n1 mark for rewriting the nutrition facts as `<dl>`/`<dt>`/`<dd>`, with the reason that the markup now encodes the pairing.",
+              "questionMdxZh": "请用正确的元素重写这两个列表，并解释每个改法为什么有效。",
+              "answerMdxZh": "步骤：`<ol><li>Boil the oats.</li><li>Stir in the milk.</li><li>Top with berries.</li></ol>`——`ol` 把条目标记为有序并编号，与食谱固定的先后顺序相符。营养：`<dl><dt>Calories</dt><dd>320 kcal</dd><dt>Protein</dt><dd>9 g</dd></dl>`——每个 `dt` 是名词，紧随其后的 `dd` 是其描述，于是配对存在于 markup 中，而不只是样式里。两处改动都用真正承载内容含义的元素，替换了纯表现性的选择。",
+              "markingMdxZh": "1 分：把步骤重写为 `<ol>`/`<li>`。\n1 分：把营养成分重写为 `<dl>`/`<dt>`/`<dd>`，并说明 markup 现在编码了这个配对。"
+            }
+          ],
+          "displayNumber": "Q8",
+          "categoryLabel": "Lists, Tables and Code",
+          "categoryLabelZh": "列表、表格与代码标签",
+          "displayStyle": "quiz-sample",
+          "mockup": {
+            "files": [
+              {
+                "name": "recipe.html",
+                "code": "<h1>Morning porridge</h1>\n<h2>Steps</h2>\n<ul class=\"steps\">\n  <li>Boil the oats.</li>\n  <li>Stir in the milk.</li>\n  <li>Top with berries.</li>\n</ul>\n<h2>Nutrition</h2>\n<p><strong>Calories</strong> — 320 kcal</p>\n<p><strong>Protein</strong> — 9 g</p>",
+                "codeZh": "<h1>Morning porridge</h1>\n<h2>Steps</h2>\n<!-- 有固定顺序的步骤却用了 ul -->\n<ul class=\"steps\">\n  <li>Boil the oats.</li>\n  <li>Stir in the milk.</li>\n  <li>Top with berries.</li>\n</ul>\n<h2>Nutrition</h2>\n<!-- 名词—数值配对却写成普通段落 -->\n<p><strong>Calories</strong> — 320 kcal</p>\n<p><strong>Protein</strong> — 9 g</p>"
+              },
+              {
+                "name": "lists.png",
+                "active": true
+              }
+            ],
+            "viewport": "desktop",
+            "html": "<div class=\"exam-ui-shell\"><div class=\"exam-ui-topbar\"><span>Recipe</span><span>Porridge</span></div><div class=\"exam-ui-body\"><p class=\"exam-ui-page-title\">Morning porridge</p><div class=\"exam-ui-card\"><p class=\"exam-ui-label\">Steps</p><ul class=\"exam-ui-list\"><li class=\"exam-ui-list-row\">Boil the oats.</li><li class=\"exam-ui-list-row\">Stir in the milk.</li><li class=\"exam-ui-list-row\">Top with berries.</li></ul><p class=\"exam-ui-muted\">Ordered steps shown with bullets</p></div><div class=\"exam-ui-card\"><p class=\"exam-ui-label\">Nutrition</p><p class=\"exam-ui-value\">Calories — 320 kcal</p><p class=\"exam-ui-value\">Protein — 9 g</p><p class=\"exam-ui-muted\">Term and value as plain paragraphs</p></div></div></div>",
+            "htmlZh": "<div class=\"exam-ui-shell\"><div class=\"exam-ui-topbar\"><span>食谱</span><span>燕麦粥</span></div><div class=\"exam-ui-body\"><p class=\"exam-ui-page-title\">晨间燕麦粥</p><div class=\"exam-ui-card\"><p class=\"exam-ui-label\">步骤</p><ul class=\"exam-ui-list\"><li class=\"exam-ui-list-row\">煮燕麦。</li><li class=\"exam-ui-list-row\">拌入牛奶。</li><li class=\"exam-ui-list-row\">加上莓果。</li></ul><p class=\"exam-ui-muted\">有序的步骤却显示成圆点</p></div><div class=\"exam-ui-card\"><p class=\"exam-ui-label\">营养成分</p><p class=\"exam-ui-value\">Calories — 320 kcal</p><p class=\"exam-ui-value\">Protein — 9 g</p><p class=\"exam-ui-muted\">名词与数值只是普通段落</p></div></div></div>",
+            "caption": "The recipe: ordered steps using bullets and nutrition facts as plain paragraphs.",
+            "captionZh": "食谱：有序步骤用了圆点列表，营养成分却只是普通段落。"
+          }
+        },
+        {
+          "id": "Q9",
+          "title": "A link that acts, a button that navigates",
+          "titleZh": "链接装成动作、按钮装成导航",
+          "marks": 5,
+          "contentMdx": "`app.html` is a task app. The \"Save draft\" action is written as `<a href=\"#\">Save draft</a>`, and the \"Docs\" navigation item is written as `<button onclick=\"location.href='/docs'\">Docs</button>`, as `ui.png` shows.",
+          "contentMdxZh": "`app.html` 是一个任务应用。\"Save draft\" 这个动作被写成 `<a href=\"#\">Save draft</a>`，而 \"Docs\" 这个导航项被写成 `<button onclick=\"location.href='/docs'\">Docs</button>`，如 `ui.png` 所示。",
+          "subQuestions": [
+            {
+              "id": "Q9-a",
+              "label": "(a)",
+              "marks": 1,
+              "questionMdx": "Which element should each of these two be, and why are they swapped?",
+              "answerMdx": "\"Save draft\" performs an action, so it should be a `<button>`; \"Docs\" navigates to a page, so it should be an `<a href=\"/docs\">`. They are swapped: the action is a link and the navigation is a button.",
+              "markingMdx": "1 mark for stating the action should be a `<button>` and the navigation should be an `<a href>`.",
+              "questionMdxZh": "这两处分别该用什么元素？为什么说它们被弄反了？",
+              "answerMdxZh": "\"Save draft\" 执行的是动作，应该是 `<button>`；\"Docs\" 是跳转到某个页面，应该是 `<a href=\"/docs\">`。它们是反的：动作被做成了链接，导航被做成了按钮。",
+              "markingMdxZh": "1 分：说明动作应是 `<button>`、导航应是 `<a href>`。"
+            },
+            {
+              "id": "Q9-b",
+              "label": "(b)",
+              "marks": 2,
+              "questionMdx": "Why does `<a href=\"#\">Save draft</a>` behave badly, and what do you lose by making the navigation a `<button>`?",
+              "answerMdx": "A link is announced as a link and is expected to take the user somewhere; with `href=\"#\"` it points at the top of the current page, so activating \"Save draft\" just jumps the view to the top and saves nothing, while assistive tech still calls it a link. It also gets link affordances it should not have (open in new tab, copy link address). Making \"Docs\" a `<button>` loses the browser's link behaviour: it cannot be opened in a new tab, copied, bookmarked or long-pressed, and it is announced as a button, so users expect an in-page action rather than navigation. A `<button onclick=...>` also breaks if JavaScript fails, whereas a real link works on its own.",
+              "markingMdx": "1 mark for explaining that `href=\"#\"` makes the action jump to the page top and is misleadingly announced as a link.\n1 mark for explaining that a `<button>` for navigation loses open-in-new-tab / copy / bookmark behaviour and is announced as a button.",
+              "questionMdxZh": "`<a href=\"#\">Save draft</a>` 为什么表现很糟？把导航做成 `<button>` 又会失去什么？",
+              "answerMdxZh": "链接会被播报为链接，用户预期它会把人带到某处；而 `href=\"#\"` 指向当前页面顶部，于是激活 \"Save draft\" 只会让视图跳到顶部、什么都没保存，辅助技术却仍把它叫链接。它还带上了本不该有的链接能力（新标签页打开、复制链接地址）。把 \"Docs\" 做成 `<button>` 则丢掉了浏览器的链接行为：无法新标签页打开、无法复制、无法收藏或长按，而且它被播报为按钮，用户会预期这是页内动作而非跳转。`<button onclick=...>` 在 JavaScript 失效时也会坏掉，而真正的链接本身就能工作。",
+              "markingMdxZh": "1 分：说明 `href=\"#\"` 让动作跳到页面顶部，且被误导性地播报为链接。\n1 分：说明用 `<button>` 做导航会失去新标签页打开/复制/收藏等行为，并被播报为按钮。"
+            },
+            {
+              "id": "Q9-c",
+              "label": "(c)",
+              "marks": 2,
+              "questionMdx": "Rewrite both so the element matches the job, and explain why the fix works.",
+              "answerMdx": "Action: `<button type=\"button\">Save draft</button>` — a button is announced as a button, is focusable and keyboard-operable by default, and performs its action without moving the page. Navigation: `<a href=\"/docs\">Docs</a>` — a real link works without JavaScript, can be opened in a new tab and copied, and is announced as a link. Swapping them back means each control now exposes the role, keyboard behaviour and browser affordances that match what it actually does.",
+              "markingMdx": "1 mark for rewriting the action as `<button>` (ideally `type=\"button\"`) and the navigation as `<a href=\"/docs\">`.\n1 mark for explaining that the correct element brings the matching role, keyboard behaviour and browser affordances.",
+              "questionMdxZh": "请重写这两处，让元素与它的职责相符，并解释改法为什么有效。",
+              "answerMdxZh": "动作：`<button type=\"button\">Save draft</button>`——按钮被播报为按钮，默认可聚焦、可用键盘操作，并且执行动作时不移动页面。导航：`<a href=\"/docs\">Docs</a>`——真正的链接不依赖 JavaScript 即可工作，可以新标签页打开、可以复制，并被播报为链接。把它们换回来，意味着每个控件现在都暴露了与其实际职责相匹配的角色、键盘行为和浏览器能力。",
+              "markingMdxZh": "1 分：把动作重写为 `<button>`（最好带 `type=\"button\"`），把导航重写为 `<a href=\"/docs\">`。\n1 分：说明正确的元素带来匹配的角色、键盘行为和浏览器能力。"
+            }
+          ],
+          "displayNumber": "Q9",
+          "categoryLabel": "Links, Images and Paths",
+          "categoryLabelZh": "链接、图片与路径",
+          "displayStyle": "quiz-sample",
+          "mockup": {
+            "files": [
+              {
+                "name": "app.html",
+                "code": "<p>New task</p>\n<a href=\"#\">Save draft</a>\n<button onclick=\"location.href='/docs'\">Docs</button>",
+                "codeZh": "<p>New task</p>\n<!-- 动作却做成了链接 -->\n<a href=\"#\">Save draft</a>\n<!-- 导航却做成了按钮 -->\n<button onclick=\"location.href='/docs'\">Docs</button>"
+              },
+              {
+                "name": "ui.png",
+                "active": true
+              }
+            ],
+            "viewport": "desktop",
+            "html": "<div class=\"exam-ui-shell\"><div class=\"exam-ui-topbar\"><span>Tasks</span><span>Draft</span></div><div class=\"exam-ui-body\"><p class=\"exam-ui-page-title\">New task</p><div class=\"exam-ui-card\"><p class=\"exam-ui-label\">Actions</p><div class=\"exam-ui-button-row\"><a class=\"exam-ui-link\">Save draft</a><button class=\"exam-ui-button\">Docs</button></div><p class=\"exam-ui-muted\">The action is a link; the navigation is a button.</p></div></div></div>",
+            "htmlZh": "<div class=\"exam-ui-shell\"><div class=\"exam-ui-topbar\"><span>任务</span><span>草稿</span></div><div class=\"exam-ui-body\"><p class=\"exam-ui-page-title\">新任务</p><div class=\"exam-ui-card\"><p class=\"exam-ui-label\">操作</p><div class=\"exam-ui-button-row\"><a class=\"exam-ui-link\">Save draft</a><button class=\"exam-ui-button\">Docs</button></div><p class=\"exam-ui-muted\">动作是链接，导航却是按钮。</p></div></div></div>",
+            "caption": "The task app: the action is a link and the navigation is a button.",
+            "captionZh": "任务应用：动作是链接，导航却是按钮。"
+          }
+        },
+        {
+          "id": "Q10",
+          "title": "A fake button and a missing language",
+          "titleZh": "假按钮与缺失的 lang",
+          "marks": 5,
+          "contentMdx": "`index.html` has an `<html>` element with no `lang` attribute, and the \"Buy\" control is a `<div class=\"btn\" role=\"button\">Buy</div>` that cannot be focused or activated by keyboard, as `a11y.png` shows.",
+          "contentMdxZh": "`index.html` 的 `<html>` 没有 `lang` 属性，而 \"Buy\" 控件是一个 `<div class=\"btn\" role=\"button\">Buy</div>`，无法被键盘聚焦或激活，如 `a11y.png` 所示。",
+          "subQuestions": [
+            {
+              "id": "Q10-a",
+              "label": "(a)",
+              "marks": 1,
+              "questionMdx": "What is missing from the `<html>` element, and what is wrong with the \"Buy\" control?",
+              "answerMdx": "The `<html>` element is missing the `lang` attribute, so the page has no declared language. The \"Buy\" control is a `<div>` with `role=\"button\"`, a fake button — it is not a real `<button>` element.",
+              "markingMdx": "1 mark for naming the missing `lang` attribute on `<html>` and identifying the `<div role=\"button\">` as a fake button.",
+              "questionMdxZh": "`<html>` 元素缺了什么？\"Buy\" 这个控件又有什么问题？",
+              "answerMdxZh": "`<html>` 元素缺了 `lang` 属性，页面没有声明语言。\"Buy\" 控件是一个带 `role=\"button\"` 的 `<div>`，是个假按钮——它不是真正的 `<button>` 元素。",
+              "markingMdxZh": "1 分：说出 `<html>` 缺少 `lang` 属性，并指出 `<div role=\"button\">` 是假按钮。"
+            },
+            {
+              "id": "Q10-b",
+              "label": "(b)",
+              "marks": 2,
+              "questionMdx": "Why does the missing `lang` matter to assistive technology, and why isn't adding `role=\"button\"` to a `<div>` enough?",
+              "answerMdx": "Screen readers use the document's language to choose the correct pronunciation rules, and browsers use it for spell-checking and translation; with no `lang`, those tools guess and may read English with the wrong accent or offer the wrong dictionary. For the control, `role=\"button\"` only changes how the element is announced (as a button) — it does not add any of a button's behaviour. A `<div>` is not focusable and has no keyboard activation, so a keyboard user cannot Tab to \"Buy\" or press Enter/Space to activate it; ARIA changes the name and role, not the behaviour. That is why the rule is \"no ARIA is better than bad ARIA\": use the native element, which gives the role and the behaviour together.",
+              "markingMdx": "1 mark for explaining that `lang` drives screen-reader pronunciation and spell-check/translation, so guessing the language mispronounces or mistranslates.\n1 mark for explaining that `role=\"button\"` only changes the announced role and adds no focus or keyboard activation, so a keyboard user cannot use the fake button.",
+              "questionMdxZh": "缺失 `lang` 为什么对辅助技术有影响？为什么给 `<div>` 加 `role=\"button\"` 还不够？",
+              "answerMdxZh": "读屏器用文档语言选择正确的发音规则，浏览器也用它做拼写检查和翻译；没有 `lang` 时，这些工具只能猜，可能用错误口音朗读英文或给出错误的词典。对控件而言，`role=\"button\"` 只改变元素被播报的方式（被读成按钮）——它不会补上按钮的任何行为。`<div>` 不可聚焦、也没有键盘激活方式，所以键盘用户无法 Tab 到 \"Buy\"，也无法按 Enter/Space 激活它；ARIA 改变的是名称和角色，不是行为。这就是那条规则的原因：\"没有 ARIA 好过糟糕的 ARIA\"——应使用原生元素，它会同时给出角色和行为。",
+              "markingMdxZh": "1 分：说明 `lang` 决定读屏发音、拼写检查与翻译，猜语言会导致读错或译错。\n1 分：说明 `role=\"button\"` 只改变被播报的角色，不提供聚焦或键盘激活，键盘用户无法使用这个假按钮。"
+            },
+            {
+              "id": "Q10-c",
+              "label": "(c)",
+              "marks": 2,
+              "questionMdx": "Fix the document so the language is declared and the control is a real button, and explain why this is better than patching the `<div>`.",
+              "answerMdx": "Add the language to the root element — `<html lang=\"en\">` — so screen readers, spell-checkers and translators no longer have to guess. Replace the fake button with the native element: `<button type=\"button\" class=\"btn\">Buy</button>`. A real `<button>` is focusable and keyboard-operable and is announced as a button with no ARIA needed, so the role and the behaviour arrive together. Patching the `<div>` instead would mean adding `tabindex=\"0\"` and a keydown handler to reproduce what the browser already does for free, which is more code and more ways to get it wrong.",
+              "markingMdx": "1 mark for adding `lang` to `<html>` (e.g. `<html lang=\"en\">`).\n1 mark for replacing the `<div role=\"button\">` with a real `<button>`, explaining that the native element provides role and keyboard behaviour together.",
+              "questionMdxZh": "请修复文档，声明语言并把控件改成真正的按钮，并解释这为什么比给 `<div>` 打补丁更好。",
+              "answerMdxZh": "在根元素上声明语言——`<html lang=\"en\">`——这样读屏器、拼写检查和翻译就不必再猜。把假按钮换成原生元素：`<button type=\"button\" class=\"btn\">Buy</button>`。真正的 `<button>` 可聚焦、可键盘操作，并被播报为按钮、无需任何 ARIA，因此角色和行为一起到位。若改为给 `<div>` 打补丁，就要加 `tabindex=\"0\"` 和一个 keydown 处理程序，去复现浏览器本就免费提供的东西，代码更多、也更容易出错。",
+              "markingMdxZh": "1 分：给 `<html>` 加上 `lang`（如 `<html lang=\"en\">`）。\n1 分：把 `<div role=\"button\">` 换成真正的 `<button>`，并说明原生元素同时提供角色与键盘行为。"
+            }
+          ],
+          "displayNumber": "Q10",
+          "categoryLabel": "HTML Document Structure",
+          "categoryLabelZh": "HTML 文档结构",
+          "displayStyle": "quiz-sample",
+          "mockup": {
+            "files": [
+              {
+                "name": "index.html",
+                "code": "<!doctype html>\n<html>\n  <body>\n    <h1>Running shoe — $120</h1>\n    <div class=\"btn\" role=\"button\">Buy</div>\n  </body>\n</html>",
+                "codeZh": "<!doctype html>\n<!-- 缺少 lang 属性 -->\n<html>\n  <body>\n    <h1>Running shoe — $120</h1>\n    <!-- 假按钮：div + role=\"button\"，不可聚焦 -->\n    <div class=\"btn\" role=\"button\">Buy</div>\n  </body>\n</html>"
+              },
+              {
+                "name": "a11y.png",
+                "active": true
+              }
+            ],
+            "viewport": "desktop",
+            "html": "<div class=\"exam-ui-shell\"><div class=\"exam-ui-topbar\"><span>Shop</span><span>Item</span></div><div class=\"exam-ui-body\"><p class=\"exam-ui-page-title\">Running shoe</p><div class=\"exam-ui-card\"><p class=\"exam-ui-label\">Price</p><p class=\"exam-ui-value\">$120</p><div class=\"exam-ui-button-row\"><div class=\"exam-ui-button\">Buy</div></div><p class=\"exam-ui-muted\">The Buy control is a div with role=\"button\" and cannot be focused</p></div></div></div>",
+            "htmlZh": "<div class=\"exam-ui-shell\"><div class=\"exam-ui-topbar\"><span>商店</span><span>商品</span></div><div class=\"exam-ui-body\"><p class=\"exam-ui-page-title\">跑鞋</p><div class=\"exam-ui-card\"><p class=\"exam-ui-label\">价格</p><p class=\"exam-ui-value\">$120</p><div class=\"exam-ui-button-row\"><div class=\"exam-ui-button\">Buy</div></div><p class=\"exam-ui-muted\">这个 Buy 控件是带 role=\"button\" 的 div，无法被聚焦</p></div></div></div>",
+            "caption": "The product page: a div pretending to be a button on a page with no lang.",
+            "captionZh": "产品页：一个假装成按钮的 div，且页面没有 lang。"
+          }
         }
-      ]
+      ],
+      "time": "2026-11-12 10:00"
     }
   ]
 }

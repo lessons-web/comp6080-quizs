@@ -3,12 +3,17 @@
   "exams": [
     {
       "id": "SPRINT1-QUIZ12",
-      "title": "Mock Quiz 1 & 2 — Sprint Paper",
-      "titleZh": "模拟 Quiz 1 & 2 · 冲刺卷",
-      "description": "A sprint revision paper for Quiz 1 and Quiz 2: eight questions covering Weeks 1-5 lectures and tutorials (semantic HTML, CSS layout, JavaScript and the DOM, async, fetch, application state and UI/UX), three sub-questions each, with screenshot-style mockups. React (the Week 5 React lectures) is out of scope; Week 5 UI/UX content is included.",
-      "descriptionZh": "面向 Quiz 1 与 Quiz 2 的冲刺复习卷：共 8 道大题，覆盖 Weeks 1-5 的讲义与辅导课内容（语义化 HTML、CSS 布局、JavaScript 与 DOM、异步、fetch、应用状态与 UI/UX），每题 3 个子题，配套截图感 mockup。React（Week 5 的 React 讲义）不在范围内；Week 5 的 UI/UX 内容仍然包含。",
-      "totalMarks": 60,
-      "tags": ["冲刺卷", "Quiz1-2", "Weeks1-5", "期末冲刺"],
+      "title": "COMP6080 Sprint Paper 01",
+      "titleZh": "COMP6080 冲刺卷01",
+      "description": "A sprint revision paper for Quiz 1 and Quiz 2: ten questions covering Weeks 1-5 lectures and tutorials (semantic HTML, CSS layout, JavaScript and the DOM, async, fetch, application state and UI/UX), three sub-questions each, with screenshot-style mockups. React (the Week 5 React lectures) is out of scope; Week 5 UI/UX content is included.",
+      "descriptionZh": "面向 Quiz 1 与 Quiz 2 的冲刺复习卷：共 10 道大题，覆盖 Weeks 1-5 的讲义与辅导课内容（语义化 HTML、CSS 布局、JavaScript 与 DOM、异步、fetch、应用状态与 UI/UX），每题 3 个子题，配套截图感 mockup。React（Week 5 的 React 讲义）不在范围内；Week 5 的 UI/UX 内容仍然包含。",
+      "totalMarks": 76,
+      "tags": [
+        "冲刺卷",
+        "Quiz1-2",
+        "Weeks1-5",
+        "期末冲刺"
+      ],
       "questions": [
         {
           "id": "Q1",
@@ -529,8 +534,139 @@
           },
           "titleZh": "没人找得到的按钮",
           "contentMdxZh": "一个账户设置面板里有一个主操作 \"Save\" 和一个破坏性操作 \"Delete account\"。两者用相同的主色和相同的尺寸样式、并排摆放，如 `panel.png` 所示。客服反馈：用户想保存时却总是点到 \"Delete account\"。"
+        },
+        {
+          "id": "Q9",
+          "title": "The blue button that turns grey",
+          "titleZh": "变灰的蓝色按钮",
+          "marks": 8,
+          "contentMdx": "A checkout card holds a button whose class is `primary`, and that button should be blue (see `card.css`). On the page it renders grey instead, as `button.png` shows. The developer is certain the `.primary { background: blue }` rule is correct, so why does the grey rule take over?",
+          "contentMdxZh": "一个结账卡片里有一个 `primary` 类的按钮，本应是蓝色（见 `card.css`）。但在页面上它却显示为灰色，如 `button.png` 所示。开发者确信 `.primary { background: blue }` 这条规则没问题——那灰色规则为什么会胜出？",
+          "subQuestions": [
+            {
+              "id": "Q9-a",
+              "label": "(a)",
+              "marks": 3,
+              "questionMdx": "Compute the specificity of the selectors `.primary` and `.card button`, and explain why the grey rule wins over the blue one.",
+              "answerMdx": "Specificity is a triple of (ids, classes, types). `.primary` is (0,1,0) — a single class. `.card button` is (0,1,1) — one class plus one type selector. When two rules set the same property, the one with the higher triple wins, compared left to right. (0,1,1) beats (0,1,0) because the class counts tie but `.card button` also carries a type selector, so its grey `background` is the one applied and the button renders grey.",
+              "markingMdx": "1 mark for `.primary` = (0,1,0) (one class).\n1 mark for `.card button` = (0,1,1) (one class plus one type).\n1 mark for explaining that the higher triple wins, so `.card button` overrides `.primary`.",
+              "questionMdxZh": "请分别计算选择器 `.primary` 与 `.card button` 的特异性，并说明为什么灰色规则会覆盖蓝色规则。",
+              "answerMdxZh": "特异性是一个三元组（id 数, class 数, 类型数）。`.primary` 是 (0,1,0)——一个类。`.card button` 是 (0,1,1)——一个类加一个类型选择器。当两条规则设置同一属性时，三元组更高的一方胜出，从左到右逐位比较。(0,1,1) 胜过 (0,1,0)：class 数相同，但 `.card button` 还额外带了一个类型选择器，因此生效的是它的灰色 `background`，按钮显示为灰色。",
+              "markingMdxZh": "1 分：`.primary` = (0,1,0)（一个类）。\n1 分：`.card button` = (0,1,1)（一个类加一个类型）。\n1 分：说明三元组更高者胜出，因此 `.card button` 覆盖了 `.primary`。"
+            },
+            {
+              "id": "Q9-b",
+              "label": "(b)",
+              "marks": 2,
+              "questionMdx": "State the order in which the browser resolves conflicting declarations, and describe what decides the winner when two selectors have exactly equal specificity.",
+              "answerMdx": "The browser compares specificity first: the higher (ids, classes, types) triple wins. If two declarations have exactly equal specificity, the one that appears later in the source (or in a stylesheet imported later at the same level) wins — the cascade's source-order rule. Only when both specificity and source order are equal do factors such as `!important` or the origin of the rule come into play.",
+              "markingMdx": "1 mark for stating that specificity is compared first, and the higher triple wins.\n1 mark for stating that equal specificity is broken by source order (the later rule wins).",
+              "questionMdxZh": "请说明浏览器解决属性冲突的先后顺序，并描述当两个选择器特异性完全相同时，由什么决定胜者。",
+              "answerMdxZh": "浏览器先比较特异性：三元组（id, class, 类型）更高的一方胜出。若两条声明的特异性完全相等，则源码中出现更靠后的一条胜出（同一层级下，后引入的样式表也算更靠后）——这就是层叠的「源顺序」规则。只有当特异性与源顺序都相同时，才会轮到 `!important`、规则来源等因素起作用。",
+              "markingMdxZh": "1 分：说明先比较特异性，三元组更高者胜出。\n1 分：说明特异性相同时由源顺序决定（更靠后的规则胜出）。"
+            },
+            {
+              "id": "Q9-c",
+              "label": "(c)",
+              "marks": 3,
+              "questionMdx": "Give a minimal change that makes the primary button blue, and explain why your change works.",
+              "answerMdx": "Raise the specificity of the blue rule so it beats `.card button`. For example, change the selector to `.card .primary` — its triple becomes (0,2,0), which has two classes and therefore outranks `.card button`'s (0,1,1). Alternatively, make the grey rule less specific (e.g. drop the element selector, or scope it as `.card .default`), or, when the two are exactly equal, simply move the blue rule later. The cleanest fix is to match or exceed the specificity of the rule you are overriding, so the intended blue reliably wins.",
+              "markingMdx": "1 mark for raising the blue rule's specificity (e.g. `.card .primary` = (0,2,0)).\n1 mark for explaining that (0,2,0) outranks (0,1,1), so blue now wins.\n1 mark for stating the general principle: to override a rule, match or exceed its specificity (rather than relying on class-name meaning).",
+              "questionMdxZh": "请给出一个最小改动让主按钮变为蓝色，并解释为什么你的改动有效。",
+              "answerMdxZh": "提高蓝色规则的特异性，使其超过 `.card button`。例如把选择器改成 `.card .primary`——它的三元组变成 (0,2,0)，含两个类，从而压过 `.card button` 的 (0,1,1)。另一种做法是降低灰色规则的特异性（例如去掉元素选择器，或收敛为 `.card .default`），或在两者特异性相等时仅靠把蓝色规则放到更靠后。最干净的做法是：让要覆盖的那条规则在特异性上不弱于被覆盖者，这样期望的蓝色才能稳定生效。",
+              "markingMdxZh": "1 分：提高蓝色规则的特异性（例如 `.card .primary` = (0,2,0)）。\n1 分：解释 (0,2,0) 高于 (0,1,1)，因此蓝色现在胜出。\n1 分：指出通用原则——要覆盖一条规则，需在特异性上不低于它（而不是依赖类名的「含义」）。"
+            }
+          ],
+          "displayNumber": "Q9",
+          "categoryLabel": "HTML/CSS Layout and Responsive Behaviour",
+          "categoryLabelZh": "HTML/CSS 布局与响应式行为",
+          "displayStyle": "quiz-sample",
+          "mockup": {
+            "files": [
+              {
+                "name": "card.css",
+                "code": ".primary {\n  background: blue;\n}\n.card button {\n  background: #e5e5e5;\n}",
+                "codeZh": ".primary {\n  background: blue; /* (0,1,0) */\n}\n.card button {\n  background: #e5e5e5; /* (0,1,1)：特异性更高 */\n}"
+              },
+              {
+                "name": "button.png",
+                "active": true
+              }
+            ],
+            "viewport": "desktop",
+            "html": "<div class=\"exam-ui-shell\"><div class=\"exam-ui-topbar\"><span>Shop</span><span>Checkout</span></div><div class=\"exam-ui-body\"><p class=\"exam-ui-page-title\">Checkout</p><div class=\"exam-ui-card\"><p class=\"exam-ui-label\">Total</p><p class=\"exam-ui-value\">$120</p><div class=\"exam-ui-button-row\"><button class=\"exam-ui-button-secondary\">Primary</button></div></div><p class=\"exam-ui-note\">The primary button renders grey, but it should be blue.</p></div></div>",
+            "htmlZh": "<div class=\"exam-ui-shell\"><div class=\"exam-ui-topbar\"><span>商城</span><span>结账</span></div><div class=\"exam-ui-body\"><p class=\"exam-ui-page-title\">结账</p><div class=\"exam-ui-card\"><p class=\"exam-ui-label\">合计</p><p class=\"exam-ui-value\">$120</p><div class=\"exam-ui-button-row\"><button class=\"exam-ui-button-secondary\">Primary</button></div></div><p class=\"exam-ui-note\">主按钮显示为灰色，但它本应是蓝色。</p></div></div>",
+            "caption": "The primary button renders grey because a more specific rule overrides its blue.",
+            "captionZh": "由于一条特异性更高的规则覆盖了蓝色，主按钮显示为灰色。"
+          }
+        },
+        {
+          "id": "Q10",
+          "title": "A message that becomes markup",
+          "titleZh": "变成标记的消息",
+          "marks": 8,
+          "contentMdx": "A chat page renders each message by concatenating it into an HTML string and assigning the result to `innerHTML` (see `chat.js`). A user posts the text `<img src=x onerror=alert(1)>` instead of a normal message, and the alert fires — the message was not shown as plain characters, as `chat.png` shows.",
+          "contentMdxZh": "一个聊天页面把每条消息拼进一个 HTML 字符串，再整体赋给 `innerHTML`（见 `chat.js`）。有用户把消息内容发成 `<img src=x onerror=alert(1)>`，结果弹出了 alert，而不是把这串文字原样显示出来，如 `chat.png` 所示。",
+          "subQuestions": [
+            {
+              "id": "Q10-a",
+              "label": "(a)",
+              "marks": 3,
+              "questionMdx": "When the message text is `<img src=x onerror=alert(1)>`, why does assigning the string to `innerHTML` run the alert instead of displaying the text?",
+              "answerMdx": "`innerHTML` does not insert text — it parses the assigned string as HTML and builds real DOM nodes from it. So the browser creates an `<img>` element, tries to load the (missing) image from `src=x`, the load fails, and the element's `onerror` attribute runs its JavaScript. The value the user typed has become executable markup, which is a cross-site scripting (XSS) hole: whatever script an attacker puts in a message runs in every viewer's page.",
+              "markingMdx": "1 mark for stating that `innerHTML` parses the string as HTML and creates real elements.\n1 mark for explaining that the injected `<img>` fails to load, so `onerror` fires and its script runs.\n1 mark for naming this as cross-site scripting (XSS) / untrusted input becoming executable markup.",
+              "questionMdxZh": "当消息内容是 `<img src=x onerror=alert(1)>` 时，为什么把字符串赋给 `innerHTML` 会执行 alert，而不是把它显示成文字？",
+              "answerMdxZh": "`innerHTML` 并不插入纯文本——它会把赋进来的字符串当作 HTML 解析，并据此构建真实的 DOM 节点。于是浏览器创建了一个 `<img>` 元素，尝试从 `src=x` 加载（并不存在的）图片，加载失败，该元素的 `onerror` 属性便执行其中的 JavaScript。用户输入的值就此变成了可执行的标记，这是一个跨站脚本（XSS）漏洞：攻击者写进消息的任何脚本，都会在每个查看者的页面里运行。",
+              "markingMdxZh": "1 分：说明 `innerHTML` 会把字符串解析为 HTML 并创建真实元素。\n1 分：解释被注入的 `<img>` 加载失败，于是 `onerror` 触发、其中的脚本执行。\n1 分：点出这是跨站脚本（XSS）／不可信输入变成了可执行标记。"
+            },
+            {
+              "id": "Q10-b",
+              "label": "(b)",
+              "marks": 2,
+              "questionMdx": "Explain why `textContent` (or building the node with `createElement`) does not have this problem.",
+              "answerMdx": "`textContent` treats the assigned value as literal text: angle brackets and everything else are written as characters and never parsed into elements, so `<img ...>` appears on screen as text and no handler can run. Using `createElement` and then setting its `textContent` goes one step further — you build the element structure yourself and put the message in as data, so only the markup you wrote is ever interpreted while the untrusted text stays inert.",
+              "markingMdx": "1 mark for stating that `textContent` inserts the value as literal text, so it is not parsed as markup.\n1 mark for stating that `createElement` + `textContent` keeps untrusted input as data, separate from the markup you create.",
+              "questionMdxZh": "请解释为什么改用 `textContent`（或用 `createElement` 构建节点）就没有这个问题。",
+              "answerMdxZh": "`textContent` 会把赋进来的值当作纯文本：尖括号以及其他字符都按字符写入，绝不会被解析成元素，因此 `<img ...>` 只在屏幕上显示为文字，任何处理器都无法执行。用 `createElement` 再设置它的 `textContent` 则更进一步——由你自己构建元素结构、把消息作为数据放进去，于是只有你写的标记会被解释，而不可信文本始终保持惰性。",
+              "markingMdxZh": "1 分：说明 `textContent` 把值作为纯文本插入，不会被当作标记解析。\n1 分：说明 `createElement` + `textContent` 让不可信输入作为数据存在，与你创建的标记分离。"
+            },
+            {
+              "id": "Q10-c",
+              "label": "(c)",
+              "marks": 3,
+              "questionMdx": "Rewrite `renderMessage` so a hostile message can no longer run code, and explain why your version is safe.",
+              "answerMdx": "Build the row out of elements instead of a string:\n\n```js\nfunction renderMessage(user, text) {\n  const li = document.createElement('li')\n  li.textContent = user + ': ' + text\n  list.appendChild(li)\n}\n```\n\nNow `text` goes in through `textContent`, so its angle brackets are written verbatim and never parsed, and `appendChild` adds just the single node we built. Because untrusted text never reaches `innerHTML`, the payload is displayed as harmless characters instead of being executed. Escaping the string by hand before assigning to `innerHTML` would also work, but it is easy to get wrong; `createElement` with `textContent` sidesteps the HTML parser entirely.",
+              "markingMdx": "1 mark for building the row with `createElement` instead of `innerHTML`.\n1 mark for writing the message through `textContent`.\n1 mark for explaining that the text is inserted as literal characters, so the payload is shown, not executed.",
+              "questionMdxZh": "请重写 `renderMessage`，让恶意消息无法再执行代码，并说明为什么你的版本是安全的。",
+              "answerMdxZh": "改用元素来构建这一行，而不是拼接字符串：\n\n```js\nfunction renderMessage(user, text) {\n  const li = document.createElement('li')\n  li.textContent = user + ': ' + text\n  list.appendChild(li)\n}\n```\n\n现在 `text` 经 `textContent` 写入，它的尖括号原样写入、绝不会被解析，`appendChild` 只添加我们构建的那一个节点。由于不可信文本永远不经过 `innerHTML`，这段载荷只会被当成无害字符显示，而不会被执行。把字符串手动转义后再赋给 `innerHTML` 也能奏效，但很容易出错；用 `createElement` 配合 `textContent` 则完全绕开了 HTML 解析器。",
+              "markingMdxZh": "1 分：用 `createElement` 而不是 `innerHTML` 构建这一行。\n1 分：通过 `textContent` 写入消息内容。\n1 分：说明文本以字面字符插入，因此载荷被显示而非被执行。"
+            }
+          ],
+          "displayNumber": "Q10",
+          "categoryLabel": "JavaScript and the DOM",
+          "categoryLabelZh": "JavaScript 与 DOM",
+          "displayStyle": "quiz-sample",
+          "mockup": {
+            "files": [
+              {
+                "name": "chat.js",
+                "code": "function renderMessage(user, text) {\n  list.innerHTML += '<li>' + user + ': ' + text + '</li>'\n}",
+                "codeZh": "function renderMessage(user, text) {\n  // 用户输入被拼进 HTML 字符串，再整体交给 innerHTML\n  list.innerHTML += '<li>' + user + ': ' + text + '</li>'\n}"
+              },
+              {
+                "name": "chat.png",
+                "active": true
+              }
+            ],
+            "viewport": "desktop",
+            "html": "<div class=\"exam-ui-shell\"><div class=\"exam-ui-topbar\"><span>Chat</span><span>Room</span></div><div class=\"exam-ui-body\"><p class=\"exam-ui-page-title\">Messages</p><div class=\"exam-ui-card\"><ul class=\"exam-ui-list\"><li class=\"exam-ui-list-row\"><span>Sam: hello</span></li><li class=\"exam-ui-list-row\"><span class=\"exam-ui-danger\">broken image (from a message)</span></li></ul></div><p class=\"exam-ui-note\">A message was inserted as HTML, so its onerror handler ran.</p></div></div>",
+            "htmlZh": "<div class=\"exam-ui-shell\"><div class=\"exam-ui-topbar\"><span>聊天</span><span>房间</span></div><div class=\"exam-ui-body\"><p class=\"exam-ui-page-title\">消息</p><div class=\"exam-ui-card\"><ul class=\"exam-ui-list\"><li class=\"exam-ui-list-row\"><span>Sam: 你好</span></li><li class=\"exam-ui-list-row\"><span class=\"exam-ui-danger\">损坏的图片（来自一条消息）</span></li></ul></div><p class=\"exam-ui-note\">某条消息被当作 HTML 插入，于是它的 onerror 处理器被执行了。</p></div></div>",
+            "caption": "The message was parsed as HTML, so its onerror payload ran instead of showing as text.",
+            "captionZh": "消息被当作 HTML 解析，因此它的 onerror 载荷被执行，而不是显示为文字。"
+          }
         }
-      ]
+      ],
+      "time": "2026-11-17 10:00"
     }
   ]
 }

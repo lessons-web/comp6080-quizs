@@ -5,10 +5,16 @@
       "id": "TOPIC4-ASYNC-NETWORK",
       "title": "Async & Network — Topic Paper",
       "titleZh": "异步与网络 · 专题卷",
-      "description": "Week 4 topic paper: JSON, XMLHttpRequest, fetch, Promise, async / await, and HTTP / Express. Six questions, three sub-questions each, with screenshot-style mockups.",
-      "descriptionZh": "Week 4 专题卷：JSON、XMLHttpRequest、fetch、Promise、async / await 与 HTTP / Express。共 6 道大题，每题 3 个子题，配套截图感 mockup。",
-      "totalMarks": 30,
-      "tags": ["专题卷", "Weeks4", "异步与网络", "Async", "Network"],
+      "description": "Week 4 topic paper: JSON, XMLHttpRequest, fetch, Promise, async / await, and HTTP / Express. Ten questions, three sub-questions each, with screenshot-style mockups.",
+      "descriptionZh": "Week 4 专题卷：JSON、XMLHttpRequest、fetch、Promise、async / await 与 HTTP / Express。共 10 道大题，每题 3 个子题，配套截图感 mockup。",
+      "totalMarks": 50,
+      "tags": [
+        "专题卷",
+        "Weeks4",
+        "异步与网络",
+        "Async",
+        "Network"
+      ],
       "questions": [
         {
           "id": "Q1",
@@ -404,8 +410,269 @@
           },
           "titleZh": "永远匹配不上的路由",
           "contentMdxZh": "一个用户详情页请求 `GET /api/users/42`（见 `users.png`）。`server.js` 里的 Express 服务只定义了 `app.get('/api/users', ...)`，所以请求返回 `404`，页面显示 “Not found”。"
+        },
+        {
+          "id": "Q7",
+          "title": "The log that came out in the wrong order",
+          "marks": 5,
+          "contentMdx": "A cart page logs four events (see `checkout.js`). The developer expects `setTimeout(..., 0)` to run right after the synchronous code, but `console.png` shows the badge update printing before it. A promise callback, a zero-delay timeout, and two plain logs are involved.",
+          "subQuestions": [
+            {
+              "id": "Q7-a",
+              "label": "(a)",
+              "marks": 1,
+              "questionMdx": "Give the exact order the four messages print, and say which callbacks run as microtasks and which as a macrotask.",
+              "answerMdx": "The order is `open cart`, `render`, `update badge`, `flush analytics`. The two plain `console.log` calls run synchronously first, in source order. The `.then` callback (`update badge`) is a microtask, and the `setTimeout(..., 0)` callback (`flush analytics`) is a macrotask. Microtasks always drain before the next macrotask, so the badge update prints before the analytics flush.",
+              "markingMdx": "1 mark for the correct order (`open cart`, `render`, `update badge`, `flush analytics`) with the `.then` callback identified as a microtask and the timeout callback as a macrotask.",
+              "questionMdxZh": "请写出这四条消息的确切输出顺序，并说明哪些回调属于微任务、哪个属于宏任务。",
+              "answerMdxZh": "顺序是 `open cart`、`render`、`update badge`、`flush analytics`。两个普通的 `console.log` 先按源码顺序同步执行。`.then` 回调（`update badge`）是微任务，`setTimeout(..., 0)` 回调（`flush analytics`）是宏任务。微任务总会在下一个宏任务之前被清空，所以徽标更新先于分析刷新打印。",
+              "markingMdxZh": "1 分：给出正确顺序（`open cart`、`render`、`update badge`、`flush analytics`），并指出 `.then` 回调是微任务、超时回调是宏任务。"
+            },
+            {
+              "id": "Q7-b",
+              "label": "(b)",
+              "marks": 2,
+              "questionMdx": "Why does `setTimeout(..., 0)` not run immediately after the synchronous code, even though its delay is 0? Explain using the event loop.",
+              "answerMdx": "A zero delay does not mean \"run now\": it only queues the callback as a macrotask to run after the current task. The event loop first finishes the currently running synchronous script, then drains the whole microtask queue (the promise `.then`), and only after that picks the next macrotask. So the timeout callback runs after every pending microtask, not right after the sync code.",
+              "markingMdx": "1 mark for stating that `setTimeout(..., 0)` only schedules a macrotask and does not run inline after the sync code.\n1 mark for explaining that the event loop drains all pending microtasks before the next macrotask.",
+              "questionMdxZh": "既然延迟是 0，为什么 `setTimeout(..., 0)` 不会在同步代码之后立刻执行？请用事件循环解释。",
+              "answerMdxZh": "延迟为 0 并不意味着“立刻执行”：它只是把回调排队成一个宏任务，等当前任务结束后再跑。事件循环会先把当前正在运行的同步脚本跑完，然后清空整个微任务队列（也就是 promise 的 `.then`），之后才取下一个宏任务。所以超时回调排在所有待处理的微任务之后，而不是紧跟同步代码。",
+              "markingMdxZh": "1 分：说明 `setTimeout(..., 0)` 只是排入一个宏任务，不会在同步代码后立刻执行。\n1 分：解释事件循环会在下一个宏任务之前清空所有待处理的微任务。"
+            },
+            {
+              "id": "Q7-c",
+              "label": "(c)",
+              "marks": 2,
+              "questionMdx": "The developer replaces the `.then` with a second `setTimeout(() => console.log('update badge'), 0)`, registered after the analytics timeout. What is the new print order, and why?",
+              "answerMdx": "Now both callbacks are macrotasks, so there is no microtask left to jump the queue. After the synchronous `open cart` and `render`, the event loop runs macrotasks in the order they were queued: `flush analytics` (registered first) then `update badge` (registered second). The new order is `open cart`, `render`, `flush analytics`, `update badge`.",
+              "markingMdx": "1 mark for the new order (`flush analytics` before `update badge`).\n1 mark for explaining that macrotasks run in registration order once all microtasks have drained.",
+              "questionMdxZh": "开发者把 `.then` 换成了第二个 `setTimeout(() => console.log('update badge'), 0)`，且它在分析超时之后注册。新的输出顺序是什么？为什么？",
+              "answerMdxZh": "此时两个回调都是宏任务，再没有微任务可以插队。同步的 `open cart` 和 `render` 之后，事件循环按排队顺序执行宏任务：先是先注册的 `flush analytics`，再是后注册的 `update badge`。新顺序为 `open cart`、`render`、`flush analytics`、`update badge`。",
+              "markingMdxZh": "1 分：给出新顺序（`flush analytics` 在 `update badge` 之前）。\n1 分：解释在所有微任务清空后，宏任务按注册顺序执行。"
+            }
+          ],
+          "displayNumber": "Q7",
+          "categoryLabel": "Async JavaScript: Promise Orchestration",
+          "categoryLabelZh": "异步 JavaScript：Promise 编排",
+          "displayStyle": "quiz-sample",
+          "mockup": {
+            "files": [
+              {
+                "name": "checkout.js",
+                "code": "console.log('open cart')\nsetTimeout(() => console.log('flush analytics'), 0)\nPromise.resolve().then(() => console.log('update badge'))\nconsole.log('render')",
+                "codeZh": "console.log('open cart')\nsetTimeout(() => console.log('flush analytics'), 0)\nPromise.resolve().then(() => console.log('update badge'))\nconsole.log('render')\n// 实际输出顺序：open cart, render, update badge, flush analytics"
+              },
+              {
+                "name": "console.png",
+                "active": true
+              }
+            ],
+            "viewport": "desktop",
+            "html": "<div class=\"exam-ui-shell\"><div class=\"exam-ui-topbar\"><span>Shop</span><span>Cart</span></div><div class=\"exam-ui-body\"><p class=\"exam-ui-page-title\">Console</p><div class=\"exam-ui-card\"><p class=\"exam-ui-label\">Log output</p><ul class=\"exam-ui-list\"><li class=\"exam-ui-list-row\">open cart</li><li class=\"exam-ui-list-row\">render</li><li class=\"exam-ui-list-row\">update badge</li><li class=\"exam-ui-list-row\">flush analytics</li></ul></div><p class=\"exam-ui-muted\">The analytics flush printed last, after the badge update.</p></div></div>",
+            "htmlZh": "<div class=\"exam-ui-shell\"><div class=\"exam-ui-topbar\"><span>商城</span><span>购物车</span></div><div class=\"exam-ui-body\"><p class=\"exam-ui-page-title\">控制台</p><div class=\"exam-ui-card\"><p class=\"exam-ui-label\">日志输出</p><ul class=\"exam-ui-list\"><li class=\"exam-ui-list-row\">open cart</li><li class=\"exam-ui-list-row\">render</li><li class=\"exam-ui-list-row\">update badge</li><li class=\"exam-ui-list-row\">flush analytics</li></ul></div><p class=\"exam-ui-muted\">分析刷新最后输出，排在徽标更新之后。</p></div></div>",
+            "caption": "The console after one cart update.",
+            "captionZh": "一次购物车更新之后的控制台。"
+          },
+          "titleZh": "顺序不对的日志",
+          "contentMdxZh": "一个购物车页面记录了四个日志事件（见 `checkout.js`）。开发者以为 `setTimeout(..., 0)` 会在同步代码之后立刻执行，但 `console.png` 显示，徽标更新反而排在它前面。这里涉及一个 promise 回调、一个零延迟定时器和两条普通日志。"
+        },
+        {
+          "id": "Q8",
+          "title": "The toast that always says Saved",
+          "marks": 5,
+          "contentMdx": "The profile editor posts JSON to `/api/save` (see `save.js`). The last save failed with `500`, yet `result.png` still shows a green \"Saved!\" toast. `onSubmit` calls `save(data)` inside a `try/catch`.",
+          "subQuestions": [
+            {
+              "id": "Q8-a",
+              "label": "(a)",
+              "marks": 1,
+              "questionMdx": "The server answers `500`. Does the user see \"Could not save\"? Explain why the `catch` block does not run.",
+              "answerMdx": "No — the user sees \"Saved!\". `onSubmit` calls `save(data)` without `await`, so the call returns a pending promise immediately and execution goes straight on to `showToast('Saved!')`, finishing the `try` block. When the request later fails, the rejection sits on that promise and is never thrown at the call site, so the `catch` has already finished and does not run; the failure surfaces only as an unhandled rejection.",
+              "markingMdx": "1 mark for stating the user sees \"Saved!\" and that the missing `await` (a not-awaited promise) is why the `catch` never runs.",
+              "questionMdxZh": "服务器返回 `500`。用户会看到 “Could not save” 吗？请解释为什么 `catch` 块没有执行。",
+              "answerMdxZh": "不会——用户看到的是 “Saved!”。`onSubmit` 调用 `save(data)` 时没有 `await`，所以该调用立刻返回一个 pending 的 promise，代码随即往下走到 `showToast('Saved!')`，`try` 块就此结束。等请求稍后失败时，拒绝挂在这个 promise 上，并不会在调用点抛出，所以 `catch` 早已走过、不会执行；这次失败只表现为一个未处理的 rejection。",
+              "markingMdxZh": "1 分：说明用户看到的是 “Saved!”，且缺少 `await`（未被 await 的 promise）是 `catch` 不执行的原因。"
+            },
+            {
+              "id": "Q8-b",
+              "label": "(b)",
+              "marks": 2,
+              "questionMdx": "Explain why a `try/catch` around a call does not catch that function's promise rejection, and what `await` changes.",
+              "answerMdx": "`try/catch` only catches exceptions thrown synchronously inside the block, plus rejections that are re-thrown at an `await`. Calling an `async` function just returns a promise; if that promise settles as rejected later, nothing is thrown inside the `try`, so the `catch` never fires. `await save(data)` makes the rejection re-throw at that line inside the `try`, which is what lets the `catch` run.",
+              "markingMdx": "1 mark for stating `try/catch` catches synchronous throws (and awaited rejections), not a rejection merely carried by a returned promise.\n1 mark for explaining that `await` surfaces the rejection as a throw inside the `try` block.",
+              "questionMdxZh": "请解释为什么在调用处写 `try/catch` 并不能捕获该函数 promise 的拒绝，以及 `await` 改变了什么。",
+              "answerMdxZh": "`try/catch` 只能捕获块内同步抛出的异常，以及在 `await` 处被重新抛出的拒绝。调用一个 `async` 函数只是返回一个 promise；如果这个 promise 稍后以 rejected 定型，`try` 块里并没有任何东西被抛出，`catch` 自然不会触发。而 `await save(data)` 会让拒绝在 `try` 内的这一行被重新抛出，`catch` 才能执行。",
+              "markingMdxZh": "1 分：说明 `try/catch` 捕获的是同步抛错（以及被 await 的拒绝），而不是仅由返回的 promise 携带的拒绝。\n1 分：解释 `await` 会把拒绝变成 `try` 块内的一次抛出。"
+            },
+            {
+              "id": "Q8-c",
+              "label": "(c)",
+              "marks": 2,
+              "questionMdx": "Rewrite `onSubmit` (and adjust `save` if needed) so a failed save shows the error toast. Mention anything you must add beyond `await`.",
+              "answerMdx": "Make `onSubmit` `async` and `await save(data)` inside the `try`. But since a `500` still fulfils the `fetch`, you must also check `res.ok` in `save` and `throw` on a non-2xx status before reading the body. Then the rejection propagates to `onSubmit`'s `catch`, which shows \"Could not save\". So beyond `await`, you also need the `res.ok` check (throwing on non-2xx).",
+              "markingMdx": "1 mark for `await`ing `save(data)` inside the `try` (and making `onSubmit` async).\n1 mark for checking `res.ok` / throwing on a non-2xx status so a `500` actually rejects.",
+              "questionMdxZh": "请重写 `onSubmit`（必要时调整 `save`），让保存失败时显示错误提示。除了 `await`，还说明你必须补上什么。",
+              "answerMdxZh": "把 `onSubmit` 改成 `async`，并在 `try` 里 `await save(data)`。但因为 `500` 仍会让 `fetch` fulfill，所以还必须在 `save` 里检查 `res.ok`，在非 2xx 时于读取响应体之前 `throw`。这样拒绝会传播到 `onSubmit` 的 `catch`，显示 “Could not save”。因此除了 `await`，还需要补上 `res.ok` 检查（非 2xx 时抛错）。",
+              "markingMdxZh": "1 分：在 `try` 里 `await save(data)`（并把 `onSubmit` 改为 async）。\n1 分：检查 `res.ok` / 在非 2xx 时抛错，使 `500` 真正变成拒绝。"
+            }
+          ],
+          "displayNumber": "Q8",
+          "categoryLabel": "Async JavaScript: async / await",
+          "categoryLabelZh": "异步 JavaScript：async / await",
+          "displayStyle": "quiz-sample",
+          "mockup": {
+            "files": [
+              {
+                "name": "save.js",
+                "code": "async function save(data) {\n  const res = await fetch('/api/save', {\n    method: 'POST',\n    headers: { 'Content-Type': 'application/json' },\n    body: JSON.stringify(data),\n  })\n  return res.json()\n}\n\nfunction onSubmit(data) {\n  try {\n    save(data)\n    showToast('Saved!')\n  } catch (err) {\n    showToast('Could not save')\n  }\n}",
+                "codeZh": "async function save(data) {\n  const res = await fetch('/api/save', {\n    method: 'POST',\n    headers: { 'Content-Type': 'application/json' },\n    body: JSON.stringify(data),\n  })\n  return res.json()\n}\n\nfunction onSubmit(data) {\n  try {\n    save(data)          // 没有 await\n    showToast('Saved!')\n  } catch (err) {\n    showToast('Could not save')\n  }\n}"
+              },
+              {
+                "name": "result.png",
+                "active": true
+              }
+            ],
+            "viewport": "desktop",
+            "html": "<div class=\"exam-ui-shell\"><div class=\"exam-ui-topbar\"><span>Profile</span><span>Edit</span></div><div class=\"exam-ui-body\"><p class=\"exam-ui-page-title\">Edit profile</p><div class=\"exam-ui-card\"><p class=\"exam-ui-label\">Display name</p><input class=\"exam-ui-input\" value=\"Ada Lovelace\" readonly><div class=\"exam-ui-button-row\"><button class=\"exam-ui-button\">Save</button></div></div><div class=\"exam-ui-toast\">Saved!</div><p class=\"exam-ui-muted\">The last save returned 500.</p></div></div>",
+            "htmlZh": "<div class=\"exam-ui-shell\"><div class=\"exam-ui-topbar\"><span>个人资料</span><span>编辑</span></div><div class=\"exam-ui-body\"><p class=\"exam-ui-page-title\">编辑资料</p><div class=\"exam-ui-card\"><p class=\"exam-ui-label\">显示名称</p><input class=\"exam-ui-input\" value=\"Ada Lovelace\" readonly><div class=\"exam-ui-button-row\"><button class=\"exam-ui-button\">保存</button></div></div><div class=\"exam-ui-toast\">Saved!</div><p class=\"exam-ui-muted\">最近一次保存返回了 500。</p></div></div>",
+            "caption": "The success toast shown after a failed save.",
+            "captionZh": "一次失败的保存之后仍显示的“成功”提示。"
+          },
+          "titleZh": "永远显示“已保存”的提示",
+          "contentMdxZh": "个人资料编辑器把 JSON POST 到 `/api/save`（见 `save.js`）。最近一次保存以 `500` 失败，但 `result.png` 仍显示绿色的 “Saved!” 提示。`onSubmit` 在 `try/catch` 里调用了 `save(data)`。"
+        },
+        {
+          "id": "Q9",
+          "title": "Results for a query the user already deleted",
+          "marks": 5,
+          "contentMdx": "A library search fires a request on every keystroke (see `search.js`). In `results.png` the field reads \"dog\" but the list still shows matches for \"cat\". Each keystroke starts a new request and calls `renderResults` when it resolves.",
+          "subQuestions": [
+            {
+              "id": "Q9-a",
+              "label": "(a)",
+              "marks": 1,
+              "questionMdx": "The field shows \"dog\" but the list shows results for \"cat\". Explain how this can happen.",
+              "answerMdx": "This is a race condition. The two requests run concurrently, and which one finishes first is decided by network timing, not by typing order. The earlier \"cat\" request happened to complete after the later \"dog\" request, so its `await` resumed last and `renderResults` was called last with the stale data, overwriting the newer results. The list ends up showing whichever response came back last, not the latest query.",
+              "markingMdx": "1 mark for identifying it as a race / out-of-order responses where the slower earlier request resolves last and overwrites the newer results.",
+              "questionMdxZh": "输入框显示 “dog”，列表却是 “cat” 的结果。请解释这怎么会发生。",
+              "answerMdxZh": "这是一次竞态（race condition）。两次请求并发进行，谁先完成由网络时序决定，而不是由输入顺序决定。较早的 “cat” 请求恰好比后发的 “dog” 请求更晚完成，于是它的 `await` 最后恢复、`renderResults` 最后被旧数据调用，覆盖了较新的结果。列表最终显示的只是“最后返回”的响应，而不是“最后一次输入”的查询。",
+              "markingMdxZh": "1 分：识别出这是竞态 / 响应乱序——较慢的先前请求最后 resolve，从而覆盖了更新的结果。"
+            },
+            {
+              "id": "Q9-b",
+              "label": "(b)",
+              "marks": 2,
+              "questionMdx": "What does an `AbortController` let you do, and what happens to the promise of a fetch that is aborted?",
+              "answerMdx": "An `AbortController` lets you cancel an in-flight fetch: you pass its `signal` in the fetch options, and calling `controller.abort()` cancels the request. The aborted fetch's promise rejects with a `DOMException` whose `name` is `'AbortError'`, which you usually catch and ignore rather than showing to the user.",
+              "markingMdx": "1 mark for stating you cancel the request by passing `signal` to fetch and calling `abort()`.\n1 mark for stating the aborted fetch rejects with an `AbortError` (a `DOMException`).",
+              "questionMdxZh": "`AbortController` 能让你做什么？被中止的 fetch，其 promise 会怎样？",
+              "answerMdxZh": "`AbortController` 可以取消正在进行的 fetch：把它的 `signal` 放进 fetch 选项，再调用 `controller.abort()` 即可中止请求。被中止的 fetch 会以一个 `DOMException` 拒绝，其 `name` 为 `'AbortError'`；通常你会捕获它并忽略，而不是展示给用户。",
+              "markingMdxZh": "1 分：说明通过把 `signal` 传给 fetch 并调用 `abort()` 来取消请求。\n1 分：说明被中止的 fetch 会以 `AbortError`（一个 `DOMException`）拒绝。"
+            },
+            {
+              "id": "Q9-c",
+              "label": "(c)",
+              "marks": 2,
+              "questionMdx": "Change `search.js` so only the latest query's results are shown.",
+              "answerMdx": "Keep a reference to the current `AbortController`. On each input, abort the previous controller and create a new one, then pass its `signal` to the fetch. A superseded request rejects with `AbortError` and its rendering is skipped, so only the latest response is rendered. (An equivalent approach is to tag each request and ignore any response whose tag is no longer the latest.)",
+              "markingMdx": "1 mark for aborting the previous request (a new controller per call, passing its `signal`).\n1 mark for ignoring the aborted / stale response so only the latest query renders.",
+              "questionMdxZh": "请修改 `search.js`，使得只显示最新一次查询的结果。",
+              "answerMdxZh": "保存当前 `AbortController` 的引用。每次输入时，先中止上一个 controller 并新建一个，再把它的 `signal` 传给 fetch。被取代的请求会以 `AbortError` 拒绝，其渲染被跳过，于是只有最新一次的响应会被渲染。（等价做法是给每个请求打上标签，忽略标签已不是最新的那些响应。）",
+              "markingMdxZh": "1 分：中止上一个请求（每次调用新建 controller 并传入其 `signal`）。\n1 分：忽略被中止 / 过期的响应，使只有最新查询会渲染。"
+            }
+          ],
+          "displayNumber": "Q9",
+          "categoryLabel": "Requests: Fetch and Response",
+          "categoryLabelZh": "请求：fetch 与 Response",
+          "displayStyle": "quiz-sample",
+          "mockup": {
+            "files": [
+              {
+                "name": "search.js",
+                "code": "async function search(query) {\n  const res = await fetch('/api/search?q=' + query)\n  const data = await res.json()\n  renderResults(data)\n}\n\ninput.addEventListener('input', (e) => {\n  search(e.target.value)\n})",
+                "codeZh": "async function search(query) {\n  const res = await fetch('/api/search?q=' + query)\n  const data = await res.json()\n  renderResults(data)   // 慢的旧请求可能最后返回\n}\n\ninput.addEventListener('input', (e) => {\n  search(e.target.value)\n})"
+              },
+              {
+                "name": "results.png",
+                "active": true
+              }
+            ],
+            "viewport": "desktop",
+            "html": "<div class=\"exam-ui-shell\"><div class=\"exam-ui-topbar\"><span>Library</span><span>Search</span></div><div class=\"exam-ui-body\"><p class=\"exam-ui-page-title\">Search</p><div class=\"exam-ui-card\"><input class=\"exam-ui-input\" value=\"dog\" readonly><ul class=\"exam-ui-list\"><li class=\"exam-ui-list-row\">Catalogue manager</li><li class=\"exam-ui-list-row\">Category list</li></ul></div><p class=\"exam-ui-muted\">The field says dog, but these are the results for cat.</p></div></div>",
+            "htmlZh": "<div class=\"exam-ui-shell\"><div class=\"exam-ui-topbar\"><span>图书馆</span><span>搜索</span></div><div class=\"exam-ui-body\"><p class=\"exam-ui-page-title\">搜索</p><div class=\"exam-ui-card\"><input class=\"exam-ui-input\" value=\"dog\" readonly><ul class=\"exam-ui-list\"><li class=\"exam-ui-list-row\">Catalogue manager</li><li class=\"exam-ui-list-row\">Category list</li></ul></div><p class=\"exam-ui-muted\">输入框写着 dog，但这些其实是 cat 的结果。</p></div></div>",
+            "caption": "Results that belong to the previous, slower query.",
+            "captionZh": "列表里其实是更早、更慢那次查询的结果。"
+          },
+          "titleZh": "搜索词已删，结果却还在",
+          "contentMdxZh": "一个图书搜索在每次按键时都会发起请求（见 `search.js`）。在 `results.png` 里，输入框写的是 “dog”，但列表显示的仍是 “cat” 的匹配结果。每次按键都会发起一个新请求，并在 resolve 时调用 `renderResults`。"
+        },
+        {
+          "id": "Q10",
+          "title": "Saved on the server, blocked in the browser",
+          "marks": 5,
+          "contentMdx": "A shop page posts an order as JSON to `https://api.shop.com/orders` from `https://shop.com` (see `client.js`). The server logs show it received and saved the order with `200`, but the browser console in `network.png` reports a CORS error and the page cannot read the response.",
+          "subQuestions": [
+            {
+              "id": "Q10-a",
+              "label": "(a)",
+              "marks": 1,
+              "questionMdx": "The server received and saved the order (`200`), yet the page's JS reports a CORS error. Why does the browser block the response even though the request reached the server?",
+              "answerMdx": "The request is cross-origin, so the browser applies the Same-Origin Policy to script-visible data. Unless the server returns an `Access-Control-Allow-Origin` header for `shop.com`, the browser receives the response but withholds it from JavaScript, so `fetch` rejects even though the server processed the request. The block happens in the browser, not on the server.",
+              "markingMdx": "1 mark for naming the Same-Origin Policy / missing `Access-Control-Allow-Origin`: the browser blocks JS from reading a cross-origin response even though the server handled it.",
+              "questionMdxZh": "服务器收到并保存了订单（`200`），可页面的 JS 却报 CORS 错误。为什么请求都到了服务器，浏览器仍要拦截响应？",
+              "answerMdxZh": "这是一次跨源请求，浏览器对脚本可见的数据套用了同源策略。只要服务器没有返回针对 `shop.com` 的 `Access-Control-Allow-Origin` 头，浏览器虽然收到了响应，也会把它对 JavaScript 屏蔽，于是 `fetch` 以 CORS 错误 reject——拦截发生在浏览器，而不是服务器。",
+              "markingMdxZh": "1 分：点出同源策略 / 缺少 `Access-Control-Allow-Origin`：即便服务器已处理，浏览器也会阻止 JS 读取跨源响应。"
+            },
+            {
+              "id": "Q10-b",
+              "label": "(b)",
+              "marks": 2,
+              "questionMdx": "A simple `GET` to the same origin works, and a form-encoded POST works, but the JSON POST fails first with a preflight (`OPTIONS`) error. Explain why the JSON POST triggers a preflight and the others do not.",
+              "answerMdx": "A browser only skips the preflight for CORS \"simple\" requests: methods such as `GET`/`POST`, a safelisted `Content-Type` (`application/x-www-form-urlencoded`, `multipart/form-data`, `text/plain`), and no custom headers. `application/json` is not a safelisted content type, so this request is not simple and the browser first sends a preflight `OPTIONS` asking the server to allow the method and headers. If that preflight is not allowed, the real `POST` is never sent.",
+              "markingMdx": "1 mark for stating `application/json` is not a CORS-safelisted content type, so the request is not a \"simple\" request.\n1 mark for explaining the browser sends a preflight `OPTIONS` first and blocks the `POST` if it is not allowed.",
+              "questionMdxZh": "同源下的简单 `GET` 能用，表单编码的 POST 也能用，但 JSON POST 却先以预检（`OPTIONS`）失败。请解释为什么 JSON POST 会触发预检，而另外两个不会。",
+              "answerMdxZh": "浏览器只对 CORS 的“简单请求”免发预检：方法为 `GET`/`POST` 之类、`Content-Type` 属于安全列表（`application/x-www-form-urlencoded`、`multipart/form-data`、`text/plain`）、且没有自定义首部。`application/json` 不在安全列表里，所以这次不是简单请求，浏览器会先发一个 `OPTIONS` 预检，请求服务器允许该方法和首部；预检不被允许时，真正的 `POST` 根本不会发出。",
+              "markingMdxZh": "1 分：说明 `application/json` 不是 CORS 安全列表中的内容类型，因此该请求不算“简单请求”。\n1 分：解释浏览器会先发 `OPTIONS` 预检，若不通过则阻止原本的 `POST`。"
+            },
+            {
+              "id": "Q10-c",
+              "label": "(c)",
+              "marks": 2,
+              "questionMdx": "Describe what the server must do so the JSON POST succeeds, and name the HTTP status a successful preflight returns.",
+              "answerMdx": "The server must answer the preflight `OPTIONS` with CORS headers: `Access-Control-Allow-Origin` (the page's origin, or `*`), `Access-Control-Allow-Methods` including `POST`, and `Access-Control-Allow-Headers` including `Content-Type`, returning a 2xx status (commonly `204 No Content`). It must also include `Access-Control-Allow-Origin` on the real `POST` response. Then the browser lets the JSON POST proceed and lets the script read the response.",
+              "markingMdx": "1 mark for returning `Access-Control-Allow-Origin` (and allowing `POST` + `Content-Type` via the Allow-Methods / Allow-Headers headers).\n1 mark for naming a 2xx status for the preflight (e.g. `204` / `200`).",
+              "questionMdxZh": "请说明服务器要如何做才能让 JSON POST 成功，并给出一次成功的预检所返回的 HTTP 状态码。",
+              "answerMdxZh": "服务器必须在预检 `OPTIONS` 的响应里返回 CORS 头：`Access-Control-Allow-Origin`（页面的源，或 `*`）、包含 `POST` 的 `Access-Control-Allow-Methods`、以及包含 `Content-Type` 的 `Access-Control-Allow-Headers`，并返回 2xx 状态（常见为 `204 No Content`）。同时在真正的 `POST` 响应里也要带上 `Access-Control-Allow-Origin`。这样浏览器才允许 JSON POST 继续，并让脚本读取响应。",
+              "markingMdxZh": "1 分：返回 `Access-Control-Allow-Origin`（并通过 Allow-Methods / Allow-Headers 允许 `POST` 与 `Content-Type`）。\n1 分：给预检一个 2xx 状态码（例如 `204` / `200`）。"
+            }
+          ],
+          "displayNumber": "Q10",
+          "categoryLabel": "HTTP, APIs and Express",
+          "categoryLabelZh": "HTTP、接口与 Express",
+          "displayStyle": "quiz-sample",
+          "mockup": {
+            "files": [
+              {
+                "name": "client.js",
+                "code": "await fetch('https://api.shop.com/orders', {\n  method: 'POST',\n  headers: { 'Content-Type': 'application/json' },\n  body: JSON.stringify(order),\n})",
+                "codeZh": "await fetch('https://api.shop.com/orders', {\n  method: 'POST',\n  headers: { 'Content-Type': 'application/json' },  // 非安全内容类型，会触发预检\n  body: JSON.stringify(order),\n})"
+              },
+              {
+                "name": "network.png",
+                "active": true
+              }
+            ],
+            "viewport": "desktop",
+            "html": "<div class=\"exam-ui-shell\"><div class=\"exam-ui-topbar\"><span>DevTools</span><span>Console</span></div><div class=\"exam-ui-body\"><p class=\"exam-ui-page-title\">Console</p><div class=\"exam-ui-card\"><p class=\"exam-ui-label\">Network</p><ul class=\"exam-ui-list\"><li class=\"exam-ui-list-row\">OPTIONS /orders &rarr; 204 (no Access-Control-Allow-Origin)</li><li class=\"exam-ui-list-row\">POST /orders &rarr; 200 (order saved)</li></ul></div><p class=\"exam-ui-muted\">Blocked by CORS policy: the page cannot read the response.</p></div></div>",
+            "htmlZh": "<div class=\"exam-ui-shell\"><div class=\"exam-ui-topbar\"><span>开发者工具</span><span>控制台</span></div><div class=\"exam-ui-body\"><p class=\"exam-ui-page-title\">控制台</p><div class=\"exam-ui-card\"><p class=\"exam-ui-label\">网络</p><ul class=\"exam-ui-list\"><li class=\"exam-ui-list-row\">OPTIONS /orders &rarr; 204（没有 Access-Control-Allow-Origin）</li><li class=\"exam-ui-list-row\">POST /orders &rarr; 200（订单已保存）</li></ul></div><p class=\"exam-ui-muted\">被 CORS 策略拦截：页面读不到响应。</p></div></div>",
+            "caption": "The order is saved, but the JSON POST is blocked by CORS.",
+            "captionZh": "订单已保存，但这个 JSON POST 被 CORS 拦截了。"
+          },
+          "titleZh": "服务器存了，浏览器却挡了",
+          "contentMdxZh": "一个商城页面从 `https://shop.com` 把订单以 JSON POST 到 `https://api.shop.com/orders`（见 `client.js`）。服务器日志显示它以 `200` 接收并保存了订单，但 `network.png` 里的浏览器控制台报出 CORS 错误，页面读不到响应。"
         }
-      ]
+      ],
+      "time": "2026-11-15 10:00"
     }
   ]
 }

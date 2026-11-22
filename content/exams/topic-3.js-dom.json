@@ -5,10 +5,16 @@
       "id": "TOPIC3-JS-DOM",
       "title": "JavaScript & the DOM — Topic Paper",
       "titleZh": "JavaScript 与 DOM · 专题卷",
-      "description": "Week 3 topic paper: `var` / `let` / `const` scope and hoisting, closures, `this` inside event handlers, DOM querying and event delegation, forms and validation, and localStorage / JSON persistence with array methods. Six questions, three sub-questions each, with screenshot-style mockups.",
-      "descriptionZh": "Week 3 专题卷：`var` / `let` / `const` 的作用域与变量提升、闭包、事件处理器里的 `this`、DOM 查询与事件委托、表单与校验，以及 localStorage / JSON 持久化与数组方法。共 6 道大题，每题 3 个子题，配套截图感 mockup。",
-      "totalMarks": 30,
-      "tags": ["专题卷", "Weeks3", "JavaScript", "DOM"],
+      "description": "Week 3 topic paper: `var` / `let` / `const` scope and hoisting, closures, `this` inside event handlers, DOM querying and event delegation, forms and validation, and localStorage / JSON persistence with array methods. Ten questions, three sub-questions each, with screenshot-style mockups.",
+      "descriptionZh": "Week 3 专题卷：`var` / `let` / `const` 的作用域与变量提升、闭包、事件处理器里的 `this`、DOM 查询与事件委托、表单与校验，以及 localStorage / JSON 持久化与数组方法。共 10 道大题，每题 3 个子题，配套截图感 mockup。",
+      "totalMarks": 50,
+      "time": "2026-11-14 10:00",
+      "tags": [
+        "专题卷",
+        "Weeks3",
+        "JavaScript",
+        "DOM"
+      ],
       "questions": [
         {
           "id": "Q1",
@@ -398,6 +404,266 @@
             "htmlZh": "<div class=\"exam-ui-shell\"><div class=\"exam-ui-topbar\"><span>笔记</span><span>全部</span></div><div class=\"exam-ui-body\"><p class=\"exam-ui-page-title\">笔记</p><div class=\"exam-ui-card\"><span class=\"exam-ui-danger\">notes.map is not a function</span></div><p class=\"exam-ui-muted\">无法从存储中加载任何笔记</p></div></div>",
             "caption": "The list crashes on reload because the stored value is read as a string.",
             "captionZh": "重新加载时列表崩溃，因为读到的存储值是一个字符串。"
+          }
+        },
+        {
+          "id": "Q7",
+          "title": "A discount that never applies",
+          "titleZh": "永远用不上的折扣",
+          "marks": 5,
+          "contentMdx": "`checkout.js` reads a size option from a `<select>` and compares it to the number `1` to apply a small discount (see `checkout.js`). Choosing the `1` option never applies the discount, as `checkout.png` shows — the total stays at full price.",
+          "contentMdxZh": "`checkout.js` 从 `<select>` 读取尺寸选项，并把它与数字 `1` 比较来打折（见 `checkout.js`）。选择 `1` 时折扣从不生效，如 `checkout.png` 所示——合计始终是原价。",
+          "subQuestions": [
+            {
+              "id": "Q7-a",
+              "label": "(a)",
+              "marks": 1,
+              "questionMdx": "Why is `size.value === 1` never true, even when the user picks the `1` option?",
+              "answerMdx": "A DOM control's `value` is always a string. The `<select>` option carries the text `1`, so `size.value` is the string `\"1\"`, not the number `1`. `===` compares both value and type, so `\"1\" === 1` is `false` and the discount branch never runs.",
+              "markingMdx": "1 mark for stating that a form control's `value` is a string, so `\"1\" === 1` is false under strict comparison.",
+              "questionMdxZh": "即使选了 `1` 这个选项，为什么 `size.value === 1` 也永远为假？",
+              "answerMdxZh": "DOM 控件的 `value` 永远是字符串。`<select>` 的选项携带文本 `1`，所以 `size.value` 是字符串 `\"1\"`，而不是数字 `1`。`===` 同时比较值和类型，因此 `\"1\" === 1` 为 `false`，折扣分支永不执行。",
+              "markingMdxZh": "1 分：说明表单控件的 `value` 是字符串，因此严格比较下 `\"1\" === 1` 为假。"
+            },
+            {
+              "id": "Q7-b",
+              "label": "(b)",
+              "marks": 2,
+              "questionMdx": "Using `==` instead of `===` (`size.value == 1`) makes the discount apply. Explain how coercion makes it true, and give an example where `==` silently hides a bug.",
+              "answerMdx": "Loose equality `==` coerces the operands to a common type before comparing: with a number on the right, the string `\"1\"` is converted with `Number(\"1\")`, giving `1 == 1`, so it is true. But the same coercion is dangerous elsewhere: an empty input has `value === \"\"`, and `\"\" == 0` is `true` (the empty string converts to `0`), while `\"0\" == false` is also `true`. So `==` can silently treat an empty field as `0`, or the string `\"0\"` as `false`. `===` avoids all of this by requiring the same type.",
+              "markingMdx": "1 mark for explaining that `==` converts the string to a number (`Number(\"1\")`) so the comparison succeeds.\n1 mark for giving a coercion pitfall (e.g. `\"\" == 0` or `\"0\" == false` is true), showing why loose equality hides bugs.",
+              "questionMdxZh": "把 `===` 换成 `==`（`size.value == 1`）折扣就生效了。请解释强制类型转换是如何让它为真的，并举一个 `==` 悄悄掩盖 bug 的例子。",
+              "answerMdxZh": "宽松相等 `==` 会先把两侧转换成同一类型再比较：右边是数字时，字符串 `\"1\"` 被 `Number(\"1\")` 转成 `1`，于是 `1 == 1` 为真。但同样的隐式转换在别处很危险：空输入框的 `value === \"\"`，而 `\"\" == 0` 为真（空字符串会转成 `0`），`\"0\" == false` 也为真。也就是说 `==` 可能把空字段悄悄当成 `0`、把字符串 `\"0\"` 当成 `false`。`===` 要求类型相同，能避免这些坑。",
+              "markingMdxZh": "1 分：说明 `==` 会把字符串转成数字（`Number(\"1\")`），因此比较成立。\n1 分：举出一个转换陷阱（如 `\"\" == 0` 或 `\"0\" == false` 为真），说明宽松相等为何会掩盖 bug。"
+            },
+            {
+              "id": "Q7-c",
+              "label": "(c)",
+              "marks": 2,
+              "questionMdx": "Fix the comparison so it is correct and explicit, and say why your fix is clearer than switching to `==`.",
+              "answerMdx": "Convert the string deliberately and compare with `===`: `if (Number(size.value) === 1) { ... }`. The conversion now happens on purpose and is visible in the code, so a reader can see that `value` is a string being turned into a number. Comparing to the string (`size.value === '1'`) also works, but `Number(...)` is safer when the value is used as a number. This is clearer than `==` because the intent (\"treat this as a number\") is explicit rather than relying on an implicit coercion rule the reader has to remember.",
+              "markingMdx": "1 mark for a fix that converts explicitly with `===` (e.g. `Number(size.value) === 1` or `size.value === '1'`).\n1 mark for explaining that the explicit conversion makes the string→number step visible, unlike `==` which coerces silently.",
+              "questionMdxZh": "请把比较改得既正确又显式，并说明它为什么比改用 `==` 更清晰。",
+              "answerMdxZh": "显式地把字符串转成数字再用 `===` 比较：`if (Number(size.value) === 1) { ... }`。现在转换是有意为之、在代码里可见的，读者能看出 `value` 是字符串、被转成了数字。与字符串比较（`size.value === '1'`）也行，但 `Number(...)` 在这种值当数字用时更稳妥。它比 `==` 更清晰，是因为“当成数字处理”的意图被显式写出，而不必依赖读者去记住某个隐式转换规则。",
+              "markingMdxZh": "1 分：给出显式转换并配 `===` 的改法（如 `Number(size.value) === 1` 或 `size.value === '1'`）。\n1 分：说明显式转换让“字符串→数字”这一步可见，而不像 `==` 那样隐式转换。"
+            }
+          ],
+          "displayNumber": "Q7",
+          "categoryLabel": "JavaScript and the DOM",
+          "categoryLabelZh": "JavaScript 与 DOM",
+          "displayStyle": "quiz-sample",
+          "mockup": {
+            "files": [
+              {
+                "name": "checkout.js",
+                "code": "const size = document.querySelector('#size')\nif (size.value === 1) {\n  total = total * 0.9\n}",
+                "codeZh": "const size = document.querySelector('#size')\n// select 的 value 永远是字符串，例如 '1'\nif (size.value === 1) {\n  total = total * 0.9\n}"
+              },
+              {
+                "name": "checkout.png",
+                "active": true
+              }
+            ],
+            "viewport": "desktop",
+            "html": "<div class=\"exam-ui-shell\"><div class=\"exam-ui-topbar\"><span>Checkout</span><span>Order</span></div><div class=\"exam-ui-body\"><p class=\"exam-ui-page-title\">Checkout</p><div class=\"exam-ui-card\"><label class=\"exam-ui-label\">Size</label><select class=\"exam-ui-select\"><option>1</option><option>2</option><option>3</option></select></div><div class=\"exam-ui-card\"><p class=\"exam-ui-label\">Total</p><p class=\"exam-ui-value\">$100.00</p></div><p class=\"exam-ui-muted\">Choosing size 1 does not change the total</p></div></div>",
+            "htmlZh": "<div class=\"exam-ui-shell\"><div class=\"exam-ui-topbar\"><span>结算</span><span>订单</span></div><div class=\"exam-ui-body\"><p class=\"exam-ui-page-title\">结算</p><div class=\"exam-ui-card\"><label class=\"exam-ui-label\">尺寸</label><select class=\"exam-ui-select\"><option>1</option><option>2</option><option>3</option></select></div><div class=\"exam-ui-card\"><p class=\"exam-ui-label\">合计</p><p class=\"exam-ui-value\">$100.00</p></div><p class=\"exam-ui-muted\">选择尺寸 1 并不会改变合计金额</p></div></div>",
+            "caption": "The discount never applies because the select value is the string \"1\", not the number 1.",
+            "captionZh": "折扣从不生效，因为 select 的 value 是字符串 \"1\"，而不是数字 1。"
+          }
+        },
+        {
+          "id": "Q8",
+          "title": "A report full of undefined",
+          "titleZh": "满是 undefined 的报表",
+          "marks": 5,
+          "contentMdx": "`report.js` doubles each price with `.map` and separately accumulates a total using `.forEach` (see `report.js`). The doubled list renders as `undefined, undefined, undefined` and the total card stays `$0.00`, as `report.png` shows.",
+          "contentMdxZh": "`report.js` 用 `.map` 把每个价格翻倍，又用 `.forEach` 单独累加总额（见 `report.js`）。翻倍后的列表渲染成 `undefined, undefined, undefined`，总额卡片停在 `$0.00`，如 `report.png` 所示。",
+          "subQuestions": [
+            {
+              "id": "Q8-a",
+              "label": "(a)",
+              "marks": 1,
+              "questionMdx": "Why does `doubled` come back as `[undefined, undefined, undefined]`?",
+              "answerMdx": "`map` builds a new array from whatever the callback *returns*. This callback has a block body `{ ... }` whose only expression is `price * 2`, which is never returned — a block-bodied arrow returns `undefined` unless you write `return`. So `map` collects `undefined` for every element. A concise arrow without braces (`price => price * 2`) would return implicitly, which is why adding braces here silently changes the result.",
+              "markingMdx": "1 mark for stating that `map` collects the callback's return value, and this block-bodied callback never returns, so each entry is `undefined`.",
+              "questionMdxZh": "为什么 `doubled` 得到的是 `[undefined, undefined, undefined]`？",
+              "answerMdxZh": "`map` 会用回调的*返回值*构造一个新数组。这个回调是带花括号的块体 `{ ... }`，里面唯一的表达式是 `price * 2`，却没有被返回——块体箭头函数在不写 `return` 时返回 `undefined`，所以每个元素都被收集成 `undefined`。写成无花括号的简洁箭头（`price => price * 2`）才会隐式返回，这也正是这里加上花括号后结果悄悄改变的原因。",
+              "markingMdxZh": "1 分：说明 `map` 收集回调的返回值，而该块体回调从不返回，因此每一项都是 `undefined`。"
+            },
+            {
+              "id": "Q8-b",
+              "label": "(b)",
+              "marks": 2,
+              "questionMdx": "Explain how `map`, `forEach` and `reduce` differ in what they return, and which one is right for computing the total.",
+              "answerMdx": "`map` returns a new array with one entry per element, each being the callback's return value — use it to transform. `forEach` returns `undefined`; it exists for side effects, and here `total + price` is evaluated but never assigned, so `total` stays `0`. `reduce` returns a single accumulated value: `prices.reduce((sum, price) => sum + price, 0)`. So for the total you want `reduce` (it threads one value through the elements), and for the doubled list you want `map` with a `return`.",
+              "markingMdx": "1 mark for stating that `map` returns a transformed array while `forEach` returns `undefined` (side-effect only).\n1 mark for choosing `reduce` to accumulate the total (a single value) and `map` with a return for the list.",
+              "questionMdxZh": "请说明 `map`、`forEach`、`reduce` 在返回值上有什么不同，并指出计算总额应该用哪一个。",
+              "answerMdxZh": "`map` 返回一个新数组，每个元素是回调的返回值——用于转换。`forEach` 返回 `undefined`，它存在的意义是副作用；这里 `total + price` 只求了值却没赋值回去，所以 `total` 始终是 `0`。`reduce` 返回单个聚合值：`prices.reduce((sum, price) => sum + price, 0)`。所以算总额应该用 `reduce`（把一个值在元素间传递），翻倍列表则用 `map` 并带上 `return`。",
+              "markingMdxZh": "1 分：说明 `map` 返回转换后的数组，而 `forEach` 返回 `undefined`（只做副作用）。\n1 分：指出算总额用 `reduce`（单个值）、列表用带 `return` 的 `map`。"
+            },
+            {
+              "id": "Q8-c",
+              "label": "(c)",
+              "marks": 2,
+              "questionMdx": "Rewrite both parts using the right methods and explain why the result is now correct.",
+              "answerMdx": "Use `const doubled = prices.map(price => price * 2)` and `const total = prices.reduce((sum, price) => sum + price, 0)`. The `map` callback now has an expression body, so it returns each doubled price and the list holds real numbers. `reduce` threads an accumulator (`sum`) from an initial `0`, adding each price, and returns one number — no reliance on a mutable outer variable, which is exactly what `forEach` could not give back.",
+              "markingMdx": "1 mark for `prices.map(price => price * 2)` with a returning callback (concise arrow or explicit `return`).\n1 mark for `prices.reduce((sum, price) => sum + price, 0)` and explaining that the accumulator returns a single number.",
+              "questionMdxZh": "请用正确的方法重写这两部分，并说明为什么结果现在是正确的。",
+              "answerMdxZh": "使用 `const doubled = prices.map(price => price * 2)` 和 `const total = prices.reduce((sum, price) => sum + price, 0)`。`map` 的回调现在有表达式体，会返回每个翻倍价格，列表里就是真实数字。`reduce` 从初值 `0` 起用累加器（`sum`）逐个相加，返回一个数字——不再依赖外层的可变变量，而这正是 `forEach` 无法给出的。",
+              "markingMdxZh": "1 分：写出带返回值的 `prices.map(price => price * 2)`（简洁箭头或显式 `return`）。\n1 分：写出 `prices.reduce((sum, price) => sum + price, 0)`，并说明累加器返回单个数字。"
+            }
+          ],
+          "displayNumber": "Q8",
+          "categoryLabel": "JavaScript and the DOM",
+          "categoryLabelZh": "JavaScript 与 DOM",
+          "displayStyle": "quiz-sample",
+          "mockup": {
+            "files": [
+              {
+                "name": "report.js",
+                "code": "const doubled = prices.map(price => {\n  price * 2\n})\n\nlet total = 0\nprices.forEach(price => total + price)\nrenderTotal(total)\nrenderList(doubled)",
+                "codeZh": "// 回调里忘了 return，map 就会收集成 undefined\nconst doubled = prices.map(price => {\n  price * 2\n})\n\nlet total = 0\n// 只求值没赋值，total 始终是 0\nprices.forEach(price => total + price)\nrenderTotal(total)\nrenderList(doubled)"
+              },
+              {
+                "name": "report.png",
+                "active": true
+              }
+            ],
+            "viewport": "desktop",
+            "html": "<div class=\"exam-ui-shell\"><div class=\"exam-ui-topbar\"><span>Report</span><span>Sales</span></div><div class=\"exam-ui-body\"><p class=\"exam-ui-page-title\">Sales report</p><div class=\"exam-ui-card\"><p class=\"exam-ui-label\">Total</p><p class=\"exam-ui-value\">$0.00</p></div><div class=\"exam-ui-card\"><p class=\"exam-ui-label\">Doubled prices</p><p class=\"exam-ui-code\">undefined, undefined, undefined</p></div></div></div>",
+            "htmlZh": "<div class=\"exam-ui-shell\"><div class=\"exam-ui-topbar\"><span>报表</span><span>销售</span></div><div class=\"exam-ui-body\"><p class=\"exam-ui-page-title\">销售报表</p><div class=\"exam-ui-card\"><p class=\"exam-ui-label\">总额</p><p class=\"exam-ui-value\">$0.00</p></div><div class=\"exam-ui-card\"><p class=\"exam-ui-label\">翻倍价格</p><p class=\"exam-ui-code\">undefined, undefined, undefined</p></div></div></div>",
+            "caption": "The map callback returns nothing, so the list fills with undefined, and the total never accumulates.",
+            "captionZh": "map 的回调没有返回值，列表被 undefined 填满，总额也从未累加。"
+          }
+        },
+        {
+          "id": "Q9",
+          "title": "An input that saves the wrong value",
+          "titleZh": "保存了错误值的输入框",
+          "marks": 5,
+          "contentMdx": "`settings.js` sets a default email with `setAttribute('value', ...)` and later reads `email.getAttribute('value')` to save (see `settings.js`). After the user edits the field, saving writes the stale default back, as `settings.png` shows the field displaying `hello@mail.com` while the saved value stays `default@mail.com`.",
+          "contentMdxZh": "`settings.js` 用 `setAttribute('value', ...)` 设置了一个默认邮箱，之后又读取 `email.getAttribute('value')` 来保存（见 `settings.js`）。用户修改字段后，保存写回的却是过时的默认值，如 `settings.png` 所示：输入框显示 `hello@mail.com`，保存下来的却仍是 `default@mail.com`。",
+          "subQuestions": [
+            {
+              "id": "Q9-a",
+              "label": "(a)",
+              "marks": 1,
+              "questionMdx": "After the user types a new address, why does `email.getAttribute('value')` still return `default@mail.com` while `email.value` returns what they typed?",
+              "answerMdx": "The `value` *attribute* is the initial/default value written in the HTML source; it is set once and does not change when the user types. The `value` *property* is the live state of the control and is updated on every keystroke. So after editing, `email.value` holds the typed text but the attribute still holds the old default — they are two different things that only started out equal.",
+              "markingMdx": "1 mark for stating that the `value` attribute is the initial/default value from the markup while the `value` property is the live state updated as the user types.",
+              "questionMdxZh": "用户输入了新地址之后，为什么 `email.getAttribute('value')` 仍返回 `default@mail.com`，而 `email.value` 返回用户输入的内容？",
+              "answerMdxZh": "`value` *特性*（attribute）是写在 HTML 源码里的初始/默认值，只设置一次，用户输入时不会改变。`value` *属性*（property）是控件在实时 DOM 上的当前状态，每次按键都会更新。所以用户修改后，`email.value` 是输入的文字，而 attribute 仍是旧的默认值——两者只是“一开始相等”。",
+              "markingMdxZh": "1 分：说明 `value` attribute 是标记里的初始/默认值，而 `value` property 是随输入更新的实时状态。"
+            },
+            {
+              "id": "Q9-b",
+              "label": "(b)",
+              "marks": 2,
+              "questionMdx": "Explain the general rule of attribute vs property for form controls, using `checked` as another example.",
+              "answerMdx": "An attribute lives in the HTML markup and describes the *initial* state; a property lives on the live DOM object and describes the *current* state. For most form controls the two are not mirrored after user interaction: `value` / `checked` / `selected` change as the user interacts, but their attributes do not. A classic trap is the checkbox: `checkbox.checked` is a real boolean property, whereas the `checked` attribute's mere presence (even `checked=\"false\"`, which is a non-empty string) means the box is checked on load. So read and write the *property* for live state, and use attributes only to set defaults.",
+              "markingMdx": "1 mark for stating that attributes describe the initial state from the markup while properties describe the current live DOM state, and they diverge after user interaction.\n1 mark for the `checked` example, especially that the attribute's presence (even `\"false\"`) checks the box while `.checked` is a boolean.",
+              "questionMdxZh": "请说明表单控件里 attribute 与 property 的一般规律，并以 `checked` 作为另一个例子。",
+              "answerMdxZh": "attribute 写在 HTML 标记里，描述*初始*状态；property 存在于实时 DOM 对象上，描述*当前*状态。对大多数表单控件，用户交互后二者并不镜像：`value` / `checked` / `selected` 会随交互变化，而它们的 attribute 不会。复选框是经典陷阱：`checkbox.checked` 是真正的布尔属性，而 `checked` attribute 只要*存在*（哪怕写成 `checked=\"false\"`，一个非空字符串）就表示加载时勾选。所以读取和写入实时状态要用 *property*，attribute 只用来设默认值。",
+              "markingMdxZh": "1 分：说明 attribute 描述标记里的初始状态，property 描述实时 DOM 的当前状态，交互后二者会分叉。\n1 分：举出 `checked` 的例子，特别是 attribute 只要存在（哪怕 `\"false\"`）就会勾选，而 `.checked` 是布尔值。"
+            },
+            {
+              "id": "Q9-c",
+              "label": "(c)",
+              "marks": 2,
+              "questionMdx": "Fix the save so it persists what the user actually typed, and say how you would set the initial default instead.",
+              "answerMdx": "Read the property: `save(email.value)`. Set the initial default with the property too — `email.value = 'default@mail.com'` — or simply put `value=\"default@mail.com\"` in the HTML. Both write the control's live value / initial value directly, so what is read back matches what is shown. Avoid `setAttribute('value', ...)` for this, because after a user edit the attribute and the property drift apart.",
+              "markingMdx": "1 mark for reading `email.value` (the property) when saving.\n1 mark for setting the default via the property (`email.value = ...`) or the HTML `value=\"...\"` attribute, and noting the attribute/property drift.",
+              "questionMdxZh": "请修复保存逻辑，让它保存用户实际输入的内容，并说明你会如何设置初始默认值。",
+              "answerMdxZh": "读取属性：`save(email.value)`。设置初始默认值也用属性——`email.value = 'default@mail.com'`——或者直接在 HTML 里写 `value=\"default@mail.com\"`。两者都直接写入控件的实时值 / 初始值，因此读回来的和显示的一致。不要用 `setAttribute('value', ...)` 来做这件事，因为用户编辑之后 attribute 与 property 会越走越远。",
+              "markingMdxZh": "1 分：保存时读取 `email.value`（property）。\n1 分：用 property（`email.value = ...`）或 HTML 的 `value=\"...\"` 设置默认值，并指出 attribute 与 property 会分叉。"
+            }
+          ],
+          "displayNumber": "Q9",
+          "categoryLabel": "JavaScript and the DOM",
+          "categoryLabelZh": "JavaScript 与 DOM",
+          "displayStyle": "quiz-sample",
+          "mockup": {
+            "files": [
+              {
+                "name": "settings.js",
+                "code": "const email = document.querySelector('#email')\nemail.setAttribute('value', 'default@mail.com')\n// user edits the field to 'hello@mail.com'\nsave(email.getAttribute('value'))   // still 'default@mail.com'",
+                "codeZh": "const email = document.querySelector('#email')\nemail.setAttribute('value', 'default@mail.com')\n// 用户把输入框改成 'hello@mail.com'\nsave(email.getAttribute('value'))   // 仍是 'default@mail.com'"
+              },
+              {
+                "name": "settings.png",
+                "active": true
+              }
+            ],
+            "viewport": "desktop",
+            "html": "<div class=\"exam-ui-shell\"><div class=\"exam-ui-topbar\"><span>Settings</span><span>Profile</span></div><div class=\"exam-ui-body\"><p class=\"exam-ui-page-title\">Profile</p><div class=\"exam-ui-card\"><label class=\"exam-ui-label\">Email</label><input class=\"exam-ui-input\" value=\"hello@mail.com\"></div><div class=\"exam-ui-card\"><p class=\"exam-ui-label\">Saved value</p><p class=\"exam-ui-value exam-ui-danger\">default@mail.com</p></div></div></div>",
+            "htmlZh": "<div class=\"exam-ui-shell\"><div class=\"exam-ui-topbar\"><span>设置</span><span>资料</span></div><div class=\"exam-ui-body\"><p class=\"exam-ui-page-title\">资料</p><div class=\"exam-ui-card\"><label class=\"exam-ui-label\">邮箱</label><input class=\"exam-ui-input\" value=\"hello@mail.com\"></div><div class=\"exam-ui-card\"><p class=\"exam-ui-label\">已保存的值</p><p class=\"exam-ui-value exam-ui-danger\">default@mail.com</p></div></div></div>",
+            "caption": "The field shows the new email, but the saved value is the stale attribute default.",
+            "captionZh": "输入框显示的是新邮箱，但保存的值却是过时的 attribute 默认值。"
+          }
+        },
+        {
+          "id": "Q10",
+          "title": "A search box that never stops",
+          "titleZh": "停不下来的搜索框",
+          "marks": 5,
+          "contentMdx": "`search.js` delays a search call by 300ms inside the `input` handler (see `search.js`). Typing `react` still fires five separate searches instead of one, as `search.png` shows five `search(...)` lines in the console.",
+          "contentMdxZh": "`search.js` 在 `input` 处理器里把搜索调用延迟 300ms（见 `search.js`）。输入 `react` 仍然触发了五次各自独立的搜索，而不是一次，如 `search.png` 所示，控制台里出现五行 `search(...)`。",
+          "subQuestions": [
+            {
+              "id": "Q10-a",
+              "label": "(a)",
+              "marks": 1,
+              "questionMdx": "There is already a 300ms delay — why does typing `react` (5 keystrokes) still call `search` five times?",
+              "answerMdx": "Each keystroke runs the handler and schedules its *own* independent `setTimeout`. Nothing cancels the earlier timers, so after roughly 300ms all five fire in turn. The delay only postpones each call; it does not combine them, because there is no shared timer being reset.",
+              "markingMdx": "1 mark for stating that every keystroke schedules its own `setTimeout` and nothing cancels the earlier ones, so all five fire.",
+              "questionMdxZh": "已经延迟了 300ms，为什么输入 `react`（5 次按键）还是调用了五次 `search`？",
+              "answerMdxZh": "每次按键都会执行处理器并各自安排一个*独立*的 `setTimeout`，没有任何代码取消之前的定时器，所以约 300ms 后这五个定时器会依次全部触发。延迟只是把每次调用往后推，并不会把它们合并——因为没有“共享且会被重置”的定时器。",
+              "markingMdxZh": "1 分：说明每次按键都会各自安排一个 `setTimeout`，且没有取消之前的，因此五个都会触发。"
+            },
+            {
+              "id": "Q10-b",
+              "label": "(b)",
+              "marks": 2,
+              "questionMdx": "Contrast debouncing and throttling, and say which fits a search-as-you-type box and why.",
+              "answerMdx": "Debounce waits for the user to *stop* for a quiet period: every new event resets the single timer, so only the last event in a burst fires — ideal for a search box, because you want to query once the typing pauses, not on every keystroke. Throttle instead allows at most one call per interval regardless of how many events occur, which fits continuous streams like scroll or resize where you want steady sampling rather than a single final value.",
+              "markingMdx": "1 mark for defining debounce (wait for a quiet period, reset the timer each event, fire once after the pause).\n1 mark for defining throttle (at most once per interval) and choosing debounce for search-as-you-type.",
+              "questionMdxZh": "请对比 debounce（防抖）与 throttle（节流），并指出“边输入边搜索”的搜索框该用哪一个、为什么。",
+              "answerMdxZh": "防抖会等用户*停止*输入一段“安静期”后再执行：每个新事件都会重置同一个定时器，只有这一串输入里的最后一个会触发——正适合搜索框，因为我们要的是停止输入后再查一次，而不是每敲一下都查。节流则是无论事件多密，每个时间间隔最多执行一次，适合滚动、缩放这类持续事件，要的是稳定采样，而不是最终那一个值。",
+              "markingMdxZh": "1 分：定义防抖（等一段安静期、每个事件重置定时器、停顿后只触发一次）。\n1 分：定义节流（每个间隔最多一次），并为“边输入边搜索”选择防抖。"
+            },
+            {
+              "id": "Q10-c",
+              "label": "(c)",
+              "marks": 2,
+              "questionMdx": "Rewrite the handler as a debounce and explain why it now fires once.",
+              "answerMdx": "Keep one timer id outside the handler and clear it before scheduling the next: `let timer = null; input.addEventListener('input', () => { clearTimeout(timer); timer = setTimeout(() => search(input.value), 300) })`. Each keystroke now cancels the previous pending timer and starts a fresh 300ms countdown, so only the last timer in a typing burst survives to run `search` — giving exactly one call after the user pauses.",
+              "markingMdx": "1 mark for storing the timer id and calling `clearTimeout(timer)` before `setTimeout` on each input.\n1 mark for explaining that clearing resets the countdown so only the final keystroke's timer fires.",
+              "questionMdxZh": "请把处理器改成防抖，并说明为什么现在只触发一次。",
+              "answerMdxZh": "在处理器外保留一个定时器 id，并在每次排程前先清掉它：`let timer = null; input.addEventListener('input', () => { clearTimeout(timer); timer = setTimeout(() => search(input.value), 300) })`。每次按键现在都会取消上一个尚未触发的定时器、重新开始 300ms 倒计时，于是这一串输入里只有最后一个定时器能存活下来执行 `search`——用户停顿后只触发一次。",
+              "markingMdxZh": "1 分：保留定时器 id，并在每次 `setTimeout` 之前调用 `clearTimeout(timer)`。\n1 分：说明清除会重置倒计时，因此只有最后一次按键的定时器会触发。"
+            }
+          ],
+          "displayNumber": "Q10",
+          "categoryLabel": "JavaScript and the DOM",
+          "categoryLabelZh": "JavaScript 与 DOM",
+          "displayStyle": "quiz-sample",
+          "mockup": {
+            "files": [
+              {
+                "name": "search.js",
+                "code": "input.addEventListener('input', () => {\n  setTimeout(() => search(input.value), 300)\n})",
+                "codeZh": "// 没有 clearTimeout，每次按键都会单独排一次\ninput.addEventListener('input', () => {\n  setTimeout(() => search(input.value), 300)\n})"
+              },
+              {
+                "name": "search.png",
+                "active": true
+              }
+            ],
+            "viewport": "desktop",
+            "html": "<div class=\"exam-ui-shell\"><div class=\"exam-ui-topbar\"><span>Search</span><span>Docs</span></div><div class=\"exam-ui-body\"><p class=\"exam-ui-page-title\">Search</p><div class=\"exam-ui-card\"><input class=\"exam-ui-input\" value=\"react\"></div><div class=\"exam-ui-card\"><p class=\"exam-ui-label\">Console</p><p class=\"exam-ui-code\">search(\"r\")</p><p class=\"exam-ui-code\">search(\"re\")</p><p class=\"exam-ui-code\">search(\"rea\")</p><p class=\"exam-ui-code\">search(\"reac\")</p><p class=\"exam-ui-code\">search(\"react\")</p></div></div></div>",
+            "htmlZh": "<div class=\"exam-ui-shell\"><div class=\"exam-ui-topbar\"><span>搜索</span><span>文档</span></div><div class=\"exam-ui-body\"><p class=\"exam-ui-page-title\">搜索</p><div class=\"exam-ui-card\"><input class=\"exam-ui-input\" value=\"react\"></div><div class=\"exam-ui-card\"><p class=\"exam-ui-label\">控制台</p><p class=\"exam-ui-code\">search(\"r\")</p><p class=\"exam-ui-code\">search(\"re\")</p><p class=\"exam-ui-code\">search(\"rea\")</p><p class=\"exam-ui-code\">search(\"reac\")</p><p class=\"exam-ui-code\">search(\"react\")</p></div></div></div>",
+            "caption": "Each keystroke schedules its own timer, so typing five letters fires five searches.",
+            "captionZh": "每次按键都各自排一个定时器，敲五个字母就触发了五次搜索。"
           }
         }
       ]

@@ -441,8 +441,8 @@ describe('content files', () => {
     const topicText = JSON.stringify(topic)
 
     expect(exam.id).toBe('TOPIC4-ASYNC-NETWORK')
-    expect(exam.totalMarks).toBe(30)
-    expect(exam.questions).toHaveLength(6)
+    expect(exam.totalMarks).toBe(50)
+    expect(exam.questions).toHaveLength(10)
     expect(exam.questions.every((question) => question.subQuestions.length === 3)).toBe(true)
     expect(exam.questions.every((question) => question.displayStyle === 'quiz-sample')).toBe(true)
     expect(exam.questions.every((question) => Boolean(question.displayNumber))).toBe(true)
@@ -485,7 +485,7 @@ describe('content files', () => {
       expect(topicText).toContain(keyword)
     }
 
-    for (let index = 1; index <= 6; index += 1) {
+    for (let index = 1; index <= 10; index += 1) {
       expect(week4).toContain(`TOPIC4-Q${index}`)
     }
   })
@@ -532,34 +532,65 @@ describe('content files', () => {
       questions: PaperQuestion[]
     }
 
-    const papers: Array<{ file: string; id: string; totalMarks: number; questions: number }> = [
-      { file: 'content/exams/topic-1.html.json', id: 'TOPIC1-HTML', totalMarks: 20, questions: 4 },
-      { file: 'content/exams/topic-2.css.json', id: 'TOPIC2-CSS', totalMarks: 30, questions: 6 },
-      { file: 'content/exams/topic-3.js-dom.json', id: 'TOPIC3-JS-DOM', totalMarks: 30, questions: 6 },
-      { file: 'content/exams/topic-4.async-network.json', id: 'TOPIC4-ASYNC-NETWORK', totalMarks: 30, questions: 6 },
-      { file: 'content/exams/topic-5.uiux-react.json', id: 'TOPIC5-UIUX-REACT', totalMarks: 30, questions: 6 },
-      { file: 'content/exams/sprint-1.quiz12.json', id: 'SPRINT1-QUIZ12', totalMarks: 60, questions: 8 },
-      { file: 'content/exams/sprint-2.quiz3.json', id: 'SPRINT2-QUIZ3', totalMarks: 64, questions: 8 },
+    const papers: Array<{ file: string; id: string; titleZh?: string; totalMarks: number; questions: number }> = [
+      { file: 'content/exams/topic-1.html.json', id: 'TOPIC1-HTML', totalMarks: 50, questions: 10 },
+      { file: 'content/exams/topic-2.css.json', id: 'TOPIC2-CSS', totalMarks: 50, questions: 10 },
+      { file: 'content/exams/topic-3.js-dom.json', id: 'TOPIC3-JS-DOM', totalMarks: 50, questions: 10 },
+      { file: 'content/exams/topic-4.async-network.json', id: 'TOPIC4-ASYNC-NETWORK', totalMarks: 50, questions: 10 },
+      { file: 'content/exams/topic-5.uiux-react.json', id: 'TOPIC5-UIUX-REACT', totalMarks: 50, questions: 10 },
+      {
+        file: 'content/exams/sprint-1.quiz12.json',
+        id: 'SPRINT1-QUIZ12',
+        titleZh: 'COMP6080 冲刺卷01',
+        totalMarks: 76,
+        questions: 10,
+      },
+      {
+        file: 'content/exams/sprint-2.quiz3.json',
+        id: 'SPRINT2-QUIZ3',
+        titleZh: 'COMP6080 冲刺卷02',
+        totalMarks: 80,
+        questions: 10,
+      },
     ]
 
     const sync: Record<string, Array<{ week: string; ids: string[] }>> = {
-      'TOPIC1-HTML': [{ week: 'week-1', ids: ['TOPIC1-Q1', 'TOPIC1-Q2', 'TOPIC1-Q3', 'TOPIC1-Q4'] }],
-      'TOPIC2-CSS': [{ week: 'week-2', ids: Array.from({ length: 6 }, (_, index) => `TOPIC2-Q${index + 1}`) }],
-      'TOPIC3-JS-DOM': [{ week: 'week-3', ids: Array.from({ length: 6 }, (_, index) => `TOPIC3-Q${index + 1}`) }],
-      'TOPIC4-ASYNC-NETWORK': [{ week: 'week-4', ids: Array.from({ length: 6 }, (_, index) => `TOPIC4-Q${index + 1}`) }],
+      'TOPIC1-HTML': [{ week: 'week-1', ids: Array.from({ length: 10 }, (_, index) => `TOPIC1-Q${index + 1}`) }],
+      'TOPIC2-CSS': [{ week: 'week-2', ids: Array.from({ length: 10 }, (_, index) => `TOPIC2-Q${index + 1}`) }],
+      'TOPIC3-JS-DOM': [{ week: 'week-3', ids: Array.from({ length: 10 }, (_, index) => `TOPIC3-Q${index + 1}`) }],
+      'TOPIC4-ASYNC-NETWORK': [{ week: 'week-4', ids: Array.from({ length: 10 }, (_, index) => `TOPIC4-Q${index + 1}`) }],
       'TOPIC5-UIUX-REACT': [
-        { week: 'week-5', ids: ['TOPIC5-Q1', 'TOPIC5-Q2', 'TOPIC5-Q3'] },
-        { week: 'week-7', ids: ['TOPIC5-Q4', 'TOPIC5-Q5', 'TOPIC5-Q6'] },
+        {
+          week: 'week-5',
+          ids: ['TOPIC5-Q1', 'TOPIC5-Q2', 'TOPIC5-Q3', 'TOPIC5-Q7', 'TOPIC5-Q8'],
+        },
+        {
+          week: 'week-7',
+          ids: ['TOPIC5-Q4', 'TOPIC5-Q5', 'TOPIC5-Q6', 'TOPIC5-Q9', 'TOPIC5-Q10'],
+        },
       ],
       'SPRINT1-QUIZ12': [
         { week: 'week-1', ids: ['SPRINT1-Q1'] },
-        { week: 'week-2', ids: ['SPRINT1-Q2'] },
-        { week: 'week-3', ids: ['SPRINT1-Q3', 'SPRINT1-Q4'] },
+        { week: 'week-2', ids: ['SPRINT1-Q2', 'SPRINT1-Q9'] },
+        { week: 'week-3', ids: ['SPRINT1-Q3', 'SPRINT1-Q4', 'SPRINT1-Q10'] },
         { week: 'week-4', ids: ['SPRINT1-Q5', 'SPRINT1-Q6'] },
         { week: 'week-5', ids: ['SPRINT1-Q7', 'SPRINT1-Q8'] },
       ],
       'SPRINT2-QUIZ3': [
-        { week: 'week-7', ids: Array.from({ length: 7 }, (_, index) => `SPRINT2-Q${index + 1}`) },
+        {
+          week: 'week-7',
+          ids: [
+            'SPRINT2-Q1',
+            'SPRINT2-Q2',
+            'SPRINT2-Q3',
+            'SPRINT2-Q4',
+            'SPRINT2-Q5',
+            'SPRINT2-Q6',
+            'SPRINT2-Q7',
+            'SPRINT2-Q9',
+            'SPRINT2-Q10',
+          ],
+        },
         { week: 'week-3', ids: ['SPRINT2-Q8'] },
       ],
     }
@@ -570,6 +601,7 @@ describe('content files', () => {
       const exam = (readJson(meta.file).exams as Paper[])[0]
 
       expect(exam.id).toBe(meta.id)
+      if (meta.titleZh) expect(exam.titleZh).toBe(meta.titleZh)
       expect(exam.totalMarks).toBe(meta.totalMarks)
       expect(Boolean(exam.titleZh && exam.descriptionZh)).toBe(true)
       expect(exam.questions).toHaveLength(meta.questions)

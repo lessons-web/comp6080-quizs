@@ -602,6 +602,111 @@
       ],
       "images": [],
       "createdAt": "2026-11-21"
+    },
+    {
+      "id": "TOPIC5-Q9",
+      "topic": "react",
+      "weeks": [
+        "week-7"
+      ],
+      "difficulty": "medium",
+      "tags": [
+        "专题卷5",
+        "React",
+        "受控组件",
+        "受控与非受控",
+        "onChange"
+      ],
+      "question": "登录表单 `App.js` 用 `<input value={email} />` 绑定邮箱输入框，其中 `email` 是初值为 `''` 的 state，整份代码里没有任何 `onChange`。结果输入框看起来正常，却谁都无法往里打字，控制台还打印 React 关于 “有 `value` 但没有 `onChange`” 的警告。请说明是什么让它成为受控输入框、为什么打不进字，解释受控与非受控输入框的区别以及 React 遇到 “有 `value` 无 `onChange`” 时做了什么，并给出修法（展示 state 与处理函数）。",
+      "knowledgePoint": "受控与非受控输入框",
+      "answerExplanation": "受控输入框显示的值由 React state 驱动：传入 `value={email}` 并在 `onChange` 里更新该 state，所以 React 是 “输入框显示什么” 的唯一数据源。这里虽然传了 `value`，却没有 `onChange`、也从不调用 `setEmail`，`email` 永远是 `''`；每次按键时浏览器会短暂地把字符写进 DOM，但 React 在下一次渲染立刻又把 `value={''}` 写回去把它抹掉，于是输入框表现得像只读框。两者区别：非受控输入框把值留存在 DOM 里，用 `defaultValue` 设初值、之后通过 ref 读回来，React 从不跟踪它；受控输入框则让 React 通过 state 拥有这个值，因此 state 与 DOM 不会各说各话，也便于根据当前文本做校验或派生 UI。正是这种拥有权解释了缺处理函数为何让输入失效：传入 `value` 却没有 `onChange` 时，React 把字段当作只读，每次渲染都把你给的 `value` 重新写回去并打印警告；由于没有按键会调用 `setEmail`，敲进去的字符立即被丢弃，输入框保持为空。修法：加一个会更新 state 的 `onChange`，`const [email, setEmail] = useState(''); return <input value={email} onChange={(e) => setEmail(e.target.value)} />`——每次按键都用新字符串调用 `setEmail`，React 重新渲染并把新值作为 `value` 传回，输入框就原样回显用户所打内容，state 成为唯一数据源；若确实想要非受控输入框，就去掉 `value`，改用 `defaultValue` 加 ref。",
+      "codeBlocks": [
+        {
+          "language": "jsx",
+          "code": "const [email, setEmail] = useState('')\nreturn (\n  <input value={email} onChange={(e) => setEmail(e.target.value)} />\n)"
+        }
+      ],
+      "images": [],
+      "createdAt": "2026-11-21"
+    },
+    {
+      "id": "TOPIC5-Q10",
+      "topic": "react",
+      "weeks": [
+        "week-7"
+      ],
+      "difficulty": "hard",
+      "tags": [
+        "专题卷5",
+        "React",
+        "React Router",
+        "useNavigate",
+        "Navigate"
+      ],
+      "question": "`Account` 页面（`App.js`）应当把未登录用户送到 `/login`，却在组件函数体里、也就是渲染期间，只要 `user` 为 `null` 就直接调用 `navigate('/login')`。结果受保护页面会短暂闪一下、跳转时灵时不灵，React 还警告 “不应在组件渲染期间调用 navigate()”。请解释为什么渲染期间调用 `navigate` 不可靠，给出当 `user` 为 null 时跳转的两种正确写法并说明各用于什么场景，最后展示改正后的组件以及必须使用 `useNavigate` 时的 effect 版替代写法。",
+      "knowledgePoint": "React Router 跳转：渲染期用 <Navigate>，事件 / 异步用 navigate",
+      "answerExplanation": "`navigate` 是一个副作用：它改变 URL、让路由器更新，进而触发重渲染；但渲染必须是纯的——它只应为当前 props 与 state 计算 UI，而不应执行副作用。在组件函数体里调用 `navigate`，等于在 React 还在渲染、尚未提交时执行它，因而脱离了正常更新流程；这次调用不会取消进行中的渲染，所以当前这次渲染仍可能把受保护的 UI 提交上去（受保护页面闪一下），跳转也就不可靠。两种正确写法：对于只由当前这次渲染决定的跳转（受保护路由），使用声明式的 `<Navigate>` 组件 `return <Navigate to=\"/login\" replace />`——返回元素是在 “描述结果” 而非执行副作用，路由器会在提交阶段完成跳转，`replace` 替换历史记录使后退不会回到受保护页；而当跳转是事件或异步结果导致时（登录成功之后、或响应一次点击），就在事件处理函数或 effect 里调用 `navigate('/account')`，这才是副作用允许发生的位置。改正后的组件：`function Account() { const { user } = useAuth(); if (!user) return <Navigate to=\"/login\" replace />; return <Profile />; }`；若必须用 `useNavigate`，把调用移进 effect：`useEffect(() => { if (!user) navigate('/login', { replace: true }); }, [user])`。两种方式都让导航发生在渲染阶段之外，闪烁和警告随之消失。",
+      "codeBlocks": [
+        {
+          "language": "jsx",
+          "code": "import { Navigate } from 'react-router-dom'\n\nfunction Account() {\n  const { user } = useAuth()\n  if (!user) return <Navigate to=\"/login\" replace />\n  return <Profile />\n}"
+        }
+      ],
+      "images": [],
+      "createdAt": "2026-11-21"
+    },
+    {
+      "id": "SPRINT2-Q9",
+      "topic": "react",
+      "weeks": [
+        "week-7"
+      ],
+      "difficulty": "medium",
+      "tags": [
+        "冲刺卷",
+        "Quiz3",
+        "React",
+        "条件渲染",
+        "falsy"
+      ],
+      "question": "搜索面板用 `{items.length && <p>Found {items.length} matches</p>}` 做条件渲染。当搜索没有结果（`items.length === 0`）时，页面上却出现一个孤零零的 `0`，而不是什么都不显示。请说明 (1) 为什么空结果时会出现 `0`；(2) 为什么 `isLoggedIn && <Badge />`（布尔）在 false 时什么都不显示，而 `count && …` 会显示 `0`；(3) 给出两种修法。",
+      "knowledgePoint": "条件渲染与 falsy 值：`&&` 返回左操作数，React 会把数字 0 当成文本渲染",
+      "answerExplanation": "空结果时 `items.length` 是数字 `0`，而 `&&` 在左操作数为假时返回左操作数本身，所以 `0 && <p>…</p>` 求值为 `0`——那个 `<p>` 根本没被创建。React 会把数值子节点当作文本渲染，于是页面上出现一个 `0`。对比之下，`false && …` 返回 `false`，React 把 `true`/`false`/`null`/`undefined` 都当作什么都不渲染的子节点；而数字 `0` 是真实的文本子节点，会被打印出来。两个守卫看起来一样，但交回的假值不同，React 只跳过布尔 / null / undefined 那几种。修法：① 显式比较或转成布尔，如 `items.length > 0 && …`、`Boolean(items.length) && …`、`!!items.length && …`，因为 `0 > 0` 和 `Boolean(0)` 都是 `false`，React 会跳过；② 用三元返回“什么都不渲染”的值：`{items.length ? <p>…</p> : null}`。",
+      "codeBlocks": [
+        {
+          "language": "jsx",
+          "code": "function Results({ items }) {\n  return (\n    <div>\n      {items.length && <p>Found {items.length} matches</p>}\n      {items.length === 0 && <p className=\"empty\">No matches</p>}\n    </div>\n  )\n}\n\n// items.length === 0 时，表达式求值为 0，React 把数字 0 当文本渲染"
+        }
+      ],
+      "images": [],
+      "createdAt": "2026-11-21"
+    },
+    {
+      "id": "SPRINT2-Q10",
+      "topic": "react",
+      "weeks": [
+        "week-7"
+      ],
+      "difficulty": "hard",
+      "tags": [
+        "冲刺卷",
+        "Quiz3",
+        "React",
+        "React.memo",
+        "useMemo",
+        "useCallback"
+      ],
+      "question": "商品列表用 `React.memo` 包裹每一行 `ProductRow`，但父组件每次渲染都传入新的内联回调 `onSelect={() => addToCart(item.id)}`，并且 `visible` 是在函数体里直接用 `items.filter(...).sort(...)` 算出来的。结果每次在搜索框打字，所有行都会重渲染、过滤列表也会重算，列表很卡。请说明 (1) 为什么 `React.memo` 没能跳过没有变化的行；(2) 为什么过滤计算运行的次数远多于数据变化；(3) 用 `useCallback` 和 `useMemo` 给出修法。",
+      "knowledgePoint": "记忆化与重渲染陷阱：`React.memo` 做 props 浅比较，内联函数 / 对象每次渲染都是新引用",
+      "answerExplanation": "`React.memo` 只有在新 props 与上一次浅相等时才跳过渲染。父组件传的是内联箭头函数 `onSelect`，每次渲染都会创建一个全新的函数对象，引用不同，浅比较失败，于是 memo 仍然重渲染该行——行数据没变，变的只是被重建的函数 prop。而函数体里的代码在每次渲染都会运行：在搜索框打字会更新 state、触发 `ProductList` 重渲染，每次渲染都从头重算 `filter().sort()`，同时把所有子组件的 `onSelect` 也重建一遍，于是整个列表都重渲染、重复计算，条目越多越卡。修法：用 `useCallback` 稳定处理器引用，用 `useMemo` 缓存派生列表——`const onSelect = useCallback((id) => addToCart(id), [addToCart])`、`const visible = useMemo(() => items.filter(...).sort(...), [items, query])`。这样依赖不变时 `onSelect` 保持同一引用，`React.memo` 的浅比较通过从而跳行，`visible` 只在 `items` 或 `query` 真正变化时才重算。依赖数组必须列出回调读取到的每个值，否则会缓存过期结果。",
+      "codeBlocks": [
+        {
+          "language": "jsx",
+          "code": "const ProductRow = React.memo(function ProductRow({ item, onSelect }) {\n  console.log('render', item.id)\n  return <li onClick={() => onSelect(item.id)}>{item.name}</li>\n})\n\nfunction ProductList({ items, query }) {\n  const visible = items\n    .filter((i) => i.name.includes(query))\n    .sort((a, b) => a.price - b.price)\n\n  return (\n    <ul>\n      {visible.map((item) => (\n        <ProductRow\n          key={item.id}\n          item={item}\n          onSelect={() => addToCart(item.id)} // 每次渲染都是新函数，memo 失效\n        />\n      ))}\n    </ul>\n  )\n}"
+        }
+      ],
+      "images": [],
+      "createdAt": "2026-11-21"
     }
   ]
 }

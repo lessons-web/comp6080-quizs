@@ -5,10 +5,16 @@
       "id": "TOPIC5-UIUX-REACT",
       "title": "UI/UX & React — Topic Paper",
       "titleZh": "UI/UX 与 React · 专题卷",
-      "description": "Weeks 5-7 topic paper: UI vs UX, alignment, colour and visual hierarchy, affordance and usability, then React declarative rendering / JSX, useState and list keys, and useEffect dependencies and cleanup. Six questions, three sub-questions each, with screenshot-style mockups.",
-      "descriptionZh": "Weeks 5-7 专题卷：UI 与 UX、对齐 / 配色 / 视觉层级、示能与可用性，再到 React 的声明式渲染 / JSX、useState 与列表 key，以及 useEffect 依赖与清理。共 6 道大题，每题 3 个子题，配套截图感 mockup。",
-      "totalMarks": 30,
-      "tags": ["专题卷", "Weeks5-7", "UI", "UX", "React"],
+      "description": "Weeks 5-7 topic paper: UI vs UX, alignment, colour and visual hierarchy, affordance and usability, then React declarative rendering / JSX, useState and list keys, and useEffect dependencies and cleanup. Ten questions, three sub-questions each, with screenshot-style mockups.",
+      "descriptionZh": "Weeks 5-7 专题卷：UI 与 UX、对齐 / 配色 / 视觉层级、示能与可用性，再到 React 的声明式渲染 / JSX、useState 与列表 key，以及 useEffect 依赖与清理。共 10 道大题，每题 3 个子题，配套截图感 mockup。",
+      "totalMarks": 50,
+      "tags": [
+        "专题卷",
+        "Weeks5-7",
+        "UI",
+        "UX",
+        "React"
+      ],
       "questions": [
         {
           "id": "Q1",
@@ -399,8 +405,269 @@
             "caption": "The timer jumps by two per second and never stops, because intervals stack and the callback reads a stale value.",
             "captionZh": "计时器每秒跳 2、且永不停止，因为定时器层层叠加，而回调读取的是过期的值。"
           }
+        },
+        {
+          "id": "Q7",
+          "title": "Close together means related",
+          "titleZh": "靠得近，就相关",
+          "marks": 5,
+          "contentMdx": "A profile form (`profile.html`) actually holds two sections — personal details and billing details — but every field uses the same 16px vertical gap and there are no section headings, so the eye reads all eight fields as one block. `profile.png` is the screenshot. In testing, people typed their billing email into the personal-details email field. Both sections happen to contain a field labelled \"Email\".",
+          "contentMdxZh": "一个个人资料表单（`profile.html`）其实包含两组字段——个人信息与账单信息——但每个字段都用了同样的 16px 垂直间距，也没有分组小标题，于是眼睛把八个字段读成一大块。`profile.png` 是截图。测试中，人们把账单邮箱填进了个人信息里的邮箱字段。恰好两组字段里都各有一个标着 “Email” 的字段。",
+          "subQuestions": [
+            {
+              "id": "Q7-a",
+              "label": "(a)",
+              "marks": 1,
+              "questionMdx": "What does the Gestalt principle of proximity say the eye does with elements, and why does giving every field the same gap fail to communicate grouping?",
+              "answerMdx": "Proximity says the eye groups elements by how close they are: items placed close together are perceived as one group, and items spaced apart as separate groups. When every field — including fields that belong to different logical sections — shares the same gap, no field is closer to its true neighbours than to the next section's first field. There is no boundary, so the eye has no distance cue to cut the block into two, and all eight fields read as a single group. The grouping information is simply not present in the layout.",
+              "markingMdx": "1 mark for defining proximity (elements close together are perceived as one group) and stating that a uniform gap leaves no boundary, so grouping is lost.",
+              "questionMdxZh": "格式塔的接近性原则（proximity）说眼睛会怎样对待元素？为什么让每个字段都用同样的间距就无法表达分组？",
+              "answerMdxZh": "接近性说的是眼睛按照元素的疏密来分组：靠得近的会被看成同一组，隔得远的被看成不同的组。当每个字段——包括属于不同逻辑分组的字段——都用同样的间距时，没有任何字段比它 “真正的邻居” 更靠近自己。也就没有边界，眼睛缺少把这一块切成两组所需的距离线索，于是八个字段被读成一组。分组信息在布局里根本不存在。",
+              "markingMdxZh": "1 分：给出接近性的定义（靠得近的元素被看成同一组），并说明间距一致会失去边界、分组信息丢失。"
+            },
+            {
+              "id": "Q7-b",
+              "label": "(b)",
+              "marks": 2,
+              "questionMdx": "Using proximity and similarity together, explain why testers typed the billing email into the personal email field.",
+              "answerMdx": "Two Gestalt rules are colliding here. By similarity, both sections render their fields with the same label style, the same input and the same gap, so the two \"Email\" fields look like two instances of the same control rather than two fields in two different sections. By proximity, because the gap is uniform, nothing signals that one \"Email\" belongs to the personal block and the other to the billing block — the fields are not clustered, so no boundary is perceived. With similarity making the labels indistinguishable and proximity supplying no boundary, the eight fields read as one flat list, and the tester simply fills the \"Email\" that is closest to what they were doing — the personal one — even though they meant the billing one.",
+              "markingMdx": "1 mark for explaining that similarity makes the two \"Email\" fields look like the same thing.\n1 mark for explaining that, with uniform spacing, proximity gives no boundary, so the tester cannot tell which section a field belongs to.",
+              "questionMdxZh": "请结合接近性与相似性，解释测试者为什么把账单邮箱填进了个人信息里的邮箱字段。",
+              "answerMdxZh": "这里两条格式塔规则在相互叠加。按相似性，两组字段用同样的标签样式、同样的输入框、同样的间距渲染，于是两个 “Email” 字段看起来是同一个控件的两个实例，而不是两个不同分组里的字段。按接近性，由于间距一致，没有任何东西暗示这个 “Email” 属于个人信息、那个 “Email” 属于账单信息——字段没有被聚成簇，所以感知不到边界。相似性让两个标签无法区分，接近性又不提供边界，于是八个字段被读成一览无余的一张平列表，测试者就顺手填了离自己当前操作最近的那个 “Email”——也就是个人信息里的那个——尽管他们本意是账单那个。",
+              "markingMdxZh": "1 分：说明相似性让两个 “Email” 字段看起来是同一种东西。\n1 分：说明间距一致时接近性无法给出边界，测试者分不清字段属于哪一组。"
+            },
+            {
+              "id": "Q7-c",
+              "label": "(c)",
+              "marks": 2,
+              "questionMdx": "Give a fix that makes the two sections read as two groups, and say why it works.",
+              "answerMdx": "Introduce a boundary that proximity can express: make the gap within a section small and the gap between sections clearly larger, and name each section. Concretely, wrap each section in a `fieldset`/card with a heading, keep the inner fields tightly spaced (e.g. a small `row-gap`), and give the second section a larger top margin or a divider. Now a field sits closer to the fields of its own section than to the next section's fields, so proximity supplies the edge and the eye reads two units; the heading adds the label that similarity had blurred. A `border` or `divider` between the sections gives a second, non-distance cue.",
+              "markingMdx": "1 mark for making the inner-section gap small and the between-section gap clearly larger (a proximity boundary).\n1 mark for adding a heading and/or a container/divider that names and encloses each group.",
+              "questionMdxZh": "请给出一个能把这两组读成两组的分组修法，并说明它为什么有效。",
+              "answerMdxZh": "引入一条接近性能表达的边界：让组内间距小、组间间距明显更大，并给每组加标题。具体做法：把每组包进带标题的 `fieldset` / 卡片里，组内字段保持紧凑（例如较小的 `row-gap`），再给第二组更大的上边距或一条分隔线。这样一来，一个字段离本组字段的距离就比离下一组字段更近，接近性便提供了边界，眼睛就读成两个单元；标题则补回了被相似性模糊掉的名字。在两组之间加 `border` 或分隔线，还能提供第二条非距离的线索。",
+              "markingMdxZh": "1 分：让组内间距小、组间间距明显更大（形成接近性边界）。\n1 分：加上标题，和/或用一个容器 / 分隔线把每组命名并包起来。"
+            }
+          ],
+          "displayNumber": "Q7",
+          "categoryLabel": "Alignment, Colour and Visual Hierarchy",
+          "categoryLabelZh": "对齐、配色与视觉层级",
+          "displayStyle": "quiz-sample",
+          "mockup": {
+            "files": [
+              {
+                "name": "profile.html",
+                "code": "<form class=\"profile\">\n  <input placeholder=\"Full name\">\n  <input placeholder=\"Email\">\n  <input placeholder=\"Phone\">\n  <input placeholder=\"Email\">\n  <input placeholder=\"Cardholder name\">\n  <input placeholder=\"Billing postcode\">\n  <!-- 个人信息与账单信息之间用了同样的间距 -->\n</form>",
+                "codeZh": "<form class=\"profile\">\n  <input placeholder=\"Full name\">\n  <input placeholder=\"Email\">\n  <input placeholder=\"Phone\">\n  <input placeholder=\"Email\">\n  <input placeholder=\"Cardholder name\">\n  <input placeholder=\"Billing postcode\">\n  <!-- 个人信息与账单信息之间用了同样的间距 -->\n</form>"
+              },
+              {
+                "name": "profile.png",
+                "active": true
+              }
+            ],
+            "viewport": "desktop",
+            "html": "<div class=\"exam-ui-shell\"><div class=\"exam-ui-topbar\"><span>Account</span><span>Profile</span></div><div class=\"exam-ui-body\"><p class=\"exam-ui-page-title\">Profile details</p><div class=\"exam-ui-card\"><div class=\"exam-ui-stack\"><div><p class=\"exam-ui-label\">Full name</p><div class=\"exam-ui-input\">Mei Tan</div></div><div><p class=\"exam-ui-label\">Email</p><div class=\"exam-ui-input\">mei@example.com</div></div><div><p class=\"exam-ui-label\">Phone</p><div class=\"exam-ui-input\">0400 000 000</div></div><div><p class=\"exam-ui-label\">Email</p><div class=\"exam-ui-input\"></div></div><div><p class=\"exam-ui-label\">Cardholder name</p><div class=\"exam-ui-input\"></div></div><div><p class=\"exam-ui-label\">Billing postcode</p><div class=\"exam-ui-input\"></div></div></div><p class=\"exam-ui-help\">Every field shares one 16px gap &middot; two Email labels in one block</p></div></div></div>",
+            "htmlZh": "<div class=\"exam-ui-shell\"><div class=\"exam-ui-topbar\"><span>账户</span><span>个人资料</span></div><div class=\"exam-ui-body\"><p class=\"exam-ui-page-title\">个人资料</p><div class=\"exam-ui-card\"><div class=\"exam-ui-stack\"><div><p class=\"exam-ui-label\">姓名</p><div class=\"exam-ui-input\">Mei Tan</div></div><div><p class=\"exam-ui-label\">邮箱</p><div class=\"exam-ui-input\">mei@example.com</div></div><div><p class=\"exam-ui-label\">电话</p><div class=\"exam-ui-input\">0400 000 000</div></div><div><p class=\"exam-ui-label\">邮箱</p><div class=\"exam-ui-input\"></div></div><div><p class=\"exam-ui-label\">持卡人姓名</p><div class=\"exam-ui-input\"></div></div><div><p class=\"exam-ui-label\">账单邮编</p><div class=\"exam-ui-input\"></div></div></div><p class=\"exam-ui-help\">每个字段共用同一个 16px 间距 &middot; 一个区块里出现两个 “邮箱” 标签</p></div></div></div>",
+            "caption": "Two sections (personal and billing) share one uniform gap, so all fields read as a single group and the two Email fields cannot be told apart.",
+            "captionZh": "个人信息与账单两组字段共用同一个间距，于是所有字段被读成一整块，两个 “邮箱” 字段也无法区分。"
+          }
+        },
+        {
+          "id": "Q8",
+          "title": "Text you cannot read",
+          "titleZh": "看不清的文字",
+          "marks": 5,
+          "contentMdx": "A shop's home page has a hero card (`landing.html`). The encouraging caption \"Sign up and we will email you the code\" is drawn in light grey (`#9aa0a6`) on a near-white background (`#f5f5f5`). `landing.png` is the screenshot. In testing, several people — including a participant who uses a screen in a bright room — said they could not read that line at all.",
+          "contentMdxZh": "一个商城首页有一张主视觉卡片（`landing.html`）。那句引导文案 “注册后我们会把优惠码发到你的邮箱” 用的是浅灰（`#9aa0a6`）配近白背景（`#f5f5f5`）。`landing.png` 是截图。测试中，好几个人——包括一位在光线明亮房间里使用屏幕的参与者——都说这行字根本看不清。",
+          "subQuestions": [
+            {
+              "id": "Q8-a",
+              "label": "(a)",
+              "marks": 1,
+              "questionMdx": "What is colour contrast, and why does light grey text on a near-white background fail?",
+              "answerMdx": "Colour contrast is the difference in luminance (perceived lightness) between the text and the background behind it. Light grey (`#9aa0a6`) and near-white (`#f5f5f5`) sit at almost the same luminance, so the contrast ratio between them is only about 1.6:1 — far too small. The eye separates letters from their background by that luminance difference, so when it is tiny the glyphs blur into the background and the line becomes unreadable, especially for low-vision users or in bright light.",
+              "markingMdx": "1 mark for defining contrast as the luminance difference between text and background, and stating that this light-grey-on-near-white pair is too close to read.",
+              "questionMdxZh": "什么是颜色对比度？为什么浅灰文字配近白背景会看不清？",
+              "answerMdxZh": "颜色对比度是文字与其背后背景之间亮度（感知明度）的差异。浅灰（`#9aa0a6`）与近白（`#f5f5f5`）的亮度几乎相同，两者的对比度只有约 1.6:1——远远不够。眼睛正是靠这个亮度差把字母从背景里分离开；差异太小，字就会糊进背景里，那一行便无法阅读，对低视力用户或在强光下更是如此。",
+              "markingMdxZh": "1 分：把对比度定义为文字与背景之间的亮度差，并说明这组 “浅灰 + 近白” 过于接近、无法阅读。"
+            },
+            {
+              "id": "Q8-b",
+              "label": "(b)",
+              "marks": 2,
+              "questionMdx": "Explain why this is a usability/accessibility issue rather than a matter of taste, and state the WCAG minimum that applies.",
+              "answerMdx": "WCAG is a usability/accessibility checklist, and its \"contrast (minimum)\" rule sets a measurable threshold: at least 4.5:1 for normal text and at least 3:1 for large text (roughly 18pt, or 24px bold, and up). The current pair (about 1.6:1) is below both, so this is not a stylistic preference — it is a rule with a number attached. For a user who cannot read the line, the content effectively does not exist: they may miss that signing up sends them a code, so the caption fails its job. Contrast is measured by comparing the relative luminance of the two colours, which is why it can be checked objectively rather than argued about.",
+              "markingMdx": "1 mark for stating the WCAG minimum (>=4.5:1 normal text, >=3:1 large text) and that the current pair is below it.\n1 mark for explaining that low-vision / bright-light users effectively lose the content, so it is an accessibility failure, not a taste preference.",
+              "questionMdxZh": "请解释为什么这是可用性 / 可访问性问题，而不是审美口味问题，并说明适用的 WCAG 最低要求。",
+              "answerMdxZh": "WCAG 是一份可用性 / 可访问性检查清单，它的 “对比度（最低）” 规则给出了可量化的阈值：正文至少 4.5:1，大号文字至少 3:1（大约 18pt，或加粗 24px 及以上）。当前这组（约 1.6:1）两条都不满足，所以这不是风格偏好，而是一条带数字的硬规则。对读不了这行字的用户来说，内容等于不存在：他们可能根本没看到 “注册会发优惠码”，这句文案就没完成任务。对比度是靠比较两种颜色的相对亮度算出来的，因此它可以被客观核验，而不是靠争论。",
+              "markingMdxZh": "1 分：给出 WCAG 最低要求（正文 >=4.5:1、大字 >=3:1），并说明当前这组低于要求。\n1 分：解释低视力 / 强光下的用户实际上会丢失这段内容，因此是可用性失败而非审美偏好。"
+            },
+            {
+              "id": "Q8-c",
+              "label": "(c)",
+              "marks": 2,
+              "questionMdx": "Give a fix and explain why it works.",
+              "answerMdx": "Raise the contrast until the ratio clears the threshold: darken the text (or change the background). For this caption, using a dark grey such as `#212121` on the same `#f5f5f5` gives about 12:1, comfortably above 4.5:1; keeping the same hue and only lowering lightness preserves the palette. This works because it increases the luminance difference the eye uses to separate the glyphs from the background, so the line becomes readable for low-vision users and in bright light. As a rule, check new colour pairs against the ratio before shipping rather than eyeballing them.",
+              "markingMdx": "1 mark for a concrete fix that raises the ratio (darken the text to something like `#212121`, or adjust the background).\n1 mark for explaining that a larger luminance difference restores readability for low-vision users / in bright light.",
+              "questionMdxZh": "请给出一个修法并解释它为什么有效。",
+              "answerMdxZh": "把对比度提高到越过阈值：加深文字颜色（或改变背景）。对这句文案，在同为 `#f5f5f5` 的背景上改用深灰如 `#212121`，对比度约 12:1，远高于 4.5:1；保持相同色相、只降低明度，还能守住原有配色。它之所以有效，是因为它增大了眼睛用来分离字母与背景的亮度差，于是这行字对低视力用户、在强光下都变得可读。经验法则是：上线前把新的配色对照比值核一遍，而不是靠肉眼估。",
+              "markingMdxZh": "1 分：给出能把比值提上去的具体修法（把文字加深到类似 `#212121`，或调整背景）。\n1 分：解释更大的亮度差恢复了对低视力用户 / 强光环境的可读性。"
+            }
+          ],
+          "displayNumber": "Q8",
+          "categoryLabel": "Affordance and Usability Checklist",
+          "categoryLabelZh": "示能与可用性检查清单",
+          "displayStyle": "quiz-sample",
+          "mockup": {
+            "files": [
+              {
+                "name": "landing.html",
+                "code": "<section class=\"hero\">\n  <h1>Get 20% off your next order</h1>\n  <p style=\"color:#9aa0a6;background:#f5f5f5;\">\n    Sign up and we will email you the code\n  </p>\n  <a href=\"/signup\">Sign up</a>\n</section>\n<!-- 正文浅灰 #9aa0a6 放在近白 #f5f5f5 上，对比度不足 -->",
+                "codeZh": "<section class=\"hero\">\n  <h1>Get 20% off your next order</h1>\n  <p style=\"color:#9aa0a6;background:#f5f5f5;\">\n    Sign up and we will email you the code\n  </p>\n  <a href=\"/signup\">Sign up</a>\n</section>\n<!-- 正文浅灰 #9aa0a6 放在近白 #f5f5f5 上，对比度不足 -->"
+              },
+              {
+                "name": "landing.png",
+                "active": true
+              }
+            ],
+            "viewport": "desktop",
+            "html": "<div class=\"exam-ui-shell\"><div class=\"exam-ui-topbar\"><span>Shop</span><span>Home</span></div><div class=\"exam-ui-body\"><p class=\"exam-ui-page-title\">Welcome back</p><div class=\"exam-ui-card\" style=\"background:#f5f5f5;\"><p class=\"exam-ui-value\" style=\"font-weight:700;\">Get 20% off your next order</p><p class=\"exam-ui-value\" style=\"color:#9aa0a6;\">Sign up and we will email you the code</p><div class=\"exam-ui-button-row\"><button class=\"exam-ui-button\">Sign up</button></div><p class=\"exam-ui-help\">Grey #9aa0a6 on #f5f5f5 &middot; contrast about 1.6:1</p></div></div></div>",
+            "htmlZh": "<div class=\"exam-ui-shell\"><div class=\"exam-ui-topbar\"><span>商城</span><span>首页</span></div><div class=\"exam-ui-body\"><p class=\"exam-ui-page-title\">欢迎回来</p><div class=\"exam-ui-card\" style=\"background:#f5f5f5;\"><p class=\"exam-ui-value\" style=\"font-weight:700;\">下次下单立减 20%</p><p class=\"exam-ui-value\" style=\"color:#9aa0a6;\">注册后我们会把优惠码发到你的邮箱</p><div class=\"exam-ui-button-row\"><button class=\"exam-ui-button\">注册</button></div><p class=\"exam-ui-help\">浅灰 #9aa0a6 放在 #f5f5f5 上 &middot; 对比度约 1.6:1</p></div></div></div>",
+            "caption": "The caption line is light grey on near-white, so its contrast ratio is far below the WCAG minimum.",
+            "captionZh": "这句文案是浅灰配近白，对比度远低于 WCAG 的最低要求。"
+          }
+        },
+        {
+          "id": "Q9",
+          "title": "The input you cannot type into",
+          "titleZh": "打不进字的输入框",
+          "marks": 5,
+          "contentMdx": "A sign-in form (`App.js`) binds the email field with `<input value={email} />`, where `email` is state that starts as `''`, and there is no `onChange` anywhere. `signin.png` is the screenshot. The field looks normal but nobody can type a single character into it, and the console shows a React warning about a `value` prop without an `onChange` handler.",
+          "contentMdxZh": "一个登录表单（`App.js`）用 `<input value={email} />` 绑定邮箱输入框，其中 `email` 是初值为 `''` 的 state，而且整份代码里没有任何 `onChange`。`signin.png` 是截图。输入框看起来一切正常，但谁都无法往里敲进一个字符，控制台则打印出 React 关于 “有 `value` 但没有 `onChange`” 的警告。",
+          "subQuestions": [
+            {
+              "id": "Q9-a",
+              "label": "(a)",
+              "marks": 1,
+              "questionMdx": "What makes this input a controlled input, and why can nobody type into it?",
+              "answerMdx": "A controlled input's displayed value is driven by React state: you pass `value={email}` and update that state in an `onChange` handler, so React is the single source of truth for what the field shows. Here there is a `value` prop but no `onChange` and never a `setEmail`, so `email` stays `''` forever. On each keystroke the browser briefly puts the character in the DOM, but React re-applies `value={''}` on the very next render and wipes it out — so the field behaves like a read-only box.",
+              "markingMdx": "1 mark for stating that a controlled input's value comes from state, and that without an `onChange`/setter the value is re-applied as empty so typing does nothing.",
+              "questionMdxZh": "是什么让这个输入框成为受控输入框？为什么谁都无法往里打字？",
+              "answerMdxZh": "受控输入框显示的值由 React state 驱动：你传入 `value={email}`，并在 `onChange` 处理函数里更新这份 state，因此 React 是 “输入框显示什么” 的唯一数据源。这里虽然传了 `value`，却没有 `onChange`、也从不调用 `setEmail`，所以 `email` 永远是 `''`。每次按键时浏览器会短暂地把字符写进 DOM，但 React 在下一次渲染立刻又把 `value={''}` 写回去，把它抹掉——于是输入框表现得像只读框。",
+              "markingMdxZh": "1 分：说明受控输入框的值来自 state，且没有 `onChange` / setter 时值会被反复设回空，打字没有任何效果。"
+            },
+            {
+              "id": "Q9-b",
+              "label": "(b)",
+              "marks": 2,
+              "questionMdx": "Explain the difference between a controlled and an uncontrolled input, and what React does when it sees `value` with no `onChange`.",
+              "answerMdx": "An uncontrolled input keeps its own value inside the DOM: you set a starting value with `defaultValue` and read it back later through a ref, and React never tracks it. A controlled input instead lets React own the value through state, so the state and the DOM cannot drift apart and it is easy to validate or derive from the current text. That ownership is exactly why the missing handler breaks typing: when you pass `value` without `onChange`, React treats the field as read-only, re-applies the `value` you gave on every render and prints a warning. Since no keystroke ever calls `setEmail`, the typed character is discarded immediately and the field stays empty — React has decided the state is the truth and the state never changes.",
+              "markingMdx": "1 mark for contrasting the two (uncontrolled = value lives in the DOM, read via ref / `defaultValue`; controlled = value lives in state).\n1 mark for explaining that `value` without `onChange` renders a read-only field that React keeps resetting, and that the typed character is discarded.",
+              "questionMdxZh": "请说明受控输入框与非受控输入框的区别，以及 React 在遇到 “有 `value` 但没有 `onChange`” 时会怎么做。",
+              "answerMdxZh": "非受控输入框把值留存在 DOM 里：用 `defaultValue` 设初值，之后通过 ref 读回来，React 从不跟踪它。受控输入框相反，让 React 通过 state 拥有这个值，因此 state 与 DOM 不会各说各话，也便于根据当前文本做校验或派生 UI。正是这种 “拥有权” 解释了缺失处理函数为何让输入失效：当你传入 `value` 却没有 `onChange` 时，React 把这个字段当作只读，每次渲染都把你给的 `value` 重新写回去并打印警告。由于没有任何按键会调用 `setEmail`，敲进去的字符立即被丢弃，输入框保持为空——React 认定 state 才是真相，而 state 从不改变。",
+              "markingMdxZh": "1 分：对比两者（非受控 = 值在 DOM，靠 ref / `defaultValue` 读取；受控 = 值在 state）。\n1 分：说明 “有 `value` 无 `onChange`” 会渲染成只读字段、被 React 不断重置，输入的字符被丢弃。"
+            },
+            {
+              "id": "Q9-c",
+              "label": "(c)",
+              "marks": 2,
+              "questionMdx": "Fix it so the user can type, and show the state and the handler.",
+              "answerMdx": "Add an `onChange` that updates the state: `const [email, setEmail] = useState(''); return <input value={email} onChange={(e) => setEmail(e.target.value)} />`. Now each keystroke calls `setEmail` with the new string, React re-renders and passes the new value back as `value`, so the field echoes exactly what the user typed and `email` holds the current text — state is the single source of truth. (If you genuinely want an uncontrolled field, drop `value` and use `defaultValue` plus a ref instead, so React stops forcing the value.)",
+              "markingMdx": "1 mark for adding an `onChange` that calls the state setter with `e.target.value`.\n1 mark for showing that the displayed value comes from state (`value={email}`), or explaining the `defaultValue` + ref uncontrolled alternative.",
+              "questionMdxZh": "请给出修法，让用户能正常输入，并展示 state 与处理函数。",
+              "answerMdxZh": "加一个会更新 state 的 `onChange`：`const [email, setEmail] = useState(''); return <input value={email} onChange={(e) => setEmail(e.target.value)} />`。这样每次按键都会用新字符串调用 `setEmail`，React 重新渲染并把新值作为 `value` 传回，输入框就原样回显用户所打的内容，`email` 也保存着当前文本——state 成为唯一数据源。（如果你确实想要非受控输入框，就去掉 `value`，改用 `defaultValue` 加一个 ref，让 React 不再强制这个值。）",
+              "markingMdxZh": "1 分：加上会调用 state setter（用 `e.target.value`）的 `onChange`。\n1 分：说明显示的值来自 state（`value={email}`），或指出 `defaultValue` + ref 的非受控替代写法。"
+            }
+          ],
+          "displayNumber": "Q9",
+          "categoryLabel": "React State and Rendering",
+          "categoryLabelZh": "React 状态与渲染",
+          "displayStyle": "quiz-sample",
+          "mockup": {
+            "files": [
+              {
+                "name": "App.js",
+                "code": "function SignIn() {\n  const [email, setEmail] = useState('')\n  return (\n    <form>\n      <label>Email</label>\n      <input value={email} />\n      <button>Continue</button>\n    </form>\n  )\n}",
+                "codeZh": "function SignIn() {\n  // value 绑定了 state，却没有 onChange —— 输入框变成只读\n  const [email, setEmail] = useState('')\n  return (\n    <form>\n      <label>Email</label>\n      <input value={email} />\n      <button>Continue</button>\n    </form>\n  )\n}"
+              },
+              {
+                "name": "signin.png",
+                "active": true
+              }
+            ],
+            "viewport": "desktop",
+            "html": "<div class=\"exam-ui-shell\"><div class=\"exam-ui-topbar\"><span>App</span><span>Sign in</span></div><div class=\"exam-ui-body\"><p class=\"exam-ui-page-title\">Sign in</p><div class=\"exam-ui-card\" style=\"max-width:360px;\"><p class=\"exam-ui-label\">Email</p><div class=\"exam-ui-input\"></div><div class=\"exam-ui-button-row\" style=\"margin-top:.8rem;\"><button class=\"exam-ui-button\">Continue</button></div><p class=\"exam-ui-help\">Typing does nothing &middot; React warns: value without onChange</p></div></div></div>",
+            "htmlZh": "<div class=\"exam-ui-shell\"><div class=\"exam-ui-topbar\"><span>App</span><span>登录</span></div><div class=\"exam-ui-body\"><p class=\"exam-ui-page-title\">登录</p><div class=\"exam-ui-card\" style=\"max-width:360px;\"><p class=\"exam-ui-label\">邮箱</p><div class=\"exam-ui-input\"></div><div class=\"exam-ui-button-row\" style=\"margin-top:.8rem;\"><button class=\"exam-ui-button\">继续</button></div><p class=\"exam-ui-help\">怎么打都没反应 &middot; React 警告：有 value 却没有 onChange</p></div></div></div>",
+            "caption": "The email field is bound to state with no onChange, so it renders read-only and no keystroke sticks.",
+            "captionZh": "邮箱字段绑定了 state 却没有 onChange，于是渲染成只读，任何按键都留不下。"
+          }
+        },
+        {
+          "id": "Q10",
+          "title": "The redirect that fires too early",
+          "titleZh": "太早触发的跳转",
+          "marks": 5,
+          "contentMdx": "An `Account` page (`App.js`) should send signed-out users to `/login`. It calls `navigate('/login')` straight inside the component body, during render, whenever `user` is `null`. `account.png` is the screenshot. In practice the guarded page flashes briefly, the redirect does not reliably happen, and React prints a warning that `navigate()` should not be called while a component is rendering.",
+          "contentMdxZh": "一个 `Account` 页面（`App.js`）应当把未登录用户送到 `/login`。它在组件函数体里、也就是渲染期间，只要 `user` 为 `null` 就直接调用 `navigate('/login')`。`account.png` 是截图。实际表现是：受保护的页面会短暂闪一下，跳转时灵时不灵，React 还打印出 “不应在组件渲染期间调用 `navigate()`” 的警告。",
+          "subQuestions": [
+            {
+              "id": "Q10-a",
+              "label": "(a)",
+              "marks": 1,
+              "questionMdx": "Why does calling `navigate('/login')` during render not work reliably?",
+              "answerMdx": "`navigate` is a side effect: it changes the URL and tells the router to update, which in turn triggers re-renders. But render must be pure — it should only compute the UI for the current props and state, not perform side effects. Calling `navigate` in the component body runs it while React is still rendering, before the render is committed, so it happens outside the normal update flow. Because the call does not cancel the in-progress render, the current render can still commit the guarded UI (a flash of the protected page), and the navigation is unreliable.",
+              "markingMdx": "1 mark for stating that navigation is a side effect and that render must stay pure, so calling `navigate` during render runs outside the normal commit and is unreliable.",
+              "questionMdxZh": "为什么在渲染期间调用 `navigate('/login')` 不能可靠生效？",
+              "answerMdxZh": "`navigate` 是一个副作用：它会改变 URL、让路由器更新，进而触发重渲染。但渲染必须是纯的——它只应为当前 props 与 state 计算 UI，而不应执行副作用。在组件函数体里调用 `navigate`，等于在 React 还在渲染、尚未提交时执行它，因而脱离了正常更新流程。这次调用并不会取消进行中的渲染，所以当前这次渲染仍可能把受保护的 UI 提交上去（受保护页面闪一下），跳转也就不可靠。",
+              "markingMdxZh": "1 分：说明导航是副作用、渲染必须保持纯净，因此渲染期间调用 `navigate` 跑在正常提交流程之外、不可靠。"
+            },
+            {
+              "id": "Q10-b",
+              "label": "(b)",
+              "marks": 2,
+              "questionMdx": "Give the two correct ways to redirect when `user` is null, and say when to use each.",
+              "answerMdx": "For a redirect that depends only on the current render (a guarded route), use the declarative `<Navigate>` component: `return <Navigate to=\"/login\" replace />`. Returning an element describes the result instead of performing a side effect in the body, so the router carries out the redirect during commit; `replace` swaps the history entry so the back button does not return to the guarded page. When the redirect is instead the result of an event or an async outcome — after a successful login, or in response to a click — call `navigate('/account')` inside the event handler or an effect, which are the proper effect-time places. The rule: put navigation where side effects are allowed (handlers/effects), or render `<Navigate>` for render-time conditions.",
+              "markingMdx": "1 mark for returning `<Navigate to=\"/login\" replace />` for the render-time condition instead of calling `navigate` during render.\n1 mark for explaining that `navigate` belongs in a handler/effect (for event- or async-driven redirects) and why `replace` is used.",
+              "questionMdxZh": "请给出当 `user` 为 null 时跳转的两种正确写法，并说明各自用在什么场景。",
+              "answerMdxZh": "对于只由当前这次渲染决定的跳转（受保护路由），使用声明式的 `<Navigate>` 组件：`return <Navigate to=\"/login\" replace />`。返回一个元素是在 “描述结果”，而不是在函数体里执行副作用，路由器会在提交阶段完成跳转；`replace` 会替换历史记录，使后退不会回到受保护页面。而当跳转是事件或异步结果导致时——例如登录成功之后、或响应一次点击——就在事件处理函数或 effect 里调用 `navigate('/account')`，这才是副作用允许发生的位置。规则是：把导航放在允许副作用的地方（处理函数 / effect），渲染期的条件则改为渲染 `<Navigate>`。",
+              "markingMdxZh": "1 分：对渲染期条件返回 `<Navigate to=\"/login\" replace />`，而不是在渲染期间调用 `navigate`。\n1 分：说明 `navigate` 应放在处理函数 / effect 中（用于事件或异步驱动的跳转），以及为何要用 `replace`。"
+            },
+            {
+              "id": "Q10-c",
+              "label": "(c)",
+              "marks": 2,
+              "questionMdx": "Show the corrected `Account` component, and give the effect-based alternative for when you must use `useNavigate`.",
+              "answerMdx": "Declarative fix: `import { Navigate } from 'react-router-dom'; function Account() { const { user } = useAuth(); if (!user) return <Navigate to=\"/login\" replace />; return <Profile />; }`. Rendering `<Navigate>` when there is no user makes the redirect a description of the UI, so it runs safely during commit and replaces the history entry. If you must use `useNavigate`, move the call into an effect so it runs after commit: `useEffect(() => { if (!user) navigate('/login', { replace: true }); }, [user])`. Either way, navigation happens outside the render phase, so the flash and the warning are gone.",
+              "markingMdx": "1 mark for the corrected component returning `<Navigate to=\"/login\" replace />` when `user` is null.\n1 mark for the effect-based alternative using `navigate('/login', { replace: true })` inside `useEffect(..., [user])`.",
+              "questionMdxZh": "请展示改正后的 `Account` 组件，并给出当你必须使用 `useNavigate` 时的 effect 版替代写法。",
+              "answerMdxZh": "声明式修法：`import { Navigate } from 'react-router-dom'; function Account() { const { user } = useAuth(); if (!user) return <Navigate to=\"/login\" replace />; return <Profile />; }`。在无用户时渲染 `<Navigate>`，把跳转变成了对 UI 的描述，于是它能在提交阶段安全执行并替换历史记录。如果你必须使用 `useNavigate`，就把调用移进 effect，让它在提交之后运行：`useEffect(() => { if (!user) navigate('/login', { replace: true }); }, [user])`。两种方式都让导航发生在渲染阶段之外，闪烁和警告随之消失。",
+              "markingMdxZh": "1 分：改正后的组件在 `user` 为 null 时返回 `<Navigate to=\"/login\" replace />`。\n1 分：给出基于 effect 的替代写法，在 `useEffect(..., [user])` 里调用 `navigate('/login', { replace: true })`。"
+            }
+          ],
+          "displayNumber": "Q10",
+          "categoryLabel": "React Effects and Data Flow",
+          "categoryLabelZh": "React 副作用与数据流",
+          "displayStyle": "quiz-sample",
+          "mockup": {
+            "files": [
+              {
+                "name": "App.js",
+                "code": "function Account() {\n  const { user } = useAuth()\n  const navigate = useNavigate()\n  if (!user) {\n    navigate('/login')   // 在渲染期间导航\n  }\n  return <Profile />\n}",
+                "codeZh": "function Account() {\n  const { user } = useAuth()\n  const navigate = useNavigate()\n  if (!user) {\n    navigate('/login')   // 在渲染期间导航\n  }\n  return <Profile />\n}"
+              },
+              {
+                "name": "account.png",
+                "active": true
+              }
+            ],
+            "viewport": "desktop",
+            "html": "<div class=\"exam-ui-shell\"><div class=\"exam-ui-topbar\"><span>App</span><span>Account</span></div><div class=\"exam-ui-body\"><p class=\"exam-ui-page-title\">My account</p><div class=\"exam-ui-card\" style=\"max-width:380px;\"><p class=\"exam-ui-value\">You are not signed in</p><p class=\"exam-ui-note\">navigate() called during render &middot; redirect skipped and the protected page flashes</p><div class=\"exam-ui-button-row\"><button class=\"exam-ui-button\">Sign in</button></div></div></div></div>",
+            "htmlZh": "<div class=\"exam-ui-shell\"><div class=\"exam-ui-topbar\"><span>App</span><span>账户</span></div><div class=\"exam-ui-body\"><p class=\"exam-ui-page-title\">我的账户</p><div class=\"exam-ui-card\" style=\"max-width:380px;\"><p class=\"exam-ui-value\">你尚未登录</p><p class=\"exam-ui-note\">在渲染期间调用了 navigate() &middot; 跳转被跳过，受保护页面一闪而过</p><div class=\"exam-ui-button-row\"><button class=\"exam-ui-button\">去登录</button></div></div></div></div>",
+            "caption": "The guarded page calls navigate() during render, so the redirect is skipped and the protected UI briefly shows.",
+            "captionZh": "受保护页面在渲染期间调用 navigate()，于是跳转被跳过，受保护的 UI 短暂地显现出来。"
+          }
         }
-      ]
+      ],
+      "time": "2026-11-16 10:00"
     }
   ]
 }

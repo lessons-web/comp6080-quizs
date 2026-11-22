@@ -5,10 +5,16 @@
       "id": "TOPIC2-CSS",
       "title": "CSS Layout & Responsive — Topic Paper",
       "titleZh": "CSS 布局与响应式 · 专题卷",
-      "description": "Week 2 topic paper: the CSS box model, flexbox alignment, positioning and stacking, responsive units and media queries, specificity / cascade, and overflow / grid. Six questions, three sub-questions each, with screenshot-style mockups.",
-      "descriptionZh": "Week 2 专题卷：CSS 盒模型、Flexbox 对齐、定位与层叠、响应式单位与媒体查询、以及优先级 / 层叠与溢出 / 栅格。共 6 道大题，每题 3 个子题，配套截图感 mockup。",
-      "totalMarks": 30,
-      "tags": ["专题卷", "Weeks2", "CSS", "布局", "响应式"],
+      "description": "Week 2 topic paper: the CSS box model, flexbox alignment, positioning and stacking, responsive units and media queries, specificity / cascade, and overflow / grid. Ten questions, three sub-questions each, with screenshot-style mockups.",
+      "descriptionZh": "Week 2 专题卷：CSS 盒模型、Flexbox 对齐、定位与层叠、响应式单位与媒体查询、以及优先级 / 层叠与溢出 / 栅格。共 10 道大题，每题 3 个子题，配套截图感 mockup。",
+      "totalMarks": 50,
+      "tags": [
+        "专题卷",
+        "Weeks2",
+        "CSS",
+        "布局",
+        "响应式"
+      ],
       "questions": [
         {
           "id": "Q1",
@@ -399,8 +405,269 @@
           },
           "titleZh": "从卡片里溢出来的通知",
           "contentMdxZh": "`panel.css` 给通知卡片设了固定的 `height: 200px`，并保留了默认的 overflow。当通知很多时，`notifications.png` 里它们会溢出卡片、压住下方的页脚，而不是滚动。"
+        },
+        {
+          "id": "Q7",
+          "title": "The grid that crushes its cards on a phone",
+          "marks": 5,
+          "contentMdx": "`grid.css` lays out product cards with `display: grid; grid-template-columns: repeat(4, 1fr); gap: 24px`. On a 400px phone the four columns are squeezed so thin that each 240px card spills across its track, as `grid.png` shows. The designer expected the cards to settle into fewer columns automatically.",
+          "subQuestions": [
+            {
+              "id": "Q7-a",
+              "label": "(a)",
+              "marks": 1,
+              "questionMdx": "How many columns does `repeat(4, 1fr)` create, and how is the container's width divided between them?",
+              "answerMdx": "`repeat(4, 1fr)` creates exactly four columns, each `1fr`. The free space (the container width minus the three 24px gaps) is split into four equal parts, so each column is one quarter of it — roughly `(400 - 72) / 4 = 82px` on a 400px phone — no matter how narrow that becomes.",
+              "markingMdx": "1 mark for stating that four equal `1fr` columns are created and the width is split evenly (allowing for the gaps).",
+              "questionMdxZh": "`repeat(4, 1fr)` 创建了几列？容器宽度是如何在它们之间分配的？",
+              "answerMdxZh": "`repeat(4, 1fr)` 恰好创建四列，每列 `1fr`。可用空间（容器宽度减去三条 24px 间隙）被分成四等份，于是每列占四分之一——在 400px 手机上约 `(400 - 72) / 4 = 82px`——无论它变得多窄。",
+              "markingMdxZh": "1 分：说明创建四列、各为 1fr，宽度平均分配（考虑 gap）。"
+            },
+            {
+              "id": "Q7-b",
+              "label": "(b)",
+              "marks": 2,
+              "questionMdx": "Why do the 240px cards break the layout on the phone, and how does `repeat(auto-fit, minmax(240px, 1fr))` fix it?",
+              "answerMdx": "A `1fr` track can shrink below its content's minimum and does not wrap, so on the phone the four tracks end up far narrower than the 240px cards, which then overflow and overlap. `minmax(240px, 1fr)` gives each track a 240px minimum and a `1fr` maximum, and `auto-fit` fits as many 240px-or-wider tracks as the container allows, collapsing the rest and wrapping the cards onto fewer columns (a single column at 400px). So the same grid becomes responsive without a media query.",
+              "markingMdx": "1 mark for explaining that a fixed four-column `1fr` grid does not wrap and its tracks shrink below the card width, so the cards overflow.\n1 mark for explaining that `minmax(240px, 1fr)` plus `auto-fit` fits as many 240px tracks as possible and wraps to fewer columns.",
+              "questionMdxZh": "为什么 240px 的卡片在手机上会撑坏布局？`repeat(auto-fit, minmax(240px, 1fr))` 又是怎么修好它的？",
+              "answerMdxZh": "`1fr` 轨道可以缩到低于内容最小宽度，而且不会换行，所以在手机上四条轨道远比 240px 的卡片窄，卡片随之溢出、互相重叠。`minmax(240px, 1fr)` 给每条轨道设 240px 的下限和 `1fr` 的上限，`auto-fit` 则在容器允许的范围内尽量多放“至少 240px”的轨道，把多余的轨道收掉、让卡片换到更少的列（400px 下就是一列）。于是同一个栅格无需媒体查询就变成响应式的。",
+              "markingMdxZh": "1 分：说明固定的四列 `1fr` 栅格不会换行，轨道会缩到小于卡片宽度，导致溢出。\n1 分：说明 minmax(240px, 1fr) 配合 auto-fit 会尽量多放 240px 的轨道并换到更少的列。"
+            },
+            {
+              "id": "Q7-c",
+              "label": "(c)",
+              "marks": 2,
+              "questionMdx": "What is the difference between `auto-fit` and `auto-fill` here, and what does `gap` contribute?",
+              "answerMdx": "With `auto-fill` the browser creates as many 240px tracks as fit and keeps the empty ones, so on a wide screen the cards stay 240px and the leftover space sits in empty tracks. With `auto-fit` those empty tracks are collapsed and the `1fr` maximum lets the real cards stretch to fill the row instead, so they grow into the extra width. `gap` adds a uniform 24px between tracks (and rows) without margins, so the spacing stays consistent and no cell is crushed against its neighbour.",
+              "markingMdx": "1 mark for explaining that `auto-fill` keeps empty tracks (cards stay 240px) while `auto-fit` collapses them and lets the remaining cards stretch.\n1 mark for stating that `gap` gives uniform space between rows and columns without margins.",
+              "questionMdxZh": "这里 `auto-fit` 与 `auto-fill` 有什么区别？`gap` 又起什么作用？",
+              "answerMdxZh": "用 `auto-fill` 时，浏览器会创建尽可能多的 240px 轨道并保留空轨道，于是在宽屏上卡片仍是 240px，剩余空间留在空轨道里。用 `auto-fit` 时这些空轨道被收掉，配合 `1fr` 上限让真实卡片拉伸填满整行，从而长进多出来的宽度。`gap` 在轨道（和行）之间加上统一的 24px 间隔而不靠 margin，所以间距保持一致，单元格也不会挤到一起。",
+              "markingMdxZh": "1 分：说明 auto-fill 保留空轨道（卡片保持 240px），auto-fit 收掉空轨道让剩余卡片拉伸。\n1 分：说明 gap 在行列之间提供统一间隔、无需 margin。"
+            }
+          ],
+          "displayNumber": "Q7",
+          "categoryLabel": "CSS Layout and Responsive Behaviour",
+          "categoryLabelZh": "CSS 布局与响应式行为",
+          "displayStyle": "quiz-sample",
+          "mockup": {
+            "files": [
+              {
+                "name": "grid.css",
+                "code": ".grid {\n  display: grid;\n  grid-template-columns: repeat(4, 1fr);\n  gap: 24px;\n}\n\n.card {\n  min-width: 240px;\n}",
+                "codeZh": ".grid {\n  display: grid;\n  /* 固定四列，不会换行 */\n  grid-template-columns: repeat(4, 1fr);\n  gap: 24px;\n}\n\n.card {\n  min-width: 240px;\n}"
+              },
+              {
+                "name": "grid.png",
+                "active": true
+              }
+            ],
+            "viewport": "mobile",
+            "html": "<div class=\"exam-ui-shell\"><div class=\"exam-ui-topbar\"><span>Shop</span><span>Products</span></div><div class=\"exam-ui-body\"><p class=\"exam-ui-page-title\">Products</p><div class=\"exam-ui-grid-2\"><div class=\"exam-ui-card\"><span class=\"exam-ui-muted\">Card</span></div><div class=\"exam-ui-card\"><span class=\"exam-ui-muted\">Card</span></div><div class=\"exam-ui-card\"><span class=\"exam-ui-muted\">Card</span></div><div class=\"exam-ui-card\"><span class=\"exam-ui-muted\">Card</span></div></div><p class=\"exam-ui-muted\">Four 1fr tracks squeeze to roughly 82px each on this phone &mdash; the 240px cards spill across the columns.</p></div></div>",
+            "htmlZh": "<div class=\"exam-ui-shell\"><div class=\"exam-ui-topbar\"><span>商城</span><span>商品</span></div><div class=\"exam-ui-body\"><p class=\"exam-ui-page-title\">商品</p><div class=\"exam-ui-grid-2\"><div class=\"exam-ui-card\"><span class=\"exam-ui-muted\">卡片</span></div><div class=\"exam-ui-card\"><span class=\"exam-ui-muted\">卡片</span></div><div class=\"exam-ui-card\"><span class=\"exam-ui-muted\">卡片</span></div><div class=\"exam-ui-card\"><span class=\"exam-ui-muted\">卡片</span></div></div><p class=\"exam-ui-muted\">在这台手机上四条 1fr 轨道被挤到约 82px —— 240px 的卡片横跨几列溢出。</p></div></div>",
+            "caption": "On a 400px phone the fixed four-column grid crushes the 240px cards across their tracks.",
+            "captionZh": "在 400px 手机上，固定的四列栅格把 240px 的卡片挤得横跨轨道溢出。"
+          },
+          "titleZh": "在手机上把卡片挤扁的栅格",
+          "contentMdxZh": "`grid.css` 用 `display: grid; grid-template-columns: repeat(4, 1fr); gap: 24px` 排布商品卡片。在 400px 手机上，四列被挤得极窄，每张 240px 的卡片都横跨自己的轨道溢出，正如 `grid.png` 所示。设计者本以为卡片会自动落到更少的列上。"
+        },
+        {
+          "id": "Q8",
+          "title": "The heading that doubles every time it nests",
+          "marks": 5,
+          "contentMdx": "`theme.css` sizes typography in `em`: `.panel { font-size: 1.2em }`, `.card { font-size: 1.2em }` and `.card .title { font-size: 1.2em }`. With the browser's 16px default, the title in `typography.png` renders far larger than the intended 1.2×, and the same markup nested one level deeper grows again.",
+          "subQuestions": [
+            {
+              "id": "Q8-a",
+              "label": "(a)",
+              "marks": 1,
+              "questionMdx": "What is `em` measured against, and how is that different from `rem`?",
+              "answerMdx": "`em` is relative to the element's own computed `font-size`, which is inherited from its parent — so a nested element's `em` is measured against its parent's already-scaled size. `rem` (\"root em\") is always relative to the root (`html`) font size, whatever the nesting depth.",
+              "markingMdx": "1 mark for stating that `em` is relative to the element's (inherited) font size and `rem` to the root font size.",
+              "questionMdxZh": "`em` 是相对于什么来计算的？它和 `rem` 有什么不同？",
+              "answerMdxZh": "`em` 相对于元素自身计算出的 `font-size`，而这个值是从父级继承来的——所以嵌套元素的 `em` 是相对于父级已经缩放过的字号来算。`rem`（root em）则始终相对于根元素（`html`）的字号，与嵌套层级无关。",
+              "markingMdxZh": "1 分：说明 em 相对于元素自身（继承来的）字号，rem 相对于根字号。"
+            },
+            {
+              "id": "Q8-b",
+              "label": "(b)",
+              "marks": 2,
+              "questionMdx": "Why does the title compute to about 27.6px rather than 19.2px, and why does nesting it one level deeper grow it again?",
+              "answerMdx": "Each `em` size multiplies the parent's computed size. Starting at the 16px root: `.panel` → 16 × 1.2 = 19.2px, `.card` → 19.2 × 1.2 = 23.04px, `.title` → 23.04 × 1.2 = 27.65px. That is 1.2 cubed, not 1.2 once. Because `.title` inherits from `.card`, which inherited from `.panel`, one more wrapping element with `font-size: 1.2em` multiplies again (27.65 × 1.2 ≈ 33.2px) — that compounding is the bug.",
+              "markingMdx": "1 mark for showing the multiplication chain (16 → 19.2 → 23.04 → 27.65), i.e. 1.2³.\n1 mark for explaining that each nested level inherits the parent's already-scaled size, so adding a level multiplies again.",
+              "questionMdxZh": "为什么标题算出来约 27.6px，而不是 19.2px？再深嵌一层为什么又变大？",
+              "answerMdxZh": "每个以 `em` 计的字号都会乘以父级计算出的字号。从 16px 的根开始：`.panel` → 16 × 1.2 = 19.2px，`.card` → 19.2 × 1.2 = 23.04px，`.title` → 23.04 × 1.2 = 27.65px。这是 1.2 的三次方，而非乘以 1.2 一次。因为 `.title` 继承自 `.card`、`.card` 又继承自 `.panel`，再多一层带 `font-size: 1.2em` 的包裹元素就会再乘一次（27.65 × 1.2 ≈ 33.2px）——这种累积正是 bug。",
+              "markingMdxZh": "1 分：写出相乘的链条（16 → 19.2 → 23.04 → 27.65），即 1.2³。\n1 分：说明每一层都继承父级已缩放的字号，所以多加一层就再乘一次。"
+            },
+            {
+              "id": "Q8-c",
+              "label": "(c)",
+              "marks": 2,
+              "questionMdx": "Give the fix using `rem` and explain why it removes the growth; then name one case where `em` is still the right choice.",
+              "answerMdx": "Switch the `font-size` values to `rem` (e.g. `.title { font-size: 1.2rem }`). Every `rem` is measured against the single root font size, so the title is always 1.2 × 16 = 19.2px no matter how deeply it nests — there is no multiplication chain. `em` is still useful for properties that should scale with the element's own text, such as `padding` or `border-radius` in `em`, so a button's padding grows when its font size does. The rule of thumb: use `rem` when you mean \"relative to the page\" and `em` when you mean \"relative to this element\".",
+              "markingMdx": "1 mark for switching the font sizes to `rem` and explaining that `rem` removes the compounding (all relative to the root).\n1 mark for correctly noting `em` is still appropriate for sizes that should scale with the element's own font size (e.g. padding).",
+              "questionMdxZh": "请给出用 `rem` 的修法并解释它为什么消除了增长；再说明什么情况下 `em` 仍是正确选择。",
+              "answerMdxZh": "把 `font-size` 的取值改成 `rem`（例如 `.title { font-size: 1.2rem }`）。每个 `rem` 都相对单一根字号，所以无论嵌套多深标题都恒为 1.2 × 16 = 19.2px——没有相乘链条。而 `em` 对于需要随元素自身文字缩放的属性仍有用，比如以 `em` 计的 `padding` 或 `border-radius`，这样按钮字号变大时内边距会跟着变大。经验法则：想表达“相对页面”就用 `rem`，想表达“相对本元素”就用 `em`。",
+              "markingMdxZh": "1 分：把字号改成 rem，并说明 rem 消除了累积（都相对根字号）。\n1 分：正确指出 em 仍适合需要随元素自身字号缩放的尺寸（如 padding）。"
+            }
+          ],
+          "displayNumber": "Q8",
+          "categoryLabel": "CSS Layout and Responsive Behaviour",
+          "categoryLabelZh": "CSS 布局与响应式行为",
+          "displayStyle": "quiz-sample",
+          "mockup": {
+            "files": [
+              {
+                "name": "theme.css",
+                "code": "html { font-size: 16px; }\n\n.panel {\n  font-size: 1.2em;\n}\n\n.card {\n  font-size: 1.2em;\n}\n\n.card .title {\n  font-size: 1.2em;\n}",
+                "codeZh": "html { font-size: 16px; }\n\n.panel {\n  /* 相对父级 */\n  font-size: 1.2em;\n}\n\n.card {\n  font-size: 1.2em;\n}\n\n.card .title {\n  /* 相对 .card，又会再乘一次 */\n  font-size: 1.2em;\n}"
+              },
+              {
+                "name": "typography.png",
+                "active": true
+              }
+            ],
+            "viewport": "desktop",
+            "html": "<div class=\"exam-ui-shell\"><div class=\"exam-ui-topbar\"><span>Theme</span><span>Typography</span></div><div class=\"exam-ui-body\"><p class=\"exam-ui-page-title\">Typography</p><div class=\"exam-ui-card\"><p class=\"exam-ui-label\">Panel &rsaquo; Card &rsaquo; Title</p><div class=\"exam-ui-typography-sample\"><p class=\"exam-ui-typography-line\">Panel heading &mdash; 19.2px</p><p class=\"exam-ui-typography-line\">Card heading &mdash; 23.04px</p><p class=\"exam-ui-typography-line exam-ui-danger\">Title &mdash; 27.65px, far bigger than intended</p></div><p class=\"exam-ui-muted\">Each nested level multiplies the previous font size by 1.2 again.</p></div></div></div>",
+            "htmlZh": "<div class=\"exam-ui-shell\"><div class=\"exam-ui-topbar\"><span>主题</span><span>排版</span></div><div class=\"exam-ui-body\"><p class=\"exam-ui-page-title\">排版</p><div class=\"exam-ui-card\"><p class=\"exam-ui-label\">面板 &rsaquo; 卡片 &rsaquo; 标题</p><div class=\"exam-ui-typography-sample\"><p class=\"exam-ui-typography-line\">面板标题 —— 19.2px</p><p class=\"exam-ui-typography-line\">卡片标题 —— 23.04px</p><p class=\"exam-ui-typography-line exam-ui-danger\">标题 —— 27.65px，比预期大得多</p></div><p class=\"exam-ui-muted\">每一层嵌套都把上一层的字号再乘以 1.2。</p></div></div></div>",
+            "caption": "The title's em value compounds at every nesting level, so it grows to 1.2x1.2x1.2 of the root.",
+            "captionZh": "标题的 em 值在每一层嵌套处累积，最终涨到根字号的 1.2×1.2×1.2。"
+          },
+          "titleZh": "每嵌套一层就翻倍增长的标题",
+          "contentMdxZh": "`theme.css` 用 `em` 设置排版字号：`.panel { font-size: 1.2em }`、`.card { font-size: 1.2em }`、`.card .title { font-size: 1.2em }`。在浏览器默认 16px 下，`typography.png` 里的标题远大于预期的 1.2 倍，而且同样的结构再深嵌一层还会继续变大。"
+        },
+        {
+          "id": "Q9",
+          "title": "The sticky header that scrolls away",
+          "marks": 5,
+          "contentMdx": "`layout.css` gives the section header `position: sticky; top: 0` so it should pin to the top while its list scrolls. In `sticky.png` it scrolls away with the content instead. An ancestor `.page` sets `overflow: hidden`.",
+          "subQuestions": [
+            {
+              "id": "Q9-a",
+              "label": "(a)",
+              "marks": 1,
+              "questionMdx": "What does `position: sticky` do, and how does it differ from `position: fixed`?",
+              "answerMdx": "`sticky` is a hybrid: the element behaves like `relative` (stays in flow) until the scroll crosses the `top`/`left` threshold, then it sticks — but only within its containing block and its scroll container. `fixed` takes the element out of flow and pins it to the viewport, so it never scrolls and does not stay inside any parent.",
+              "markingMdx": "1 mark for describing `sticky` as relative-until-threshold then pinned within its scroll container, and `fixed` as pinned to the viewport.",
+              "questionMdxZh": "`position: sticky` 的作用是什么？它和 `position: fixed` 有何不同？",
+              "answerMdxZh": "`sticky` 是一种混合体：元素先像 `relative` 一样留在流中，直到滚动越过 `top`/`left` 阈值才吸附——但只在它的包含块和滚动容器范围内。`fixed` 则把元素移出文档流并钉在视口上，所以它永不滚动，也不会留在任何父级之内。",
+              "markingMdxZh": "1 分：说明 sticky 在越过阈值前是相对定位、之后固定在滚动容器内，fixed 则固定在视口上。"
+            },
+            {
+              "id": "Q9-b",
+              "label": "(b)",
+              "marks": 2,
+              "questionMdx": "Why does the exactly-correct `top: 0` fail to stick here?",
+              "answerMdx": "Sticky sticks relative to its nearest scroll container, not the page. `.page { overflow: hidden }` makes `.page` that scroll container, and because `hidden` produces a scrollport that never actually scrolls (its content fits and it is not user-scrollable), the sticky element has no scroll range to stick within — so it just scrolls away with the page. The `overflow: hidden` ancestor both clips the header and steals the 'scroll container' role from the viewport.",
+              "markingMdx": "1 mark for explaining that sticky uses its nearest scrolling ancestor, and an `overflow: hidden` ancestor becomes that scrollport.\n1 mark for explaining that because that ancestor does not scroll, the sticky element never engages and appears to scroll away.",
+              "questionMdxZh": "为什么明明写对了 `top: 0`，还是吸不住？",
+              "answerMdxZh": "sticky 是相对它最近的滚动容器吸附的，而不是相对页面。`.page { overflow: hidden }` 让 `.page` 成了那个滚动容器，而 `hidden` 产生的是一个从不真正滚动的滚动口（内容放得下、用户也无法滚动它），于是 sticky 元素没有可吸附的滚动范围——它只能随页面滚走。这个 `overflow: hidden` 的祖先既裁掉了标题，又从视口手里抢走了“滚动容器”的角色。",
+              "markingMdxZh": "1 分：说明 sticky 相对最近的滚动祖先吸附，而 `overflow: hidden` 的祖先正是那个滚动口。\n1 分：说明由于该祖先并不滚动，sticky 从不触发，看起来就像滚走了。"
+            },
+            {
+              "id": "Q9-c",
+              "label": "(c)",
+              "marks": 2,
+              "questionMdx": "Give two fixes and explain why each restores the pinning.",
+              "answerMdx": "Either (1) remove `overflow: hidden` from `.page`, so the sticky element's nearest scroll container is again the viewport (the page scroll) and the header pins to the top of the window; or (2) if you truly need clipping, split the roles: keep the sticky element outside the clipped element, or make that ancestor the intended scrolling region with a fixed height and `overflow: auto`, so it actually scrolls and the sticky pins to its top. In both cases the fix works because it gives the sticky element a scroll container that really scrolls, which is the one thing sticky needs.",
+              "markingMdx": "1 mark for one valid fix (remove the `overflow: hidden` ancestor, or move the sticky element out of it).\n1 mark for the alternative (make the ancestor a real scroll container with a set height plus `overflow: auto`) with the reason that sticky needs a genuine scrollport.",
+              "questionMdxZh": "请给出两种修法，并解释每种为什么能恢复吸顶。",
+              "answerMdxZh": "要么（1）去掉 `.page` 上的 `overflow: hidden`，让 sticky 元素最近的滚动容器重新变回视口（页面滚动），标题就能吸在窗口顶部；要么（2）如果确实需要裁剪，把角色拆开：让 sticky 元素处在被裁剪元素之外，或把那个祖先做成真正的滚动区域——固定高度加 `overflow: auto`，让它真的能滚动，sticky 便会吸在它的顶部。两种修法都有效，因为它们都给 sticky 元素提供了一个真正会滚动的滚动容器，而这正是 sticky 唯一需要的东西。",
+              "markingMdxZh": "1 分：给出一种有效修法（去掉 overflow: hidden 的祖先，或把 sticky 元素移出它）。\n1 分：给出另一种修法（把祖先做成真正的滚动容器：设定高度 + overflow: auto），并说明原因是 sticky 需要一个真实的滚动口。"
+            }
+          ],
+          "displayNumber": "Q9",
+          "categoryLabel": "CSS Layout and Responsive Behaviour",
+          "categoryLabelZh": "CSS 布局与响应式行为",
+          "displayStyle": "quiz-sample",
+          "mockup": {
+            "files": [
+              {
+                "name": "layout.css",
+                "code": ".page {\n  overflow: hidden;\n}\n\n.section-header {\n  position: sticky;\n  top: 0;\n}",
+                "codeZh": ".page {\n  /* 这个祖先成了滚动容器 */\n  overflow: hidden;\n}\n\n.section-header {\n  position: sticky;\n  top: 0;\n}"
+              },
+              {
+                "name": "sticky.png",
+                "active": true
+              }
+            ],
+            "viewport": "desktop",
+            "html": "<div class=\"exam-ui-shell\"><div class=\"exam-ui-topbar\"><span>Docs</span><span>Guide</span></div><div class=\"exam-ui-body\"><p class=\"exam-ui-page-title\">Guide</p><div class=\"exam-ui-stage\"><p class=\"exam-ui-label\">Section A &mdash; header should pin to the top</p><ul class=\"exam-ui-list\"><li class=\"exam-ui-list-row\">Paragraph one</li><li class=\"exam-ui-list-row\">Paragraph two</li><li class=\"exam-ui-list-row\">Paragraph three</li></ul><p class=\"exam-ui-muted exam-ui-danger\">The sticky header scrolled away with the content.</p></div><p class=\"exam-ui-muted\">An ancestor .page has overflow: hidden, which becomes the scroll container.</p></div></div>",
+            "htmlZh": "<div class=\"exam-ui-shell\"><div class=\"exam-ui-topbar\"><span>文档</span><span>指南</span></div><div class=\"exam-ui-body\"><p class=\"exam-ui-page-title\">指南</p><div class=\"exam-ui-stage\"><p class=\"exam-ui-label\">区块 A —— 标题本应吸在顶部</p><ul class=\"exam-ui-list\"><li class=\"exam-ui-list-row\">第一段</li><li class=\"exam-ui-list-row\">第二段</li><li class=\"exam-ui-list-row\">第三段</li></ul><p class=\"exam-ui-muted exam-ui-danger\">吸顶标题随内容一起滚走了。</p></div><p class=\"exam-ui-muted\">某个祖先 .page 带 overflow: hidden，它成了滚动容器。</p></div></div>",
+            "caption": "The sticky section header scrolls away because an overflow: hidden ancestor stole the scroll-container role.",
+            "captionZh": "因为一个 overflow: hidden 的祖先抢走了滚动容器的角色，吸顶的区块标题随内容滚走了。"
+          },
+          "titleZh": "会滚走的吸顶标题",
+          "contentMdxZh": "`layout.css` 给区块标题设了 `position: sticky; top: 0`，本应在列表滚动时吸在顶部。但 `sticky.png` 里它却随内容一起滚走了。一个祖先元素 `.page` 设置了 `overflow: hidden`。"
+        },
+        {
+          "id": "Q10",
+          "title": "The dialog that sits in the corner",
+          "marks": 5,
+          "contentMdx": "`modal.css` tries to centre a dialog with `.modal { position: absolute; top: 50%; left: 50% }`. In `modal.png` the dialog appears offset toward the bottom-right instead of being centred in its overlay.",
+          "subQuestions": [
+            {
+              "id": "Q10-a",
+              "label": "(a)",
+              "marks": 1,
+              "questionMdx": "Why does `top: 50%; left: 50%` place the dialog down and to the right instead of centred?",
+              "answerMdx": "`top: 50%` and `left: 50%` position the element's top-left corner at the centre of its containing block. The dialog then extends its full width and height down-right from that corner, so its centre ends up half its own size below and to the right of the overlay's centre.",
+              "markingMdx": "1 mark for explaining that `top`/`left` move the element's top-left corner to the centre, so the box extends down-right and is offset by half its size.",
+              "questionMdxZh": "为什么 `top: 50%; left: 50%` 会把对话框放到右下，而不是居中？",
+              "answerMdxZh": "`top: 50%` 与 `left: 50%` 把元素的左上角放到包含块的中心。对话框随后从这个角向右下方向铺开整个宽高，于是它的中心比遮罩中心低、右各偏移了自身尺寸的一半。",
+              "markingMdxZh": "1 分：说明 top/left 把元素左上角移到中心，盒子向右下延伸、因而偏移自身一半尺寸。"
+            },
+            {
+              "id": "Q10-b",
+              "label": "(b)",
+              "marks": 2,
+              "questionMdx": "Give a transform-based fix and a second approach, and explain how each accounts for the dialog's own size.",
+              "answerMdx": "Transform fix: keep `top: 50%; left: 50%` and add `transform: translate(-50%, -50%)`, which shifts the dialog back by half its own width and height, cancelling the offset. Second approach: if the dialog has a known size, `inset: 0; margin: auto` centres it, because the auto margins absorb the equal free space on both sides. A third, size-agnostic way is to centre the overlay's flex child: `.overlay { display: flex; align-items: center; justify-content: center }`, which puts the dialog in the middle whatever its size. All three account for the dialog's real size instead of ignoring it.",
+              "markingMdx": "1 mark for the `translate(-50%, -50%)` fix with the reason that it cancels the half-size offset.\n1 mark for a second working approach (e.g. `inset: 0` + `margin: auto`, or flex centring on the overlay) that still centres without ignoring the size.",
+              "questionMdxZh": "请给出一个用 transform 的修法，再给出第二种做法，并说明它们各自如何处理对话框自身的尺寸。",
+              "answerMdxZh": "transform 修法：保留 `top: 50%; left: 50%` 再加 `transform: translate(-50%, -50%)`，把对话框按自身宽高的一半反向平移，抵消那个偏移。第二种做法：如果对话框有已知尺寸，用 `inset: 0; margin: auto` 居中，因为 auto 外边距会吸收两侧相等的剩余空间。还有一种与尺寸无关的方式：在遮罩上居中它的 flex 子元素 `.overlay { display: flex; align-items: center; justify-content: center }`，无论对话框多大都把它摆在正中间。三者都考虑了对话框的真实尺寸，而不是忽略它。",
+              "markingMdxZh": "1 分：给出 translate(-50%, -50%) 修法，并说明它抵消了半尺寸的偏移。\n1 分：给出第二种可行做法（如 inset:0 + margin:auto，或在遮罩上做 flex 居中），无需忽略尺寸即可居中。"
+            },
+            {
+              "id": "Q10-c",
+              "label": "(c)",
+              "marks": 2,
+              "questionMdx": "The team later turns the dialog into a viewport-covering modal: the overlay becomes `position: fixed; inset: 0` centring the dialog with flex. Explain why `fixed`, and why flex centring is more robust than the translate trick.",
+              "answerMdx": "A modal backdrop must cover the entire viewport and stay put while the page scrolls, so `position: fixed` (relative to the viewport) is correct, whereas `absolute` is measured from a positioned ancestor and could be clipped or scroll with the content. `inset: 0` sizes the overlay to the viewport on all four sides, giving a full-screen backdrop. Centring the dialog with `display: flex; align-items: center; justify-content: center` needs no knowledge of the dialog's size and no magic `-50%` values; it also keeps the dialog centred when its content changes its height, whereas a baked-in `translate` can drift or interact badly with other transforms and animations on the same element.",
+              "markingMdx": "1 mark for explaining that `fixed` is viewport-relative and keeps the backdrop covering the screen while the page scrolls (versus `absolute`).\n1 mark for explaining that flex centring is size-agnostic and avoids magic `translate` offsets / transform conflicts.",
+              "questionMdxZh": "团队后来把对话框做成覆盖视口的模态框：遮罩改为 `position: fixed; inset: 0`，并用 flex 居中对话框。请解释这里为什么用 `fixed`，以及为什么 flex 居中比 translate 技巧更稳健。",
+              "answerMdxZh": "模态遮罩必须覆盖整个视口并在页面滚动时保持不动，所以 `position: fixed`（相对视口）是对的；而 `absolute` 会以某个定位祖先为参照，可能被裁剪或随内容滚动。`inset: 0` 让遮罩四边都撑到视口，形成全屏背景。用 `display: flex; align-items: center; justify-content: center` 居中对话框，无需知道对话框尺寸、也不需要写死的 `-50%`；当对话框内容变化导致高度改变时它仍能正确居中，而写死的 `translate` 可能偏移，或与同一元素上的其他 transform / 动画相互干扰。",
+              "markingMdxZh": "1 分：说明 fixed 相对视口、能在页面滚动时让遮罩保持覆盖（对比 absolute）。\n1 分：说明 flex 居中与尺寸无关，避免了写死的 translate 偏移 / transform 冲突。"
+            }
+          ],
+          "displayNumber": "Q10",
+          "categoryLabel": "CSS Layout and Responsive Behaviour",
+          "categoryLabelZh": "CSS 布局与响应式行为",
+          "displayStyle": "quiz-sample",
+          "mockup": {
+            "files": [
+              {
+                "name": "modal.css",
+                "code": ".overlay {\n  position: relative;\n}\n\n.modal {\n  position: absolute;\n  top: 50%;\n  left: 50%;\n  width: 280px;\n}",
+                "codeZh": ".overlay {\n  position: relative;\n}\n\n.modal {\n  position: absolute;\n  /* 只把左上角放到中心 */\n  top: 50%;\n  left: 50%;\n  width: 280px;\n}"
+              },
+              {
+                "name": "modal.png",
+                "active": true
+              }
+            ],
+            "viewport": "desktop",
+            "html": "<div class=\"exam-ui-shell\"><div class=\"exam-ui-topbar\"><span>App</span><span>Confirm</span></div><div class=\"exam-ui-body\"><p class=\"exam-ui-page-title\">Overlay</p><div class=\"exam-ui-stage\"><p class=\"exam-ui-muted\">Dimmed overlay &mdash; the dialog should be centred here.</p><div class=\"exam-ui-card\"><p class=\"exam-ui-label\">Dialog (280px)</p><p class=\"exam-ui-muted\">It sits down and to the right, offset by half its own size.</p><div class=\"exam-ui-button-row\"><span class=\"exam-ui-button\">Confirm</span><span class=\"exam-ui-button exam-ui-button-secondary\">Cancel</span></div></div></div></div></div>",
+            "htmlZh": "<div class=\"exam-ui-shell\"><div class=\"exam-ui-topbar\"><span>应用</span><span>确认</span></div><div class=\"exam-ui-body\"><p class=\"exam-ui-page-title\">遮罩</p><div class=\"exam-ui-stage\"><p class=\"exam-ui-muted\">变暗的遮罩 —— 对话框本应居中在这里。</p><div class=\"exam-ui-card\"><p class=\"exam-ui-label\">对话框（280px）</p><p class=\"exam-ui-muted\">它偏向右下，位移量是自身尺寸的一半。</p><div class=\"exam-ui-button-row\"><span class=\"exam-ui-button\">确认</span><span class=\"exam-ui-button exam-ui-button-secondary\">取消</span></div></div></div></div></div>",
+            "caption": "The dialog is offset to the bottom-right because top/left place its corner, not its centre, at 50%.",
+            "captionZh": "对话框偏向右下，因为 top/left 是把它的角而非中心放在 50% 处。"
+          },
+          "titleZh": "跑到角落里的对话框",
+          "contentMdxZh": "`modal.css` 想用 `.modal { position: absolute; top: 50%; left: 50% }` 把对话框居中。但 `modal.png` 里对话框偏向右下角，而不是居中在遮罩里。"
         }
-      ]
+      ],
+      "time": "2026-11-13 10:00"
     }
   ]
 }

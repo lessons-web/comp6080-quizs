@@ -766,6 +766,106 @@
       ],
       "images": [],
       "createdAt": "2026-11-21"
+    },
+    {
+      "id": "TOPIC4-Q7",
+      "topic": "javascript",
+      "weeks": [
+        "week-4"
+      ],
+      "difficulty": "hard",
+      "tags": [
+        "专题卷4",
+        "事件循环",
+        "微任务",
+        "setTimeout"
+      ],
+      "question": "购物车页面执行下面这段代码：\n```js\nconsole.log('open cart')\nsetTimeout(() => console.log('flush analytics'), 0)\nPromise.resolve().then(() => console.log('update badge'))\nconsole.log('render')\n```\n开发者以为 `setTimeout(..., 0)` 会在同步代码之后立刻执行，实际却不是。请写出真实的输出顺序，并解释为什么延迟为 0 的定时器仍要排在 promise 回调之后。",
+      "knowledgePoint": "事件循环：微任务与宏任务的执行顺序",
+      "answerExplanation": "真实顺序是 `open cart`、`render`、`update badge`、`flush analytics`。先跑完当前同步脚本：按源码顺序打印 `open cart` 和 `render`。`.then` 回调进入微任务队列，`setTimeout(..., 0)` 的回调进入宏任务队列。脚本结束后，事件循环会先把微任务队列清空（打印 `update badge`），之后才取下一个宏任务（打印 `flush analytics`）。所以延迟写 0 并不等于立刻执行，它只是把回调排成一个宏任务，而宏任务永远排在所有待处理的微任务之后。",
+      "codeBlocks": [
+        {
+          "language": "js",
+          "code": "console.log('open cart')\nsetTimeout(() => console.log('flush analytics'), 0)\nPromise.resolve().then(() => console.log('update badge'))\nconsole.log('render')\n// 实际顺序：open cart, render, update badge, flush analytics"
+        }
+      ],
+      "images": [],
+      "createdAt": "2026-11-21"
+    },
+    {
+      "id": "TOPIC4-Q8",
+      "topic": "javascript",
+      "weeks": [
+        "week-4"
+      ],
+      "difficulty": "medium",
+      "tags": [
+        "专题卷4",
+        "async",
+        "await",
+        "错误处理"
+      ],
+      "question": "资料编辑页把数据以 JSON POST 到 `/api/save`，核心逻辑如下：\n```js\nasync function save(data) {\n  const res = await fetch('/api/save', {\n    method: 'POST',\n    headers: { 'Content-Type': 'application/json' },\n    body: JSON.stringify(data),\n  })\n  return res.json()\n}\n\nfunction onSubmit(data) {\n  try {\n    save(data)          // 没有 await\n    showToast('Saved!')\n  } catch (err) {\n    showToast('Could not save')\n  }\n}\n```\n一次保存实际以 `500` 失败，用户却看到 “Saved!” 成功提示。为什么 `try/catch` 没有捕获到这次失败？`await` 又能改变什么？",
+      "knowledgePoint": "async/await、Promise 与 try/catch 的错误传播",
+      "answerExplanation": "因为 `onSubmit` 调用 `save(data)` 时没有 `await`。`save` 是 async 函数，调用它只是立刻返回一个 pending 的 promise，代码随即继续执行到 `showToast('Saved!')`，`try` 块就此结束。等请求稍后失败时，拒绝挂在这个 promise 上，并不会在调用点被抛出，所以 `catch` 早已错过，失败只表现为一个未处理的 rejection。`try/catch` 能捕获的是块内的同步抛错，以及在 `await` 处被重新抛出的拒绝。把 `onSubmit` 改成 async 并写成 `await save(data)`，拒绝才会在这一行抛出并进入 `catch`。此外还要注意 `500` 不会让 `fetch` reject，需在 `save` 里检查 `res.ok` 并在非 2xx 时手动抛错，错误才能真正传播出来。",
+      "codeBlocks": [
+        {
+          "language": "js",
+          "code": "async function onSubmit(data) {\n  try {\n    await save(data)\n    showToast('Saved!')\n  } catch (err) {\n    showToast('Could not save')\n  }\n}"
+        }
+      ],
+      "images": [],
+      "createdAt": "2026-11-21"
+    },
+    {
+      "id": "TOPIC4-Q9",
+      "topic": "javascript",
+      "weeks": [
+        "week-4"
+      ],
+      "difficulty": "hard",
+      "tags": [
+        "专题卷4",
+        "fetch",
+        "AbortController",
+        "竞态"
+      ],
+      "question": "图书搜索在每次按键时都发起一次请求：\n```js\nasync function search(query) {\n  const res = await fetch('/api/search?q=' + query)\n  const data = await res.json()\n  renderResults(data)\n}\n\ninput.addEventListener('input', (e) => {\n  search(e.target.value)\n})\n```\n用户先输入 `cat`，又飞快改成 `dog`，结果输入框写着 `dog`，列表却显示 `cat` 的结果。为什么会出现这种“旧结果覆盖新结果”？`AbortController` 又能怎样帮忙？",
+      "knowledgePoint": "fetch 竞态条件与 AbortController 取消",
+      "answerExplanation": "这是一次竞态（race condition）：两次请求并发进行，谁先完成不由输入顺序决定。`cat` 那次请求恰好更慢，它的 `await` 最后才恢复执行，于是 `renderResults` 最后被 `cat` 的数据调用，把 `dog` 的结果覆盖掉了。也就是说，最终渲染的是“最后返回”的响应，而不是“最后一次输入”的响应。`AbortController` 可以取消仍在途中的请求：把它的 `signal` 传给 `fetch`，调用 `controller.abort()` 即可中止该请求，被取消的 fetch 会以 `name` 为 `'AbortError'` 的 `DOMException` 拒绝。每次输入时先中止上一次请求，被取代的请求就不会再渲染，只有最新一次的结果会显示出来。",
+      "codeBlocks": [
+        {
+          "language": "js",
+          "code": "let controller\n\nasync function search(query) {\n  controller?.abort()\n  controller = new AbortController()\n  const res = await fetch('/api/search?q=' + query, { signal: controller.signal })\n  const data = await res.json()\n  renderResults(data)\n}"
+        }
+      ],
+      "images": [],
+      "createdAt": "2026-11-21"
+    },
+    {
+      "id": "TOPIC4-Q10",
+      "topic": "javascript",
+      "weeks": [
+        "week-4"
+      ],
+      "difficulty": "medium",
+      "tags": [
+        "专题卷4",
+        "CORS",
+        "HTTP",
+        "预检"
+      ],
+      "question": "商城页面从 `https://shop.com` 向 `https://api.shop.com/orders` 以 JSON 方式提交订单：\n```js\nawait fetch('https://api.shop.com/orders', {\n  method: 'POST',\n  headers: { 'Content-Type': 'application/json' },\n  body: JSON.stringify(order),\n})\n```\n服务器日志显示它以 `200` 收到并保存了订单，但浏览器控制台却报 CORS 错误，页面读不到响应。为什么服务器已处理成功、浏览器仍要拦截？为什么同样的表单编码 POST 不会先发预检请求？",
+      "knowledgePoint": "CORS 同源策略、预检请求与 HTTP 状态",
+      "answerExplanation": "这是跨源请求，浏览器对脚本可见的数据套用了同源策略。只要服务器没有在响应里返回针对 `shop.com` 的 `Access-Control-Allow-Origin`，浏览器虽然收到了响应，也会把它对 JavaScript 屏蔽，于是 `fetch` 以 CORS 错误 reject——拦截发生在浏览器，而不是服务器。至于预检：浏览器只对“简单请求”免发预检，也就是 GET/POST 这类方法、`Content-Type` 属于 `application/x-www-form-urlencoded`、`multipart/form-data`、`text/plain` 之一、且没有自定义首部。`application/json` 不在安全列表里，所以这次不是简单请求，浏览器会先发一个 `OPTIONS` 预检，请求服务器允许该方法和首部；预检不通过时真正的 POST 根本不会发出。要让 JSON POST 成功，服务器需在预检响应里返回 `Access-Control-Allow-Origin`、`Access-Control-Allow-Methods`（含 POST）和 `Access-Control-Allow-Headers`（含 Content-Type），并返回 2xx 状态（常见 204），同时在实际响应里也带上 `Access-Control-Allow-Origin`。",
+      "codeBlocks": [
+        {
+          "language": "js",
+          "code": "// 服务器需为跨源 JSON POST 处理预检并返回 CORS 头\nres.setHeader('Access-Control-Allow-Origin', 'https://shop.com')\nres.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS')\nres.setHeader('Access-Control-Allow-Headers', 'Content-Type')\nres.status(204).end()   // 预检成功返回 2xx"
+        }
+      ],
+      "images": [],
+      "createdAt": "2026-11-21"
     }
   ]
 }

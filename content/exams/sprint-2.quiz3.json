@@ -3,12 +3,19 @@
   "exams": [
     {
       "id": "SPRINT2-QUIZ3",
-      "title": "Mock Quiz 3 — Sprint Paper",
-      "titleZh": "模拟 Quiz 3 · 冲刺卷",
-      "description": "A sprint / revision paper in the real Quiz 3 format: Weeks 1-8 lectures and Weeks 1-9 tutorials plus assignment 4, with a focus on Weeks 7-8 React (state, effects, router) and a light Weeks 1-8 review. Eight questions, three sub-questions each, with screenshot-style mockups.",
-      "descriptionZh": "按真实 Quiz 3 形式组织的冲刺 / 复习卷：覆盖 Weeks 1-8 lectures 与 Weeks 1-9 tutorials，并包含 assignment 4，重点为 Weeks 7-8 的 React（state、effects、router），另含少量 Weeks 1-8 复习。共 8 道大题，每题 3 个子题，配套截图感 mockup。",
-      "totalMarks": 64,
-      "tags": ["冲刺卷", "Quiz3", "Weeks7-8", "React", "期末冲刺"],
+      "title": "COMP6080 Sprint Paper 02",
+      "titleZh": "COMP6080 冲刺卷02",
+      "description": "A sprint / revision paper in the real Quiz 3 format: Weeks 1-8 lectures and Weeks 1-9 tutorials plus assignment 4, with a focus on Weeks 7-8 React (state, effects, router) and a light Weeks 1-8 review. Ten questions, three sub-questions each, with screenshot-style mockups.",
+      "descriptionZh": "按真实 Quiz 3 形式组织的冲刺 / 复习卷：覆盖 Weeks 1-8 lectures 与 Weeks 1-9 tutorials，并包含 assignment 4，重点为 Weeks 7-8 的 React（state、effects、router），另含少量 Weeks 1-8 复习。共 10 道大题，每题 3 个子题，配套截图感 mockup。",
+      "totalMarks": 80,
+      "time": "2026-11-18 10:00",
+      "tags": [
+        "冲刺卷",
+        "Quiz3",
+        "Weeks7-8",
+        "React",
+        "期末冲刺"
+      ],
       "questions": [
         {
           "id": "Q1",
@@ -73,8 +80,7 @@
             "htmlZh": "<div class=\"exam-ui-shell\"><div class=\"exam-ui-topbar\"><span>商城</span><span>购物车</span></div><div class=\"exam-ui-body\"><p class=\"exam-ui-page-title\">我的购物车</p><div class=\"exam-ui-card\"><ul class=\"exam-ui-list\"><li class=\"exam-ui-list-row exam-ui-space-between\"><span>馥芮白 &times; 2</span><span>$9.00</span></li><li class=\"exam-ui-list-row exam-ui-space-between\"><span>香蕉面包 &times; 1</span><span>$6.00</span></li></ul><div class=\"exam-ui-divider\"></div><div class=\"exam-ui-space-between\"><span class=\"exam-ui-label\">总价</span><span class=\"exam-ui-stat\">$15.00</span></div><p class=\"exam-ui-help\">每次重渲染后总价又弹回旧值</p></div></div></div>",
             "caption": "The cart page: the total is written by hand, so the next render resets it.",
             "captionZh": "购物车页面：总价被手动写入，所以下一次渲染又把它重置了。"
-          },
-          "titleZh": "会弹回去的总价"
+          }
         },
         {
           "id": "Q2",
@@ -139,8 +145,7 @@
             "htmlZh": "<div class=\"exam-ui-shell\"><div class=\"exam-ui-topbar\"><span>Qanda</span><span>帖子</span></div><div class=\"exam-ui-body\"><p class=\"exam-ui-page-title\">评论</p><div class=\"exam-ui-card\"><ul class=\"exam-ui-list\"><li class=\"exam-ui-list-row\"><div class=\"exam-ui-input\" style=\"flex:1;\">谢谢，这样就好了</div></li><li class=\"exam-ui-list-row\"><div class=\"exam-ui-input\" style=\"flex:1;\">我这里是 42</div></li><li class=\"exam-ui-list-row\"><div class=\"exam-ui-input\" style=\"flex:1;\">我正在写的草稿</div></li></ul><p class=\"exam-ui-help\">删掉第一条评论后，每个框都显示上一行的文字</p></div></div></div>",
             "caption": "The comment list after a delete: the input text stays with the position, so it appears to shift down.",
             "captionZh": "删除之后的评论列表：输入的文字留在原位置，看起来整体往下错位。"
-          },
-          "titleZh": "跟着错误行走的输入框"
+          }
         },
         {
           "id": "Q3",
@@ -205,8 +210,7 @@
             "htmlZh": "<div class=\"exam-ui-shell\"><div class=\"exam-ui-topbar\"><span>演练场</span><span>计数器</span></div><div class=\"exam-ui-body\"><div class=\"exam-ui-card\" style=\"max-width:240px;\"><p class=\"exam-ui-label\">计数</p><p class=\"exam-ui-stat\" style=\"font-size:1.8rem;\">1</p><div class=\"exam-ui-button-row\"><button class=\"exam-ui-button\">+3</button></div><p class=\"exam-ui-help\">点 +3 只会让计数走 1</p></div></div></div>",
             "caption": "The counter: three identical updates collapse into one because they all read the same snapshot.",
             "captionZh": "计数器：三次相同的更新因为都读同一份快照而塌缩成一次。"
-          },
-          "titleZh": "点了只加一的 +3 按钮"
+          }
         },
         {
           "id": "Q4",
@@ -271,8 +275,7 @@
             "htmlZh": "<div class=\"exam-ui-shell\"><div class=\"exam-ui-topbar\"><span>通讯录</span><span>个人主页</span></div><div class=\"exam-ui-body\"><p class=\"exam-ui-page-title\">用户 1</p><div class=\"exam-ui-card\"><p class=\"exam-ui-label\">已打开 /users/2，但显示的是</p><p class=\"exam-ui-value\" style=\"font-weight:700;\">用户 1</p><p class=\"exam-ui-help\">新的 id 没有让 effect 重新运行</p></div></div></div>",
             "caption": "The profile page: it still shows user 1 after navigating to user 2.",
             "captionZh": "个人主页：切到用户 2 之后仍显示用户 1。"
-          },
-          "titleZh": "从不刷新的个人主页"
+          }
         },
         {
           "id": "Q5",
@@ -337,8 +340,7 @@
             "htmlZh": "<div class=\"exam-ui-shell\"><div class=\"exam-ui-topbar\"><span>应用</span><span>工具栏</span></div><div class=\"exam-ui-body\"><p class=\"exam-ui-page-title\">响应式工具栏</p><div class=\"exam-ui-card\"><div class=\"exam-ui-stack\"><div class=\"exam-ui-chip\">宽度：1280</div><div class=\"exam-ui-chip\">宽度：1024</div><div class=\"exam-ui-chip\">宽度：800</div></div><p class=\"exam-ui-help\">一次缩放把宽度打印了三遍</p></div></div></div>",
             "caption": "The toolbar: stacked resize listeners make one event log the width several times.",
             "captionZh": "工具栏：层层叠加的缩放监听器让一次事件把宽度打印好几遍。"
-          },
-          "titleZh": "一次缩放，三条日志"
+          }
         },
         {
           "id": "Q6",
@@ -403,8 +405,7 @@
             "htmlZh": "<div class=\"exam-ui-shell\"><div class=\"exam-ui-topbar\"><span>通讯录</span><span>用户</span></div><div class=\"exam-ui-body\"><p class=\"exam-ui-page-title\">用户主页</p><div class=\"exam-ui-card\"><p class=\"exam-ui-label\">请求</p><p class=\"exam-ui-value\">GET /api/users/undefined</p><p class=\"exam-ui-danger\">未找到</p></div></div></div>",
             "caption": "The profile page: the mismatched param name makes the request ask for \"undefined\".",
             "captionZh": "个人主页：参数名不匹配，请求里去要 “undefined”。"
-          },
-          "titleZh": "永远是 undefined 的路由参数"
+          }
         },
         {
           "id": "Q7",
@@ -469,8 +470,7 @@
             "htmlZh": "<div class=\"exam-ui-shell\"><div class=\"exam-ui-topbar\"><span>账户</span><span>设置</span></div><div class=\"exam-ui-body\"><p class=\"exam-ui-page-title\">设置</p><div class=\"exam-ui-card\"><div class=\"exam-ui-breadcrumbs\"><span class=\"exam-ui-nav-item\">个人资料</span><span class=\"exam-ui-nav-item\">账单</span><span class=\"exam-ui-nav-item\">安全</span></div><div class=\"exam-ui-stage\" style=\"min-height:120px;display:flex;align-items:center;justify-content:center;\"><span class=\"exam-ui-muted\">标签内容不显示</span></div><p class=\"exam-ui-help\">点击标签会让整个应用刷新</p></div></div></div>",
             "caption": "The settings tabs: plain links reload the app and no <Outlet /> renders the child route.",
             "captionZh": "设置页标签：普通链接会刷新应用，且没有 <Outlet /> 渲染子路由。"
-          },
-          "titleZh": "一点就整页刷新的标签"
+          }
         },
         {
           "id": "Q8",
@@ -535,8 +535,137 @@
             "htmlZh": "<div class=\"exam-ui-shell\"><div class=\"exam-ui-topbar\"><span>控制台</span><span>main.js</span></div><div class=\"exam-ui-body\"><p class=\"exam-ui-page-title\">控制台输出</p><ul class=\"exam-ui-list\"><li class=\"exam-ui-list-row\">A</li><li class=\"exam-ui-list-row\">D</li><li class=\"exam-ui-list-row\">C</li><li class=\"exam-ui-list-row\">B</li></ul><p class=\"exam-ui-help\">不是源码顺序——日志实际输出为 A D C B</p></div></div></div>",
             "caption": "The console after running main.js: sync first, then the promise, then the timer.",
             "captionZh": "运行 main.js 后的控制台：先同步，再 promise，最后定时器。"
-          },
-          "titleZh": "顺序对不上的日志"
+          }
+        },
+        {
+          "id": "Q9",
+          "title": "The zero that shows up when it shouldn't",
+          "titleZh": "不该出现的那个 0",
+          "marks": 8,
+          "contentMdx": "A search panel renders its results behind a single guard, in `Results.js`: `{items.length && <p>Found {items.length} matches</p>}`. When a search matches nothing, `results.png` shows a stray `0` sitting above the empty-state message where the team expected no output at all. The team wants to know why a guard that reads as false still printed something.",
+          "contentMdxZh": "一个搜索面板在 `Results.js` 里用一行守卫渲染结果：`{items.length && <p>Found {items.length} matches</p>}`。当搜索没有任何匹配时，`results.png` 却在空状态提示上方显示了一个孤零零的 `0`，而团队本以为这里什么都不显示。团队想知道，为什么一个读起来是假的守卫仍然打印出了东西。",
+          "subQuestions": [
+            {
+              "id": "Q9-a",
+              "label": "(a)",
+              "marks": 3,
+              "questionMdx": "When the search returns no items, what exactly appears on the screen, and why? Trace what `items.length && <p>Found {items.length} matches</p>` evaluates to.",
+              "answerMdx": "A bare `0` is printed. `items.length` is the number `0`; the logical AND returns its left operand whenever that operand is falsy, so `0 && <p>…</p>` evaluates to `0` — the `<p>` is never created. React then renders a numeric child as text, so a `0` is placed on the page. The guard did not hide anything because it returned the falsy value itself, and for a number that value is something React draws rather than ignores.",
+              "markingMdx": "1 mark for identifying that a `0` appears on screen.\n1 mark for stating `&&` returns the falsy left operand, so the expression evaluates to the number `0`.\n1 mark for stating React renders the number `0` as text (unlike `false`/`null`).",
+              "questionMdxZh": "当搜索没有返回任何条目时，屏幕上具体会出现什么？为什么？请追踪 `items.length && <p>Found {items.length} matches</p>` 的求值结果。",
+              "answerMdxZh": "会打印出一个孤零零的 `0`。`items.length` 是数字 `0`；逻辑与在左操作数为假时返回左操作数本身，所以 `0 && <p>…</p>` 求值为 `0`——那个 `<p>` 根本没被创建。React 会把数值子节点当作文本渲染，于是页面上出现一个 `0`。这个守卫没有隐藏任何东西，因为它返回的就是那个假值本身，而对这个数值来说，React 并不会忽略它。",
+              "markingMdxZh": "1 分：指出屏幕上出现了一个 `0`。\n1 分：说明 `&&` 返回为假的左操作数，因此表达式求值为数字 `0`。\n1 分：说明 React 会把数字 `0` 当作文本渲染（不同于 `false`/`null`）。"
+            },
+            {
+              "id": "Q9-b",
+              "label": "(b)",
+              "marks": 3,
+              "questionMdx": "A boolean guard such as `isLoggedIn && <Badge />` shows nothing when it is false, yet `items.length && <p>…</p>` shows `0`. Explain the difference.",
+              "answerMdx": "Both guards short-circuit when the left side is falsy, but the value `&&` hands back is different. `false && …` returns `false`, and React treats `true`, `false`, `null` and `undefined` as children that render nothing. `0 && …` returns `0`, and React treats a number — including `0` — as a real text child, so it prints it. The two expressions look identical but pass React different falsy values, and React only skips the boolean/null/undefined ones.",
+              "markingMdx": "1 mark for stating `&&` returns the left operand, so the returned falsy value differs (`false` vs `0`).\n1 mark for stating React renders nothing for `false`/`null`/`undefined`.\n1 mark for stating React renders the number `0` as text.",
+              "questionMdxZh": "像 `isLoggedIn && <Badge />` 这样的布尔守卫为假时什么都不显示，而 `items.length && <p>…</p>` 却会显示 `0`。请解释其中的区别。",
+              "answerMdxZh": "两个守卫在左侧为假时都会短路，但 `&&` 交回的假值并不相同。`false && …` 返回 `false`，而 React 把 `true`、`false`、`null`、`undefined` 当作什么都不渲染的子节点；`0 && …` 返回 `0`，而 React 把数值（包括 `0`）当作真实的文本子节点，于是把它打印出来。两个表达式看起来一样，但交给 React 的假值不同，React 只跳过布尔 / null / undefined 那几种。",
+              "markingMdxZh": "1 分：说明 `&&` 返回左操作数，因此返回的假值不同（`false` 与 `0`）。\n1 分：说明 React 对 `false`/`null`/`undefined` 什么都不渲染。\n1 分：说明 React 会把数字 `0` 当作文本渲染。"
+            },
+            {
+              "id": "Q9-c",
+              "label": "(c)",
+              "marks": 2,
+              "questionMdx": "Give two ways to make the guard render nothing when there are no matches.",
+              "answerMdx": "Coerce the condition to a real boolean, or compare explicitly: `items.length > 0 && <p>…</p>`, `Boolean(items.length) && <p>…</p>`, or `!!items.length && <p>…</p>`. Because `0 > 0` is `false` and `Boolean(0)` is `false`, the left side becomes `false`, which React skips. Alternatively use a ternary that returns a renderable-nothing value: `{items.length ? <p>…</p> : null}`. Both keep the `0` out of the output.",
+              "markingMdx": "1 mark for an explicit comparison or boolean coercion (e.g. `items.length > 0`, `Boolean(...)`, `!!`).\n1 mark for the ternary form returning `null` (or an equivalent explicit branch).",
+              "questionMdxZh": "请给出两种修法，让没有匹配时这个守卫什么都不渲染。",
+              "answerMdxZh": "把条件强制转成真正的布尔值，或显式比较：`items.length > 0 && <p>…</p>`、`Boolean(items.length) && <p>…</p>`，或 `!!items.length && <p>…</p>`。因为 `0 > 0` 是 `false`、`Boolean(0)` 也是 `false`，左侧就成了 `false`，React 会跳过它。另一种写法是用三元运算符返回一个“什么都不渲染”的值：`{items.length ? <p>…</p> : null}`。两种写法都能让 `0` 不出现在输出里。",
+              "markingMdxZh": "1 分：给出显式比较或布尔转换（如 `items.length > 0`、`Boolean(...)`、`!!`）。\n1 分：给出返回 `null` 的三元写法（或等价的显式分支）。"
+            }
+          ],
+          "displayNumber": "Q9",
+          "categoryLabel": "React State and Rendering",
+          "categoryLabelZh": "React 状态与渲染",
+          "displayStyle": "quiz-sample",
+          "mockup": {
+            "files": [
+              {
+                "name": "Results.js",
+                "code": "function Results({ items }) {\n  return (\n    <div>\n      <h2>Results</h2>\n      {items.length && <p>Found {items.length} matches</p>}\n      {items.length === 0 && <p className=\"empty\">No matches</p>}\n    </div>\n  )\n}",
+                "codeZh": "function Results({ items }) {\n  return (\n    <div>\n      <h2>Results</h2>\n      {items.length && <p>Found {items.length} matches</p>}\n      // items.length === 0 时，上面求值为 0，被当成文本渲染\n      {items.length === 0 && <p className=\"empty\">No matches</p>}\n    </div>\n  )\n}"
+              },
+              {
+                "name": "results.png",
+                "active": true
+              }
+            ],
+            "viewport": "desktop",
+            "html": "<div class=\"exam-ui-shell\"><div class=\"exam-ui-topbar\"><span>Shop</span><span>Search</span></div><div class=\"exam-ui-body\"><p class=\"exam-ui-page-title\">Search results</p><div class=\"exam-ui-card\"><div class=\"exam-ui-toolbar-demo\"><span class=\"exam-ui-input\">wireless</span><span class=\"exam-ui-button\">Search</span></div><div class=\"exam-ui-divider\"></div><p class=\"exam-ui-stat\">0</p><p class=\"exam-ui-muted\">No matches for \"wireless\"</p><p class=\"exam-ui-help\">A stray 0 shows above the empty state instead of nothing</p></div></div></div>",
+            "htmlZh": "<div class=\"exam-ui-shell\"><div class=\"exam-ui-topbar\"><span>商城</span><span>搜索</span></div><div class=\"exam-ui-body\"><p class=\"exam-ui-page-title\">搜索结果</p><div class=\"exam-ui-card\"><div class=\"exam-ui-toolbar-demo\"><span class=\"exam-ui-input\">wireless</span><span class=\"exam-ui-button\">搜索</span></div><div class=\"exam-ui-divider\"></div><p class=\"exam-ui-stat\">0</p><p class=\"exam-ui-muted\">没有匹配 \"wireless\" 的结果</p><p class=\"exam-ui-help\">空状态上方出现了一个多余的 0，而不是什么都不显示</p></div></div></div>",
+            "caption": "The search page: a false-looking guard still prints the number 0 above the empty state.",
+            "captionZh": "搜索页面：一个看起来为假的守卫仍然在空状态上方打印出数字 0。"
+          }
+        },
+        {
+          "id": "Q10",
+          "title": "The memo that never skips a render",
+          "titleZh": "从不省下渲染的 memo",
+          "marks": 8,
+          "contentMdx": "A product list renders each row through `ProductRow`, which is wrapped in `React.memo`, and passes it an inline callback (`ProductList.js`). Typing in the search box still re-renders every row and recomputes the filtered list on each keystroke, as `list.png` hints, so the list feels laggy. The team expected `React.memo` to skip the unchanged rows.",
+          "contentMdxZh": "一个商品列表通过 `ProductRow` 渲染每一行，该组件用 `React.memo` 包裹，并接收一个内联回调（`ProductList.js`）。但每在搜索框里敲一个字符，所有行仍然会重渲染、过滤后的列表也被重新计算（`list.png` 暗示了这一点），于是列表卡顿。团队本以为 `React.memo` 会跳过那些没有变化的行。",
+          "subQuestions": [
+            {
+              "id": "Q10-a",
+              "label": "(a)",
+              "marks": 3,
+              "questionMdx": "`ProductRow` is wrapped in `React.memo`, so it should skip re-rendering when its props are unchanged. Why does it still re-render on every parent render?",
+              "answerMdx": "`React.memo` only skips a render when the new props are *shallow-equal* to the previous ones. The parent passes `onSelect={() => addToCart(item.id)}`, an inline arrow function. A brand-new function object is created on every parent render, so `onSelect` is a different reference each time, the shallow comparison fails, and memo re-renders the row anyway. The row's data did not change; only the recreated function prop did.",
+              "markingMdx": "1 mark for stating `React.memo` does a shallow comparison of props.\n1 mark for identifying that the inline arrow prop is a new reference on every render.\n1 mark for stating the reference change makes the comparison fail, so the row re-renders.",
+              "questionMdxZh": "`ProductRow` 被 `React.memo` 包裹，按理说 props 没变时应当跳过重渲染。为什么它在每次父组件渲染时仍然会重渲染？",
+              "answerMdxZh": "`React.memo` 只有在新 props 与上一次 *浅相等* 时才会跳过渲染。父组件传入的是 `onSelect={() => addToCart(item.id)}`，一个内联箭头函数。每次父组件渲染都会创建一个全新的函数对象，所以 `onSelect` 每次都是不同的引用，浅比较失败，memo 于是照旧重渲染该行。行本身的数据没变，变得只是那个被反复重建的函数 prop。",
+              "markingMdxZh": "1 分：说明 `React.memo` 做的是 props 的浅比较。\n1 分：指出内联箭头函数 prop 每次渲染都是新引用。\n1 分：说明引用变化导致比较失败，因此该行仍然重渲染。"
+            },
+            {
+              "id": "Q10-b",
+              "label": "(b)",
+              "marks": 2,
+              "questionMdx": "Typing in the search box feels laggy. `visible` is computed with `items.filter(...).sort(...)` directly in `ProductList`'s body. Why does this work run far more often than the data changes?",
+              "answerMdx": "Code in the component body runs on *every* render. Typing in the search box sets state, which re-renders `ProductList`, and each render recomputes `filter().sort()` from scratch — even when `items` and the filter have not changed in a meaningful way. The same render also recreates every child's `onSelect`, so the whole list re-renders and repeats the work, and the lag grows with the number of items.",
+              "markingMdx": "1 mark for stating that component-body code runs on every render.\n1 mark for linking the search keystroke (state change → re-render) to the repeated `filter().sort()` work.",
+              "questionMdxZh": "在搜索框里打字感觉很卡。`visible` 是在 `ProductList` 的函数体里直接用 `items.filter(...).sort(...)` 算出来的。为什么这段计算运行的次数远多于数据变化的次数？",
+              "answerMdxZh": "组件函数体里的代码在 *每次* 渲染时都会运行。在搜索框里打字会更新 state，从而重渲染 `ProductList`，而每次渲染都会从头重算一遍 `filter().sort()`——即便 `items` 和过滤条件并没有实质变化。同一次渲染还会把每个子组件的 `onSelect` 都重建一遍，于是整个列表都重渲染、重复计算，条目越多卡顿越明显。",
+              "markingMdxZh": "1 分：说明组件函数体里的代码每次渲染都会运行。\n1 分：把打字（state 变化 → 重渲染）与反复执行的 `filter().sort()` 联系起来。"
+            },
+            {
+              "id": "Q10-c",
+              "label": "(c)",
+              "marks": 3,
+              "questionMdx": "Rewrite the parent so the memoised rows actually skip renders and the expensive list work is not repeated, using `useCallback` and `useMemo`.",
+              "answerMdx": "Wrap the handler in `useCallback` so its identity only changes when its dependencies do, and wrap the derived list in `useMemo`:\n\n```jsx\nconst onSelect = useCallback((id) => addToCart(id), [addToCart])\nconst visible = useMemo(\n  () => items.filter((i) => i.name.includes(query)).sort((a, b) => a.price - b.price),\n  [items, query],\n)\n```\n\nNow `onSelect` keeps the same reference between renders while its deps are unchanged, so `React.memo`'s shallow compare passes and the row is skipped; `visible` is recomputed only when `items` or `query` actually change. Dependencies must list every value the callbacks read, or React will cache a stale version.",
+              "markingMdx": "1 mark for using `useCallback` for the handler prop so its identity stays stable across renders.\n1 mark for using `useMemo` for `visible` with correct dependencies.\n1 mark for stating that stable props let `React.memo`'s shallow compare pass so rows are skipped, and the memo only recomputes when deps change.",
+              "questionMdxZh": "请用 `useCallback` 和 `useMemo` 重写父组件，让被 memo 的行真的能跳过渲染、昂贵的列表计算也不再重复。",
+              "answerMdxZh": "用 `useCallback` 包裹处理器，让它的引用只在依赖变化时才改变；再用 `useMemo` 包裹派生列表：\n\n```jsx\nconst onSelect = useCallback((id) => addToCart(id), [addToCart])\nconst visible = useMemo(\n  () => items.filter((i) => i.name.includes(query)).sort((a, b) => a.price - b.price),\n  [items, query],\n)\n```\n\n这样在依赖不变时，`onSelect` 在多次渲染之间保持同一引用，`React.memo` 的浅比较通过，该行被跳过；`visible` 只在 `items` 或 `query` 真正变化时才重算。依赖数组必须列出回调读取到的每个值，否则 React 会缓存一份过期的结果。",
+              "markingMdxZh": "1 分：对处理器 prop 使用 `useCallback`，使其引用在多次渲染间保持稳定。\n1 分：对 `visible` 使用 `useMemo`，并给出正确的依赖。\n1 分：说明稳定的 props 能让 `React.memo` 的浅比较通过、从而跳过行；memo 只在依赖变化时才重算。"
+            }
+          ],
+          "displayNumber": "Q10",
+          "categoryLabel": "React State and Rendering",
+          "categoryLabelZh": "React 状态与渲染",
+          "displayStyle": "quiz-sample",
+          "mockup": {
+            "files": [
+              {
+                "name": "ProductList.js",
+                "code": "const ProductRow = React.memo(function ProductRow({ item, onSelect }) {\n  console.log('render', item.id)\n  return <li onClick={() => onSelect(item.id)}>{item.name}</li>\n})\n\nfunction ProductList({ items, query }) {\n  const visible = items\n    .filter((i) => i.name.includes(query))\n    .sort((a, b) => a.price - b.price)\n\n  return (\n    <ul>\n      {visible.map((item) => (\n        <ProductRow\n          key={item.id}\n          item={item}\n          onSelect={() => addToCart(item.id)}\n        />\n      ))}\n    </ul>\n  )\n}",
+                "codeZh": "const ProductRow = React.memo(function ProductRow({ item, onSelect }) {\n  console.log('render', item.id)\n  return <li onClick={() => onSelect(item.id)}>{item.name}</li>\n})\n\nfunction ProductList({ items, query }) {\n  // 每次渲染都重算\n  const visible = items\n    .filter((i) => i.name.includes(query))\n    .sort((a, b) => a.price - b.price)\n\n  return (\n    <ul>\n      {visible.map((item) => (\n        <ProductRow\n          key={item.id}\n          item={item}\n          // 每次渲染都是新函数，memo 失效\n          onSelect={() => addToCart(item.id)}\n        />\n      ))}\n    </ul>\n  )\n}"
+              },
+              {
+                "name": "list.png",
+                "active": true
+              }
+            ],
+            "viewport": "desktop",
+            "html": "<div class=\"exam-ui-shell\"><div class=\"exam-ui-topbar\"><span>Shop</span><span>Products</span></div><div class=\"exam-ui-body\"><p class=\"exam-ui-page-title\">Products</p><div class=\"exam-ui-card\"><div class=\"exam-ui-toolbar-demo\"><span class=\"exam-ui-input\">search</span><span class=\"exam-ui-chip\">5 items</span></div><ul class=\"exam-ui-list\"><li class=\"exam-ui-list-row exam-ui-space-between\"><span>Blue Mug</span><span>$8</span></li><li class=\"exam-ui-list-row exam-ui-space-between\"><span>Green Tea</span><span>$5</span></li><li class=\"exam-ui-list-row exam-ui-space-between\"><span>Red Pen</span><span>$2</span></li></ul><p class=\"exam-ui-help\">Every row logs \"render\" on each parent render even though its item did not change</p></div></div></div>",
+            "htmlZh": "<div class=\"exam-ui-shell\"><div class=\"exam-ui-topbar\"><span>商城</span><span>商品</span></div><div class=\"exam-ui-body\"><p class=\"exam-ui-page-title\">商品</p><div class=\"exam-ui-card\"><div class=\"exam-ui-toolbar-demo\"><span class=\"exam-ui-input\">search</span><span class=\"exam-ui-chip\">5 件</span></div><ul class=\"exam-ui-list\"><li class=\"exam-ui-list-row exam-ui-space-between\"><span>蓝色马克杯</span><span>$8</span></li><li class=\"exam-ui-list-row exam-ui-space-between\"><span>绿茶</span><span>$5</span></li><li class=\"exam-ui-list-row exam-ui-space-between\"><span>红笔</span><span>$2</span></li></ul><p class=\"exam-ui-help\">即便内容没变，每次父组件渲染时每一行都会打印一次 \"render\"</p></div></div></div>",
+            "caption": "The product list: every memoised row still logs \"render\" on each keystroke because its function prop is recreated.",
+            "captionZh": "商品列表：因为函数 prop 被反复重建，每个被 memo 的行在每次敲键时仍会打印 \"render\"。"
+          }
         }
       ]
     }

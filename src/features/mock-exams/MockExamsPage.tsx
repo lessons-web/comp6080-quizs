@@ -41,6 +41,26 @@ const ListIcon = ({ className }: { className?: string }) => (
   </svg>
 )
 
+type ExamCategory = 'mock' | 'real' | 'topic'
+
+const EXAM_CATEGORY_LABELS: Record<ExamCategory, string> = {
+  mock: '模拟卷',
+  real: '真题卷',
+  topic: '专题卷',
+}
+
+interface CategorizedExam {
+  id: string
+  tags?: string[]
+}
+
+function getExamCategory(exam: CategorizedExam): ExamCategory {
+  const tags = exam.tags ?? []
+  if (tags.includes('真题')) return 'real'
+  if (tags.includes('专题卷')) return 'topic'
+  return 'mock'
+}
+
 function LoadErrorCard() {
   return (
     <section className="w-full rounded-3xl border border-rose-200 bg-rose-50 p-6 text-rose-900">
@@ -70,9 +90,10 @@ export function MockExamsPage() {
   const loginHref = `/login${pathname ? `?redirect=${encodeURIComponent(pathname)}` : ''}`
 
   const [searchQuery, setSearchQuery] = useState('')
+  const [categoryFilter, setCategoryFilter] = useState<'all' | ExamCategory>('all')
   const [layoutMode, setLayoutMode] = useLocalStoragePref<'card' | 'table'>(
     'comp6080:pref:exam-layout',
-    'card',
+    'table',
     (v) => v === 'card' || v === 'table',
   )
 
@@ -83,13 +104,18 @@ export function MockExamsPage() {
   const filteredAndSortedExams = useMemo(() => {
     if (!exams) return []
     let result = [...exams]
-    
+
+    if (categoryFilter !== 'all') {
+      result = result.filter((exam) => getExamCategory(exam) === categoryFilter)
+    }
+
     if (searchQuery.trim()) {
       const q = searchQuery.toLowerCase()
-      result = result.filter(exam => 
-        exam.title.toLowerCase().includes(q) ||
-        (exam.description && exam.description.toLowerCase().includes(q)) ||
-        (exam.tags && exam.tags.some(t => t.toLowerCase().includes(q)))
+      result = result.filter((exam) =>
+        [exam.title, exam.titleZh, exam.description, exam.descriptionZh].some(
+          (value) => value?.toLowerCase().includes(q),
+        ) ||
+        (exam.tags && exam.tags.some((tag) => tag.toLowerCase().includes(q))),
       )
     }
 
@@ -111,7 +137,7 @@ export function MockExamsPage() {
     }
 
     return result
-  }, [exams, searchQuery, isGuest])
+  }, [exams, categoryFilter, searchQuery, isGuest])
 
   if (loading) {
     return (
@@ -201,11 +227,43 @@ export function MockExamsPage() {
               </div>
             </div>
           </div>
+
+          <div className="mt-5 flex flex-wrap items-center gap-2">
+            <button
+              type="button"
+              onClick={() => setCategoryFilter('all')}
+              aria-pressed={categoryFilter === 'all'}
+              className={`rounded-full px-4 py-1.5 text-sm font-medium transition-colors ${
+                categoryFilter === 'all'
+                  ? 'bg-[#2f6b5f] text-white'
+                  : 'bg-[#f4f1ea] text-[#6b7078] ring-1 ring-inset ring-[#d8d1c5] hover:text-[#4c5159]'
+              }`}
+            >
+              全部
+            </button>
+            {(['mock', 'real', 'topic'] as const).map((category) => (
+              <button
+                key={category}
+                type="button"
+                onClick={() => setCategoryFilter(category)}
+                aria-pressed={categoryFilter === category}
+                className={`rounded-full px-4 py-1.5 text-sm font-medium transition-colors ${
+                  categoryFilter === category
+                    ? 'bg-[#2f6b5f] text-white'
+                    : 'bg-[#f4f1ea] text-[#6b7078] ring-1 ring-inset ring-[#d8d1c5] hover:text-[#4c5159]'
+                }`}
+              >
+                {EXAM_CATEGORY_LABELS[category]}
+              </button>
+            ))}
+          </div>
         </div>
 
         {filteredAndSortedExams.length === 0 ? (
           <div className="rounded-[2rem] border border-dashed border-[#d8d1c5] bg-[#fffdfa] p-8 text-center text-sm text-[#6b7078] shadow-sm">
-            {searchQuery ? '没有找到匹配的真题' : '当前还没有录入模拟真题，后续会补充。'}
+            {searchQuery || categoryFilter !== 'all'
+              ? '没有找到匹配的试卷'
+              : '当前还没有录入模拟真题，后续会补充。'}
           </div>
         ) : layoutMode === 'card' ? (
           <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
@@ -221,7 +279,7 @@ export function MockExamsPage() {
                     <div aria-hidden className="pointer-events-none absolute inset-0 bg-[#faf8f4]/80 backdrop-blur-[1px]" />
                     <div className="relative flex flex-1 flex-col">
                       <h3 className="text-xl font-semibold text-[#4c5159]">
-                        {exam.title}
+                        {exam.titleZh || exam.title}
                       </h3>
                       <div className="mt-3 flex flex-wrap gap-2">
                         <span className="inline-flex shrink-0 items-center gap-1 rounded-full bg-[#ebe5da] px-2.5 py-0.5 text-[11px] font-semibold text-[#6a6257] ring-1 ring-[#d8d1c5]">
@@ -244,9 +302,9 @@ export function MockExamsPage() {
                           </>
                         )}
                       </div>
-                      {exam.description && (
+                      {(exam.descriptionZh || exam.description) && (
                         <p className="mt-4 line-clamp-3 text-sm leading-6 text-[#6b7078]">
-                          {exam.description}
+                          {exam.descriptionZh || exam.description}
                         </p>
                       )}
                       {exam.time && (
@@ -282,7 +340,7 @@ export function MockExamsPage() {
                 >
                   <div className="flex flex-1 flex-col">
                     <h3 className="text-xl font-semibold text-[#16181d] group-hover:text-[#2f6b5f]">
-                      {exam.title}
+                      {exam.titleZh || exam.title}
                     </h3>
                     <div className="mt-3 flex flex-wrap gap-2">
                       <span className="inline-flex items-center gap-1 rounded-full bg-[#edf7f1] px-2.5 py-0.5 text-xs font-medium text-[#24745c] ring-1 ring-inset ring-[#cfe7db]">
@@ -302,9 +360,9 @@ export function MockExamsPage() {
                         </>
                       )}
                     </div>
-                    {exam.description && (
+                    {(exam.descriptionZh || exam.description) && (
                       <p className="mt-4 line-clamp-3 text-sm leading-6 text-[#4c5159]">
-                        {exam.description}
+                        {exam.descriptionZh || exam.description}
                       </p>
                     )}
                     {exam.time && (
@@ -328,15 +386,22 @@ export function MockExamsPage() {
             })}
           </div>
         ) : (
-          <div className="overflow-hidden rounded-3xl border border-[#e3ded4] bg-[#fffdfa] shadow-[0_1px_2px_rgba(22,24,29,.05)]">
-            <table className="w-full text-left text-sm">
+          <div className="overflow-x-auto rounded-3xl border border-[#e3ded4] bg-[#fffdfa] shadow-[0_1px_2px_rgba(22,24,29,.05)]">
+            <table className="w-full min-w-[1120px] table-fixed text-left text-sm">
+              <colgroup>
+                <col style={{ width: '40%' }} />
+                <col style={{ width: '25%' }} />
+                <col style={{ width: '15%' }} />
+                <col style={{ width: '9%' }} />
+                <col style={{ width: '11%' }} />
+              </colgroup>
               <thead className="bg-[#f4f1ea] text-[#6b7078]">
                 <tr>
-                  <th className="px-6 py-4 font-medium">试卷名称</th>
-                  <th className="px-6 py-4 font-medium">标签</th>
-                  <th className="px-6 py-4 font-medium">发布时间</th>
-                  <th className="px-6 py-4 font-medium">总分</th>
-                  <th className="px-6 py-4 font-medium text-right">操作</th>
+                  <th className="px-4 py-4 font-medium">试卷名称</th>
+                  <th className="px-4 py-4 font-medium">标签</th>
+                  <th className="px-4 py-4 font-medium">发布时间</th>
+                  <th className="px-4 py-4 font-medium">总分</th>
+                  <th className="px-4 py-4 font-medium text-right">操作</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-[#ece7dd]">
@@ -347,32 +412,34 @@ export function MockExamsPage() {
                       'group transition-colors',
                       locked ? 'bg-[#f7f4ed]' : 'hover:bg-[#fbfaf6]',
                     ].join(' ')}>
-                      <td className="px-6 py-4">
-                        <div className="flex items-center gap-2">
+                      <td className="px-4 py-4">
+                        <div className="flex min-w-0 items-center gap-2">
                           <div className={[
-                            'font-medium',
+                            'min-w-0 truncate font-medium',
                             locked ? 'text-[#6b7078]' : 'text-[#16181d] group-hover:text-[#2f6b5f]',
                           ].join(' ')}>
-                            {exam.title}
+                            {exam.titleZh || exam.title}
                           </div>
                           {locked ? (
-                            <span className="inline-flex items-center gap-1 rounded-full bg-[#ebe5da] px-2 py-0.5 text-[10px] font-semibold text-[#6a6257] ring-1 ring-[#d8d1c5]">
+                            <span className="inline-flex shrink-0 items-center gap-1 rounded-full bg-[#ebe5da] px-2 py-0.5 text-[10px] font-semibold text-[#6a6257] ring-1 ring-[#d8d1c5]">
                               <svg viewBox="0 0 12 12" aria-hidden="true" className="h-2.5 w-2.5">
                                 <path fill="currentColor" d="M8.5 4.5V4a2.5 2.5 0 0 0-5 0v.5H2.5A1.5 1.5 0 0 0 1 6v3.5A1.5 1.5 0 0 0 2.5 11h7A1.5 1.5 0 0 0 10.5 9.5V6A1.5 1.5 0 0 0 9 4.5h-.5Zm-4 0V4a1.5 1.5 0 0 1 3 0v.5h-3ZM6 9A1 1 0 1 1 6 7a1 1 0 0 1 0 2Z" />
                               </svg>
                               锁定
                             </span>
                           ) : (
-                            <span className="inline-flex items-center gap-1 rounded-full bg-[#edf7f1] px-2 py-0.5 text-[10px] font-medium text-[#24745c] ring-1 ring-inset ring-[#cfe7db]">
+                            <span className="inline-flex shrink-0 items-center gap-1 rounded-full bg-[#edf7f1] px-2 py-0.5 text-[10px] font-medium text-[#24745c] ring-1 ring-inset ring-[#cfe7db]">
                               可预览
                             </span>
                           )}
                         </div>
-                        {exam.description && (
-                          <div className="mt-1 line-clamp-1 text-[#6b7078]">{exam.description}</div>
+                        {(exam.descriptionZh || exam.description) && (
+                          <div className="mt-1 truncate text-[#6b7078]">
+                            {exam.descriptionZh || exam.description}
+                          </div>
                         )}
                       </td>
-                      <td className="px-6 py-4">
+                      <td className="px-4 py-4">
                         {exam.tags && (
                           <div className="flex flex-wrap gap-2">
                             {exam.tags.map(tag => (
@@ -387,24 +454,24 @@ export function MockExamsPage() {
                           </div>
                         )}
                       </td>
-                      <td className="whitespace-nowrap px-6 py-4 text-[#6b7078]">
+                      <td className="whitespace-nowrap px-4 py-4 text-[#6b7078]">
                         {exam.time ? new Date(exam.time).toLocaleDateString('zh-CN', { year: 'numeric', month: '2-digit', day: '2-digit' }) : '-'}
                       </td>
-                      <td className="whitespace-nowrap px-6 py-4 text-[#6a6257]">
+                      <td className="whitespace-nowrap px-4 py-4 text-[#6a6257]">
                         {exam.totalMarks} 分
                       </td>
-                      <td className="px-6 py-4 text-right">
+                      <td className="px-4 py-4 text-right">
                         {locked ? (
                           <Link
                             href={loginHref}
-                            className="inline-flex items-center justify-center rounded-lg bg-[#f4f1ea] px-3 py-1.5 text-xs font-medium text-[#6a6257] transition-colors hover:bg-[#ebe5da] hover:text-[#4c5159]"
+                            className="inline-flex items-center justify-center whitespace-nowrap rounded-lg bg-[#f4f1ea] px-3 py-1.5 text-xs font-medium text-[#6a6257] transition-colors hover:bg-[#ebe5da] hover:text-[#4c5159]"
                           >
                             登录解锁
                           </Link>
                         ) : (
                           <Link
                             href={`/exams/${exam.id}`}
-                            className="inline-flex items-center justify-center rounded-lg bg-[#edf7f1] px-3 py-1.5 text-xs font-medium text-[#2f6b5f] transition-colors hover:bg-[#dff2ea]"
+                            className="inline-flex items-center justify-center whitespace-nowrap rounded-lg bg-[#edf7f1] px-3 py-1.5 text-xs font-medium text-[#2f6b5f] transition-colors hover:bg-[#dff2ea]"
                           >
                             开始测试
                           </Link>

@@ -410,6 +410,134 @@
       ],
       "images": [],
       "createdAt": "2026-11-21"
+    },
+    {
+      "id": "TOPIC2-Q7",
+      "topic": "css",
+      "weeks": [
+        "week-2"
+      ],
+      "difficulty": "medium",
+      "tags": [
+        "专题卷2",
+        "CSS Grid",
+        "auto-fit",
+        "minmax",
+        "响应式"
+      ],
+      "question": "一个商品卡片栅格在手机上把卡片挤扁，CSS 如下：\n```css\n.grid {\n  display: grid;\n  grid-template-columns: repeat(4, 1fr);\n  gap: 24px;\n}\n.card { min-width: 240px; }\n```\n(a) `repeat(4, 1fr)` 创建几列？容器宽度如何分配？(b) 为什么 240px 的卡片在 400px 手机上会撑坏布局？`repeat(auto-fit, minmax(240px, 1fr))` 如何修复？(c) `auto-fit` 与 `auto-fill` 有何区别？`gap` 又起什么作用？",
+      "knowledgePoint": "CSS Grid 轨道、auto-fit / minmax 与响应式栅格",
+      "answerExplanation": "(a) repeat(4, 1fr) 恰创建四列，每列 1fr，可用空间（容器宽度减去三条 24px 间隙）被平均分成四份，400px 手机上每列约 (400 - 72) / 4 = 82px。(b) 1fr 轨道可缩到低于内容最小宽度且不会换行，于是四列远比 240px 的卡片窄，卡片溢出、重叠。minmax(240px, 1fr) 给每条轨道 240px 下限和 1fr 上限，auto-fit 在容器允许范围内尽量多放“至少 240px”的轨道，收掉多余轨道并让卡片换到更少的列（400px 下一列），于是无需媒体查询即变响应式。(c) auto-fill 会创建尽可能多的 240px 轨道并保留空轨道，宽屏上卡片仍为 240px；auto-fit 收掉空轨道并配合 1fr 让卡片拉伸填满整行。gap 在行列之间加上统一 24px 间隔而不靠 margin，间距一致且单元格不会挤到一起。",
+      "codeBlocks": [
+        {
+          "language": "css",
+          "code": ".grid {\n  display: grid;\n  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));\n  gap: 24px;\n}"
+        }
+      ],
+      "images": [],
+      "createdAt": "2026-11-21"
+    },
+    {
+      "id": "TOPIC2-Q8",
+      "topic": "css",
+      "weeks": [
+        "week-2"
+      ],
+      "difficulty": "medium",
+      "tags": [
+        "专题卷2",
+        "单位",
+        "em",
+        "rem",
+        "继承"
+      ],
+      "question": "排版字号用 em 层层相乘，标题比预期大得多：\n```css\nhtml { font-size: 16px; }\n.panel { font-size: 1.2em; }\n.card { font-size: 1.2em; }\n.card .title { font-size: 1.2em; }\n```\n(a) em 相对什么计算？与 rem 有何不同？(b) 标题为什么算成约 27.6px 而非 19.2px？再深嵌一层为何又变大？(c) 用 rem 给出修法并解释它为何消除增长，另说明 em 何时仍是正确选择。",
+      "knowledgePoint": "CSS 单位 em / rem 与 em 的累积效应",
+      "answerExplanation": "(a) em 相对元素自身（继承来的）font-size，所以嵌套元素的 em 是相对父级已缩放的字号；rem（root em）始终相对根 html 字号，与嵌套层级无关。(b) 每个 em 字号都乘以父级的计算字号：16 → 19.2 → 23.04 → 27.65，即 1.2 的三次方而非一次。因为 .title 继承自 .card、.card 又继承自 .panel，再多一层带 font-size: 1.2em 的包裹元素就再乘一次（27.65 × 1.2 ≈ 33.2px）——这种累积就是 bug。(c) 把字号改成 rem（如 .title { font-size: 1.2rem }），每个 rem 都相对单一根字号，无论嵌套多深标题恒为 1.2 × 16 = 19.2px，没有相乘链条。em 仍适合需要随元素自身文字缩放的属性，如以 em 计的 padding / border-radius，使按钮字号变大时内边距同步变大。",
+      "codeBlocks": [
+        {
+          "language": "css",
+          "code": ".panel { font-size: 1.2rem; }\n.card { font-size: 1.2rem; }\n.card .title { font-size: 1.2rem; }"
+        }
+      ],
+      "images": [],
+      "createdAt": "2026-11-21"
+    },
+    {
+      "id": "TOPIC2-Q9",
+      "topic": "css",
+      "weeks": [
+        "week-2"
+      ],
+      "difficulty": "hard",
+      "tags": [
+        "专题卷2",
+        "定位",
+        "sticky",
+        "overflow",
+        "滚动容器"
+      ],
+      "question": "区块标题设了吸顶却随内容滚走：\n```css\n.page { overflow: hidden; }\n.section-header { position: sticky; top: 0; }\n```\n(a) sticky 的作用是什么？与 fixed 有何不同？(b) 为什么写对了 top: 0 还是吸不住？(c) 给出两种修法并解释每种为何能恢复吸顶。",
+      "knowledgePoint": "position: sticky 与滚动容器（overflow 祖先）",
+      "answerExplanation": "(a) sticky 是混合体：先像 relative 一样留在流中，滚动越过 top/left 阈值后吸附，但只在包含块和滚动容器范围内；fixed 把元素移出文档流并钉在视口上，永不滚动也不留在任何父级内。(b) sticky 相对最近的滚动容器吸附，而 .page { overflow: hidden } 让 .page 成为那个滚动容器；hidden 产生的是一个从不真正滚动的滚动口（内容放得下、用户也无法滚动），于是 sticky 没有可吸附的滚动范围，只能随页面滚走。这个祖先既裁掉了它，又从视口手里抢走了“滚动容器”的角色。(c) 修法一：去掉 .page 的 overflow: hidden，让最近的滚动容器重新变回视口，标题吸附在窗口顶部。修法二：若确需裁剪，把角色拆开——让 sticky 元素处在被裁剪元素之外，或把该祖先做成真正的滚动区域（固定高度 + overflow: auto），使其真的能滚动、sticky 吸附在它的顶部。两者都提供了真正会滚动的滚动容器，这正是 sticky 唯一需要的。",
+      "codeBlocks": [
+        {
+          "language": "css",
+          "code": ".page { /* 移除 overflow: hidden */ }\n.section-header {\n  position: sticky;\n  top: 0;\n}"
+        }
+      ],
+      "images": [],
+      "createdAt": "2026-11-21"
+    },
+    {
+      "id": "TOPIC2-Q10",
+      "topic": "css",
+      "weeks": [
+        "week-2"
+      ],
+      "difficulty": "medium",
+      "tags": [
+        "专题卷2",
+        "居中",
+        "transform",
+        "定位",
+        "flex"
+      ],
+      "question": "对话框想居中却偏到了右下角：\n```css\n.overlay { position: relative; }\n.modal {\n  position: absolute;\n  top: 50%;\n  left: 50%;\n  width: 280px;\n}\n```\n(a) 为什么 top/left 的 50% 把对话框放到右下而非居中？(b) 给出一个 transform 修法和第二种做法，并说明各自如何处理对话框尺寸。(c) 团队后来把对话框做成覆盖视口的模态框（遮罩 position: fixed; inset: 0，用 flex 居中），解释为什么用 fixed、以及为什么 flex 居中比 translate 更稳健。",
+      "knowledgePoint": "绝对定位居中、transform 与 flex 居中",
+      "answerExplanation": "(a) top: 50%/left: 50% 把元素左上角放到包含块中心，框体再向右下铺开整个宽高，于是其中心比遮罩中心低、右各偏移自身尺寸的一半。(b) transform 修法：保留 top/left: 50% 并加 transform: translate(-50%, -50%)，按自身宽高一半反向平移抵消偏移。第二种：若尺寸已知，用 inset: 0; margin: auto，auto 外边距吸收两侧相等的剩余空间；或与尺寸无关地在遮罩上居中 flex 子元素（display: flex; align-items: center; justify-content: center）。三者都考虑了真实尺寸而非忽略它。(c) 模态遮罩要覆盖整个视口且随页面滚动保持不动，故用相对视口的 position: fixed（absolute 会以定位祖先为参照，可能被裁剪或随内容滚动），inset: 0 让遮罩四边撑满视口。flex 居中无需知道对话框尺寸、也不需写死 -50%，内容改变高度时仍居中，而写死的 translate 可能偏移或与同元素上其他 transform/动画相互干扰。",
+      "codeBlocks": [
+        {
+          "language": "css",
+          "code": ".modal {\n  position: absolute;\n  top: 50%;\n  left: 50%;\n  transform: translate(-50%, -50%);\n}\n/* 或：.overlay { display: flex; align-items: center; justify-content: center; } */"
+        }
+      ],
+      "images": [],
+      "createdAt": "2026-11-21"
+    },
+    {
+      "id": "SPRINT1-Q9",
+      "topic": "css",
+      "weeks": [
+        "week-2"
+      ],
+      "difficulty": "medium",
+      "tags": [
+        "冲刺卷",
+        "CSS选择器",
+        "层叠优先级"
+      ],
+      "question": "一个结账卡片里的按钮带有 `primary` 类，本应是蓝色。但页面上它显示为灰色，样式如下：\n```css\n.primary { background: blue; }\n.card button { background: #e5e5e5; }\n```\n(a) 请分别计算 `.primary` 与 `.card button` 的特异性，并说明为什么灰色规则会覆盖蓝色规则。\n(b) 当两条选择器特异性完全相同时，浏览器依据什么决定胜者？\n(c) 请给出一个最小改动让主按钮变为蓝色，并解释原因。",
+      "knowledgePoint": "CSS 选择器特异性与层叠顺序",
+      "answerExplanation": "特异性是一个三元组（id 数, class 数, 类型数），逐位比较、更高者胜出。`.primary` 是 (0,1,0)，只含一个类；`.card button` 是 (0,1,1)，含一个类加一个类型选择器。两者 class 数相同，但后者多了一个类型选择器，三元组更高，因此它的灰色 `background` 覆盖了蓝色，按钮显示为灰色。当两条规则特异性完全相等时，由源顺序决定胜负——源码中更靠后的（或同级更晚引入的样式表）胜出。修复的最小改动是提高蓝色规则的特异性，例如改成 `.card .primary`，其三元组为 (0,2,0)，含两个类，从而压过 (0,1,1)，蓝色即可生效。关键原则：要覆盖一条规则，需在特异性上不低于它，而不能依赖类名的「含义」。",
+      "codeBlocks": [
+        {
+          "language": "css",
+          "code": ".primary {\n  background: blue;\n}\n.card button {\n  background: #e5e5e5;\n}"
+        }
+      ],
+      "images": [],
+      "createdAt": "2026-11-21"
     }
   ]
 }

@@ -992,6 +992,156 @@
       ],
       "images": [],
       "createdAt": "2026-11-21"
+    },
+    {
+      "id": "TOPIC1-Q5",
+      "topic": "html",
+      "weeks": [
+        "week-1"
+      ],
+      "difficulty": "medium",
+      "tags": [
+        "专题卷1",
+        "语义化",
+        "标题层级",
+        "大纲"
+      ],
+      "question": "文档页 `guide.html` 为了让页面标题比默认 `<h1>` 小，把标题写成了 `<h2>`；为了得到小而粗的章节标签，每个章节都用 `<h4>`。整页没有 `<h1>`，层级从 `<h2>` 直接跳到 `<h4>`：\n```html\n<body>\n  <h2>Install & usage</h2>\n  <h4>Install</h4>\n  <p>Run the installer.</p>\n  <h4>Usage</h4>\n  <p>Import the module.</p>\n</body>\n```\n请指出标题结构的问题，说明它为什么破坏读屏导航，并给出修正写法。",
+      "knowledgePoint": "Headings chosen by size",
+      "answerExplanation": "问题有两个：最顶层标题是 `<h2>` 而不是 `<h1>`，整页没有一级标题；同时出现跳级，从 `<h2>` 直接到 `<h4>`，中间缺少 `<h3>`。读屏器用标题层级构成大纲树来导航，用户可以列出标题或跳到某一层级的下一个标题：没有 `<h1>` 时跳到一级标题会落空；`h2 → h4` 让大纲声称存在两个更深层级却缺失，这棵树自相矛盾，用户无法判断哪些章节同级。按渲染字号来挑标题级别是错的，因为标题元素表达的是结构，字号属于样式。修正：页面标题用 `<h1>`、章节用 `<h2>`、子章节用 `<h3>`，形成 h1 → h2 → h3 → h2 的连续大纲；视觉大小改用 CSS（例如 `h1 { font-size: 1.4rem; }`），从而把结构与表现分离。",
+      "codeBlocks": [
+        {
+          "language": "html",
+          "code": "<h1>Install & usage</h1>\n<h2>Install</h2>\n<h3>Requirements</h3>\n<h2>Usage</h2>"
+        }
+      ],
+      "images": [],
+      "createdAt": "2026-11-21"
+    },
+    {
+      "id": "TOPIC1-Q6",
+      "topic": "html",
+      "weeks": [
+        "week-1"
+      ],
+      "difficulty": "medium",
+      "tags": [
+        "专题卷1",
+        "语义化",
+        "section",
+        "aside"
+      ],
+      "question": "落地页 `landing.html` 的主内容已用 `<main>` 包好，但里面每个区块都是 `<section>`，其标题只是普通 `<div class=\"title\">`；一条广告条也是 `<section>`，夹在功能介绍和注册表单之间：\n```html\n<main class=\"wrap\">\n  <section class=\"features\">\n    <div class=\"title\">Features</div>\n  </section>\n  <section class=\"ads\">\n    <a href=\"/promo\">Spring sale</a>\n  </section>\n  <section class=\"signup\">\n    <div class=\"title\">Sign up</div>\n  </section>\n</main>\n```\n请指出结构问题，说明为什么没有标题的 `<section>` 不利于辅助技术、以及广告条为什么应是 `<aside>`，并给出修正写法。",
+      "knowledgePoint": "Sections with no names",
+      "answerExplanation": "问题：这些 `<section>` 里没有任何标题（标题只是 `<div>`），因此它们没有可访问名称；广告条属于补充性内容，却也被标成了 `<section>`。`<section>` 只有在拥有可访问名称（来自标题或 `aria-label`）时，才会成为一个有意义、可导航的区域；若内部只有 `<div class=\"title\">`，它就是个通用容器，读屏用户拿不到名字去列出或跳转，区域导航无法区分 \"Features\" 和 \"Sign up\"。广告标成 `<aside>` 很重要，因为它把内容标记为补充性而非主体：辅助技术可以对其分组、跳过，阅读顺序也表明它不是页面主旨；错标成 `<section>` 会让广告混进页面结构内容。修正：给每个 `<section>` 加真正的标题（如 `<h2>`），把广告条改成 `<aside>`，并保留原 class 使样式不变。",
+      "codeBlocks": [
+        {
+          "language": "html",
+          "code": "<main class=\"wrap\">\n  <section class=\"features\">\n    <h2>Features</h2>\n    <p>Everything you need.</p>\n  </section>\n  <aside class=\"ads\">\n    <a href=\"/promo\">Spring sale</a>\n  </aside>\n  <section class=\"signup\">\n    <h2>Sign up</h2>\n    <form>...</form>\n  </section>\n</main>"
+        }
+      ],
+      "images": [],
+      "createdAt": "2026-11-21"
+    },
+    {
+      "id": "TOPIC1-Q7",
+      "topic": "html",
+      "weeks": [
+        "week-1"
+      ],
+      "difficulty": "medium",
+      "tags": [
+        "专题卷1",
+        "可访问性",
+        "alt",
+        "figure"
+      ],
+      "question": "产品画廊 `gallery.html` 里，作为装饰的背景花纹写成了 `alt=\"decorative swirl pattern\"`，真正承载价格与优惠的产品照片却是 `alt=\"\"`；还有一张照片用 `<figure>` 包着，但说明文字放在普通 `<p>` 里：\n```html\n<img src=\"swirl.svg\" alt=\"decorative swirl pattern\">\n<img src=\"shoe.jpg\" alt=\"\">\n<figure>\n  <img src=\"beach.jpg\" alt=\"Bondi Beach at sunrise\">\n  <p>Morning near the harbour</p>\n</figure>\n```\n请指出 alt 与说明文字的问题，说明原因，并给出修正写法。",
+      "knowledgePoint": "The wrong alt text",
+      "answerExplanation": "`alt` 是读屏器用来替代图片朗读的文本。装饰性图片不承载信息，给它写长 `alt` 只会成为用户必须听完的噪音，应使用空 `alt=\"\"` 让读屏器跳过；产品照片本身就是内容，`alt=\"\"` 会把它完全隐藏，用户就丢掉了价格与优惠，因此必须用能描述产品的 `alt`。也就是说两张图的 `alt` 写反了。此外，`<figcaption>` 会与它的 `<figure>` 在程序上绑定，辅助技术会把说明呈现为“属于这张图”；并列的 `<p>` 没有这种关系，会被当作无关文字。修正：装饰图 `alt=\"\"`，产品图写描述性 `alt`，并把说明移入 `<figure>` 内的 `<figcaption>`。",
+      "codeBlocks": [
+        {
+          "language": "html",
+          "code": "<img src=\"swirl.svg\" alt=\"\">\n<img src=\"shoe.jpg\" alt=\"Red running shoe, $120, on sale\">\n\n<figure>\n  <img src=\"beach.jpg\" alt=\"Bondi Beach at sunrise\">\n  <figcaption>Morning near the harbour</figcaption>\n</figure>"
+        }
+      ],
+      "images": [],
+      "createdAt": "2026-11-21"
+    },
+    {
+      "id": "TOPIC1-Q8",
+      "topic": "html",
+      "weeks": [
+        "week-1"
+      ],
+      "difficulty": "easy",
+      "tags": [
+        "专题卷1",
+        "列表",
+        "ol",
+        "dl"
+      ],
+      "question": "食谱 `recipe.html` 中，有固定顺序的步骤却用 `<ul>` 表示；作为“名词—数值”配对的营养成分，被写成两个带粗体标签的 `<p>`：\n```html\n<h2>Steps</h2>\n<ul class=\"steps\">\n  <li>Boil the oats.</li>\n  <li>Stir in the milk.</li>\n  <li>Top with berries.</li>\n</ul>\n<h2>Nutrition</h2>\n<p><strong>Calories</strong> — 320 kcal</p>\n<p><strong>Protein</strong> — 9 g</p>\n```\n请说明这两处的元素选择问题，解释 `<ol>`、`<ul>`、`<dl>` 的差别，并给出修正写法。",
+      "knowledgePoint": "The wrong kinds of lists",
+      "answerExplanation": "步骤有固定顺序，应使用有序列表 `<ol>`（配 `<li>`）；营养成分是“名词—描述”配对，应使用描述列表 `<dl>`（`<dt>` 写名词、`<dd>` 写数值）。`<ul>` 与 `<ol>` 播报不同：两者都会说 \"list\"，但 `<ol>` 还告诉辅助技术条目有顺序，可报出 \"item 2 of 3\"，用户就知道顺序有意义；把有序步骤标成 `<ul>` 会暗示顺序任意，这在食谱里是错的（用户可能在煮燕麦前就加牛奶）。`<dl>` 表达每个名词与它的描述成对出现，辅助技术能把 \"Calories: 320 kcal\" 作为名词及其取值传达；两个 `<p>` 只是两句话，配对只存在于视觉粗体里，读屏器听到的是两行无关文字，关系丢失。修正即改用 `<ol>` 与 `<dl>`。",
+      "codeBlocks": [
+        {
+          "language": "html",
+          "code": "<h2>Steps</h2>\n<ol>\n  <li>Boil the oats.</li>\n  <li>Stir in the milk.</li>\n  <li>Top with berries.</li>\n</ol>\n<h2>Nutrition</h2>\n<dl>\n  <dt>Calories</dt>\n  <dd>320 kcal</dd>\n  <dt>Protein</dt>\n  <dd>9 g</dd>\n</dl>"
+        }
+      ],
+      "images": [],
+      "createdAt": "2026-11-21"
+    },
+    {
+      "id": "TOPIC1-Q9",
+      "topic": "html",
+      "weeks": [
+        "week-1"
+      ],
+      "difficulty": "medium",
+      "tags": [
+        "专题卷1",
+        "语义化",
+        "链接",
+        "按钮"
+      ],
+      "question": "任务应用 `app.html` 里，\"Save draft\" 这个动作写成了 `<a href=\"#\">Save draft</a>`，而 \"Docs\" 这个导航项写成了 `<button onclick=\"location.href='/docs'\">Docs</button>`：\n```html\n<a href=\"#\">Save draft</a>\n<button onclick=\"location.href='/docs'\">Docs</button>\n```\n请说明元素与职责错配的问题、各自的副作用，并给出修正写法。",
+      "knowledgePoint": "A link that acts, a button that navigates",
+      "answerExplanation": "动作应使用 `<button>`，导航应使用 `<a href=\"/docs\">`；当前两者被弄反了。链接会被播报为链接、用户预期它会把人带到某处，而 `href=\"#\"` 指向当前页顶部，激活 \"Save draft\" 只会让视图跳到顶部、什么都没保存，还带上了本不该有的链接能力（新标签页打开、复制地址）。把 \"Docs\" 做成 `<button>` 则丢掉浏览器的链接行为：无法新标签页打开、复制、收藏或长按，且被播报为按钮，用户会预期页内动作而非跳转；`<button onclick=...>` 在 JavaScript 失效时也会坏。修正：`<button type=\"button\">Save draft</button>` 与 `<a href=\"/docs\">Docs</a>`。这样一来每个控件都暴露了与其职责匹配的角色、键盘行为和浏览器能力。",
+      "codeBlocks": [
+        {
+          "language": "html",
+          "code": "<button type=\"button\">Save draft</button>\n<a href=\"/docs\">Docs</a>"
+        }
+      ],
+      "images": [],
+      "createdAt": "2026-11-21"
+    },
+    {
+      "id": "TOPIC1-Q10",
+      "topic": "html",
+      "weeks": [
+        "week-1"
+      ],
+      "difficulty": "medium",
+      "tags": [
+        "专题卷1",
+        "可访问性",
+        "lang",
+        "ARIA"
+      ],
+      "question": "页面 `index.html` 的 `<html>` 没有 `lang` 属性，而 \"Buy\" 控件是一个无法聚焦、无法键盘激活的假按钮：\n```html\n<!doctype html>\n<html>\n  <body>\n    <h1>Running shoe — $120</h1>\n    <div class=\"btn\" role=\"button\">Buy</div>\n  </body>\n</html>\n```\n请指出这两处的问题，说明缺失 `lang` 与 `role=\"button\"` 的影响，并给出修正写法。",
+      "knowledgePoint": "A fake button and a missing language",
+      "answerExplanation": "`<html>` 缺了 `lang` 属性，页面没有声明语言；读屏器用文档语言选择发音规则，浏览器也用它做拼写检查和翻译，没有 `lang` 时这些工具只能猜，可能用错误口音朗读或给出错误词典。\"Buy\" 是 `<div role=\"button\">` 这一假按钮：`role=\"button\"` 只改变元素被播报的方式（读成按钮），不会补上按钮的任何行为——`<div>` 不可聚焦、没有键盘激活，键盘用户无法 Tab 到它，也无法按 Enter/Space 触发。这正是「没有 ARIA 好过糟糕的 ARIA」：应使用原生 `<button>`，它同时给出角色和行为。修正：`<html lang=\"en\">`，并把假按钮换成 `<button type=\"button\" class=\"btn\">Buy</button>`；若改为给 `<div>` 打补丁，则需加 `tabindex=\"0\"` 和 keydown 处理，去复现浏览器免费提供的东西，代码更多也更易出错。",
+      "codeBlocks": [
+        {
+          "language": "html",
+          "code": "<html lang=\"en\">\n  <body>\n    <h1>Running shoe — $120</h1>\n    <button type=\"button\" class=\"btn\">Buy</button>\n  </body>\n</html>"
+        }
+      ],
+      "images": [],
+      "createdAt": "2026-11-21"
     }
   ]
 }
